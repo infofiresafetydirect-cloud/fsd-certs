@@ -4,28 +4,40 @@
   <meta charset="utf-8">
   <title>FSD Certs</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
   <meta name="apple-mobile-web-app-title" content="FSD Certs">
   <meta name="application-name" content="FSD Certs">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="theme-color" content="#0b1f3a">
-  <link rel="apple-touch-icon" sizes="180x180" href="icon-180.png">
-  <link rel="icon" type="image/png" href="favicon.png">
+
+  <!-- App icons -->
+  <link rel="apple-touch-icon" sizes="180x180" href="fsd-icon.png">
+  <link rel="icon" type="image/png" href="fsd-icon.png">
+
+  <!-- Web app manifest -->
   <link rel="manifest" href="manifest.webmanifest">
+
   <style>
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       margin: 0;
       min-height: 100vh;
       font-family: Arial, Helvetica, sans-serif;
-      background: radial-gradient(circle at top, rgba(255,255,255,0.12), transparent 36%), linear-gradient(135deg, #07172b, #12385f 55%, #07172b);
+      background:
+        radial-gradient(circle at top, rgba(255,255,255,0.12), transparent 36%),
+        linear-gradient(135deg, #07172b, #12385f 55%, #07172b);
       color: white;
       display: flex;
       align-items: center;
       justify-content: center;
       padding: 24px;
     }
+
     .card {
       width: 100%;
       max-width: 460px;
@@ -36,14 +48,28 @@
       padding: 30px 24px;
       box-shadow: 0 20px 60px rgba(0,0,0,0.35);
     }
+
     img {
       width: 140px;
       height: 140px;
       border-radius: 32px;
       box-shadow: 0 14px 34px rgba(0,0,0,0.35);
+      object-fit: cover;
+      background: #0b1f3a;
     }
-    h1 { margin: 22px 0 8px; font-size: 34px; }
-    p { margin: 0 0 24px; color: rgba(255,255,255,0.82); line-height: 1.45; font-size: 16px; }
+
+    h1 {
+      margin: 22px 0 8px;
+      font-size: 34px;
+    }
+
+    p {
+      margin: 0 0 24px;
+      color: rgba(255,255,255,0.82);
+      line-height: 1.45;
+      font-size: 16px;
+    }
+
     a.button {
       display: block;
       width: 100%;
@@ -56,15 +82,34 @@
       font-size: 18px;
       box-shadow: 0 12px 30px rgba(200,16,46,0.34);
     }
-    .small { margin-top: 18px; font-size: 13px; color: rgba(255,255,255,0.66); }
+
+    a.button:active {
+      transform: scale(0.98);
+    }
+
+    .small {
+      margin-top: 18px;
+      font-size: 13px;
+      color: rgba(255,255,255,0.66);
+    }
   </style>
 </head>
+
 <body>
   <main class="card">
-    <img src="icon-512.png" alt="FSD Certs icon">
+    <img src="fsd-icon.png" alt="FSD Certs icon">
+
     <h1>FSD Certs</h1>
+
     <p>Open the Fire Safety Direct certificate system.</p>
-    <a class="button" href="https://script.google.com/macros/s/AKfycbzq9FTETNZwUJWHMGnMHECbu3sJ3jy3FFvGYyeaRXtkoK1GHBtqOu-GLBle_WGfoFtI/exec">Open Certificate System</a>
+
+    <a
+      class="button"
+      href="https://script.google.com/macros/s/AKfycbzq9FTETNZwUJWHMGnMHECbu3sJ3jy3FFvGYyeaRXtkoK1GHBtqOu-GLBle_WGfoFtI/exec"
+    >
+      Open Certificate System
+    </a>
+
     <div class="small">FSD Certs · Built by Jared720 Labs.</div>
   </main>
 </body>
