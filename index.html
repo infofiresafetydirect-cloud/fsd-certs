@@ -10,7 +10,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="theme-color" content="#07172b">
+  <meta name="theme-color" content="#0e5f83">
 
   <link rel="apple-touch-icon" sizes="180x180" href="fsd-icon.png">
   <link rel="icon" type="image/png" href="fsd-icon.png">
@@ -27,20 +27,18 @@
       min-height: 100vh;
       font-family: Arial, Helvetica, sans-serif;
       background:
-        radial-gradient(circle at 50% 10%, rgba(0, 191, 255, 0.22), transparent 34%),
-        radial-gradient(circle at 80% 85%, rgba(200, 16, 46, 0.18), transparent 28%),
-        linear-gradient(145deg, #06111f 0%, #0b2742 52%, #06111f 100%);
+        radial-gradient(circle at 50% 0%, rgba(255,255,255,0.95), rgba(255,255,255,0.18) 28%, transparent 48%),
+        linear-gradient(145deg, #c9f4ff 0%, #55b9d7 42%, #0e5f83 100%);
       color: white;
       display: flex;
       align-items: center;
       justify-content: center;
       padding: 28px;
-      overflow: hidden;
     }
 
     .shell {
       width: 100%;
-      max-width: 540px;
+      max-width: 560px;
       text-align: center;
     }
 
@@ -50,66 +48,70 @@
       justify-content: center;
       gap: 8px;
       margin-bottom: 18px;
-      padding: 8px 14px;
+      padding: 9px 16px;
       border-radius: 999px;
-      background: rgba(255, 255, 255, 0.10);
-      border: 1px solid rgba(255, 255, 255, 0.18);
-      color: rgba(255, 255, 255, 0.86);
+      background: rgba(255, 255, 255, 0.28);
+      border: 1px solid rgba(255, 255, 255, 0.38);
+      color: #07324a;
       font-size: 13px;
-      font-weight: 700;
+      font-weight: 800;
       letter-spacing: 0.3px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.12);
     }
 
     .card {
       width: 100%;
       text-align: center;
       background:
-        linear-gradient(180deg, rgba(255,255,255,0.15), rgba(255,255,255,0.07));
-      border: 1px solid rgba(255,255,255,0.22);
+        linear-gradient(180deg, rgba(255,255,255,0.42), rgba(255,255,255,0.18));
+      border: 1px solid rgba(255,255,255,0.46);
       border-radius: 34px;
-      padding: 34px 28px 28px;
+      padding: 38px 30px 30px;
       box-shadow:
-        0 28px 80px rgba(0,0,0,0.46),
-        inset 0 1px 0 rgba(255,255,255,0.20);
+        0 28px 80px rgba(0, 60, 90, 0.28),
+        inset 0 1px 0 rgba(255,255,255,0.50);
       backdrop-filter: blur(18px);
     }
 
     .icon-wrap {
-      width: 170px;
-      height: 170px;
-      margin: 0 auto 22px;
+      width: 178px;
+      height: 178px;
+      margin: 0 auto 24px;
       padding: 10px;
-      border-radius: 42px;
-      background: linear-gradient(145deg, rgba(255,255,255,0.30), rgba(255,255,255,0.08));
+      border-radius: 44px;
+      background: linear-gradient(145deg, rgba(255,255,255,0.72), rgba(255,255,255,0.18));
       box-shadow:
-        0 18px 42px rgba(0,0,0,0.40),
-        inset 0 1px 0 rgba(255,255,255,0.32);
+        0 18px 42px rgba(0, 60, 90, 0.28),
+        inset 0 1px 0 rgba(255,255,255,0.70);
     }
 
     img {
-      width: 150px;
-      height: 150px;
-      border-radius: 34px;
+      width: 158px;
+      height: 158px;
+      border-radius: 36px;
       object-fit: cover;
       display: block;
-      box-shadow: 0 12px 30px rgba(0,0,0,0.32);
+      box-shadow: 0 12px 30px rgba(0, 60, 90, 0.28);
       background: #0b1f3a;
     }
 
     h1 {
       margin: 0;
       font-size: 38px;
-      line-height: 1.05;
+      line-height: 1.08;
       letter-spacing: -1px;
       font-weight: 900;
+      color: #062b40;
+      text-shadow: 0 1px 0 rgba(255,255,255,0.45);
     }
 
     .subtitle {
-      margin: 14px auto 28px;
-      max-width: 420px;
-      color: rgba(255,255,255,0.80);
+      margin: 14px auto 30px;
+      max-width: 430px;
+      color: rgba(6, 43, 64, 0.82);
       line-height: 1.45;
       font-size: 17px;
+      font-weight: 600;
     }
 
     .button {
@@ -117,9 +119,9 @@
       align-items: center;
       justify-content: center;
       width: 100%;
-      min-height: 62px;
+      min-height: 64px;
       padding: 18px 20px;
-      border-radius: 19px;
+      border-radius: 20px;
       background: linear-gradient(180deg, #e3153c, #b90927);
       color: white;
       text-decoration: none;
@@ -127,9 +129,9 @@
       font-size: 20px;
       letter-spacing: 0.2px;
       box-shadow:
-        0 16px 34px rgba(200,16,46,0.38),
-        inset 0 1px 0 rgba(255,255,255,0.22);
-      border: 1px solid rgba(255,255,255,0.14);
+        0 16px 34px rgba(200,16,46,0.32),
+        inset 0 1px 0 rgba(255,255,255,0.28);
+      border: 1px solid rgba(255,255,255,0.20);
     }
 
     .button:active {
@@ -138,40 +140,18 @@
 
     .secondary {
       margin-top: 14px;
-      background: rgba(255,255,255,0.10);
-      box-shadow: none;
-      border: 1px solid rgba(255,255,255,0.18);
-      font-size: 16px;
-      min-height: 54px;
-    }
-
-    .status-row {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-      margin: 24px 0 4px;
-    }
-
-    .status {
-      padding: 12px 8px;
-      border-radius: 16px;
-      background: rgba(255,255,255,0.08);
-      border: 1px solid rgba(255,255,255,0.12);
-      font-size: 12px;
-      color: rgba(255,255,255,0.74);
-    }
-
-    .status strong {
-      display: block;
-      color: white;
-      font-size: 14px;
-      margin-bottom: 3px;
+      background: linear-gradient(180deg, rgba(6,43,64,0.84), rgba(6,43,64,0.68));
+      box-shadow: 0 12px 26px rgba(0, 60, 90, 0.18);
+      border: 1px solid rgba(255,255,255,0.28);
+      font-size: 17px;
+      min-height: 56px;
     }
 
     .small {
-      margin-top: 20px;
+      margin-top: 24px;
       font-size: 13px;
-      color: rgba(255,255,255,0.56);
+      color: rgba(6, 43, 64, 0.68);
+      font-weight: 700;
     }
 
     @media (max-width: 520px) {
@@ -180,12 +160,12 @@
       }
 
       .card {
-        padding: 28px 20px 22px;
+        padding: 30px 20px 24px;
         border-radius: 28px;
       }
 
       h1 {
-        font-size: 32px;
+        font-size: 31px;
       }
 
       .icon-wrap {
@@ -200,8 +180,8 @@
         border-radius: 30px;
       }
 
-      .status-row {
-        grid-template-columns: 1fr;
+      .subtitle {
+        font-size: 16px;
       }
     }
   </style>
@@ -235,23 +215,6 @@
       >
         Open FSD Schedule
       </a>
-
-      <div class="status-row">
-        <div class="status">
-          <strong>iPad Ready</strong>
-          Home Screen access
-        </div>
-
-        <div class="status">
-          <strong>Cloud Based</strong>
-          Reports saved online
-        </div>
-
-        <div class="status">
-          <strong>Engineer Use</strong>
-          Fast field access
-        </div>
-      </div>
 
       <div class="small">FSD Certificate Portal · Built by Jared720 Labs</div>
     </section>
