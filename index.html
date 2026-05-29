@@ -363,7 +363,7 @@
 </head>
 <body>
   <!--
-    Fire Safety Direct - FSD Certs V6.3c36y iPad Home Stay In App Shell Fix
+    Fire Safety Direct - FSD Certs V6.3c36z iPad Home Message Top + Fallback Fix
     Forces menu-first launch and gives iPad standalone-mode buttons proper touch feedback and reliable tap handling.
     Cert engine remains on V6.3c36o unless patched separately.
     App shell mark: Jared720 Labs
@@ -579,7 +579,7 @@
         loaded = false;
 
         if (!hasStarted) {
-          frame.src = APP_URL + '?shell=ipad&v=V6.3c36y';
+          frame.src = APP_URL + '?shell=ipad&v=V6.3c36z';
           hasStarted = true;
         }
 
@@ -636,7 +636,10 @@
 
       window.addEventListener('message', function (event) {
         var data = event && event.data ? event.data : null;
-        if (data && data.type === 'FSD_CERTS_HOME') {
+        var type = '';
+        if (typeof data === 'string') type = data;
+        if (data && typeof data === 'object' && data.type) type = data.type;
+        if (type === 'FSD_CERTS_HOME' || type === 'fsd-certs-home') {
           window.showHome(true);
         }
       });
