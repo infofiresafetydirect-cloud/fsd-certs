@@ -6,6 +6,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="FSD Certs">
+  <meta name="application-name" content="FSD Certs by Jared720 Labs">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="theme-color" content="#991b1b">
   <meta name="format-detection" content="telephone=no">
@@ -16,6 +17,7 @@
 
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
   <link rel="icon" href="apple-touch-icon.png">
+  <link rel="preload" as="image" href="fsd-certs-logo.png">
 
   <style>
     :root {
@@ -108,18 +110,12 @@
     }
 
     .logo {
-      width: 86px;
-      height: 86px;
-      border-radius: 24px;
+      width: 104px;
+      height: 104px;
+      border-radius: 26px;
       margin: 0 auto 18px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: linear-gradient(135deg, var(--fsd-red-bright), var(--fsd-red));
-      color: #ffffff;
-      font-weight: 950;
-      font-size: 28px;
-      letter-spacing: -.04em;
+      display: block;
+      object-fit: cover;
       box-shadow: 0 18px 44px rgba(153, 27, 27, .28);
     }
 
@@ -181,13 +177,24 @@
       background: linear-gradient(135deg, #4b5563, #1f2937);
       box-shadow: 0 10px 24px rgba(17, 24, 39, .16);
     }
+
+    .maker-mark {
+      margin-top: 16px;
+      color: #9ca3af;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+    }
   </style>
 </head>
 <body>
   <!--
-    Fire Safety Direct - FSD Certs V6.3c36p iPad App Shell Mode
+    Fire Safety Direct - FSD Certs V6.3c36r iPad App Shell Mode - Cloud Logo
     Replace the GitHub Pages index.html with this file.
     Keep the Apps Script engine on V6.3c36o unless you choose to patch it separately.
+    App shell mark: Jared720 Labs
+    Logo: FSD cloud icon with Jared720 Labs mark
   -->
 
   <div class="shell" aria-label="FSD Certs App Shell">
@@ -203,18 +210,20 @@
 
   <div id="loader" class="loader">
     <div class="panel">
-      <div class="logo">FSD</div>
+      <img class="logo" src="fsd-certs-logo.png" alt="FSD Certs cloud logo">
       <h1>FSD Certs</h1>
       <p>Loading the certificate system…</p>
+      <div class="maker-mark">Jared720 Labs</div>
       <div class="spinner" aria-hidden="true"></div>
     </div>
   </div>
 
   <div id="fallback" class="fallback hidden">
     <div class="panel">
-      <div class="logo">FSD</div>
+      <img class="logo" src="fsd-certs-logo.png" alt="FSD Certs cloud logo">
       <h1>Still loading?</h1>
       <p>If iPad Safari is being awkward, reload the shell or open the cert system directly.</p>
+      <div class="maker-mark">Jared720 Labs</div>
       <div class="actions">
         <button type="button" onclick="reloadApp()">Reload FSD Certs</button>
         <a class="button secondary" href="https://script.google.com/macros/s/AKfycbzq9FTETNZwUJWHMGnMHECbu3sJ3jy3FFvGYyeaRXtkoK1GHBtqOu-GLBle_WGfoFtI/exec" target="_self" rel="noopener">Open Direct</a>
