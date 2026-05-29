@@ -1,0 +1,543 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="FSD Certs">
+  <meta name="application-name" content="FSD Certs by Jared720 Labs">
+  <meta name="theme-color" content="#991b1b">
+  <meta name="format-detection" content="telephone=no">
+  <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
+  <meta http-equiv="Pragma" content="no-cache">
+
+  <title>FSD Certs</title>
+
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="icon" href="apple-touch-icon.png">
+  <link rel="preload" as="image" href="fsd-certs-logo.png">
+
+  <style>
+    :root {
+      --fsd-red: #991b1b;
+      --fsd-red-bright: #dc2626;
+      --fsd-red-dark: #7f1d1d;
+      --fsd-dark: #111827;
+      --safe-top: env(safe-area-inset-top, 0px);
+      --safe-right: env(safe-area-inset-right, 0px);
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+      --safe-left: env(safe-area-inset-left, 0px);
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      min-height: 100%;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background: #ffffff;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+      -webkit-text-size-adjust: 100%;
+    }
+
+    body {
+      position: fixed;
+      inset: 0;
+      overscroll-behavior: none;
+      touch-action: manipulation;
+    }
+
+    .screen {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      height: 100dvh;
+      overflow: hidden;
+    }
+
+    .home {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: calc(24px + var(--safe-top)) calc(22px + var(--safe-right)) calc(24px + var(--safe-bottom)) calc(22px + var(--safe-left));
+      background:
+        radial-gradient(circle at 50% 0%, rgba(255,255,255,0.96), rgba(255,255,255,0.12) 30%, transparent 52%),
+        linear-gradient(145deg, #ef4444 0%, #b91c1c 45%, #7f1d1d 100%);
+      color: #ffffff;
+      z-index: 30;
+      transition: transform .2s ease, opacity .2s ease, visibility .2s ease;
+    }
+
+    .home.hidden {
+      transform: translateY(-10px);
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .home-panel {
+      width: min(560px, 100%);
+      text-align: center;
+    }
+
+    .home-card {
+      width: 100%;
+      border-radius: 34px;
+      padding: 30px 24px 24px;
+      background: linear-gradient(180deg, rgba(255,255,255,.20), rgba(255,255,255,.10));
+      border: 1px solid rgba(255,255,255,.28);
+      box-shadow: 0 28px 80px rgba(69, 10, 10, .32), inset 0 1px 0 rgba(255,255,255,.22);
+      backdrop-filter: blur(16px);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin: 0 0 14px;
+      padding: 9px 16px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.18);
+      border: 1px solid rgba(255,255,255,.28);
+      color: #ffffff;
+      font-size: 13px;
+      font-weight: 850;
+      letter-spacing: .02em;
+    }
+
+    .logo-wrap {
+      width: 172px;
+      height: 172px;
+      margin: 0 auto 20px;
+      padding: 9px;
+      border-radius: 42px;
+      background: linear-gradient(145deg, rgba(255,255,255,.55), rgba(255,255,255,.16));
+      box-shadow: 0 18px 42px rgba(69,10,10,.28), inset 0 1px 0 rgba(255,255,255,.50);
+    }
+
+    .logo {
+      width: 100%;
+      height: 100%;
+      border-radius: 34px;
+      object-fit: cover;
+      display: block;
+      box-shadow: 0 12px 30px rgba(69,10,10,.34);
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 38px;
+      line-height: 1.06;
+      letter-spacing: -.04em;
+      font-weight: 950;
+      color: #ffffff;
+      text-shadow: 0 2px 16px rgba(0,0,0,.20);
+    }
+
+    .subtitle {
+      margin: 11px auto 22px;
+      max-width: 440px;
+      color: rgba(255,255,255,.88);
+      line-height: 1.42;
+      font-size: 16px;
+      font-weight: 650;
+    }
+
+    .actions {
+      display: grid;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .button,
+    button.button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      min-height: 62px;
+      padding: 17px 18px;
+      border: 0;
+      border-radius: 20px;
+      background: linear-gradient(180deg, #ffffff, #f3f4f6);
+      color: var(--fsd-red-dark);
+      text-decoration: none;
+      font: inherit;
+      font-weight: 950;
+      font-size: 19px;
+      letter-spacing: .01em;
+      cursor: pointer;
+      box-shadow: 0 16px 34px rgba(69,10,10,.26), inset 0 1px 0 rgba(255,255,255,.50);
+    }
+
+    .button:active {
+      transform: scale(.985);
+    }
+
+    .button.secondary {
+      min-height: 56px;
+      font-size: 17px;
+      color: #ffffff;
+      background: linear-gradient(180deg, rgba(17,24,39,.92), rgba(17,24,39,.72));
+      border: 1px solid rgba(255,255,255,.20);
+      box-shadow: 0 12px 26px rgba(17,24,39,.22);
+    }
+
+    .button.third {
+      min-height: 56px;
+      font-size: 17px;
+      color: #ffffff;
+      background: linear-gradient(180deg, #ef4444, #991b1b);
+      border: 1px solid rgba(255,255,255,.22);
+      box-shadow: 0 12px 26px rgba(69,10,10,.24);
+    }
+
+    .maker-mark {
+      margin-top: 20px;
+      color: rgba(255,255,255,.72);
+      font-size: 12px;
+      font-weight: 850;
+      letter-spacing: .05em;
+      text-transform: uppercase;
+    }
+
+    .app-shell {
+      background: #ffffff;
+      z-index: 10;
+    }
+
+    .top-safe-fill {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: var(--safe-top);
+      background: linear-gradient(135deg, var(--fsd-red-bright), var(--fsd-red));
+      z-index: 15;
+      pointer-events: none;
+    }
+
+    iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+      background: #ffffff;
+      display: block;
+    }
+
+    .mini-home {
+      position: fixed;
+      top: calc(8px + var(--safe-top));
+      left: calc(8px + var(--safe-left));
+      z-index: 25;
+      border: 0;
+      border-radius: 999px;
+      padding: 9px 13px;
+      background: rgba(127, 29, 29, .92);
+      color: #ffffff;
+      font: inherit;
+      font-size: 13px;
+      font-weight: 900;
+      box-shadow: 0 8px 22px rgba(0,0,0,.18);
+      cursor: pointer;
+      opacity: .92;
+    }
+
+    .mini-home:active {
+      transform: scale(.96);
+    }
+
+    .loader,
+    .fallback {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: calc(22px + var(--safe-top)) calc(22px + var(--safe-right)) calc(22px + var(--safe-bottom)) calc(22px + var(--safe-left));
+      background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+      color: var(--fsd-dark);
+      z-index: 20;
+      transition: opacity .18s ease, visibility .18s ease;
+    }
+
+    .loader.hidden,
+    .fallback.hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .panel {
+      width: min(420px, 100%);
+      text-align: center;
+    }
+
+    .panel .logo {
+      width: 104px;
+      height: 104px;
+      border-radius: 26px;
+      margin: 0 auto 18px;
+      box-shadow: 0 18px 44px rgba(153, 27, 27, .28);
+    }
+
+    .panel h2 {
+      margin: 0;
+      font-size: 30px;
+      line-height: 1.05;
+      color: var(--fsd-red);
+      letter-spacing: -.04em;
+    }
+
+    .panel p {
+      margin: 10px 0 0;
+      color: #4b5563;
+      font-size: 15px;
+      line-height: 1.4;
+    }
+
+    .panel .maker-mark {
+      color: #9ca3af;
+      margin-top: 14px;
+    }
+
+    .spinner {
+      width: 34px;
+      height: 34px;
+      border: 4px solid #fee2e2;
+      border-top-color: var(--fsd-red);
+      border-radius: 999px;
+      margin: 22px auto 0;
+      animation: spin .85s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    @media (max-width: 520px) {
+      .home {
+        padding: calc(18px + var(--safe-top)) calc(16px + var(--safe-right)) calc(18px + var(--safe-bottom)) calc(16px + var(--safe-left));
+      }
+
+      .home-card {
+        padding: 24px 18px 20px;
+        border-radius: 28px;
+      }
+
+      .logo-wrap {
+        width: 148px;
+        height: 148px;
+        border-radius: 36px;
+      }
+
+      .logo {
+        border-radius: 30px;
+      }
+
+      h1 {
+        font-size: 32px;
+      }
+
+      .subtitle {
+        font-size: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!--
+    Fire Safety Direct - FSD Certs V6.3c36v iPad App Shell Menu-First Mode
+    Forces the launcher menu to show first on iPad home-screen launch, then opens Certs, Schedule or Callouts only after a button tap.
+    Cert engine remains on V6.3c36o unless patched separately.
+    App shell mark: Jared720 Labs
+  -->
+
+  <section id="home" class="screen home" aria-label="FSD Certs Launcher">
+    <main class="home-panel">
+      <div class="badge">✅ Fire Safety Direct · Service Certificate Portal</div>
+      <section class="home-card">
+        <div class="logo-wrap">
+          <img class="logo" src="fsd-certs-logo.png" alt="FSD Certs cloud logo">
+        </div>
+        <h1>FSD Certs</h1>
+        <p class="subtitle">Fire Safety Direct’s online certificates, engineer reporting, schedule, and callout launcher.</p>
+        <div class="actions">
+          <button class="button" type="button" onclick="openCerts(event)">Open Certificate Portal</button>
+          <button class="button secondary" type="button" onclick="openSchedule(event)">Open FSD Schedule</button>
+          <button class="button third" type="button" onclick="openCallouts(event)">Callouts</button>
+        </div>
+        <div class="maker-mark">Built by Jared720 Labs</div>
+      </section>
+    </main>
+  </section>
+
+  <section class="screen app-shell" aria-label="FSD Certs App Shell">
+    <div class="top-safe-fill"></div>
+    <button class="mini-home" type="button" onclick="showHome()">⌂ Menu</button>
+    <iframe
+      id="fsdFrame"
+      title="FSD Certs"
+      src="about:blank"
+      allow="camera *; microphone *; clipboard-read *; clipboard-write *; fullscreen *"
+      referrerpolicy="no-referrer-when-downgrade">
+    </iframe>
+  </section>
+
+  <div id="loader" class="loader hidden">
+    <div class="panel">
+      <img class="logo" src="fsd-certs-logo.png" alt="FSD Certs cloud logo">
+      <h2>FSD Certs</h2>
+      <p>Loading the certificate system…</p>
+      <div class="maker-mark">Jared720 Labs</div>
+      <div class="spinner" aria-hidden="true"></div>
+    </div>
+  </div>
+
+  <div id="fallback" class="fallback hidden">
+    <div class="panel">
+      <img class="logo" src="fsd-certs-logo.png" alt="FSD Certs cloud logo">
+      <h2>Still loading?</h2>
+      <p>If iPad Safari is being awkward, reload the shell or open the cert system directly.</p>
+      <div class="maker-mark">Jared720 Labs</div>
+      <div class="actions">
+        <button class="button" type="button" onclick="reloadApp()">Reload FSD Certs</button>
+        <a class="button secondary" href="https://script.google.com/macros/s/AKfycbzq9FTETNZwUJWHMGnMHECbu3sJ3jy3FFvGYyeaRXtkoK1GHBtqOu-GLBle_WGfoFtI/exec" target="_self" rel="noopener">Open Direct</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      'use strict';
+
+      const APP_URL = 'https://script.google.com/macros/s/AKfycbzq9FTETNZwUJWHMGnMHECbu3sJ3jy3FFvGYyeaRXtkoK1GHBtqOu-GLBle_WGfoFtI/exec';
+      const SCHEDULE_URL = 'https://docs.google.com/spreadsheets/d/1SZK6igtKPVHcBRdkA49A6AKSobkWXI_pk-De7taZP6c/edit';
+      const CALLOUTS_URL = 'https://docs.google.com/spreadsheets/d/1eP59Z3wJj2N7QlZJ2sJIh2SIWeVkgXy24ER8kG6xICc/edit?gid=1031351657#gid=1031351657';
+      const home = document.getElementById('home');
+      const frame = document.getElementById('fsdFrame');
+      const loader = document.getElementById('loader');
+      const fallback = document.getElementById('fallback');
+
+      let loaded = false;
+      let hasStarted = false;
+      let fallbackTimer = null;
+
+      function startFallbackTimer() {
+        clearTimeout(fallbackTimer);
+        fallbackTimer = setTimeout(function () {
+          if (!loaded) fallback.classList.remove('hidden');
+        }, 12000);
+      }
+
+      function hideLoader() {
+        loaded = true;
+        clearTimeout(fallbackTimer);
+        loader.classList.add('hidden');
+        fallback.classList.add('hidden');
+      }
+
+      function stopTap(event) {
+        if (!event) return;
+        event.preventDefault();
+        event.stopPropagation();
+      }
+
+
+      function resetToLauncherMenu() {
+        // iPad home-screen mode can sometimes restore the last iframe/session state.
+        // Force a clean launcher-first start so Schedule and Callouts are always available.
+        loaded = false;
+        hasStarted = false;
+        clearTimeout(fallbackTimer);
+        frame.src = 'about:blank';
+        loader.classList.add('hidden');
+        fallback.classList.add('hidden');
+        home.classList.remove('hidden');
+      }
+
+      function goDirect(url) {
+        // iPad home-screen apps handle button-driven navigation more reliably
+        // than normal anchor tags. This keeps Schedule/Callouts behaving like
+        // the Certificate Portal button instead of doing nothing on some iPads.
+        try {
+          window.location.assign(url);
+        } catch (err) {
+          window.location.href = url;
+        }
+      }
+
+      window.openCerts = function openCerts(event) {
+        stopTap(event);
+        home.classList.add('hidden');
+        fallback.classList.add('hidden');
+        loader.classList.remove('hidden');
+        loaded = false;
+
+        if (!hasStarted) {
+          frame.src = APP_URL + '?shell=ipad&v=V6.3c36v';
+          hasStarted = true;
+        }
+
+        startFallbackTimer();
+      };
+
+
+
+      window.openSchedule = function openSchedule(event) {
+        stopTap(event);
+        goDirect(SCHEDULE_URL);
+      };
+
+      window.openCallouts = function openCallouts(event) {
+        stopTap(event);
+        goDirect(CALLOUTS_URL);
+      };
+
+      window.showHome = function showHome() {
+        loader.classList.add('hidden');
+        fallback.classList.add('hidden');
+        home.classList.remove('hidden');
+      };
+
+      window.reloadApp = function reloadApp() {
+        home.classList.add('hidden');
+        fallback.classList.add('hidden');
+        loader.classList.remove('hidden');
+        loaded = false;
+        frame.src = APP_URL + '?shell=ipad&reload=' + Date.now();
+        startFallbackTimer();
+      };
+
+      frame.addEventListener('load', function () {
+        if (!hasStarted) return;
+        setTimeout(hideLoader, 250);
+      });
+
+      window.addEventListener('pageshow', function () {
+        resetToLauncherMenu();
+      });
+
+      // Run once immediately as well, in case iPad restored an old app-shell state.
+      resetToLauncherMenu();
+
+      document.addEventListener('gesturestart', function (event) {
+        event.preventDefault();
+      });
+    }());
+  </script>
+</body>
+</html>
