@@ -181,8 +181,11 @@
       box-shadow: 0 16px 34px rgba(69,10,10,.26), inset 0 1px 0 rgba(255,255,255,.50);
     }
 
-    .button:active {
-      transform: scale(.985);
+    .button:active,
+    .button.pressed {
+      transform: translateY(2px) scale(.982);
+      box-shadow: 0 8px 18px rgba(69,10,10,.22), inset 0 2px 8px rgba(0,0,0,.08);
+      filter: brightness(.97);
     }
 
     .button.secondary {
@@ -360,8 +363,8 @@
 </head>
 <body>
   <!--
-    Fire Safety Direct - FSD Certs V6.3c36u iPad App Shell Mode
-    Uses iPad-safe button handlers for Certs, Schedule and Callouts while keeping the full-screen Certs app shell.
+    Fire Safety Direct - FSD Certs V6.3c36y iPad Home Stay In App Shell Fix
+    Forces menu-first launch and gives iPad standalone-mode buttons proper touch feedback and reliable tap handling.
     Cert engine remains on V6.3c36o unless patched separately.
     App shell mark: Jared720 Labs
   -->
@@ -376,9 +379,9 @@
         <h1>FSD Certs</h1>
         <p class="subtitle">Fire Safety Direct’s online certificates, engineer reporting, schedule, and callout launcher.</p>
         <div class="actions">
-          <button class="button" type="button" onclick="openCerts(event)">Open Certificate Portal</button>
-          <button class="button secondary" type="button" onclick="openSchedule(event)">Open FSD Schedule</button>
-          <button class="button third" type="button" onclick="openCallouts(event)">Callouts</button>
+          <button id="btnCerts" class="button" type="button" data-action="certs">Open Certificate Portal</button>
+          <button id="btnSchedule" class="button secondary" type="button" data-action="schedule">Open FSD Schedule</button>
+          <button id="btnCallouts" class="button third" type="button" data-action="callouts">Callouts</button>
         </div>
         <div class="maker-mark">Built by Jared720 Labs</div>
       </section>
@@ -387,7 +390,7 @@
 
   <section class="screen app-shell" aria-label="FSD Certs App Shell">
     <div class="top-safe-fill"></div>
-    <button class="mini-home" type="button" onclick="showHome()">⌂ Menu</button>
+    <button id="btnMiniHome" class="mini-home" type="button">⌂ Menu</button>
     <iframe
       id="fsdFrame"
       title="FSD Certs"
@@ -414,7 +417,7 @@
       <p>If iPad Safari is being awkward, reload the shell or open the cert system directly.</p>
       <div class="maker-mark">Jared720 Labs</div>
       <div class="actions">
-        <button class="button" type="button" onclick="reloadApp()">Reload FSD Certs</button>
+        <button id="btnReload" class="button" type="button">Reload FSD Certs</button>
         <a class="button secondary" href="https://script.google.com/macros/s/AKfycbzq9FTETNZwUJWHMGnMHECbu3sJ3jy3FFvGYyeaRXtkoK1GHBtqOu-GLBle_WGfoFtI/exec" target="_self" rel="noopener">Open Direct</a>
       </div>
     </div>
@@ -456,6 +459,19 @@
         event.stopPropagation();
       }
 
+
+      function resetToLauncherMenu() {
+        // iPad home-screen mode can sometimes restore the last iframe/session state.
+        // Force a clean launcher-first start so Schedule and Callouts are always available.
+        loaded = false;
+        hasStarted = false;
+        clearTimeout(fallbackTimer);
+        frame.src = 'about:blank';
+        loader.classList.add('hidden');
+        fallback.classList.add('hidden');
+        home.classList.remove('hidden');
+      }
+
       function goDirect(url) {
         // iPad home-screen apps handle button-driven navigation more reliably
         // than normal anchor tags. This keeps Schedule/Callouts behaving like
@@ -467,6 +483,94 @@
         }
       }
 
+
+      function pressButton(button) {
+        if (!button) return;
+        button.classList.add('pressed');
+      }
+
+      function releaseButton(button) {
+        if (!button) return;
+        setTimeout(function () {
+          button.classList.remove('pressed');
+        }, 120);
+      }
+
+      function handleLauncherAction(action, event) {
+        stopTap(event);
+        if (action === 'certs') {
+          window.openCerts(event);
+          return;
+        }
+        if (action === 'schedule') {
+          window.openSchedule(event);
+          return;
+        }
+        if (action === 'callouts') {
+          window.openCallouts(event);
+          return;
+        }
+        if (action === 'reload') {
+          window.reloadApp();
+        }
+      }
+
+      function bindTapButton(button, action) {
+        if (!button) return;
+
+        button.addEventListener('touchstart', function () {
+          pressButton(button);
+        }, { passive: true });
+
+        button.addEventListener('touchend', function (event) {
+          releaseButton(button);
+          handleLauncherAction(action, event);
+        }, { passive: false });
+
+        button.addEventListener('touchcancel', function () {
+          releaseButton(button);
+        }, { passive: true });
+
+        button.addEventListener('pointerdown', function () {
+          pressButton(button);
+        });
+
+        button.addEventListener('pointerup', function () {
+          releaseButton(button);
+        });
+
+        button.addEventListener('pointerleave', function () {
+          releaseButton(button);
+        });
+
+        button.addEventListener('click', function (event) {
+          handleLauncherAction(action, event);
+        });
+      }
+
+      function bindButtons() {
+        bindTapButton(document.getElementById('btnCerts'), 'certs');
+        bindTapButton(document.getElementById('btnSchedule'), 'schedule');
+        bindTapButton(document.getElementById('btnCallouts'), 'callouts');
+
+        const miniHome = document.getElementById('btnMiniHome');
+        if (miniHome) {
+          miniHome.addEventListener('click', function (event) {
+            stopTap(event);
+            window.showHome(true);
+          });
+          miniHome.addEventListener('touchend', function (event) {
+            stopTap(event);
+            window.showHome(true);
+          }, { passive: false });
+        }
+
+        const reload = document.getElementById('btnReload');
+        if (reload) {
+          bindTapButton(reload, 'reload');
+        }
+      }
+
       window.openCerts = function openCerts(event) {
         stopTap(event);
         home.classList.add('hidden');
@@ -475,7 +579,7 @@
         loaded = false;
 
         if (!hasStarted) {
-          frame.src = APP_URL + '?shell=ipad&v=V6.3c36u';
+          frame.src = APP_URL + '?shell=ipad&v=V6.3c36y';
           hasStarted = true;
         }
 
@@ -494,10 +598,16 @@
         goDirect(CALLOUTS_URL);
       };
 
-      window.showHome = function showHome() {
+      window.showHome = function showHome(resetFrame) {
         loader.classList.add('hidden');
         fallback.classList.add('hidden');
         home.classList.remove('hidden');
+        if (resetFrame) {
+          loaded = false;
+          hasStarted = false;
+          clearTimeout(fallbackTimer);
+          frame.src = 'about:blank';
+        }
       };
 
       window.reloadApp = function reloadApp() {
@@ -512,6 +622,23 @@
       frame.addEventListener('load', function () {
         if (!hasStarted) return;
         setTimeout(hideLoader, 250);
+      });
+
+      bindButtons();
+
+      window.addEventListener('pageshow', function () {
+        resetToLauncherMenu();
+      });
+
+      // Run once immediately as well, in case iPad restored an old app-shell state.
+      resetToLauncherMenu();
+
+
+      window.addEventListener('message', function (event) {
+        var data = event && event.data ? event.data : null;
+        if (data && data.type === 'FSD_CERTS_HOME') {
+          window.showHome(true);
+        }
       });
 
       document.addEventListener('gesturestart', function (event) {
