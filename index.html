@@ -2,238 +2,264 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>FSD Certificate Portal</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-
-  <meta name="apple-mobile-web-app-title" content="FSD Cert Portal">
-  <meta name="application-name" content="FSD Certificate Portal">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="theme-color" content="#0e5f83">
+  <meta name="apple-mobile-web-app-title" content="FSD Certs">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="theme-color" content="#991b1b">
+  <meta name="format-detection" content="telephone=no">
+  <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
+  <meta http-equiv="Pragma" content="no-cache">
 
-  <link rel="apple-touch-icon" sizes="180x180" href="fsd-icon.png">
-  <link rel="icon" type="image/png" href="fsd-icon.png">
-  <link rel="manifest" href="manifest.webmanifest">
+  <title>FSD Certs</title>
+
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="icon" href="apple-touch-icon.png">
 
   <style>
-    * {
-      box-sizing: border-box;
+    :root {
+      --fsd-red: #991b1b;
+      --fsd-red-bright: #dc2626;
+      --fsd-dark: #111827;
+      --safe-top: env(safe-area-inset-top, 0px);
+      --safe-right: env(safe-area-inset-right, 0px);
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+      --safe-left: env(safe-area-inset-left, 0px);
+    }
+
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      min-height: 100%;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background: #ffffff;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+      -webkit-text-size-adjust: 100%;
       -webkit-tap-highlight-color: transparent;
     }
 
     body {
-      margin: 0;
-      min-height: 100vh;
-      font-family: Arial, Helvetica, sans-serif;
-      background:
-        radial-gradient(circle at 50% 0%, rgba(255,255,255,0.95), rgba(255,255,255,0.18) 28%, transparent 48%),
-        linear-gradient(145deg, #c9f4ff 0%, #55b9d7 42%, #0e5f83 100%);
-      color: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 28px;
+      position: fixed;
+      inset: 0;
+      overscroll-behavior: none;
+      touch-action: manipulation;
     }
 
     .shell {
-      width: 100%;
-      max-width: 560px;
-      text-align: center;
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      height: 100dvh;
+      background: #ffffff;
+      overflow: hidden;
     }
 
-    .badge {
-      display: inline-flex;
+    .top-safe-fill {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: var(--safe-top);
+      background: linear-gradient(135deg, var(--fsd-red-bright), var(--fsd-red));
+      z-index: 5;
+      pointer-events: none;
+    }
+
+    iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+      background: #ffffff;
+      display: block;
+    }
+
+    .loader,
+    .fallback {
+      position: fixed;
+      inset: 0;
+      display: flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
-      margin-bottom: 18px;
-      padding: 9px 16px;
-      border-radius: 999px;
-      background: rgba(255, 255, 255, 0.28);
-      border: 1px solid rgba(255, 255, 255, 0.38);
-      color: #07324a;
-      font-size: 13px;
-      font-weight: 800;
-      letter-spacing: 0.3px;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+      padding: calc(22px + var(--safe-top)) calc(22px + var(--safe-right)) calc(22px + var(--safe-bottom)) calc(22px + var(--safe-left));
+      box-sizing: border-box;
+      background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+      color: var(--fsd-dark);
+      z-index: 10;
+      transition: opacity .18s ease, visibility .18s ease;
     }
 
-    .card {
-      width: 100%;
+    .loader.hidden,
+    .fallback.hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .panel {
+      width: min(420px, 100%);
       text-align: center;
-      background:
-        linear-gradient(180deg, rgba(255,255,255,0.42), rgba(255,255,255,0.18));
-      border: 1px solid rgba(255,255,255,0.46);
-      border-radius: 34px;
-      padding: 38px 30px 30px;
-      box-shadow:
-        0 28px 80px rgba(0, 60, 90, 0.28),
-        inset 0 1px 0 rgba(255,255,255,0.50);
-      backdrop-filter: blur(18px);
     }
 
-    .icon-wrap {
-      width: 178px;
-      height: 178px;
-      margin: 0 auto 24px;
-      padding: 10px;
-      border-radius: 44px;
-      background: linear-gradient(145deg, rgba(255,255,255,0.72), rgba(255,255,255,0.18));
-      box-shadow:
-        0 18px 42px rgba(0, 60, 90, 0.28),
-        inset 0 1px 0 rgba(255,255,255,0.70);
-    }
-
-    img {
-      width: 158px;
-      height: 158px;
-      border-radius: 36px;
-      object-fit: cover;
-      display: block;
-      box-shadow: 0 12px 30px rgba(0, 60, 90, 0.28);
-      background: #0b1f3a;
+    .logo {
+      width: 86px;
+      height: 86px;
+      border-radius: 24px;
+      margin: 0 auto 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, var(--fsd-red-bright), var(--fsd-red));
+      color: #ffffff;
+      font-weight: 950;
+      font-size: 28px;
+      letter-spacing: -.04em;
+      box-shadow: 0 18px 44px rgba(153, 27, 27, .28);
     }
 
     h1 {
       margin: 0;
-      font-size: 38px;
-      line-height: 1.08;
-      letter-spacing: -1px;
-      font-weight: 900;
-      color: #062b40;
-      text-shadow: 0 1px 0 rgba(255,255,255,0.45);
+      font-size: 30px;
+      line-height: 1.05;
+      color: var(--fsd-red);
+      letter-spacing: -.04em;
     }
 
-    .subtitle {
-      margin: 14px auto 30px;
-      max-width: 430px;
-      color: rgba(6, 43, 64, 0.82);
-      line-height: 1.45;
-      font-size: 17px;
-      font-weight: 600;
+    p {
+      margin: 10px 0 0;
+      color: #4b5563;
+      font-size: 15px;
+      line-height: 1.4;
     }
 
-    .button {
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    .spinner {
+      width: 34px;
+      height: 34px;
+      border: 4px solid #fee2e2;
+      border-top-color: var(--fsd-red);
+      border-radius: 999px;
+      margin: 22px auto 0;
+      animation: spin .85s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .actions {
+      display: grid;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    button,
+    a.button {
+      display: block;
       width: 100%;
-      min-height: 64px;
-      padding: 18px 20px;
-      border-radius: 20px;
-      background: linear-gradient(180deg, #e3153c, #b90927);
-      color: white;
+      min-height: 52px;
+      box-sizing: border-box;
+      border: 0;
+      border-radius: 16px;
+      padding: 15px 16px;
+      background: linear-gradient(135deg, var(--fsd-red-bright), var(--fsd-red));
+      color: #ffffff;
+      font: inherit;
+      font-weight: 850;
       text-decoration: none;
-      font-weight: 900;
-      font-size: 20px;
-      letter-spacing: 0.2px;
-      box-shadow:
-        0 16px 34px rgba(200,16,46,0.32),
-        inset 0 1px 0 rgba(255,255,255,0.28);
-      border: 1px solid rgba(255,255,255,0.20);
+      cursor: pointer;
+      box-shadow: 0 10px 24px rgba(153, 27, 27, .2);
     }
 
-    .button:active {
-      transform: scale(0.98);
-    }
-
-    .secondary {
-      margin-top: 14px;
-      background: linear-gradient(180deg, rgba(6,43,64,0.84), rgba(6,43,64,0.68));
-      box-shadow: 0 12px 26px rgba(0, 60, 90, 0.18);
-      border: 1px solid rgba(255,255,255,0.28);
-      font-size: 17px;
-      min-height: 56px;
-    }
-
-    .third {
-      margin-top: 14px;
-      background: linear-gradient(180deg, #147ea1, #075676);
-      box-shadow: 0 12px 26px rgba(0, 60, 90, 0.22);
-      border: 1px solid rgba(255,255,255,0.28);
-      font-size: 17px;
-      min-height: 56px;
-    }
-
-    .small {
-      margin-top: 24px;
-      font-size: 13px;
-      color: rgba(6, 43, 64, 0.68);
-      font-weight: 700;
-    }
-
-    @media (max-width: 520px) {
-      body {
-        padding: 18px;
-      }
-
-      .card {
-        padding: 30px 20px 24px;
-        border-radius: 28px;
-      }
-
-      h1 {
-        font-size: 31px;
-      }
-
-      .icon-wrap {
-        width: 150px;
-        height: 150px;
-        border-radius: 36px;
-      }
-
-      img {
-        width: 130px;
-        height: 130px;
-        border-radius: 30px;
-      }
-
-      .subtitle {
-        font-size: 16px;
-      }
+    button.secondary,
+    a.button.secondary {
+      background: linear-gradient(135deg, #4b5563, #1f2937);
+      box-shadow: 0 10px 24px rgba(17, 24, 39, .16);
     }
   </style>
 </head>
-
 <body>
-  <main class="shell">
-    <div class="badge">✅ Fire Safety Direct · Service Certificate Portal</div>
+  <!--
+    Fire Safety Direct - FSD Certs V6.3c36p iPad App Shell Mode
+    Replace the GitHub Pages index.html with this file.
+    Keep the Apps Script engine on V6.3c36o unless you choose to patch it separately.
+  -->
 
-    <section class="card">
-      <div class="icon-wrap">
-        <img src="fsd-icon.png" alt="FSD Certificate Portal icon">
+  <div class="shell" aria-label="FSD Certs App Shell">
+    <div class="top-safe-fill"></div>
+    <iframe
+      id="fsdFrame"
+      title="FSD Certs"
+      src="https://script.google.com/macros/s/AKfycbzq9FTETNZwUJWHMGnMHECbu3sJ3jy3FFvGYyeaRXtkoK1GHBtqOu-GLBle_WGfoFtI/exec?shell=ipad"
+      allow="camera *; microphone *; clipboard-read *; clipboard-write *; fullscreen *"
+      referrerpolicy="no-referrer-when-downgrade">
+    </iframe>
+  </div>
+
+  <div id="loader" class="loader">
+    <div class="panel">
+      <div class="logo">FSD</div>
+      <h1>FSD Certs</h1>
+      <p>Loading the certificate system…</p>
+      <div class="spinner" aria-hidden="true"></div>
+    </div>
+  </div>
+
+  <div id="fallback" class="fallback hidden">
+    <div class="panel">
+      <div class="logo">FSD</div>
+      <h1>Still loading?</h1>
+      <p>If iPad Safari is being awkward, reload the shell or open the cert system directly.</p>
+      <div class="actions">
+        <button type="button" onclick="reloadApp()">Reload FSD Certs</button>
+        <a class="button secondary" href="https://script.google.com/macros/s/AKfycbzq9FTETNZwUJWHMGnMHECbu3sJ3jy3FFvGYyeaRXtkoK1GHBtqOu-GLBle_WGfoFtI/exec" target="_self" rel="noopener">Open Direct</a>
       </div>
+    </div>
+  </div>
 
-      <h1>FSD Certificate Portal</h1>
+  <script>
+    (function () {
+      'use strict';
 
-      <p class="subtitle">
-        Fire Safety Direct’s online service certificates and engineer reporting system.
-      </p>
+      const APP_URL = 'https://script.google.com/macros/s/AKfycbzq9FTETNZwUJWHMGnMHECbu3sJ3jy3FFvGYyeaRXtkoK1GHBtqOu-GLBle_WGfoFtI/exec';
+      const frame = document.getElementById('fsdFrame');
+      const loader = document.getElementById('loader');
+      const fallback = document.getElementById('fallback');
 
-      <a
-        class="button"
-        href="https://script.google.com/macros/s/AKfycbzq9FTETNZwUJWHMGnMHECbu3sJ3jy3FFvGYyeaRXtkoK1GHBtqOu-GLBle_WGfoFtI/exec"
-      >
-        Open Certificate Portal
-      </a>
+      let loaded = false;
 
-      <a
-        class="button secondary"
-        href="https://docs.google.com/spreadsheets/d/1SZK6igtKPVHcBRdkA49A6AKSobkWXI_pk-De7taZP6c/edit"
-      >
-        Open FSD Schedule
-      </a>
+      function hideLoader() {
+        loaded = true;
+        loader.classList.add('hidden');
+      }
 
-      <a
-        class="button third"
-        href="https://docs.google.com/spreadsheets/d/1eP59Z3wJj2N7QlZJ2sJIh2SIWeVkgXy24ER8kG6xICc/edit?gid=1031351657#gid=1031351657"
-      >
-        Callouts
-      </a>
+      function showFallback() {
+        if (!loaded) fallback.classList.remove('hidden');
+      }
 
-      <div class="small">FSD Certificate Portal · Built by Jared720 Labs</div>
-    </section>
-  </main>
+      window.reloadApp = function reloadApp() {
+        fallback.classList.add('hidden');
+        loader.classList.remove('hidden');
+        loaded = false;
+        frame.src = APP_URL + '?shell=ipad&reload=' + Date.now();
+        setTimeout(showFallback, 12000);
+      };
+
+      frame.addEventListener('load', function () {
+        setTimeout(hideLoader, 250);
+      });
+
+      setTimeout(showFallback, 12000);
+
+      document.addEventListener('gesturestart', function (event) {
+        event.preventDefault();
+      });
+    }());
+  </script>
 </body>
 </html>
