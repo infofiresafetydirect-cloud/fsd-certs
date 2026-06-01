@@ -555,6 +555,7 @@
       const offlineStatus = document.getElementById('offlineStatus');
       const OFFLINE_W_QUEUE_KEY = 'fsd_esr_offline_w_queue_v6_3c37u';
       const OFFLINE_W_OLD_QUEUE_KEY = 'fsd_esr_offline_w_queue_v6_3c37s';
+      const OFFLINE_W_WINDOW_NAME_PREFIX = 'FSD_OFFLINE_W_PAYLOAD::';
       let pendingShellAction = null;
       let shellActionTimer = null;
 
@@ -680,7 +681,18 @@
         loaded = false;
         hasStarted = true;
         pendingShellAction = { action: action, item: item, attempts: 0 };
-        frame.src = APP_URL + '?page=esr&shell=ipad&offlineAction=' + encodeURIComponent(action) + '&v=V6.3c37u&ts=' + Date.now();
+        try {
+          // V6.3c37x: postMessage can arrive before Apps Script finishes loading the W page.
+          // window.name survives the iframe navigation, so the W page can read the offline
+          // draft/sync payload immediately on load. postMessage remains as a fallback.
+          frame.name = OFFLINE_W_WINDOW_NAME_PREFIX + JSON.stringify({
+            type: action === 'sync' ? 'FSD_OFFLINE_W_SYNC' : 'FSD_OFFLINE_W_RESTORE',
+            source: 'fsd-certs-shell',
+            item: item,
+            ts: Date.now()
+          });
+        } catch (err) {}
+        frame.src = APP_URL + '?page=esr&shell=ipad&offlineAction=' + encodeURIComponent(action) + '&v=V6.3c37x&ts=' + Date.now();
         startFallbackTimer();
       }
 
@@ -756,6 +768,7 @@
         loaded = false;
 
         if (!hasStarted) {
+          try { frame.name = ''; } catch (err) {}
           frame.src = APP_URL + '?shell=ipad&v=V6.3c36u';
           hasStarted = true;
         }
@@ -789,6 +802,7 @@
         fallback.classList.add('hidden');
         loader.classList.remove('hidden');
         loaded = false;
+        try { frame.name = ''; } catch (err) {}
         frame.src = APP_URL + '?shell=ipad&reload=' + Date.now();
         startFallbackTimer();
       };
