@@ -72,7 +72,7 @@
       padding: calc(24px + var(--safe-top)) calc(22px + var(--safe-right)) calc(24px + var(--safe-bottom)) calc(22px + var(--safe-left));
       background:
         radial-gradient(circle at 50% 0%, rgba(255,255,255,0.96), rgba(255,255,255,0.12) 30%, transparent 52%),
-        linear-gradient(145deg, #ef4444 0%, #b91c1c 45%, #7f1d1d 100%);
+        linear-gradient(145deg, #ef4444 0%, #b91c1c 42%, #581c87 100%);
       color: #ffffff;
       z-index: 30;
       transition: transform .2s ease, opacity .2s ease, visibility .2s ease;
@@ -210,6 +210,41 @@
       font-weight: 850;
       letter-spacing: .05em;
       text-transform: uppercase;
+    }
+
+
+
+    .shell-version-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 12px;
+      padding: 7px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.24);
+      border: 1px solid rgba(255,255,255,.35);
+      color: #ffffff;
+      font-size: 12px;
+      font-weight: 950;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+    }
+
+    .fixed-version-badge {
+      position: fixed;
+      right: calc(10px + var(--safe-right));
+      bottom: calc(10px + var(--safe-bottom));
+      z-index: 60;
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: rgba(17, 24, 39, .72);
+      border: 1px solid rgba(255,255,255,.22);
+      color: rgba(255,255,255,.92);
+      font-size: 11px;
+      font-weight: 950;
+      letter-spacing: .03em;
+      pointer-events: none;
+      backdrop-filter: blur(8px);
     }
 
     .app-shell {
@@ -464,7 +499,7 @@
 </head>
 <body>
   <!--
-    Fire Safety Direct - FSD Certs V6.3c36u iPad App Shell Mode
+    Fire Safety Direct - FSD Certs V6.3c37y iPad App Shell Mode
     Uses iPad-safe button handlers for Certs, Schedule and Callouts while keeping the full-screen Certs app shell.
     Cert engine remains on V6.3c36o unless patched separately.
     App shell mark: Jared720 Labs
@@ -486,6 +521,7 @@
           <button class="button secondary" type="button" onclick="openOfflineDrafts(event)">Offline Drafts</button>
         </div>
         <div class="maker-mark">Built by Jared720 Labs</div>
+        <div class="shell-version-badge">App Shell V6.3c37y · handshake test</div>
       </section>
     </main>
   </section>
@@ -692,7 +728,7 @@
             ts: Date.now()
           });
         } catch (err) {}
-        frame.src = APP_URL + '?page=esr&shell=ipad&offlineAction=' + encodeURIComponent(action) + '&v=V6.3c37x&ts=' + Date.now();
+        frame.src = APP_URL + '?page=esr&shell=ipad&offlineAction=' + encodeURIComponent(action) + '&v=V6.3c37y&ts=' + Date.now();
         startFallbackTimer();
       }
 
@@ -827,6 +863,24 @@
 
         if (msg.source !== 'fsd-certs-esr') return;
 
+        if (msg.type === 'FSD_OFFLINE_W_REQUEST' && pendingShellAction) {
+          // V6.3c37y: Apps Script may put the real W page inside a Google
+          // wrapper frame. Sending to frame.contentWindow can hit the wrapper
+          // instead of the report. Reply directly to the requesting window so
+          // Resume/Sync receives the actual saved draft payload.
+          const type = pendingShellAction.action === 'sync' ? 'FSD_OFFLINE_W_SYNC' : 'FSD_OFFLINE_W_RESTORE';
+          try {
+            event.source.postMessage({
+              type: type,
+              source: 'fsd-certs-shell',
+              item: pendingShellAction.item,
+              ts: Date.now()
+            }, '*');
+            setOfflineStatus('Sending offline W draft to report...');
+          } catch (err) {}
+          return;
+        }
+
         if (msg.type === 'FSD_OFFLINE_W_SAVE' && msg.item) {
           upsertOfflineItem(msg.item);
           return;
@@ -871,5 +925,6 @@
       });
     }());
   </script>
+  <div class="fixed-version-badge">V6.3c37y · handshake test</div>
 </body>
 </html>
