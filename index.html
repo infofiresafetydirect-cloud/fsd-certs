@@ -72,7 +72,7 @@
       padding: calc(24px + var(--safe-top)) calc(22px + var(--safe-right)) calc(24px + var(--safe-bottom)) calc(22px + var(--safe-left));
       background:
         radial-gradient(circle at 50% 0%, rgba(255,255,255,0.96), rgba(255,255,255,0.12) 30%, transparent 52%),
-        linear-gradient(145deg, #ef4444 0%, #b91c1c 42%, #581c87 100%);
+        linear-gradient(145deg, #ef4444 0%, #991b1b 42%, #0f766e 100%);
       color: #ffffff;
       z-index: 30;
       transition: transform .2s ease, opacity .2s ease, visibility .2s ease;
@@ -728,7 +728,8 @@
             ts: Date.now()
           });
         } catch (err) {}
-        frame.src = APP_URL + '?page=esr&shell=ipad&offlineAction=' + encodeURIComponent(action) + '&v=V6.3c37y&ts=' + Date.now();
+        const offlineIdParam = item && item.offlineId ? '&offlineId=' + encodeURIComponent(item.offlineId) : '';
+        frame.src = APP_URL + '?page=esr&shell=ipad&offlineAction=' + encodeURIComponent(action) + offlineIdParam + '&v=V6.3c37z&ts=' + Date.now();
         startFallbackTimer();
       }
 
@@ -925,6 +926,6 @@
       });
     }());
   </script>
-  <div class="fixed-version-badge">V6.3c37y · handshake test</div>
+  <div class="fixed-version-badge">V6.3c37z · offlineId bridge</div>
 </body>
 </html>
