@@ -181,11 +181,8 @@
       box-shadow: 0 16px 34px rgba(69,10,10,.26), inset 0 1px 0 rgba(255,255,255,.50);
     }
 
-    .button:active,
-    .button.pressed {
-      transform: translateY(2px) scale(.982);
-      box-shadow: 0 8px 18px rgba(69,10,10,.22), inset 0 2px 8px rgba(0,0,0,.08);
-      filter: brightness(.97);
+    .button:active {
+      transform: scale(.985);
     }
 
     .button.secondary {
@@ -331,6 +328,110 @@
       to { transform: rotate(360deg); }
     }
 
+
+    .offline-screen {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: calc(24px + var(--safe-top)) calc(22px + var(--safe-right)) calc(24px + var(--safe-bottom)) calc(22px + var(--safe-left));
+      background: linear-gradient(145deg, #7f1d1d 0%, #991b1b 50%, #111827 100%);
+      color: #ffffff;
+      z-index: 35;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .offline-screen.active {
+      display: flex;
+    }
+
+    .offline-card {
+      width: min(680px, 100%);
+      max-height: calc(100dvh - 48px - var(--safe-top) - var(--safe-bottom));
+      overflow-y: auto;
+      border-radius: 30px;
+      padding: 22px;
+      background: rgba(255,255,255,.14);
+      border: 1px solid rgba(255,255,255,.25);
+      box-shadow: 0 24px 70px rgba(0,0,0,.30), inset 0 1px 0 rgba(255,255,255,.20);
+      backdrop-filter: blur(14px);
+    }
+
+    .offline-title {
+      margin: 0 0 6px;
+      font-size: 30px;
+      font-weight: 950;
+      letter-spacing: -.03em;
+    }
+
+    .offline-help {
+      margin: 0 0 16px;
+      color: rgba(255,255,255,.84);
+      line-height: 1.38;
+      font-weight: 650;
+    }
+
+    .offline-list {
+      display: grid;
+      gap: 12px;
+      margin: 16px 0;
+    }
+
+    .offline-item {
+      padding: 14px;
+      border-radius: 18px;
+      background: rgba(255,255,255,.94);
+      color: #111827;
+      text-align: left;
+      box-shadow: 0 12px 28px rgba(0,0,0,.18);
+    }
+
+    .offline-item strong {
+      display: block;
+      color: var(--fsd-red-dark);
+      font-size: 17px;
+      margin-bottom: 4px;
+    }
+
+    .offline-meta {
+      color: #4b5563;
+      font-size: 13px;
+      line-height: 1.35;
+      font-weight: 650;
+      margin-bottom: 12px;
+    }
+
+    .offline-actions {
+      display: grid;
+      gap: 8px;
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .offline-actions .button {
+      min-height: 44px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      font-size: 14px;
+      box-shadow: none;
+    }
+
+    .offline-empty {
+      padding: 18px;
+      border-radius: 18px;
+      background: rgba(255,255,255,.13);
+      border: 1px dashed rgba(255,255,255,.32);
+      color: rgba(255,255,255,.90);
+      font-weight: 750;
+    }
+
+    .offline-status {
+      min-height: 22px;
+      margin-top: 12px;
+      color: rgba(255,255,255,.90);
+      font-size: 14px;
+      font-weight: 750;
+    }
+
     @media (max-width: 520px) {
       .home {
         padding: calc(18px + var(--safe-top)) calc(16px + var(--safe-right)) calc(18px + var(--safe-bottom)) calc(16px + var(--safe-left));
@@ -363,8 +464,8 @@
 </head>
 <body>
   <!--
-    Fire Safety Direct - FSD Certs V6.3c36z iPad Home Message Top + Fallback Fix
-    Forces menu-first launch and gives iPad standalone-mode buttons proper touch feedback and reliable tap handling.
+    Fire Safety Direct - FSD Certs V6.3c36u iPad App Shell Mode
+    Uses iPad-safe button handlers for Certs, Schedule and Callouts while keeping the full-screen Certs app shell.
     Cert engine remains on V6.3c36o unless patched separately.
     App shell mark: Jared720 Labs
   -->
@@ -379,18 +480,33 @@
         <h1>FSD Certs</h1>
         <p class="subtitle">Fire Safety Direct’s online certificates, engineer reporting, schedule, and callout launcher.</p>
         <div class="actions">
-          <button id="btnCerts" class="button" type="button" data-action="certs">Open Certificate Portal</button>
-          <button id="btnSchedule" class="button secondary" type="button" data-action="schedule">Open FSD Schedule</button>
-          <button id="btnCallouts" class="button third" type="button" data-action="callouts">Callouts</button>
+          <button class="button" type="button" onclick="openCerts(event)">Open Certificate Portal</button>
+          <button class="button secondary" type="button" onclick="openSchedule(event)">Open FSD Schedule</button>
+          <button class="button third" type="button" onclick="openCallouts(event)">Callouts</button>
+          <button class="button secondary" type="button" onclick="openOfflineDrafts(event)">Offline Drafts</button>
         </div>
         <div class="maker-mark">Built by Jared720 Labs</div>
       </section>
     </main>
   </section>
 
+  <section id="offlineDrafts" class="screen offline-screen" aria-label="Offline Drafts">
+    <main class="offline-card">
+      <h2 class="offline-title">Offline Drafts</h2>
+      <p class="offline-help">Drafts saved without signal live on this iPad until they are synced to the FSD cloud Draft Manager.</p>
+      <div id="offlineList" class="offline-list"></div>
+      <div class="actions">
+        <button class="button" type="button" onclick="refreshOfflineDrafts(event)">Refresh Offline Drafts</button>
+        <button class="button secondary" type="button" onclick="closeOfflineDrafts(event)">Back to Menu</button>
+      </div>
+      <div id="offlineStatus" class="offline-status"></div>
+      <div class="maker-mark">Jared720 Labs</div>
+    </main>
+  </section>
+
   <section class="screen app-shell" aria-label="FSD Certs App Shell">
     <div class="top-safe-fill"></div>
-    <button id="btnMiniHome" class="mini-home" type="button">⌂ Menu</button>
+    <button class="mini-home" type="button" onclick="showHome()">⌂ Menu</button>
     <iframe
       id="fsdFrame"
       title="FSD Certs"
@@ -417,7 +533,7 @@
       <p>If iPad Safari is being awkward, reload the shell or open the cert system directly.</p>
       <div class="maker-mark">Jared720 Labs</div>
       <div class="actions">
-        <button id="btnReload" class="button" type="button">Reload FSD Certs</button>
+        <button class="button" type="button" onclick="reloadApp()">Reload FSD Certs</button>
         <a class="button secondary" href="https://script.google.com/macros/s/AKfycbzq9FTETNZwUJWHMGnMHECbu3sJ3jy3FFvGYyeaRXtkoK1GHBtqOu-GLBle_WGfoFtI/exec" target="_self" rel="noopener">Open Direct</a>
       </div>
     </div>
@@ -434,6 +550,13 @@
       const frame = document.getElementById('fsdFrame');
       const loader = document.getElementById('loader');
       const fallback = document.getElementById('fallback');
+      const offlineDrafts = document.getElementById('offlineDrafts');
+      const offlineList = document.getElementById('offlineList');
+      const offlineStatus = document.getElementById('offlineStatus');
+      const OFFLINE_W_QUEUE_KEY = 'fsd_esr_offline_w_queue_v6_3c37u';
+      const OFFLINE_W_OLD_QUEUE_KEY = 'fsd_esr_offline_w_queue_v6_3c37s';
+      let pendingShellAction = null;
+      let shellActionTimer = null;
 
       let loaded = false;
       let hasStarted = false;
@@ -459,19 +582,6 @@
         event.stopPropagation();
       }
 
-
-      function resetToLauncherMenu() {
-        // iPad home-screen mode can sometimes restore the last iframe/session state.
-        // Force a clean launcher-first start so Schedule and Callouts are always available.
-        loaded = false;
-        hasStarted = false;
-        clearTimeout(fallbackTimer);
-        frame.src = 'about:blank';
-        loader.classList.add('hidden');
-        fallback.classList.add('hidden');
-        home.classList.remove('hidden');
-      }
-
       function goDirect(url) {
         // iPad home-screen apps handle button-driven navigation more reliably
         // than normal anchor tags. This keeps Schedule/Callouts behaving like
@@ -484,92 +594,159 @@
       }
 
 
-      function pressButton(button) {
-        if (!button) return;
-        button.classList.add('pressed');
+      function setOfflineStatus(message) {
+        if (offlineStatus) offlineStatus.textContent = message || '';
       }
 
-      function releaseButton(button) {
-        if (!button) return;
-        setTimeout(function () {
-          button.classList.remove('pressed');
-        }, 120);
+      function readOfflineQueue() {
+        let rows = [];
+        try {
+          rows = JSON.parse(localStorage.getItem(OFFLINE_W_QUEUE_KEY) || '[]') || [];
+        } catch (err) {
+          rows = [];
+        }
+        try {
+          const oldRows = JSON.parse(localStorage.getItem(OFFLINE_W_OLD_QUEUE_KEY) || '[]') || [];
+          if (Array.isArray(oldRows) && oldRows.length) {
+            const seen = new Set(rows.map(function(row) { return row && row.offlineId; }));
+            oldRows.forEach(function(row) {
+              if (row && row.offlineId && !seen.has(row.offlineId)) rows.push(row);
+            });
+            localStorage.setItem(OFFLINE_W_QUEUE_KEY, JSON.stringify(rows));
+          }
+        } catch (err) {}
+        return Array.isArray(rows) ? rows.filter(function(row) { return row && row.offlineId && row.draft; }) : [];
       }
 
-      function handleLauncherAction(action, event) {
+      function writeOfflineQueue(rows) {
+        localStorage.setItem(OFFLINE_W_QUEUE_KEY, JSON.stringify(rows || []));
+      }
+
+      function upsertOfflineItem(item) {
+        if (!item || !item.offlineId) return;
+        const rows = readOfflineQueue();
+        const idx = rows.findIndex(function(row) { return row && row.offlineId === item.offlineId; });
+        if (idx >= 0) rows[idx] = item; else rows.push(item);
+        writeOfflineQueue(rows);
+      }
+
+      function removeOfflineItem(offlineId) {
+        if (!offlineId) return;
+        writeOfflineQueue(readOfflineQueue().filter(function(row) { return row && row.offlineId !== offlineId; }));
+      }
+
+      function escapeHtml(value) {
+        return String(value || '').replace(/[&<>"']/g, function(ch) {
+          return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[ch];
+        });
+      }
+
+      function renderOfflineDrafts() {
+        const rows = readOfflineQueue().sort(function(a, b) { return String(b.savedAt || '').localeCompare(String(a.savedAt || '')); });
+        if (!offlineList) return;
+        if (!rows.length) {
+          offlineList.innerHTML = '<div class="offline-empty">No offline W drafts found on this iPad.</div>';
+          setOfflineStatus('');
+          return;
+        }
+
+        offlineList.innerHTML = rows.map(function(row, index) {
+          const title = row.draftName || row.customer || 'Offline W draft';
+          const saved = row.savedAt ? new Date(row.savedAt).toLocaleString() : 'not known';
+          const meta = [
+            row.engineer ? 'Engineer: ' + row.engineer : '',
+            row.customer ? 'Customer: ' + row.customer : '',
+            row.site ? 'Site: ' + row.site : '',
+            'Saved: ' + saved
+          ].filter(Boolean).join(' · ');
+          return '<article class="offline-item">' +
+            '<strong>' + escapeHtml(title) + '</strong>' +
+            '<div class="offline-meta">' + escapeHtml(meta) + '</div>' +
+            '<div class="offline-actions">' +
+              '<button class="button" type="button" onclick="resumeOfflineW(' + index + ')">Resume</button>' +
+              '<button class="button secondary" type="button" onclick="syncOfflineW(' + index + ')">Sync</button>' +
+              '<button class="button third" type="button" onclick="deleteOfflineW(' + index + ')">Delete</button>' +
+            '</div>' +
+          '</article>';
+        }).join('');
+        setOfflineStatus(rows.length + ' offline W draft' + (rows.length === 1 ? '' : 's') + ' waiting on this iPad.');
+      }
+
+      function loadEsrForShellAction(action, item) {
+        home.classList.add('hidden');
+        offlineDrafts.classList.remove('active');
+        fallback.classList.add('hidden');
+        loader.classList.remove('hidden');
+        loaded = false;
+        hasStarted = true;
+        pendingShellAction = { action: action, item: item, attempts: 0 };
+        frame.src = APP_URL + '?page=esr&shell=ipad&offlineAction=' + encodeURIComponent(action) + '&v=V6.3c37u&ts=' + Date.now();
+        startFallbackTimer();
+      }
+
+      function sendPendingShellAction() {
+        if (!pendingShellAction || !frame || !frame.contentWindow) return;
+        pendingShellAction.attempts += 1;
+        const type = pendingShellAction.action === 'sync' ? 'FSD_OFFLINE_W_SYNC' : 'FSD_OFFLINE_W_RESTORE';
+        try {
+          frame.contentWindow.postMessage({
+            type: type,
+            source: 'fsd-certs-shell',
+            item: pendingShellAction.item,
+            ts: Date.now()
+          }, '*');
+        } catch (err) {}
+        if (pendingShellAction && pendingShellAction.attempts < 8) {
+          clearTimeout(shellActionTimer);
+          shellActionTimer = setTimeout(sendPendingShellAction, 900);
+        }
+      }
+
+      window.openOfflineDrafts = function openOfflineDrafts(event) {
         stopTap(event);
-        if (action === 'certs') {
-          window.openCerts(event);
+        loader.classList.add('hidden');
+        fallback.classList.add('hidden');
+        home.classList.add('hidden');
+        offlineDrafts.classList.add('active');
+        renderOfflineDrafts();
+      };
+
+      window.closeOfflineDrafts = function closeOfflineDrafts(event) {
+        stopTap(event);
+        offlineDrafts.classList.remove('active');
+        home.classList.remove('hidden');
+      };
+
+      window.refreshOfflineDrafts = function refreshOfflineDrafts(event) {
+        stopTap(event);
+        renderOfflineDrafts();
+      };
+
+      window.resumeOfflineW = function resumeOfflineW(index) {
+        const item = readOfflineQueue()[index];
+        if (!item) return renderOfflineDrafts();
+        setOfflineStatus('Opening offline W draft...');
+        loadEsrForShellAction('resume', item);
+      };
+
+      window.syncOfflineW = function syncOfflineW(index) {
+        const item = readOfflineQueue()[index];
+        if (!item) return renderOfflineDrafts();
+        if (!navigator.onLine) {
+          setOfflineStatus('Still offline. Connect the iPad to the internet, then press Sync again.');
           return;
         }
-        if (action === 'schedule') {
-          window.openSchedule(event);
-          return;
-        }
-        if (action === 'callouts') {
-          window.openCallouts(event);
-          return;
-        }
-        if (action === 'reload') {
-          window.reloadApp();
-        }
-      }
+        setOfflineStatus('Opening W sync bridge...');
+        loadEsrForShellAction('sync', item);
+      };
 
-      function bindTapButton(button, action) {
-        if (!button) return;
-
-        button.addEventListener('touchstart', function () {
-          pressButton(button);
-        }, { passive: true });
-
-        button.addEventListener('touchend', function (event) {
-          releaseButton(button);
-          handleLauncherAction(action, event);
-        }, { passive: false });
-
-        button.addEventListener('touchcancel', function () {
-          releaseButton(button);
-        }, { passive: true });
-
-        button.addEventListener('pointerdown', function () {
-          pressButton(button);
-        });
-
-        button.addEventListener('pointerup', function () {
-          releaseButton(button);
-        });
-
-        button.addEventListener('pointerleave', function () {
-          releaseButton(button);
-        });
-
-        button.addEventListener('click', function (event) {
-          handleLauncherAction(action, event);
-        });
-      }
-
-      function bindButtons() {
-        bindTapButton(document.getElementById('btnCerts'), 'certs');
-        bindTapButton(document.getElementById('btnSchedule'), 'schedule');
-        bindTapButton(document.getElementById('btnCallouts'), 'callouts');
-
-        const miniHome = document.getElementById('btnMiniHome');
-        if (miniHome) {
-          miniHome.addEventListener('click', function (event) {
-            stopTap(event);
-            window.showHome(true);
-          });
-          miniHome.addEventListener('touchend', function (event) {
-            stopTap(event);
-            window.showHome(true);
-          }, { passive: false });
-        }
-
-        const reload = document.getElementById('btnReload');
-        if (reload) {
-          bindTapButton(reload, 'reload');
-        }
-      }
+      window.deleteOfflineW = function deleteOfflineW(index) {
+        const item = readOfflineQueue()[index];
+        if (!item) return renderOfflineDrafts();
+        if (!confirm('Delete this offline W draft from this iPad?')) return;
+        removeOfflineItem(item.offlineId);
+        renderOfflineDrafts();
+      };
 
       window.openCerts = function openCerts(event) {
         stopTap(event);
@@ -579,7 +756,7 @@
         loaded = false;
 
         if (!hasStarted) {
-          frame.src = APP_URL + '?shell=ipad&v=V6.3c36z';
+          frame.src = APP_URL + '?shell=ipad&v=V6.3c36u';
           hasStarted = true;
         }
 
@@ -598,16 +775,13 @@
         goDirect(CALLOUTS_URL);
       };
 
-      window.showHome = function showHome(resetFrame) {
+      window.showHome = function showHome() {
+        pendingShellAction = null;
+        clearTimeout(shellActionTimer);
         loader.classList.add('hidden');
         fallback.classList.add('hidden');
+        offlineDrafts.classList.remove('active');
         home.classList.remove('hidden');
-        if (resetFrame) {
-          loaded = false;
-          hasStarted = false;
-          clearTimeout(fallbackTimer);
-          frame.src = 'about:blank';
-        }
       };
 
       window.reloadApp = function reloadApp() {
@@ -622,25 +796,59 @@
       frame.addEventListener('load', function () {
         if (!hasStarted) return;
         setTimeout(hideLoader, 250);
+        if (pendingShellAction) {
+          clearTimeout(shellActionTimer);
+          shellActionTimer = setTimeout(sendPendingShellAction, 900);
+        }
       });
 
-      bindButtons();
+      window.addEventListener('message', function(event) {
+        const msg = event && event.data ? event.data : null;
+        if (!msg || typeof msg !== 'object') return;
 
-      window.addEventListener('pageshow', function () {
-        resetToLauncherMenu();
-      });
+        if (msg.type === 'FSD_CERTS_HOME') {
+          window.showHome();
+          return;
+        }
 
-      // Run once immediately as well, in case iPad restored an old app-shell state.
-      resetToLauncherMenu();
+        if (msg.source !== 'fsd-certs-esr') return;
 
+        if (msg.type === 'FSD_OFFLINE_W_SAVE' && msg.item) {
+          upsertOfflineItem(msg.item);
+          return;
+        }
 
-      window.addEventListener('message', function (event) {
-        var data = event && event.data ? event.data : null;
-        var type = '';
-        if (typeof data === 'string') type = data;
-        if (data && typeof data === 'object' && data.type) type = data.type;
-        if (type === 'FSD_CERTS_HOME' || type === 'fsd-certs-home') {
-          window.showHome(true);
+        if (msg.type === 'FSD_OFFLINE_W_DELETE' && msg.item && msg.item.offlineId) {
+          removeOfflineItem(msg.item.offlineId);
+          return;
+        }
+
+        if (msg.type === 'FSD_OFFLINE_W_QUEUE' && msg.item && Array.isArray(msg.item.rows)) {
+          msg.item.rows.forEach(upsertOfflineItem);
+          return;
+        }
+
+        if (msg.type === 'FSD_OFFLINE_W_SYNC_RESULT') {
+          clearTimeout(shellActionTimer);
+          const result = msg.item || {};
+          if (result.ok && result.offlineId) {
+            removeOfflineItem(result.offlineId);
+            pendingShellAction = null;
+            loader.classList.add('hidden');
+            fallback.classList.add('hidden');
+            home.classList.add('hidden');
+            offlineDrafts.classList.add('active');
+            renderOfflineDrafts();
+            setOfflineStatus('Synced to cloud drafts: ' + (result.draftName || result.draftId || 'W draft') + '. Open Draft Manager to resume it.');
+          } else {
+            pendingShellAction = null;
+            loader.classList.add('hidden');
+            fallback.classList.add('hidden');
+            home.classList.add('hidden');
+            offlineDrafts.classList.add('active');
+            renderOfflineDrafts();
+            setOfflineStatus('Sync failed, so the iPad copy has been kept: ' + (result.error || 'Cloud save did not confirm.'));
+          }
         }
       });
 
