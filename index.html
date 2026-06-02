@@ -179,7 +179,7 @@
     .offline-item { padding: 14px; border-radius: 18px; background: rgba(255,255,255,.94); color: #111827; text-align: left; box-shadow: 0 12px 28px rgba(0,0,0,.18); }
     .offline-item strong { display: block; color: var(--fsd-blue-dark); font-size: 17px; margin-bottom: 4px; }
     .offline-meta { color: #4b5563; font-size: 13px; line-height: 1.35; font-weight: 650; margin-bottom: 12px; }
-    .offline-actions { display: grid; gap: 8px; grid-template-columns: repeat(2, 1fr); }
+    .offline-actions { display: grid; gap: 8px; grid-template-columns: repeat(3, 1fr); }
     .offline-actions .button { min-height: 44px; padding: 10px 12px; border-radius: 14px; font-size: 14px; box-shadow: none; }
     .offline-empty { padding: 18px; border-radius: 18px; background: rgba(255,255,255,.13); border: 1px dashed rgba(255,255,255,.32); color: rgba(255,255,255,.90); font-weight: 750; }
     .offline-status { min-height: 22px; margin-top: 12px; color: rgba(255,255,255,.90); font-size: 14px; font-weight: 750; }
@@ -216,8 +216,8 @@
 </head>
 <body>
   <!--
-    Fire Safety Direct - FSD Certs V6.3c40 Compact iPad App Shell Mode
-    Compact polished glass iPad launcher. Cert engine and draft behaviour remain unchanged from V6.3c38.
+    Fire Safety Direct - FSD Certs V6.3c41 Offline W Editor Trial
+    Compact polished glass iPad launcher with Offline W Editor trial.
     App shell mark: Jared720 Labs
   -->
 
@@ -243,7 +243,7 @@
         </div>
       </section>
       <div class="maker-mark">Built by Jared720 Labs</div>
-      <div class="shell-version-badge">App Shell V6.3c40 · compact iPad shell</div>
+      <div class="shell-version-badge">App Shell V6.3c41 · offline W editor trial</div>
     </main>
   </section>
 
@@ -251,7 +251,7 @@
     <main class="offline-card">
       <h2 class="offline-title">Offline Drafts</h2>
       <p class="offline-help">Drafts saved without signal live on this iPad until they are synced to the FSD cloud Draft Manager.</p>
-      <p class="offline-help"><strong>Safe workflow:</strong> press <strong>Sync</strong> first, then open the draft from Cloud Drafts. Offline resume is paused for now so we do not open blank W forms.</p>
+      <p class="offline-help"><strong>GoFormz-style trial:</strong> W drafts can now be edited locally on this iPad before syncing. Sync first when signal returns, then open from Cloud Drafts to generate the PDF.</p>
       <div id="offlineList" class="offline-list"></div>
       <div class="actions">
         <button class="button" type="button" onclick="refreshOfflineDrafts(event)"><span class="tile-icon">🔄</span><span>Refresh Offline Drafts</span></button>
@@ -259,6 +259,64 @@
       </div>
       <div id="offlineStatus" class="offline-status"></div>
       <div class="maker-mark">Jared720 Labs</div>
+    </main>
+  </section>
+
+
+
+  <section id="offlineEditor" class="screen offline-editor-screen" aria-label="Edit Offline W Draft">
+    <main class="editor-card">
+      <div class="editor-head">
+        <div>
+          <h2>Edit Offline W Draft</h2>
+          <p class="editor-note">This is the local iPad editor. It works without signal for saved W drafts. Live customer/material lookups and PDF creation still happen after syncing to Cloud Drafts.</p>
+        </div>
+        <button class="mini-home" style="position:static;" type="button" onclick="closeOfflineEditor(event)">Back</button>
+      </div>
+      <form id="offlineWEditorForm" onsubmit="saveOfflineEditor(event)">
+        <div class="editor-grid">
+          <input type="hidden" id="editOfflineId">
+          <div class="editor-field editor-wide"><label>Draft name</label><input id="editDraftName"></div>
+          <div class="editor-field"><label>Engineer</label><input id="editEngineer"></div>
+          <div class="editor-field"><label>Service date</label><input id="editServiceDate" type="date"></div>
+          <div class="editor-field editor-wide"><label>Customer / Invoice address</label><textarea id="editCustomer"></textarea></div>
+          <div class="editor-field editor-wide"><label>Site address</label><textarea id="editSite"></textarea></div>
+          <div class="editor-field"><label>Sage account no.</label><input id="editSageAccountNo"></div>
+          <div class="editor-field"><label>Customer order no.</label><input id="editCustomerOrderNo"></div>
+          <div class="editor-field"><label>Our ref no.</label><input id="editOurRefNo"></div>
+          <div class="editor-field"><label>Asbestos register available?</label><select id="editAsbestosAvailable"><option value=""></option><option>Yes</option><option>No</option><option>N/A</option></select></div>
+          <div class="editor-section-title">Work description</div>
+          <div class="editor-field editor-wide"><label>Material / work description</label><textarea id="editWorkDescription"></textarea></div>
+          <div class="editor-field"><label>Qty</label><input id="editWorkDescriptionQty"></div>
+          <div class="editor-field"><label>Unit price</label><input id="editWorkDescriptionUnitPrice" type="number" step="0.01"></div>
+          <div class="editor-field"><label>Total price</label><input id="editWorkDescriptionTotalPrice" type="number" step="0.01"></div>
+          <div class="editor-field"><label>Charge note</label><input id="editWorkDescriptionChargeNote"></div>
+          <div class="editor-section-title">Materials / work rows</div>
+          <div id="editorMaterials" class="editor-materials"></div>
+          <div class="editor-wide"><button class="button secondary" style="min-height:48px;font-size:16px;" type="button" onclick="addEditorMaterialRow()">+ Add material/work row</button></div>
+          <div class="editor-section-title">Comments and time</div>
+          <div class="editor-field editor-wide"><label>Comments</label><textarea id="editComments"></textarea></div>
+          <div class="editor-field"><label>Travel time</label><input id="editTravelTime"></div>
+          <div class="editor-field"><label>Arrival time</label><input id="editArrivalTime"></div>
+          <div class="editor-field"><label>Time on site</label><input id="editTimeOnSite"></div>
+          <div class="editor-field"><label>Carriage</label><input id="editCarriage" type="number" step="0.01"></div>
+          <div class="editor-section-title">Costs</div>
+          <div class="editor-field"><label>Manual subtotal override</label><select id="editManualSubtotalOverride"><option value=""></option><option value="YES">YES</option><option value="NO">NO</option></select></div>
+          <div class="editor-field"><label>Manual subtotal</label><input id="editManualSubtotal" type="number" step="0.01"></div>
+          <div class="editor-field"><label>Sub total</label><input id="editSubTotal" type="number" step="0.01"></div>
+          <div class="editor-field"><label>VAT</label><input id="editVat" type="number" step="0.01"></div>
+          <div class="editor-field"><label>Total</label><input id="editTotal" type="number" step="0.01"></div>
+          <div class="editor-section-title">Customer sign-off text</div>
+          <div class="editor-field"><label>Customer name</label><input id="editCustomerName"></div>
+          <div class="editor-field"><label>Customer date</label><input id="editCustomerDate" type="date"></div>
+        </div>
+        <div class="editor-actions">
+          <button class="button" type="submit">Save Offline</button>
+          <button class="button secondary" type="button" onclick="saveOfflineEditorAndSync(event)">Save + Sync</button>
+          <button class="button third" type="button" onclick="closeOfflineEditor(event)">Back to Offline Drafts</button>
+        </div>
+        <div id="editorStatus" class="editor-status"></div>
+      </form>
     </main>
   </section>
 
@@ -311,6 +369,8 @@
       const offlineDrafts = document.getElementById('offlineDrafts');
       const offlineList = document.getElementById('offlineList');
       const offlineStatus = document.getElementById('offlineStatus');
+      const offlineEditor = document.getElementById('offlineEditor');
+      const editorStatus = document.getElementById('editorStatus');
       const OFFLINE_W_QUEUE_KEY = 'fsd_esr_offline_w_queue_v6_3c37u';
       const OFFLINE_W_OLD_QUEUE_KEY = 'fsd_esr_offline_w_queue_v6_3c37s';
       const OFFLINE_W_WINDOW_NAME_PREFIX = 'FSD_OFFLINE_W_PAYLOAD::';
@@ -422,13 +482,199 @@
             '<strong>' + escapeHtml(title) + '</strong>' +
             '<div class="offline-meta">' + escapeHtml(meta) + '</div>' +
             '<div class="offline-actions">' +
-              '<button class="button" type="button" onclick="syncOfflineW(' + index + ')">Sync to Cloud</button>' +
-              '<button class="button third" type="button" onclick="deleteOfflineW(' + index + ')">Delete</button>' +
+              '<button class="button secondary" type="button" onclick="editOfflineWById(' + JSON.stringify(row.offlineId) + ')">Edit Offline</button>' +
+              '<button class="button" type="button" onclick="syncOfflineWById(' + JSON.stringify(row.offlineId) + ')">Sync to Cloud</button>' +
+              '<button class="button third" type="button" onclick="deleteOfflineWById(' + JSON.stringify(row.offlineId) + ')">Delete</button>' +
             '</div>' +
           '</article>';
         }).join('');
         setOfflineStatus(rows.length + ' offline W draft' + (rows.length === 1 ? '' : 's') + ' waiting on this iPad.');
       }
+
+
+
+      function getOfflineItemById(offlineId) {
+        return readOfflineQueue().find(function(row) { return row && row.offlineId === offlineId; }) || null;
+      }
+
+      function setEditorStatus(message) {
+        if (editorStatus) editorStatus.textContent = message || '';
+      }
+
+      function setEditValue(id, value) {
+        const el = document.getElementById(id);
+        if (el) el.value = value == null ? '' : value;
+      }
+
+      function getEditValue(id) {
+        const el = document.getElementById(id);
+        return el ? el.value : '';
+      }
+
+      function renderEditorMaterials(materials) {
+        const wrap = document.getElementById('editorMaterials');
+        if (!wrap) return;
+        wrap.innerHTML = '';
+        (Array.isArray(materials) && materials.length ? materials : [{}, {}]).forEach(function(item) {
+          addEditorMaterialRow(item || {});
+        });
+      }
+
+      window.addEditorMaterialRow = function addEditorMaterialRow(item) {
+        const wrap = document.getElementById('editorMaterials');
+        if (!wrap) return;
+        item = item || {};
+        const row = document.createElement('div');
+        row.className = 'editor-material-row';
+        row.innerHTML =
+          '<div class="editor-field"><label>Qty</label><input class="emQty" value="' + escapeHtml(item.qty || '') + '"></div>' +
+          '<div class="editor-field desc"><label>Description</label><input class="emDescription" value="' + escapeHtml(item.description || item.searchText || '') + '"></div>' +
+          '<div class="editor-field"><label>Unit</label><input class="emUnitPrice" type="number" step="0.01" value="' + escapeHtml(item.unitPrice || '') + '"></div>' +
+          '<div class="editor-field"><label>Total</label><input class="emTotalPrice" type="number" step="0.01" value="' + escapeHtml(item.totalPrice || '') + '"></div>' +
+          '<button class="button third" style="min-height:42px;font-size:18px;padding:6px;" type="button" onclick="this.closest(\'.editor-material-row\').remove()">×</button>';
+        wrap.appendChild(row);
+      };
+
+      function collectEditorMaterials() {
+        return Array.from(document.querySelectorAll('.editor-material-row')).map(function(row) {
+          return {
+            qty: (row.querySelector('.emQty') || {}).value || '',
+            searchText: '',
+            description: (row.querySelector('.emDescription') || {}).value || '',
+            unitPrice: (row.querySelector('.emUnitPrice') || {}).value || '',
+            totalPrice: (row.querySelector('.emTotalPrice') || {}).value || ''
+          };
+        }).filter(function(item) { return item.qty || item.description || item.unitPrice || item.totalPrice; });
+      }
+
+      function openEditorForItem(item) {
+        if (!item || !item.draft) return;
+        const d = item.draft || {};
+        document.getElementById('editOfflineId').value = item.offlineId || '';
+        setEditValue('editDraftName', item.draftName || d.draftName || buildEditorDraftName(d));
+        setEditValue('editEngineer', d.engineer || item.engineer || '');
+        setEditValue('editServiceDate', d.serviceDate || '');
+        setEditValue('editCustomer', d.customer || item.customer || '');
+        setEditValue('editSite', d.site || item.site || '');
+        setEditValue('editSageAccountNo', d.sageAccountNo || '');
+        setEditValue('editCustomerOrderNo', d.customerOrderNo || '');
+        setEditValue('editOurRefNo', d.ourRefNo || '');
+        setEditValue('editAsbestosAvailable', d.asbestosAvailable || '');
+        setEditValue('editWorkDescription', d.workDescription || '');
+        setEditValue('editWorkDescriptionQty', d.workDescriptionQty || '');
+        setEditValue('editWorkDescriptionUnitPrice', d.workDescriptionUnitPrice || '');
+        setEditValue('editWorkDescriptionTotalPrice', d.workDescriptionTotalPrice || '');
+        setEditValue('editWorkDescriptionChargeNote', d.workDescriptionChargeNote || '');
+        renderEditorMaterials(d.materials || []);
+        setEditValue('editComments', d.comments || '');
+        setEditValue('editTravelTime', d.travelTime || '');
+        setEditValue('editArrivalTime', d.arrivalTime || '');
+        setEditValue('editTimeOnSite', d.timeOnSite || '');
+        setEditValue('editCarriage', d.carriage || '');
+        setEditValue('editManualSubtotalOverride', d.manualSubtotalOverride || '');
+        setEditValue('editManualSubtotal', d.manualSubtotal || '');
+        setEditValue('editSubTotal', d.subTotal || '');
+        setEditValue('editVat', d.vat || '');
+        setEditValue('editTotal', d.total || '');
+        setEditValue('editCustomerName', d.customerName || '');
+        setEditValue('editCustomerDate', d.customerDate || '');
+        home.classList.add('hidden');
+        offlineDrafts.classList.remove('active');
+        loader.classList.add('hidden');
+        fallback.classList.add('hidden');
+        offlineEditor.classList.add('active');
+        setEditorStatus('Editing offline W draft saved on this iPad. Press Save Offline before leaving.');
+      }
+
+      function firstLine(value) {
+        return String(value || '').split(/\r?\n/).map(function(x) { return x.trim(); }).filter(Boolean)[0] || '';
+      }
+
+      function buildEditorDraftName(draft) {
+        const name = firstLine(draft.customer || draft.site) || 'Engineer Service Report';
+        const date = draft.serviceDate || new Date().toISOString().slice(0, 10);
+        return name + ' - ' + date;
+      }
+
+      function saveEditorToQueue() {
+        const offlineId = getEditValue('editOfflineId');
+        const item = getOfflineItemById(offlineId);
+        if (!item || !item.draft) {
+          setEditorStatus('Could not find this offline draft on the iPad. Go back and refresh Offline Drafts.');
+          return null;
+        }
+        const d = Object.assign({}, item.draft);
+        d.savedAt = new Date().toISOString();
+        d.engineer = getEditValue('editEngineer');
+        d.serviceDate = getEditValue('editServiceDate');
+        d.customer = getEditValue('editCustomer');
+        d.site = getEditValue('editSite');
+        d.sageAccountNo = getEditValue('editSageAccountNo');
+        d.customerOrderNo = getEditValue('editCustomerOrderNo');
+        d.ourRefNo = getEditValue('editOurRefNo');
+        d.asbestosAvailable = getEditValue('editAsbestosAvailable');
+        d.workDescription = getEditValue('editWorkDescription');
+        d.workDescriptionQty = getEditValue('editWorkDescriptionQty');
+        d.workDescriptionUnitPrice = getEditValue('editWorkDescriptionUnitPrice');
+        d.workDescriptionTotalPrice = getEditValue('editWorkDescriptionTotalPrice');
+        d.workDescriptionChargeNote = getEditValue('editWorkDescriptionChargeNote');
+        d.materials = collectEditorMaterials();
+        d.comments = getEditValue('editComments');
+        d.travelTime = getEditValue('editTravelTime');
+        d.arrivalTime = getEditValue('editArrivalTime');
+        d.timeOnSite = getEditValue('editTimeOnSite');
+        d.carriage = getEditValue('editCarriage');
+        d.manualSubtotalOverride = getEditValue('editManualSubtotalOverride');
+        d.manualSubtotal = getEditValue('editManualSubtotal');
+        d.subTotal = getEditValue('editSubTotal');
+        d.vat = getEditValue('editVat');
+        d.total = getEditValue('editTotal');
+        d.customerName = getEditValue('editCustomerName');
+        d.customerDate = getEditValue('editCustomerDate');
+        const draftName = getEditValue('editDraftName') || item.draftName || buildEditorDraftName(d);
+        const updated = Object.assign({}, item, {
+          draft: d,
+          draftName: draftName,
+          engineer: d.engineer || '',
+          customer: d.customer || '',
+          site: d.site || '',
+          savedAt: d.savedAt
+        });
+        upsertOfflineItem(updated);
+        setEditorStatus('Saved offline on this iPad at ' + new Date().toLocaleTimeString() + '.');
+        return updated;
+      }
+
+      window.editOfflineWById = function editOfflineWById(offlineId) {
+        const item = getOfflineItemById(offlineId);
+        if (!item) return renderOfflineDrafts();
+        openEditorForItem(item);
+      };
+
+      window.closeOfflineEditor = function closeOfflineEditor(event) {
+        stopTap(event);
+        offlineEditor.classList.remove('active');
+        offlineDrafts.classList.add('active');
+        renderOfflineDrafts();
+      };
+
+      window.saveOfflineEditor = function saveOfflineEditor(event) {
+        stopTap(event);
+        saveEditorToQueue();
+      };
+
+      window.saveOfflineEditorAndSync = function saveOfflineEditorAndSync(event) {
+        stopTap(event);
+        const updated = saveEditorToQueue();
+        if (!updated) return;
+        if (!navigator.onLine) {
+          setEditorStatus('Saved offline. Still no internet, so it cannot sync yet.');
+          return;
+        }
+        offlineEditor.classList.remove('active');
+        setOfflineStatus('Saved offline changes. Syncing to Cloud Drafts...');
+        loadEsrForShellAction('sync', updated);
+      };
 
       function loadEsrForShellAction(action, item) {
         home.classList.add('hidden');
@@ -450,7 +696,7 @@
           });
         } catch (err) {}
         const offlineIdParam = item && item.offlineId ? '&offlineId=' + encodeURIComponent(item.offlineId) : '';
-        frame.src = APP_URL + '?page=esr&shell=ipad&offlineAction=' + encodeURIComponent(action) + offlineIdParam + '&v=V6.3c40&ts=' + Date.now();
+        frame.src = APP_URL + '?page=esr&shell=ipad&offlineAction=' + encodeURIComponent(action) + offlineIdParam + '&v=V6.3c41&ts=' + Date.now();
         startFallbackTimer();
       }
 
@@ -484,6 +730,7 @@
       window.closeOfflineDrafts = function closeOfflineDrafts(event) {
         stopTap(event);
         offlineDrafts.classList.remove('active');
+        if (offlineEditor) offlineEditor.classList.remove('active');
         home.classList.remove('hidden');
       };
 
@@ -492,27 +739,38 @@
         renderOfflineDrafts();
       };
 
-      window.resumeOfflineW = function resumeOfflineW(index) {
-        setOfflineStatus('Offline Resume is paused. Press Sync to Cloud, then open the draft from Cloud Drafts.');
-      };
-
-      window.syncOfflineW = function syncOfflineW(index) {
-        const item = readOfflineQueue()[index];
+      window.syncOfflineWById = function syncOfflineWById(offlineId) {
+        const item = getOfflineItemById(offlineId);
         if (!item) return renderOfflineDrafts();
         if (!navigator.onLine) {
-          setOfflineStatus('Still offline. Connect the iPad to the internet, then press Sync again.');
+          setOfflineStatus('Still offline. You can press Edit Offline and carry on working, or connect the iPad and press Sync again.');
           return;
         }
         setOfflineStatus('Syncing offline W draft to Cloud Drafts. Keep this screen open...');
         loadEsrForShellAction('sync', item);
       };
 
-      window.deleteOfflineW = function deleteOfflineW(index) {
-        const item = readOfflineQueue()[index];
+      window.deleteOfflineWById = function deleteOfflineWById(offlineId) {
+        const item = getOfflineItemById(offlineId);
         if (!item) return renderOfflineDrafts();
         if (!confirm('Delete this offline W draft from this iPad?')) return;
         removeOfflineItem(item.offlineId);
         renderOfflineDrafts();
+      };
+
+      window.resumeOfflineW = function resumeOfflineW(index) {
+        const item = readOfflineQueue()[index];
+        if (item) openEditorForItem(item);
+      };
+
+      window.syncOfflineW = function syncOfflineW(index) {
+        const item = readOfflineQueue()[index];
+        if (item) window.syncOfflineWById(item.offlineId);
+      };
+
+      window.deleteOfflineW = function deleteOfflineW(index) {
+        const item = readOfflineQueue()[index];
+        if (item) window.deleteOfflineWById(item.offlineId);
       };
 
       window.openCerts = function openCerts(event) {
@@ -524,7 +782,7 @@
 
         if (!hasStarted) {
           try { frame.name = ''; } catch (err) {}
-          frame.src = APP_URL + '?shell=ipad&v=V6.3c40';
+          frame.src = APP_URL + '?shell=ipad&v=V6.3c41';
           hasStarted = true;
         }
 
@@ -549,6 +807,7 @@
         loader.classList.add('hidden');
         fallback.classList.add('hidden');
         offlineDrafts.classList.remove('active');
+        if (offlineEditor) offlineEditor.classList.remove('active');
         home.classList.remove('hidden');
       };
 
@@ -650,6 +909,6 @@
       });
     }());
   </script>
-  <div class="fixed-version-badge">V6.3c39 · iPad glass shell</div>
+  <div class="fixed-version-badge">V6.3c41 · offline W editor</div>
 </body>
 </html>
