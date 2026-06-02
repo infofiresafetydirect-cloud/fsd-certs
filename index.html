@@ -282,7 +282,7 @@
         </div>
       </section>
       <div class="maker-mark">Built by Jared720 Labs</div>
-      <div class="shell-version-badge">App Shell V6.3c48 · portal reset after sync</div>
+      <div class="shell-version-badge">App Shell V6.3c51 · cloud drafts stay in app</div>
     </main>
   </section>
 
@@ -800,7 +800,7 @@
           frame.name = OFFLINE_W_WINDOW_NAME_PREFIX + JSON.stringify(shellPayload);
         } catch (err) {}
         const offlineIdParam = item && item.offlineId ? '&offlineId=' + encodeURIComponent(item.offlineId) : '';
-        frame.src = APP_URL + '?page=esr&offlineBridge=1&shell=ipad&offlineAction=' + encodeURIComponent(action) + offlineIdParam + '&v=V6.3c48&ts=' + Date.now();
+        frame.src = APP_URL + '?page=esr&offlineBridge=1&shell=ipad&offlineAction=' + encodeURIComponent(action) + offlineIdParam + '&v=V6.3c51&ts=' + Date.now();
         startFallbackTimer();
       }
 
@@ -890,6 +890,28 @@
         if (item) window.deleteOfflineWById(item.offlineId);
       };
 
+      function openAppUrlInShell(url) {
+        var targetUrl = String(url || APP_URL);
+        if (targetUrl.indexOf(APP_URL) !== 0) return;
+        // Make sure resumed cloud drafts load inside the iPad app iframe, not Safari/top window.
+        if (targetUrl.indexOf('shell=') === -1) {
+          targetUrl += (targetUrl.indexOf('?') === -1 ? '?' : '&') + 'shell=ipad';
+        }
+        targetUrl += (targetUrl.indexOf('?') === -1 ? '?' : '&') + 'appShell=1&v=V6.3c51&ts=' + Date.now();
+        pendingShellAction = null;
+        clearTimeout(shellActionTimer);
+        home.classList.add('hidden');
+        offlineDrafts.classList.remove('active');
+        if (offlineEditor) offlineEditor.classList.remove('active');
+        fallback.classList.add('hidden');
+        loader.classList.remove('hidden');
+        loaded = false;
+        try { frame.name = ''; } catch (err) {}
+        frame.src = targetUrl;
+        hasStarted = true;
+        startFallbackTimer();
+      }
+
       window.openCerts = function openCerts(event) {
         stopTap(event);
         // V6.3c48: always load a fresh portal when the home button is pressed.
@@ -905,7 +927,7 @@
         loader.classList.remove('hidden');
         loaded = false;
         try { frame.name = ''; } catch (err) {}
-        frame.src = APP_URL + '?shell=ipad&v=V6.3c48&ts=' + Date.now();
+        frame.src = APP_URL + '?shell=ipad&v=V6.3c51&ts=' + Date.now();
         hasStarted = true;
         startFallbackTimer();
       };
@@ -938,7 +960,7 @@
         loader.classList.remove('hidden');
         loaded = false;
         try { frame.name = ''; } catch (err) {}
-        frame.src = APP_URL + '?shell=ipad&v=V6.3c48&reload=' + Date.now();
+        frame.src = APP_URL + '?shell=ipad&v=V6.3c51&reload=' + Date.now();
         startFallbackTimer();
       };
 
@@ -960,6 +982,11 @@
       window.addEventListener('message', function(event) {
         const msg = event && event.data ? event.data : null;
         if (!msg || typeof msg !== 'object') return;
+
+        if (msg.type === 'FSD_OPEN_IN_SHELL' && msg.url) {
+          openAppUrlInShell(msg.url);
+          return;
+        }
 
         if (msg.type === 'FSD_CERTS_HOME') {
           window.showHome();
@@ -1038,6 +1065,6 @@
       });
     }());
   </script>
-  <div class="fixed-version-badge">V6.3c48 · portal reset</div>
+  <div class="fixed-version-badge">V6.3c51 · cloud drafts</div>
 </body>
 </html>
