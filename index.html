@@ -8,7 +8,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="FSD Certs">
   <meta name="application-name" content="FSD Certs by Jared720 Labs">
-  <meta name="theme-color" content="#991b1b">
+  <meta name="theme-color" content="#0f172a">
   <meta name="format-detection" content="telephone=no">
   <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
   <meta http-equiv="Pragma" content="no-cache">
@@ -21,508 +21,229 @@
 
   <style>
     :root {
-      --fsd-red: #991b1b;
-      --fsd-red-bright: #dc2626;
-      --fsd-red-dark: #7f1d1d;
-      --fsd-dark: #111827;
+      --fsd-red: #b10f1f;
+      --fsd-red-dark: #7f0d19;
+      --fsd-blue: #0f5faa;
+      --fsd-blue-dark: #0f172a;
+      --fsd-ink: #0b1220;
+      --glass: rgba(255,255,255,.76);
+      --glass-line: rgba(255,255,255,.48);
       --safe-top: env(safe-area-inset-top, 0px);
       --safe-right: env(safe-area-inset-right, 0px);
       --safe-bottom: env(safe-area-inset-bottom, 0px);
       --safe-left: env(safe-area-inset-left, 0px);
     }
 
-    * {
-      box-sizing: border-box;
-      -webkit-tap-highlight-color: transparent;
-    }
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
-    html,
-    body {
-      width: 100%;
-      height: 100%;
-      min-height: 100%;
-      margin: 0;
-      padding: 0;
-      overflow: hidden;
-      background: #ffffff;
+    html, body {
+      width: 100%; height: 100%; min-height: 100%;
+      margin: 0; padding: 0; overflow: hidden;
+      background: #0f172a;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
       -webkit-text-size-adjust: 100%;
     }
 
-    body {
-      position: fixed;
-      inset: 0;
-      overscroll-behavior: none;
-      touch-action: manipulation;
-    }
+    body { position: fixed; inset: 0; overscroll-behavior: none; touch-action: manipulation; }
 
-    .screen {
-      position: fixed;
-      inset: 0;
-      width: 100vw;
-      height: 100vh;
-      height: 100dvh;
-      overflow: hidden;
-    }
+    .screen { position: fixed; inset: 0; width: 100vw; height: 100vh; height: 100dvh; overflow: hidden; }
 
     .home {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: calc(24px + var(--safe-top)) calc(22px + var(--safe-right)) calc(24px + var(--safe-bottom)) calc(22px + var(--safe-left));
+      display: flex; align-items: center; justify-content: center;
+      padding: calc(22px + var(--safe-top)) calc(22px + var(--safe-right)) calc(28px + var(--safe-bottom)) calc(22px + var(--safe-left));
+      color: var(--fsd-ink); z-index: 30;
       background:
-        radial-gradient(circle at 50% 0%, rgba(255,255,255,0.96), rgba(255,255,255,0.12) 30%, transparent 52%),
-        linear-gradient(145deg, #b91c1c 0%, #7f1d1d 48%, #1e3a8a 100%);
-      color: #ffffff;
-      z-index: 30;
+        radial-gradient(circle at 12% 8%, rgba(59,130,246,.42), transparent 28%),
+        radial-gradient(circle at 88% 18%, rgba(255,255,255,.28), transparent 26%),
+        radial-gradient(circle at 50% 95%, rgba(177,15,31,.32), transparent 32%),
+        linear-gradient(145deg, #111827 0%, #16355c 48%, #dbeafe 100%);
       transition: transform .2s ease, opacity .2s ease, visibility .2s ease;
     }
 
-    .home.hidden {
-      transform: translateY(-10px);
-      opacity: 0;
-      visibility: hidden;
+    .home::before {
+      content: ""; position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,.045) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px);
+      background-size: 38px 38px;
+      mask-image: radial-gradient(circle at 50% 42%, black 0%, transparent 72%);
       pointer-events: none;
     }
 
-    .home-panel {
-      width: min(560px, 100%);
-      text-align: center;
-    }
+    .home.hidden { transform: translateY(-10px); opacity: 0; visibility: hidden; pointer-events: none; }
+
+    .home-panel { width: min(700px, 100%); text-align: center; position: relative; z-index: 1; }
 
     .home-card {
-      width: 100%;
-      border-radius: 34px;
-      padding: 30px 24px 24px;
-      background: linear-gradient(180deg, rgba(255,255,255,.20), rgba(255,255,255,.10));
-      border: 1px solid rgba(255,255,255,.28);
-      box-shadow: 0 28px 80px rgba(69, 10, 10, .32), inset 0 1px 0 rgba(255,255,255,.22);
-      backdrop-filter: blur(16px);
+      width: 100%; border-radius: 28px; padding: 20px;
+      background: linear-gradient(180deg, rgba(255,255,255,.86), rgba(255,255,255,.58));
+      border: 1px solid rgba(255,255,255,.64);
+      box-shadow: 0 34px 90px rgba(2, 8, 23, .36), inset 0 1px 0 rgba(255,255,255,.85);
+      backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
     }
 
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      margin: 0 0 14px;
-      padding: 9px 16px;
-      border-radius: 999px;
-      background: rgba(255,255,255,.18);
-      border: 1px solid rgba(255,255,255,.28);
-      color: #ffffff;
-      font-size: 13px;
-      font-weight: 850;
-      letter-spacing: .02em;
+    .brand-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 16px; }
+
+    .brand-left { display: flex; align-items: center; gap: 12px; text-align: left; }
+
+    .brand-logo {
+      width: 54px; height: 54px; border-radius: 15px; object-fit: cover; display: block;
+      box-shadow: 0 12px 26px rgba(15, 95, 170, .28);
+      background: #fff;
     }
 
-    .logo-wrap {
-      width: 172px;
-      height: 172px;
-      margin: 0 auto 20px;
-      padding: 9px;
-      border-radius: 42px;
-      background: linear-gradient(145deg, rgba(255,255,255,.55), rgba(255,255,255,.16));
-      box-shadow: 0 18px 42px rgba(69,10,10,.28), inset 0 1px 0 rgba(255,255,255,.50);
-    }
+    .brand-name { font-size: 24px; line-height: .92; letter-spacing: .12em; font-weight: 950; color: #0f172a; }
+    .brand-name small { display: block; font-size: 14px; letter-spacing: .16em; margin-top: 3px; }
 
-    .logo {
-      width: 100%;
-      height: 100%;
-      border-radius: 34px;
-      object-fit: cover;
-      display: block;
-      box-shadow: 0 12px 30px rgba(69,10,10,.34);
-    }
+    .company-name { font-size: 25px; letter-spacing: -.02em; font-weight: 500; color: #0b1220; }
 
     h1 {
-      margin: 0;
-      font-size: 38px;
-      line-height: 1.06;
-      letter-spacing: -.04em;
-      font-weight: 950;
-      color: #ffffff;
-      text-shadow: 0 2px 16px rgba(0,0,0,.20);
+      margin: 0; font-size: clamp(32px, 5.6vw, 48px); line-height: 1.02;
+      letter-spacing: .08em; font-weight: 500; color: #0b1220;
+      text-shadow: 0 1px 0 rgba(255,255,255,.7);
     }
 
     .subtitle {
-      margin: 11px auto 22px;
-      max-width: 440px;
-      color: rgba(255,255,255,.88);
-      line-height: 1.42;
-      font-size: 16px;
-      font-weight: 650;
+      margin: 12px auto 18px; max-width: 560px; color: rgba(15,23,42,.80);
+      line-height: 1.35; font-size: clamp(17px, 2.8vw, 22px); font-weight: 500; letter-spacing: .02em;
     }
 
-    .actions {
-      display: grid;
-      gap: 12px;
-      margin-top: 18px;
+    .actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: 12px; }
+
+    .button, button.button {
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;
+      width: 100%; min-height: 112px; padding: 14px 12px; border: 1px solid rgba(255,255,255,.70);
+      border-radius: 22px; background: linear-gradient(180deg, rgba(255,255,255,.68), rgba(226,232,240,.48));
+      color: #0b1220; text-decoration: none; font: inherit; font-weight: 500; font-size: clamp(20px, 3.2vw, 28px);
+      letter-spacing: .05em; cursor: pointer;
+      box-shadow: 0 18px 34px rgba(15,23,42,.13), inset 0 1px 0 rgba(255,255,255,.74);
+      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
     }
 
-    .button,
-    button.button {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 100%;
-      min-height: 62px;
-      padding: 17px 18px;
-      border: 0;
-      border-radius: 20px;
-      background: linear-gradient(180deg, #ffffff, #f3f4f6);
-      color: var(--fsd-red-dark);
-      text-decoration: none;
-      font: inherit;
-      font-weight: 950;
-      font-size: 19px;
-      letter-spacing: .01em;
-      cursor: pointer;
-      box-shadow: 0 16px 34px rgba(69,10,10,.26), inset 0 1px 0 rgba(255,255,255,.50);
-    }
+    .button .tile-icon { font-size: 32px; line-height: 1; filter: drop-shadow(0 10px 14px rgba(15,95,170,.18)); }
+    .button:active { transform: scale(.982); }
+    .button.secondary, .button.third { background: linear-gradient(180deg, rgba(255,255,255,.62), rgba(219,234,254,.42)); color: #0b1220; }
 
-    .button:active {
-      transform: scale(.985);
-    }
-
-    .button.secondary {
-      min-height: 56px;
-      font-size: 17px;
-      color: #ffffff;
-      background: linear-gradient(180deg, rgba(17,24,39,.92), rgba(17,24,39,.72));
-      border: 1px solid rgba(255,255,255,.20);
-      box-shadow: 0 12px 26px rgba(17,24,39,.22);
-    }
-
-    .button.third {
-      min-height: 56px;
-      font-size: 17px;
-      color: #ffffff;
-      background: linear-gradient(180deg, #ef4444, #991b1b);
-      border: 1px solid rgba(255,255,255,.22);
-      box-shadow: 0 12px 26px rgba(69,10,10,.24);
-    }
-
-    .maker-mark {
-      margin-top: 20px;
-      color: rgba(255,255,255,.72);
-      font-size: 12px;
-      font-weight: 850;
-      letter-spacing: .05em;
-      text-transform: uppercase;
-    }
-
-
+    .maker-mark { margin-top: 16px; color: rgba(255,255,255,.82); font-size: 13px; font-weight: 700; letter-spacing: .04em; }
 
     .shell-version-badge {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      margin-top: 12px;
-      padding: 7px 12px;
-      border-radius: 999px;
-      background: rgba(255,255,255,.24);
-      border: 1px solid rgba(255,255,255,.35);
-      color: #ffffff;
-      font-size: 12px;
-      font-weight: 950;
-      letter-spacing: .04em;
-      text-transform: uppercase;
+      display: inline-flex; align-items: center; justify-content: center; margin-top: 6px; padding: 5px 10px;
+      border-radius: 999px; color: rgba(255,255,255,.88); font-size: 13px; font-weight: 700; letter-spacing: .03em;
     }
 
     .fixed-version-badge {
-      position: fixed;
-      right: calc(10px + var(--safe-right));
-      bottom: calc(10px + var(--safe-bottom));
-      z-index: 60;
-      padding: 7px 10px;
-      border-radius: 999px;
-      background: rgba(17, 24, 39, .72);
-      border: 1px solid rgba(255,255,255,.22);
-      color: rgba(255,255,255,.92);
-      font-size: 11px;
-      font-weight: 950;
-      letter-spacing: .03em;
-      pointer-events: none;
-      backdrop-filter: blur(8px);
+      position: fixed; right: calc(10px + var(--safe-right)); bottom: calc(10px + var(--safe-bottom)); z-index: 60;
+      padding: 7px 10px; border-radius: 999px; background: rgba(15, 23, 42, .70); border: 1px solid rgba(255,255,255,.24);
+      color: rgba(255,255,255,.92); font-size: 11px; font-weight: 950; letter-spacing: .03em; pointer-events: none; backdrop-filter: blur(8px);
     }
 
-    .app-shell {
-      background: #ffffff;
-      z-index: 10;
-    }
-
-    .top-safe-fill {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: var(--safe-top);
-      background: linear-gradient(135deg, var(--fsd-red-bright), var(--fsd-red));
-      z-index: 15;
-      pointer-events: none;
-    }
-
-    iframe {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      border: 0;
-      background: #ffffff;
-      display: block;
-    }
+    .app-shell { background: #ffffff; z-index: 10; }
+    .top-safe-fill { position: fixed; top: 0; left: 0; right: 0; height: var(--safe-top); background: #0f172a; z-index: 15; pointer-events: none; }
+    iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; background: #ffffff; display: block; }
 
     .mini-home {
-      position: fixed;
-      top: calc(8px + var(--safe-top));
-      left: calc(8px + var(--safe-left));
-      z-index: 25;
-      border: 0;
-      border-radius: 999px;
-      padding: 9px 13px;
-      background: rgba(127, 29, 29, .92);
-      color: #ffffff;
-      font: inherit;
-      font-size: 13px;
-      font-weight: 900;
-      box-shadow: 0 8px 22px rgba(0,0,0,.18);
-      cursor: pointer;
-      opacity: .92;
+      position: fixed; top: calc(8px + var(--safe-top)); left: calc(8px + var(--safe-left)); z-index: 25;
+      border: 0; border-radius: 999px; padding: 9px 13px; background: rgba(15,23,42,.86); color: #ffffff;
+      font: inherit; font-size: 13px; font-weight: 900; box-shadow: 0 8px 22px rgba(0,0,0,.18); cursor: pointer; opacity: .94;
     }
+    .mini-home:active { transform: scale(.96); }
 
-    .mini-home:active {
-      transform: scale(.96);
-    }
-
-    .loader,
-    .fallback {
-      position: fixed;
-      inset: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    .loader, .fallback {
+      position: fixed; inset: 0; display: flex; align-items: center; justify-content: center;
       padding: calc(22px + var(--safe-top)) calc(22px + var(--safe-right)) calc(22px + var(--safe-bottom)) calc(22px + var(--safe-left));
-      background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
-      color: var(--fsd-dark);
-      z-index: 20;
-      transition: opacity .18s ease, visibility .18s ease;
+      background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%); color: var(--fsd-ink); z-index: 20; transition: opacity .18s ease, visibility .18s ease;
     }
-
-    .loader.hidden,
-    .fallback.hidden {
-      opacity: 0;
-      visibility: hidden;
-      pointer-events: none;
-    }
-
-    .panel {
-      width: min(420px, 100%);
-      text-align: center;
-    }
-
-    .panel .logo {
-      width: 104px;
-      height: 104px;
-      border-radius: 26px;
-      margin: 0 auto 18px;
-      box-shadow: 0 18px 44px rgba(153, 27, 27, .28);
-    }
-
-    .panel h2 {
-      margin: 0;
-      font-size: 30px;
-      line-height: 1.05;
-      color: var(--fsd-red);
-      letter-spacing: -.04em;
-    }
-
-    .panel p {
-      margin: 10px 0 0;
-      color: #4b5563;
-      font-size: 15px;
-      line-height: 1.4;
-    }
-
-    .panel .maker-mark {
-      color: #9ca3af;
-      margin-top: 14px;
-    }
-
-    .spinner {
-      width: 34px;
-      height: 34px;
-      border: 4px solid #fee2e2;
-      border-top-color: var(--fsd-red);
-      border-radius: 999px;
-      margin: 22px auto 0;
-      animation: spin .85s linear infinite;
-    }
-
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-
+    .loader.hidden, .fallback.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+    .panel { width: min(420px, 100%); text-align: center; }
+    .panel .logo { width: 104px; height: 104px; border-radius: 22px; margin: 0 auto 18px; box-shadow: 0 18px 44px rgba(15,95,170,.25); }
+    .panel h2 { margin: 0; font-size: 30px; line-height: 1.05; color: var(--fsd-blue); letter-spacing: -.04em; }
+    .panel p { margin: 10px 0 0; color: #4b5563; font-size: 15px; line-height: 1.4; }
+    .panel .maker-mark { color: #9ca3af; margin-top: 14px; }
+    .spinner { width: 34px; height: 34px; border: 4px solid #dbeafe; border-top-color: var(--fsd-blue); border-radius: 999px; margin: 22px auto 0; animation: spin .85s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
 
     .offline-screen {
-      display: none;
-      align-items: center;
-      justify-content: center;
+      display: none; align-items: center; justify-content: center;
       padding: calc(24px + var(--safe-top)) calc(22px + var(--safe-right)) calc(24px + var(--safe-bottom)) calc(22px + var(--safe-left));
-      background: linear-gradient(145deg, #7f1d1d 0%, #991b1b 50%, #111827 100%);
-      color: #ffffff;
-      z-index: 35;
-      overflow-y: auto;
-      -webkit-overflow-scrolling: touch;
+      background: linear-gradient(145deg, #0f172a 0%, #16355c 55%, #dbeafe 100%); color: #ffffff; z-index: 35; overflow-y: auto; -webkit-overflow-scrolling: touch;
     }
-
-    .offline-screen.active {
-      display: flex;
-    }
-
+    .offline-screen.active { display: flex; }
     .offline-card {
-      width: min(680px, 100%);
-      max-height: calc(100dvh - 48px - var(--safe-top) - var(--safe-bottom));
-      overflow-y: auto;
-      border-radius: 30px;
-      padding: 22px;
-      background: rgba(255,255,255,.14);
-      border: 1px solid rgba(255,255,255,.25);
-      box-shadow: 0 24px 70px rgba(0,0,0,.30), inset 0 1px 0 rgba(255,255,255,.20);
-      backdrop-filter: blur(14px);
+      width: min(720px, 100%); max-height: calc(100dvh - 48px - var(--safe-top) - var(--safe-bottom)); overflow-y: auto;
+      border-radius: 30px; padding: 24px; background: rgba(255,255,255,.18); border: 1px solid rgba(255,255,255,.28);
+      box-shadow: 0 24px 70px rgba(0,0,0,.30), inset 0 1px 0 rgba(255,255,255,.20); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+    }
+    .offline-title { margin: 0 0 6px; font-size: 34px; font-weight: 800; letter-spacing: -.03em; }
+    .offline-help { margin: 0 0 16px; color: rgba(255,255,255,.86); line-height: 1.38; font-weight: 650; }
+    .offline-list { display: grid; gap: 12px; margin: 16px 0; }
+    .offline-item { padding: 14px; border-radius: 18px; background: rgba(255,255,255,.94); color: #111827; text-align: left; box-shadow: 0 12px 28px rgba(0,0,0,.18); }
+    .offline-item strong { display: block; color: var(--fsd-blue-dark); font-size: 17px; margin-bottom: 4px; }
+    .offline-meta { color: #4b5563; font-size: 13px; line-height: 1.35; font-weight: 650; margin-bottom: 12px; }
+    .offline-actions { display: grid; gap: 8px; grid-template-columns: repeat(2, 1fr); }
+    .offline-actions .button { min-height: 44px; padding: 10px 12px; border-radius: 14px; font-size: 14px; box-shadow: none; }
+    .offline-empty { padding: 18px; border-radius: 18px; background: rgba(255,255,255,.13); border: 1px dashed rgba(255,255,255,.32); color: rgba(255,255,255,.90); font-weight: 750; }
+    .offline-status { min-height: 22px; margin-top: 12px; color: rgba(255,255,255,.90); font-size: 14px; font-weight: 750; }
+
+
+    @media (max-height: 760px) {
+      .home { padding: calc(10px + var(--safe-top)) calc(14px + var(--safe-right)) calc(12px + var(--safe-bottom)) calc(14px + var(--safe-left)); }
+      .home-card { padding: 16px 18px; border-radius: 26px; }
+      .brand-row { margin-bottom: 12px; }
+      .brand-logo { width: 48px; height: 48px; border-radius: 14px; }
+      .brand-name { font-size: 21px; }
+      .brand-name small { font-size: 12px; }
+      .company-name { font-size: 22px; }
+      h1 { font-size: clamp(30px, 5vw, 42px); }
+      .subtitle { margin: 10px auto 14px; font-size: clamp(16px, 2.5vw, 20px); line-height: 1.25; }
+      .button, button.button { min-height: 96px; padding: 11px 10px; gap: 6px; font-size: clamp(18px, 2.9vw, 24px); border-radius: 20px; }
+      .button .tile-icon { font-size: 28px; }
+      .maker-mark { margin-top: 12px; font-size: 12px; }
+      .shell-version-badge { margin-top: 3px; font-size: 12px; padding: 4px 8px; }
     }
 
-    .offline-title {
-      margin: 0 0 6px;
-      font-size: 30px;
-      font-weight: 950;
-      letter-spacing: -.03em;
-    }
-
-    .offline-help {
-      margin: 0 0 16px;
-      color: rgba(255,255,255,.84);
-      line-height: 1.38;
-      font-weight: 650;
-    }
-
-    .offline-list {
-      display: grid;
-      gap: 12px;
-      margin: 16px 0;
-    }
-
-    .offline-item {
-      padding: 14px;
-      border-radius: 18px;
-      background: rgba(255,255,255,.94);
-      color: #111827;
-      text-align: left;
-      box-shadow: 0 12px 28px rgba(0,0,0,.18);
-    }
-
-    .offline-item strong {
-      display: block;
-      color: var(--fsd-red-dark);
-      font-size: 17px;
-      margin-bottom: 4px;
-    }
-
-    .offline-meta {
-      color: #4b5563;
-      font-size: 13px;
-      line-height: 1.35;
-      font-weight: 650;
-      margin-bottom: 12px;
-    }
-
-    .offline-actions {
-      display: grid;
-      gap: 8px;
-      grid-template-columns: repeat(3, 1fr);
-    }
-
-    .offline-actions .button {
-      min-height: 44px;
-      padding: 10px 12px;
-      border-radius: 14px;
-      font-size: 14px;
-      box-shadow: none;
-    }
-
-    .offline-empty {
-      padding: 18px;
-      border-radius: 18px;
-      background: rgba(255,255,255,.13);
-      border: 1px dashed rgba(255,255,255,.32);
-      color: rgba(255,255,255,.90);
-      font-weight: 750;
-    }
-
-    .offline-status {
-      min-height: 22px;
-      margin-top: 12px;
-      color: rgba(255,255,255,.90);
-      font-size: 14px;
-      font-weight: 750;
-    }
-
-    @media (max-width: 520px) {
-      .home {
-        padding: calc(18px + var(--safe-top)) calc(16px + var(--safe-right)) calc(18px + var(--safe-bottom)) calc(16px + var(--safe-left));
-      }
-
-      .home-card {
-        padding: 24px 18px 20px;
-        border-radius: 28px;
-      }
-
-      .logo-wrap {
-        width: 148px;
-        height: 148px;
-        border-radius: 36px;
-      }
-
-      .logo {
-        border-radius: 30px;
-      }
-
-      h1 {
-        font-size: 32px;
-      }
-
-      .subtitle {
-        font-size: 15px;
-      }
+    @media (max-width: 620px) {
+      .home { padding: calc(16px + var(--safe-top)) calc(14px + var(--safe-right)) calc(18px + var(--safe-bottom)) calc(14px + var(--safe-left)); }
+      .home-card { padding: 20px 18px 18px; border-radius: 28px; }
+      .brand-logo { width: 54px; height: 54px; border-radius: 15px; }
+      .brand-name { font-size: 22px; } .brand-name small { font-size: 14px; }
+      .company-name { font-size: 21px; }
+      .actions { gap: 12px; }
+      .button, button.button { min-height: 128px; border-radius: 22px; font-size: 25px; letter-spacing: .04em; }
+      .button .tile-icon { font-size: 36px; }
+      .maker-mark { margin-top: 22px; }
     }
   </style>
 </head>
 <body>
   <!--
-    Fire Safety Direct - FSD Certs V6.3c38 iPad App Shell Mode
-    Uses iPad-safe button handlers for Certs, Schedule and Callouts while keeping the full-screen Certs app shell.
-    Cert engine remains on V6.3c36o unless patched separately.
+    Fire Safety Direct - FSD Certs V6.3c40 Compact iPad App Shell Mode
+    Compact polished glass iPad launcher. Cert engine and draft behaviour remain unchanged from V6.3c38.
     App shell mark: Jared720 Labs
   -->
 
   <section id="home" class="screen home" aria-label="FSD Certs Launcher">
     <main class="home-panel">
-      <div class="badge">✅ Fire Safety Direct · Service Certificate Portal</div>
       <section class="home-card">
-        <div class="logo-wrap">
-          <img class="logo" src="fsd-certs-logo.png" alt="FSD Certs cloud logo">
+        <div class="brand-row">
+          <div class="brand-left">
+            <img class="brand-logo" src="fsd-certs-logo.png" alt="FSD Certs cloud logo">
+            <div class="brand-name">FSD<small>CERTS</small></div>
+          </div>
+          <div class="company-name">Fire Safety Direct</div>
         </div>
-        <h1>FSD Certs</h1>
-        <p class="subtitle">Fire Safety Direct’s online certificates, engineer reporting, schedule, and callout launcher.</p>
+
+        <h1>Welcome to FSD Certs</h1>
+        <p class="subtitle">Your hub for online certificates, engineer reports, scheduling, and callouts.</p>
+
         <div class="actions">
-          <button class="button" type="button" onclick="openCerts(event)">Open Certificate Portal</button>
-          <button class="button secondary" type="button" onclick="openSchedule(event)">Open FSD Schedule</button>
-          <button class="button third" type="button" onclick="openCallouts(event)">Callouts</button>
-          <button class="button secondary" type="button" onclick="openOfflineDrafts(event)">Offline Drafts</button>
+          <button class="button" type="button" onclick="openCerts(event)"><span class="tile-icon">📄</span><span>Open Certificate<br>Portal</span></button>
+          <button class="button secondary" type="button" onclick="openSchedule(event)"><span class="tile-icon">🗓️</span><span>Open FSD<br>Schedule</span></button>
+          <button class="button third" type="button" onclick="openCallouts(event)"><span class="tile-icon">🔔</span><span>Callouts</span></button>
+          <button class="button secondary" type="button" onclick="openOfflineDrafts(event)"><span class="tile-icon">📁</span><span>Offline Drafts</span></button>
         </div>
-        <div class="maker-mark">Built by Jared720 Labs</div>
-        <div class="shell-version-badge">App Shell V6.3c38 · offline sync only</div>
       </section>
+      <div class="maker-mark">Built by Jared720 Labs</div>
+      <div class="shell-version-badge">App Shell V6.3c40 · compact iPad shell</div>
     </main>
   </section>
 
@@ -533,8 +254,8 @@
       <p class="offline-help"><strong>Safe workflow:</strong> press <strong>Sync</strong> first, then open the draft from Cloud Drafts. Offline resume is paused for now so we do not open blank W forms.</p>
       <div id="offlineList" class="offline-list"></div>
       <div class="actions">
-        <button class="button" type="button" onclick="refreshOfflineDrafts(event)">Refresh Offline Drafts</button>
-        <button class="button secondary" type="button" onclick="closeOfflineDrafts(event)">Back to Menu</button>
+        <button class="button" type="button" onclick="refreshOfflineDrafts(event)"><span class="tile-icon">🔄</span><span>Refresh Offline Drafts</span></button>
+        <button class="button secondary" type="button" onclick="closeOfflineDrafts(event)"><span class="tile-icon">↩️</span><span>Back to Menu</span></button>
       </div>
       <div id="offlineStatus" class="offline-status"></div>
       <div class="maker-mark">Jared720 Labs</div>
@@ -729,7 +450,7 @@
           });
         } catch (err) {}
         const offlineIdParam = item && item.offlineId ? '&offlineId=' + encodeURIComponent(item.offlineId) : '';
-        frame.src = APP_URL + '?page=esr&shell=ipad&offlineAction=' + encodeURIComponent(action) + offlineIdParam + '&v=V6.3c38&ts=' + Date.now();
+        frame.src = APP_URL + '?page=esr&shell=ipad&offlineAction=' + encodeURIComponent(action) + offlineIdParam + '&v=V6.3c40&ts=' + Date.now();
         startFallbackTimer();
       }
 
@@ -803,7 +524,7 @@
 
         if (!hasStarted) {
           try { frame.name = ''; } catch (err) {}
-          frame.src = APP_URL + '?shell=ipad&v=V6.3c38';
+          frame.src = APP_URL + '?shell=ipad&v=V6.3c40';
           hasStarted = true;
         }
 
@@ -844,7 +565,7 @@
       frame.addEventListener('load', function () {
         if (!hasStarted) return;
         if (pendingShellAction && pendingShellAction.action === 'sync') {
-          // V6.3c38: keep the blank W sync bridge covered.
+          // V6.3c39: keep the blank W sync bridge covered.
           // The screen returns to Offline Drafts when sync confirms or fails.
           loader.classList.remove('hidden');
         } else {
@@ -929,6 +650,6 @@
       });
     }());
   </script>
-  <div class="fixed-version-badge">V6.3c38 · sync only</div>
+  <div class="fixed-version-badge">V6.3c39 · iPad glass shell</div>
 </body>
 </html>
