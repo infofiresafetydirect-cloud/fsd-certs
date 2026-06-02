@@ -255,8 +255,8 @@
 </head>
 <body>
   <!--
-    Fire Safety Direct - FSD Certs V6.3c43 Offline W Editor Visible Fix
-    Compact polished glass iPad launcher with Offline W Editor trial.
+    Fire Safety Direct - FSD Certs V6.3c47 Start New Offline W Draft
+    Compact polished glass iPad launcher with Start Offline W trial.
     App shell mark: Jared720 Labs
   -->
 
@@ -282,7 +282,7 @@
         </div>
       </section>
       <div class="maker-mark">Built by Jared720 Labs</div>
-      <div class="shell-version-badge">App Shell V6.3c45 · small sync bridge</div>
+      <div class="shell-version-badge">App Shell V6.3c47 · start offline W</div>
     </main>
   </section>
 
@@ -293,8 +293,9 @@
       <p class="offline-help"><strong>GoFormz-style trial:</strong> W drafts can now be edited locally on this iPad before syncing. Sync first when signal returns, then open from Cloud Drafts to generate the PDF.</p>
       <div id="offlineList" class="offline-list"></div>
       <div class="actions">
-        <button class="button" type="button" onclick="refreshOfflineDrafts(event)"><span class="tile-icon">🔄</span><span>Refresh Offline Drafts</span></button>
-        <button class="button secondary" type="button" onclick="closeOfflineDrafts(event)"><span class="tile-icon">↩️</span><span>Back to Menu</span></button>
+        <button class="button" type="button" onclick="startNewOfflineW(event)"><span class="tile-icon">📝</span><span>Start Offline W</span></button>
+        <button class="button secondary" type="button" onclick="refreshOfflineDrafts(event)"><span class="tile-icon">🔄</span><span>Refresh Offline Drafts</span></button>
+        <button class="button third" type="button" onclick="closeOfflineDrafts(event)"><span class="tile-icon">↩️</span><span>Back to Menu</span></button>
       </div>
       <div id="offlineStatus" class="offline-status"></div>
       <div class="maker-mark">Jared720 Labs</div>
@@ -635,6 +636,68 @@
         return name + ' - ' + date;
       }
 
+      function makeOfflineId() {
+        return 'W-OFFLINE-' + new Date().toISOString().replace(/[-:.TZ]/g, '').slice(0, 14) + '-' + Math.random().toString(36).slice(2, 7).toUpperCase();
+      }
+
+      function createBlankOfflineWItem() {
+        const now = new Date();
+        const today = now.toISOString().slice(0, 10);
+        const offlineId = makeOfflineId();
+        const draft = {
+          offlineCreated: true,
+          offlineId: offlineId,
+          reportType: 'Engineer Service Report',
+          draftName: 'New Offline W - ' + today,
+          serviceDate: today,
+          engineer: '',
+          customer: '',
+          site: '',
+          sageAccountNo: '',
+          customerOrderNo: '',
+          ourRefNo: '',
+          asbestosAvailable: '',
+          workDescription: '',
+          workDescriptionQty: '',
+          workDescriptionUnitPrice: '',
+          workDescriptionTotalPrice: '',
+          workDescriptionChargeNote: '',
+          materials: [],
+          comments: '',
+          travelTime: '',
+          arrivalTime: '',
+          timeOnSite: '',
+          carriage: '',
+          manualSubtotalOverride: '',
+          manualSubtotal: '',
+          subTotal: '',
+          vat: '',
+          total: '',
+          customerName: '',
+          customerDate: '',
+          savedAt: now.toISOString()
+        };
+        return {
+          offlineId: offlineId,
+          draftId: '',
+          draftName: draft.draftName,
+          engineer: '',
+          customer: '',
+          site: '',
+          savedAt: draft.savedAt,
+          source: 'github-shell-start-offline-w',
+          draft: draft
+        };
+      }
+
+      window.startNewOfflineW = function startNewOfflineW(event) {
+        stopTap(event);
+        const item = createBlankOfflineWItem();
+        upsertOfflineItem(item);
+        openEditorForItem(item);
+        setEditorStatus('New offline W draft started on this iPad. Fill it in and press Save Offline. Sync to Cloud Drafts when signal returns.');
+      };
+
       function saveEditorToQueue() {
         const offlineId = getEditValue('editOfflineId');
         const item = getOfflineItemById(offlineId);
@@ -963,6 +1026,6 @@
       });
     }());
   </script>
-  <div class="fixed-version-badge">V6.3c45 · small bridge</div>
+  <div class="fixed-version-badge">V6.3c47 · start offline W</div>
 </body>
 </html>
