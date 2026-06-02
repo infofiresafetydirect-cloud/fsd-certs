@@ -72,7 +72,7 @@
       padding: calc(24px + var(--safe-top)) calc(22px + var(--safe-right)) calc(24px + var(--safe-bottom)) calc(22px + var(--safe-left));
       background:
         radial-gradient(circle at 50% 0%, rgba(255,255,255,0.96), rgba(255,255,255,0.12) 30%, transparent 52%),
-        linear-gradient(145deg, #ef4444 0%, #991b1b 42%, #0f766e 100%);
+        linear-gradient(145deg, #b91c1c 0%, #7f1d1d 48%, #1e3a8a 100%);
       color: #ffffff;
       z-index: 30;
       transition: transform .2s ease, opacity .2s ease, visibility .2s ease;
@@ -499,7 +499,7 @@
 </head>
 <body>
   <!--
-    Fire Safety Direct - FSD Certs V6.3c37y iPad App Shell Mode
+    Fire Safety Direct - FSD Certs V6.3c38 iPad App Shell Mode
     Uses iPad-safe button handlers for Certs, Schedule and Callouts while keeping the full-screen Certs app shell.
     Cert engine remains on V6.3c36o unless patched separately.
     App shell mark: Jared720 Labs
@@ -521,7 +521,7 @@
           <button class="button secondary" type="button" onclick="openOfflineDrafts(event)">Offline Drafts</button>
         </div>
         <div class="maker-mark">Built by Jared720 Labs</div>
-        <div class="shell-version-badge">App Shell V6.3c37y · handshake test</div>
+        <div class="shell-version-badge">App Shell V6.3c38 · offline sync only</div>
       </section>
     </main>
   </section>
@@ -530,6 +530,7 @@
     <main class="offline-card">
       <h2 class="offline-title">Offline Drafts</h2>
       <p class="offline-help">Drafts saved without signal live on this iPad until they are synced to the FSD cloud Draft Manager.</p>
+      <p class="offline-help"><strong>Safe workflow:</strong> press <strong>Sync</strong> first, then open the draft from Cloud Drafts. Offline resume is paused for now so we do not open blank W forms.</p>
       <div id="offlineList" class="offline-list"></div>
       <div class="actions">
         <button class="button" type="button" onclick="refreshOfflineDrafts(event)">Refresh Offline Drafts</button>
@@ -700,8 +701,7 @@
             '<strong>' + escapeHtml(title) + '</strong>' +
             '<div class="offline-meta">' + escapeHtml(meta) + '</div>' +
             '<div class="offline-actions">' +
-              '<button class="button" type="button" onclick="resumeOfflineW(' + index + ')">Resume</button>' +
-              '<button class="button secondary" type="button" onclick="syncOfflineW(' + index + ')">Sync</button>' +
+              '<button class="button" type="button" onclick="syncOfflineW(' + index + ')">Sync to Cloud</button>' +
               '<button class="button third" type="button" onclick="deleteOfflineW(' + index + ')">Delete</button>' +
             '</div>' +
           '</article>';
@@ -729,7 +729,7 @@
           });
         } catch (err) {}
         const offlineIdParam = item && item.offlineId ? '&offlineId=' + encodeURIComponent(item.offlineId) : '';
-        frame.src = APP_URL + '?page=esr&shell=ipad&offlineAction=' + encodeURIComponent(action) + offlineIdParam + '&v=V6.3c37z&ts=' + Date.now();
+        frame.src = APP_URL + '?page=esr&shell=ipad&offlineAction=' + encodeURIComponent(action) + offlineIdParam + '&v=V6.3c38&ts=' + Date.now();
         startFallbackTimer();
       }
 
@@ -772,10 +772,7 @@
       };
 
       window.resumeOfflineW = function resumeOfflineW(index) {
-        const item = readOfflineQueue()[index];
-        if (!item) return renderOfflineDrafts();
-        setOfflineStatus('Opening offline W draft...');
-        loadEsrForShellAction('resume', item);
+        setOfflineStatus('Offline Resume is paused. Press Sync to Cloud, then open the draft from Cloud Drafts.');
       };
 
       window.syncOfflineW = function syncOfflineW(index) {
@@ -785,7 +782,7 @@
           setOfflineStatus('Still offline. Connect the iPad to the internet, then press Sync again.');
           return;
         }
-        setOfflineStatus('Opening W sync bridge...');
+        setOfflineStatus('Syncing offline W draft to Cloud Drafts. Keep this screen open...');
         loadEsrForShellAction('sync', item);
       };
 
@@ -806,7 +803,7 @@
 
         if (!hasStarted) {
           try { frame.name = ''; } catch (err) {}
-          frame.src = APP_URL + '?shell=ipad&v=V6.3c36u';
+          frame.src = APP_URL + '?shell=ipad&v=V6.3c38';
           hasStarted = true;
         }
 
@@ -846,7 +843,13 @@
 
       frame.addEventListener('load', function () {
         if (!hasStarted) return;
-        setTimeout(hideLoader, 250);
+        if (pendingShellAction && pendingShellAction.action === 'sync') {
+          // V6.3c38: keep the blank W sync bridge covered.
+          // The screen returns to Offline Drafts when sync confirms or fails.
+          loader.classList.remove('hidden');
+        } else {
+          setTimeout(hideLoader, 250);
+        }
         if (pendingShellAction) {
           clearTimeout(shellActionTimer);
           shellActionTimer = setTimeout(sendPendingShellAction, 900);
@@ -926,6 +929,6 @@
       });
     }());
   </script>
-  <div class="fixed-version-badge">V6.3c37z · offlineId bridge</div>
+  <div class="fixed-version-badge">V6.3c38 · sync only</div>
 </body>
 </html>
