@@ -216,7 +216,7 @@
 </head>
 <body>
   <!--
-    Fire Safety Direct - FSD Certs V6.3c41 Offline W Editor Trial
+    Fire Safety Direct - FSD Certs V6.3c42 Offline W Editor Button Fix
     Compact polished glass iPad launcher with Offline W Editor trial.
     App shell mark: Jared720 Labs
   -->
@@ -243,7 +243,7 @@
         </div>
       </section>
       <div class="maker-mark">Built by Jared720 Labs</div>
-      <div class="shell-version-badge">App Shell V6.3c41 · offline W editor trial</div>
+      <div class="shell-version-badge">App Shell V6.3c42 · offline editor buttons fixed</div>
     </main>
   </section>
 
@@ -482,9 +482,9 @@
             '<strong>' + escapeHtml(title) + '</strong>' +
             '<div class="offline-meta">' + escapeHtml(meta) + '</div>' +
             '<div class="offline-actions">' +
-              '<button class="button secondary" type="button" onclick="editOfflineWById(' + JSON.stringify(row.offlineId) + ')">Edit Offline</button>' +
-              '<button class="button" type="button" onclick="syncOfflineWById(' + JSON.stringify(row.offlineId) + ')">Sync to Cloud</button>' +
-              '<button class="button third" type="button" onclick="deleteOfflineWById(' + JSON.stringify(row.offlineId) + ')">Delete</button>' +
+              '<button class="button secondary" type="button" data-offline-id="' + escapeHtml(row.offlineId) + '" data-offline-action="edit">Edit Offline</button>' +
+              '<button class="button" type="button" data-offline-id="' + escapeHtml(row.offlineId) + '" data-offline-action="sync">Sync to Cloud</button>' +
+              '<button class="button third" type="button" data-offline-id="' + escapeHtml(row.offlineId) + '" data-offline-action="delete">Delete</button>' +
             '</div>' +
           '</article>';
         }).join('');
@@ -696,7 +696,7 @@
           });
         } catch (err) {}
         const offlineIdParam = item && item.offlineId ? '&offlineId=' + encodeURIComponent(item.offlineId) : '';
-        frame.src = APP_URL + '?page=esr&shell=ipad&offlineAction=' + encodeURIComponent(action) + offlineIdParam + '&v=V6.3c41&ts=' + Date.now();
+        frame.src = APP_URL + '?page=esr&shell=ipad&offlineAction=' + encodeURIComponent(action) + offlineIdParam + '&v=V6.3c42&ts=' + Date.now();
         startFallbackTimer();
       }
 
@@ -738,6 +738,19 @@
         stopTap(event);
         renderOfflineDrafts();
       };
+
+      if (offlineList) {
+        offlineList.addEventListener('click', function(event) {
+          const btn = event.target && event.target.closest ? event.target.closest('[data-offline-action]') : null;
+          if (!btn) return;
+          stopTap(event);
+          const offlineId = btn.getAttribute('data-offline-id') || '';
+          const action = btn.getAttribute('data-offline-action') || '';
+          if (action === 'edit') return window.editOfflineWById(offlineId);
+          if (action === 'sync') return window.syncOfflineWById(offlineId);
+          if (action === 'delete') return window.deleteOfflineWById(offlineId);
+        });
+      }
 
       window.syncOfflineWById = function syncOfflineWById(offlineId) {
         const item = getOfflineItemById(offlineId);
@@ -782,7 +795,7 @@
 
         if (!hasStarted) {
           try { frame.name = ''; } catch (err) {}
-          frame.src = APP_URL + '?shell=ipad&v=V6.3c41';
+          frame.src = APP_URL + '?shell=ipad&v=V6.3c42';
           hasStarted = true;
         }
 
@@ -909,6 +922,6 @@
       });
     }());
   </script>
-  <div class="fixed-version-badge">V6.3c41 · offline W editor</div>
+  <div class="fixed-version-badge">V6.3c42 · buttons fixed</div>
 </body>
 </html>
