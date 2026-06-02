@@ -282,7 +282,7 @@
         </div>
       </section>
       <div class="maker-mark">Built by Jared720 Labs</div>
-      <div class="shell-version-badge">App Shell V6.3c44 · hash sync bridge</div>
+      <div class="shell-version-badge">App Shell V6.3c45 · no-hash sync bridge</div>
     </main>
   </section>
 
@@ -729,18 +729,14 @@
           item: item,
           ts: Date.now()
         };
-        let payloadHash = '';
         try {
-          // V6.3c44: hash bridge. Google iframe/window.name/postMessage can be unreliable.
-          // The payload is now also placed in the URL hash so the W page can read it
-          // directly after loading. Hash is not sent to the server and avoids the blank-W sync trap.
-          payloadHash = '#fsdOfflinePayload=' + encodeURIComponent(JSON.stringify(shellPayload));
-        } catch (err) {}
-        try {
+          // V6.3c45: do NOT put the whole draft JSON in the URL hash.
+          // Safari/iPad can choke on long iframe URLs, leaving the shell stuck on the loading screen.
+          // Keep the full draft in memory and hand it to the W bridge via window.name/postMessage instead.
           frame.name = OFFLINE_W_WINDOW_NAME_PREFIX + JSON.stringify(shellPayload);
         } catch (err) {}
         const offlineIdParam = item && item.offlineId ? '&offlineId=' + encodeURIComponent(item.offlineId) : '';
-        frame.src = APP_URL + '?page=esr&shell=ipad&offlineAction=' + encodeURIComponent(action) + offlineIdParam + '&v=V6.3c44&ts=' + Date.now() + payloadHash;
+        frame.src = APP_URL + '?page=esr&shell=ipad&offlineAction=' + encodeURIComponent(action) + offlineIdParam + '&v=V6.3c45&ts=' + Date.now();
         startFallbackTimer();
       }
 
@@ -966,6 +962,6 @@
       });
     }());
   </script>
-  <div class="fixed-version-badge">V6.3c44 · hash bridge</div>
+  <div class="fixed-version-badge">V6.3c45 · no-hash sync</div>
 </body>
 </html>
