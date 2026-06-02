@@ -282,7 +282,7 @@
         </div>
       </section>
       <div class="maker-mark">Built by Jared720 Labs</div>
-      <div class="shell-version-badge">App Shell V6.3c43 · offline editor visible fix</div>
+      <div class="shell-version-badge">App Shell V6.3c44 · hash sync bridge</div>
     </main>
   </section>
 
@@ -723,19 +723,24 @@
         loaded = false;
         hasStarted = true;
         pendingShellAction = { action: action, item: item, attempts: 0 };
+        const shellPayload = {
+          type: action === 'sync' ? 'FSD_OFFLINE_W_SYNC' : 'FSD_OFFLINE_W_RESTORE',
+          source: 'fsd-certs-shell',
+          item: item,
+          ts: Date.now()
+        };
+        let payloadHash = '';
         try {
-          // V6.3c37x: postMessage can arrive before Apps Script finishes loading the W page.
-          // window.name survives the iframe navigation, so the W page can read the offline
-          // draft/sync payload immediately on load. postMessage remains as a fallback.
-          frame.name = OFFLINE_W_WINDOW_NAME_PREFIX + JSON.stringify({
-            type: action === 'sync' ? 'FSD_OFFLINE_W_SYNC' : 'FSD_OFFLINE_W_RESTORE',
-            source: 'fsd-certs-shell',
-            item: item,
-            ts: Date.now()
-          });
+          // V6.3c44: hash bridge. Google iframe/window.name/postMessage can be unreliable.
+          // The payload is now also placed in the URL hash so the W page can read it
+          // directly after loading. Hash is not sent to the server and avoids the blank-W sync trap.
+          payloadHash = '#fsdOfflinePayload=' + encodeURIComponent(JSON.stringify(shellPayload));
+        } catch (err) {}
+        try {
+          frame.name = OFFLINE_W_WINDOW_NAME_PREFIX + JSON.stringify(shellPayload);
         } catch (err) {}
         const offlineIdParam = item && item.offlineId ? '&offlineId=' + encodeURIComponent(item.offlineId) : '';
-        frame.src = APP_URL + '?page=esr&shell=ipad&offlineAction=' + encodeURIComponent(action) + offlineIdParam + '&v=V6.3c43&ts=' + Date.now();
+        frame.src = APP_URL + '?page=esr&shell=ipad&offlineAction=' + encodeURIComponent(action) + offlineIdParam + '&v=V6.3c44&ts=' + Date.now() + payloadHash;
         startFallbackTimer();
       }
 
@@ -961,6 +966,6 @@
       });
     }());
   </script>
-  <div class="fixed-version-badge">V6.3c43 · editor visible</div>
+  <div class="fixed-version-badge">V6.3c44 · hash bridge</div>
 </body>
 </html>
