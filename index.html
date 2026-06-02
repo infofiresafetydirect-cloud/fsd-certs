@@ -282,7 +282,7 @@
         </div>
       </section>
       <div class="maker-mark">Built by Jared720 Labs</div>
-      <div class="shell-version-badge">App Shell V6.3c45 · no-hash sync bridge</div>
+      <div class="shell-version-badge">App Shell V6.3c45 · small sync bridge</div>
     </main>
   </section>
 
@@ -729,14 +729,15 @@
           item: item,
           ts: Date.now()
         };
+        // V6.3c45: keep the iframe URL tiny. The c44 URL-hash payload could be too
+        // large for iPad/Safari/Google wrappers and leave the shell stuck on the
+        // loading/fallback screen. The full draft is carried in frame.name and
+        // repeated by postMessage after load; the URL only carries the action/id.
         try {
-          // V6.3c45: do NOT put the whole draft JSON in the URL hash.
-          // Safari/iPad can choke on long iframe URLs, leaving the shell stuck on the loading screen.
-          // Keep the full draft in memory and hand it to the W bridge via window.name/postMessage instead.
           frame.name = OFFLINE_W_WINDOW_NAME_PREFIX + JSON.stringify(shellPayload);
         } catch (err) {}
         const offlineIdParam = item && item.offlineId ? '&offlineId=' + encodeURIComponent(item.offlineId) : '';
-        frame.src = APP_URL + '?page=esr&shell=ipad&offlineAction=' + encodeURIComponent(action) + offlineIdParam + '&v=V6.3c45&ts=' + Date.now();
+        frame.src = APP_URL + '?page=esr&offlineBridge=1&shell=ipad&offlineAction=' + encodeURIComponent(action) + offlineIdParam + '&v=V6.3c46&ts=' + Date.now();
         startFallbackTimer();
       }
 
@@ -835,7 +836,7 @@
 
         if (!hasStarted) {
           try { frame.name = ''; } catch (err) {}
-          frame.src = APP_URL + '?shell=ipad&v=V6.3c43';
+          frame.src = APP_URL + '?shell=ipad&v=V6.3c46';
           hasStarted = true;
         }
 
@@ -962,6 +963,6 @@
       });
     }());
   </script>
-  <div class="fixed-version-badge">V6.3c45 · no-hash sync</div>
+  <div class="fixed-version-badge">V6.3c45 · small bridge</div>
 </body>
 </html>
