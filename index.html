@@ -185,6 +185,45 @@
     .offline-status { min-height: 22px; margin-top: 12px; color: rgba(255,255,255,.90); font-size: 14px; font-weight: 750; }
 
 
+    .offline-editor-screen {
+      display: none; align-items: stretch; justify-content: center;
+      padding: calc(18px + var(--safe-top)) calc(16px + var(--safe-right)) calc(18px + var(--safe-bottom)) calc(16px + var(--safe-left));
+      background: linear-gradient(145deg, #07111f 0%, #123a64 52%, #dbeafe 100%);
+      color: #0b1220; z-index: 45; overflow-y: auto; -webkit-overflow-scrolling: touch;
+    }
+    .offline-editor-screen.active { display: flex; }
+    .editor-card {
+      width: min(920px, 100%); max-height: calc(100dvh - 36px - var(--safe-top) - var(--safe-bottom)); overflow-y: auto;
+      border-radius: 24px; padding: 18px; background: rgba(255,255,255,.94); border: 1px solid rgba(255,255,255,.55);
+      box-shadow: 0 24px 70px rgba(0,0,0,.32); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+    }
+    .editor-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
+    .editor-head h2 { margin: 0 0 5px; font-size: clamp(24px, 3.6vw, 34px); line-height: 1.05; color: var(--fsd-blue-dark); }
+    .editor-note { margin: 0; color: #475569; font-size: 14px; line-height: 1.35; font-weight: 650; }
+    .editor-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+    .editor-wide, .editor-section-title { grid-column: 1 / -1; }
+    .editor-field { display: grid; gap: 4px; }
+    .editor-field label { font-size: 12px; line-height: 1.1; color: #475569; font-weight: 900; letter-spacing: .03em; text-transform: uppercase; }
+    .editor-field input, .editor-field textarea, .editor-field select {
+      width: 100%; min-height: 42px; border: 1px solid #cbd5e1; border-radius: 12px; padding: 9px 10px;
+      font: inherit; font-size: 16px; color: #0f172a; background: #ffffff; outline: none;
+    }
+    .editor-field textarea { min-height: 74px; resize: vertical; }
+    .editor-section-title { margin: 10px 0 0; padding: 9px 11px; border-radius: 12px; background: #e0f2fe; color: #0f172a; font-weight: 950; letter-spacing: .03em; }
+    .editor-materials { grid-column: 1 / -1; display: grid; gap: 8px; }
+    .editor-material-row { display: grid; grid-template-columns: 74px minmax(0, 1fr) 96px 96px 44px; gap: 8px; align-items: end; padding: 10px; border-radius: 14px; background: #f8fafc; border: 1px solid #e2e8f0; }
+    .editor-actions { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-top: 14px; }
+    .editor-actions .button { min-height: 56px; padding: 10px; font-size: 16px; border-radius: 16px; }
+    .editor-status { min-height: 22px; margin-top: 10px; color: #0f5faa; font-size: 14px; font-weight: 850; }
+
+    @media (max-width: 720px) {
+      .editor-grid { grid-template-columns: 1fr; }
+      .editor-material-row { grid-template-columns: 1fr; }
+      .editor-actions { grid-template-columns: 1fr; }
+    }
+
+
+
     @media (max-height: 760px) {
       .home { padding: calc(10px + var(--safe-top)) calc(14px + var(--safe-right)) calc(12px + var(--safe-bottom)) calc(14px + var(--safe-left)); }
       .home-card { padding: 16px 18px; border-radius: 26px; }
@@ -216,7 +255,7 @@
 </head>
 <body>
   <!--
-    Fire Safety Direct - FSD Certs V6.3c42 Offline W Editor Button Fix
+    Fire Safety Direct - FSD Certs V6.3c43 Offline W Editor Visible Fix
     Compact polished glass iPad launcher with Offline W Editor trial.
     App shell mark: Jared720 Labs
   -->
@@ -243,7 +282,7 @@
         </div>
       </section>
       <div class="maker-mark">Built by Jared720 Labs</div>
-      <div class="shell-version-badge">App Shell V6.3c42 · offline editor buttons fixed</div>
+      <div class="shell-version-badge">App Shell V6.3c43 · offline editor visible fix</div>
     </main>
   </section>
 
@@ -696,7 +735,7 @@
           });
         } catch (err) {}
         const offlineIdParam = item && item.offlineId ? '&offlineId=' + encodeURIComponent(item.offlineId) : '';
-        frame.src = APP_URL + '?page=esr&shell=ipad&offlineAction=' + encodeURIComponent(action) + offlineIdParam + '&v=V6.3c42&ts=' + Date.now();
+        frame.src = APP_URL + '?page=esr&shell=ipad&offlineAction=' + encodeURIComponent(action) + offlineIdParam + '&v=V6.3c43&ts=' + Date.now();
         startFallbackTimer();
       }
 
@@ -795,7 +834,7 @@
 
         if (!hasStarted) {
           try { frame.name = ''; } catch (err) {}
-          frame.src = APP_URL + '?shell=ipad&v=V6.3c42';
+          frame.src = APP_URL + '?shell=ipad&v=V6.3c43';
           hasStarted = true;
         }
 
@@ -922,6 +961,6 @@
       });
     }());
   </script>
-  <div class="fixed-version-badge">V6.3c42 · buttons fixed</div>
+  <div class="fixed-version-badge">V6.3c43 · editor visible</div>
 </body>
 </html>
