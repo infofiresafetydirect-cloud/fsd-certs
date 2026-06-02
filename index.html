@@ -255,7 +255,7 @@
 </head>
 <body>
   <!--
-    Fire Safety Direct - FSD Certs V6.3c47 Start New Offline W Draft
+    Fire Safety Direct - FSD Certs V6.3c48 Portal After Sync Reset
     Compact polished glass iPad launcher with Start Offline W trial.
     App shell mark: Jared720 Labs
   -->
@@ -282,7 +282,7 @@
         </div>
       </section>
       <div class="maker-mark">Built by Jared720 Labs</div>
-      <div class="shell-version-badge">App Shell V6.3c47 · start offline W</div>
+      <div class="shell-version-badge">App Shell V6.3c48 · portal reset after sync</div>
     </main>
   </section>
 
@@ -800,7 +800,7 @@
           frame.name = OFFLINE_W_WINDOW_NAME_PREFIX + JSON.stringify(shellPayload);
         } catch (err) {}
         const offlineIdParam = item && item.offlineId ? '&offlineId=' + encodeURIComponent(item.offlineId) : '';
-        frame.src = APP_URL + '?page=esr&offlineBridge=1&shell=ipad&offlineAction=' + encodeURIComponent(action) + offlineIdParam + '&v=V6.3c46&ts=' + Date.now();
+        frame.src = APP_URL + '?page=esr&offlineBridge=1&shell=ipad&offlineAction=' + encodeURIComponent(action) + offlineIdParam + '&v=V6.3c48&ts=' + Date.now();
         startFallbackTimer();
       }
 
@@ -892,17 +892,21 @@
 
       window.openCerts = function openCerts(event) {
         stopTap(event);
+        // V6.3c48: always load a fresh portal when the home button is pressed.
+        // After an offline sync, the iframe can still be sitting on the tiny
+        // sync bridge page, so reusing the old frame makes the shell hit the
+        // fallback screen until Reload is pressed. Fresh URL = no stale bridge.
+        pendingShellAction = null;
+        clearTimeout(shellActionTimer);
         home.classList.add('hidden');
+        offlineDrafts.classList.remove('active');
+        if (offlineEditor) offlineEditor.classList.remove('active');
         fallback.classList.add('hidden');
         loader.classList.remove('hidden');
         loaded = false;
-
-        if (!hasStarted) {
-          try { frame.name = ''; } catch (err) {}
-          frame.src = APP_URL + '?shell=ipad&v=V6.3c46';
-          hasStarted = true;
-        }
-
+        try { frame.name = ''; } catch (err) {}
+        frame.src = APP_URL + '?shell=ipad&v=V6.3c48&ts=' + Date.now();
+        hasStarted = true;
         startFallbackTimer();
       };
 
@@ -934,7 +938,7 @@
         loader.classList.remove('hidden');
         loaded = false;
         try { frame.name = ''; } catch (err) {}
-        frame.src = APP_URL + '?shell=ipad&reload=' + Date.now();
+        frame.src = APP_URL + '?shell=ipad&v=V6.3c48&reload=' + Date.now();
         startFallbackTimer();
       };
 
@@ -1003,6 +1007,10 @@
           if (result.ok && result.offlineId) {
             removeOfflineItem(result.offlineId);
             pendingShellAction = null;
+            // V6.3c48: clear the hidden tiny sync bridge so the next Open Portal
+            // starts clean instead of landing on the fallback/loading screen.
+            hasStarted = false;
+            try { frame.name = ''; frame.src = 'about:blank'; } catch (err) {}
             loader.classList.add('hidden');
             fallback.classList.add('hidden');
             home.classList.add('hidden');
@@ -1011,6 +1019,10 @@
             setOfflineStatus('Synced to cloud drafts: ' + (result.draftName || result.draftId || 'W draft') + '. Open Draft Manager to resume it.');
           } else {
             pendingShellAction = null;
+            // V6.3c48: clear the hidden tiny sync bridge so the next Open Portal
+            // starts clean instead of landing on the fallback/loading screen.
+            hasStarted = false;
+            try { frame.name = ''; frame.src = 'about:blank'; } catch (err) {}
             loader.classList.add('hidden');
             fallback.classList.add('hidden');
             home.classList.add('hidden');
@@ -1026,6 +1038,6 @@
       });
     }());
   </script>
-  <div class="fixed-version-badge">V6.3c47 · start offline W</div>
+  <div class="fixed-version-badge">V6.3c48 · portal reset</div>
 </body>
 </html>
