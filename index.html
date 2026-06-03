@@ -15,9 +15,14 @@
 
   <title>FSD Certs</title>
 
+  <link rel="preconnect" href="https://script.google.com" crossorigin>
+  <link rel="preconnect" href="https://docs.google.com" crossorigin>
+  <link rel="dns-prefetch" href="https://script.google.com">
+  <link rel="dns-prefetch" href="https://docs.google.com">
+
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
   <link rel="icon" href="apple-touch-icon.png">
-  <link rel="preload" as="image" href="fsd-certs-logo.png">
+  <link rel="preload" as="image" href="fsd-certs-logo.png" fetchpriority="high">
 
   <style>
     :root {
@@ -111,6 +116,7 @@
     .actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: 12px; }
 
     .button, button.button {
+      will-change: transform;
       display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;
       width: 100%; min-height: 112px; padding: 14px 12px; border: 1px solid rgba(255,255,255,.70);
       border-radius: 22px; background: linear-gradient(180deg, rgba(255,255,255,.68), rgba(226,232,240,.48));
@@ -139,7 +145,7 @@
 
     .app-shell { background: #ffffff; z-index: 10; }
     .top-safe-fill { position: fixed; top: 0; left: 0; right: 0; height: var(--safe-top); background: #0f172a; z-index: 15; pointer-events: none; }
-    iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; background: #ffffff; display: block; }
+    iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; background: #ffffff; display: block; contain: strict; }
 
     .mini-home {
       position: fixed; top: calc(8px + var(--safe-top)); left: calc(8px + var(--safe-left)); z-index: 25;
@@ -216,6 +222,36 @@
     .editor-actions .button { min-height: 56px; padding: 10px; font-size: 16px; border-radius: 16px; }
     .editor-status { min-height: 22px; margin-top: 10px; color: #0f5faa; font-size: 14px; font-weight: 850; }
 
+
+    .editor-pill-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-top: 8px; }
+    .net-badge, .dirty-badge {
+      display: inline-flex; align-items: center; gap: 6px; padding: 7px 10px; border-radius: 999px;
+      font-size: 12px; font-weight: 950; letter-spacing: .03em; text-transform: uppercase;
+      background: #e2e8f0; color: #0f172a; border: 1px solid #cbd5e1;
+    }
+    .net-badge.online { background: #dcfce7; color: #14532d; border-color: #86efac; }
+    .net-badge.offline { background: #fee2e2; color: #7f1d1d; border-color: #fecaca; }
+    .dirty-badge { background: #fef3c7; color: #78350f; border-color: #fcd34d; }
+    .dirty-badge.saved { background: #e0f2fe; color: #075985; border-color: #7dd3fc; }
+    .editor-quick-row { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 8px; margin-top: -2px; }
+    .editor-mini-btn {
+      min-height: 38px; padding: 8px 12px; border-radius: 12px; border: 1px solid #cbd5e1;
+      background: #f8fafc; color: #0f172a; font: inherit; font-size: 14px; font-weight: 900; cursor: pointer;
+    }
+    .editor-mini-btn:active { transform: scale(.98); }
+    .editor-summary {
+      grid-column: 1 / -1; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px;
+      padding: 10px; border-radius: 16px; background: #f8fafc; border: 1px solid #e2e8f0;
+    }
+    .editor-summary div { padding: 10px; border-radius: 12px; background: #ffffff; border: 1px solid #e2e8f0; }
+    .editor-summary span { display: block; color: #64748b; font-size: 11px; font-weight: 950; text-transform: uppercase; letter-spacing: .04em; }
+    .editor-summary strong { display: block; margin-top: 4px; font-size: 20px; color: #0f172a; }
+    .editor-actions {
+      position: sticky; bottom: 0; padding-top: 10px; padding-bottom: 2px;
+      background: linear-gradient(180deg, rgba(255,255,255,0), rgba(255,255,255,.94) 24%, rgba(255,255,255,.96));
+    }
+    .editor-material-row .remove-material { min-height:42px;font-size:18px;padding:6px; }
+
     @media (max-width: 720px) {
       .editor-grid { grid-template-columns: 1fr; }
       .editor-material-row { grid-template-columns: 1fr; }
@@ -255,7 +291,7 @@
 </head>
 <body>
   <!--
-    Fire Safety Direct - FSD Certs V6.3c48 Portal After Sync Reset
+    Fire Safety Direct - FSD Certs V6.3c54 iPad Shell Speed Polish
     Compact polished glass iPad launcher with Start Offline W trial.
     App shell mark: Jared720 Labs
   -->
@@ -265,7 +301,7 @@
       <section class="home-card">
         <div class="brand-row">
           <div class="brand-left">
-            <img class="brand-logo" src="fsd-certs-logo.png" alt="FSD Certs cloud logo">
+            <img class="brand-logo" src="fsd-certs-logo.png" alt="FSD Certs cloud logo" width="54" height="54" decoding="async" fetchpriority="high">
             <div class="brand-name">FSD<small>CERTS</small></div>
           </div>
           <div class="company-name">Fire Safety Direct</div>
@@ -282,7 +318,7 @@
         </div>
       </section>
       <div class="maker-mark">Built by Jared720 Labs</div>
-      <div class="shell-version-badge">App Shell V6.3c51 · cloud drafts stay in app</div>
+      <div class="shell-version-badge">App Shell V6.3c54 · shell speed polish</div>
     </main>
   </section>
 
@@ -310,6 +346,10 @@
         <div>
           <h2>Edit Offline W Draft</h2>
           <p class="editor-note">This is the local iPad editor. It works without signal for saved W drafts. Live customer/material lookups and PDF creation still happen after syncing to Cloud Drafts.</p>
+          <div class="editor-pill-row">
+            <span id="editorNetBadge" class="net-badge">Checking signal</span>
+            <span id="editorDirtyBadge" class="dirty-badge saved">Saved offline</span>
+          </div>
         </div>
         <button class="mini-home" style="position:static;" type="button" onclick="closeOfflineEditor(event)">Back</button>
       </div>
@@ -317,6 +357,11 @@
         <div class="editor-grid">
           <input type="hidden" id="editOfflineId">
           <div class="editor-field editor-wide"><label>Draft name</label><input id="editDraftName"></div>
+          <div class="editor-quick-row">
+            <button class="editor-mini-btn" type="button" onclick="autoNameOfflineW(event)">Auto-name from customer/site</button>
+            <button class="editor-mini-btn" type="button" onclick="setCustomerDateToday(event)">Set customer date today</button>
+            <button class="editor-mini-btn" type="button" onclick="addThreeMaterialRows(event)">Add 3 material rows</button>
+          </div>
           <div class="editor-field"><label>Engineer</label><input id="editEngineer"></div>
           <div class="editor-field"><label>Service date</label><input id="editServiceDate" type="date"></div>
           <div class="editor-field editor-wide"><label>Customer / Invoice address</label><textarea id="editCustomer"></textarea></div>
@@ -326,7 +371,7 @@
           <div class="editor-field"><label>Our ref no.</label><input id="editOurRefNo"></div>
           <div class="editor-field"><label>Asbestos register available?</label><select id="editAsbestosAvailable"><option value=""></option><option>Yes</option><option>No</option><option>N/A</option></select></div>
           <div class="editor-section-title">Work description</div>
-          <div class="editor-field editor-wide"><label>Material / work description</label><textarea id="editWorkDescription"></textarea></div>
+          <div class="editor-field editor-wide"><label>Material / work description</label><textarea id="editWorkDescription" rows="4"></textarea></div>
           <div class="editor-field"><label>Qty</label><input id="editWorkDescriptionQty"></div>
           <div class="editor-field"><label>Unit price</label><input id="editWorkDescriptionUnitPrice" type="number" step="0.01"></div>
           <div class="editor-field"><label>Total price</label><input id="editWorkDescriptionTotalPrice" type="number" step="0.01"></div>
@@ -335,7 +380,7 @@
           <div id="editorMaterials" class="editor-materials"></div>
           <div class="editor-wide"><button class="button secondary" style="min-height:48px;font-size:16px;" type="button" onclick="addEditorMaterialRow()">+ Add material/work row</button></div>
           <div class="editor-section-title">Comments and time</div>
-          <div class="editor-field editor-wide"><label>Comments</label><textarea id="editComments"></textarea></div>
+          <div class="editor-field editor-wide"><label>Comments</label><textarea id="editComments" rows="4"></textarea></div>
           <div class="editor-field"><label>Travel time</label><input id="editTravelTime"></div>
           <div class="editor-field"><label>Arrival time</label><input id="editArrivalTime"></div>
           <div class="editor-field"><label>Time on site</label><input id="editTimeOnSite"></div>
@@ -346,6 +391,11 @@
           <div class="editor-field"><label>Sub total</label><input id="editSubTotal" type="number" step="0.01"></div>
           <div class="editor-field"><label>VAT</label><input id="editVat" type="number" step="0.01"></div>
           <div class="editor-field"><label>Total</label><input id="editTotal" type="number" step="0.01"></div>
+          <div class="editor-summary">
+            <div><span>Offline subtotal</span><strong id="calcSubTotal">£0.00</strong></div>
+            <div><span>VAT @ 20%</span><strong id="calcVat">£0.00</strong></div>
+            <div><span>Total</span><strong id="calcTotal">£0.00</strong></div>
+          </div>
           <div class="editor-section-title">Customer sign-off text</div>
           <div class="editor-field"><label>Customer name</label><input id="editCustomerName"></div>
           <div class="editor-field"><label>Customer date</label><input id="editCustomerDate" type="date"></div>
@@ -368,13 +418,14 @@
       title="FSD Certs"
       src="about:blank"
       allow="camera *; microphone *; clipboard-read *; clipboard-write *; fullscreen *"
+      loading="lazy"
       referrerpolicy="no-referrer-when-downgrade">
     </iframe>
   </section>
 
   <div id="loader" class="loader hidden">
     <div class="panel">
-      <img class="logo" src="fsd-certs-logo.png" alt="FSD Certs cloud logo">
+      <img class="logo" src="fsd-certs-logo.png" alt="FSD Certs cloud logo" width="104" height="104" decoding="async">
       <h2>FSD Certs</h2>
       <p>Loading the certificate system…</p>
       <div class="maker-mark">Jared720 Labs</div>
@@ -384,7 +435,7 @@
 
   <div id="fallback" class="fallback hidden">
     <div class="panel">
-      <img class="logo" src="fsd-certs-logo.png" alt="FSD Certs cloud logo">
+      <img class="logo" src="fsd-certs-logo.png" alt="FSD Certs cloud logo" width="104" height="104" decoding="async">
       <h2>Still loading?</h2>
       <p>If iPad Safari is being awkward, reload the shell or open the cert system directly.</p>
       <div class="maker-mark">Jared720 Labs</div>
@@ -399,6 +450,7 @@
     (function () {
       'use strict';
 
+      const SHELL_VER = 'V6.3c54';
       const APP_URL = 'https://script.google.com/macros/s/AKfycbzq9FTETNZwUJWHMGnMHECbu3sJ3jy3FFvGYyeaRXtkoK1GHBtqOu-GLBle_WGfoFtI/exec';
       const SCHEDULE_URL = 'https://docs.google.com/spreadsheets/d/1SZK6igtKPVHcBRdkA49A6AKSobkWXI_pk-De7taZP6c/edit';
       const CALLOUTS_URL = 'https://docs.google.com/spreadsheets/d/1eP59Z3wJj2N7QlZJ2sJIh2SIWeVkgXy24ER8kG6xICc/edit?gid=1031351657#gid=1031351657';
@@ -411,6 +463,8 @@
       const offlineStatus = document.getElementById('offlineStatus');
       const offlineEditor = document.getElementById('offlineEditor');
       const editorStatus = document.getElementById('editorStatus');
+      const editorNetBadge = document.getElementById('editorNetBadge');
+      const editorDirtyBadge = document.getElementById('editorDirtyBadge');
       const OFFLINE_W_QUEUE_KEY = 'fsd_esr_offline_w_queue_v6_3c37u';
       const OFFLINE_W_OLD_QUEUE_KEY = 'fsd_esr_offline_w_queue_v6_3c37s';
       const OFFLINE_W_WINDOW_NAME_PREFIX = 'FSD_OFFLINE_W_PAYLOAD::';
@@ -494,9 +548,11 @@
         writeOfflineQueue(readOfflineQueue().filter(function(row) { return row && row.offlineId !== offlineId; }));
       }
 
+      const ESC_MAP = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
+
       function escapeHtml(value) {
         return String(value || '').replace(/[&<>"']/g, function(ch) {
-          return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[ch];
+          return ESC_MAP[ch];
         });
       }
 
@@ -509,7 +565,8 @@
           return;
         }
 
-        offlineList.innerHTML = rows.map(function(row, index) {
+        const parts = [];
+        rows.forEach(function(row) {
           const title = row.draftName || row.customer || 'Offline W draft';
           const saved = row.savedAt ? new Date(row.savedAt).toLocaleString() : 'not known';
           const meta = [
@@ -518,16 +575,20 @@
             row.site ? 'Site: ' + row.site : '',
             'Saved: ' + saved
           ].filter(Boolean).join(' · ');
-          return '<article class="offline-item">' +
-            '<strong>' + escapeHtml(title) + '</strong>' +
-            '<div class="offline-meta">' + escapeHtml(meta) + '</div>' +
-            '<div class="offline-actions">' +
-              '<button class="button secondary" type="button" data-offline-id="' + escapeHtml(row.offlineId) + '" data-offline-action="edit">Edit Offline</button>' +
-              '<button class="button" type="button" data-offline-id="' + escapeHtml(row.offlineId) + '" data-offline-action="sync">Sync to Cloud</button>' +
-              '<button class="button third" type="button" data-offline-id="' + escapeHtml(row.offlineId) + '" data-offline-action="delete">Delete</button>' +
-            '</div>' +
-          '</article>';
-        }).join('');
+          const id = escapeHtml(row.offlineId);
+          parts.push(
+            '<article class="offline-item">',
+              '<strong>', escapeHtml(title), '</strong>',
+              '<div class="offline-meta">', escapeHtml(meta), '</div>',
+              '<div class="offline-actions">',
+                '<button class="button secondary" type="button" data-offline-id="', id, '" data-offline-action="edit">Edit Offline</button>',
+                '<button class="button" type="button" data-offline-id="', id, '" data-offline-action="sync">Sync to Cloud</button>',
+                '<button class="button third" type="button" data-offline-id="', id, '" data-offline-action="delete">Delete</button>',
+              '</div>',
+            '</article>'
+          );
+        });
+        offlineList.innerHTML = parts.join('');
         setOfflineStatus(rows.length + ' offline W draft' + (rows.length === 1 ? '' : 's') + ' waiting on this iPad.');
       }
 
@@ -550,6 +611,89 @@
         const el = document.getElementById(id);
         return el ? el.value : '';
       }
+
+      function money(value) {
+        const n = Number(value || 0);
+        return '£' + (Number.isFinite(n) ? n : 0).toFixed(2);
+      }
+
+      function parseMoney(value) {
+        const n = Number(String(value || '').replace(/[^0-9.-]/g, ''));
+        return Number.isFinite(n) ? n : 0;
+      }
+
+      function setEditorDirty(isDirty) {
+        if (!editorDirtyBadge) return;
+        editorDirtyBadge.className = isDirty ? 'dirty-badge' : 'dirty-badge saved';
+        editorDirtyBadge.textContent = isDirty ? 'Unsaved changes' : 'Saved offline';
+      }
+
+      function updateEditorNetworkBadge() {
+        if (!editorNetBadge) return;
+        const online = navigator.onLine;
+        editorNetBadge.className = 'net-badge ' + (online ? 'online' : 'offline');
+        editorNetBadge.textContent = online ? 'Online - can sync' : 'Offline - iPad only';
+      }
+
+      function calculateEditorTotals() {
+        // Work description line
+        const wdQty = parseMoney(getEditValue('editWorkDescriptionQty'));
+        const wdUnit = parseMoney(getEditValue('editWorkDescriptionUnitPrice'));
+        if (wdQty && wdUnit && !document.activeElement?.matches('#editWorkDescriptionTotalPrice')) {
+          setEditValue('editWorkDescriptionTotalPrice', (wdQty * wdUnit).toFixed(2));
+        }
+
+        // Material rows
+        Array.from(document.querySelectorAll('.editor-material-row')).forEach(function(row) {
+          const qtyEl = row.querySelector('.emQty');
+          const unitEl = row.querySelector('.emUnitPrice');
+          const totalEl = row.querySelector('.emTotalPrice');
+          const qty = parseMoney(qtyEl && qtyEl.value);
+          const unit = parseMoney(unitEl && unitEl.value);
+          if (qty && unit && totalEl && document.activeElement !== totalEl) {
+            totalEl.value = (qty * unit).toFixed(2);
+          }
+        });
+
+        const workTotal = parseMoney(getEditValue('editWorkDescriptionTotalPrice'));
+        const materialsTotal = Array.from(document.querySelectorAll('.emTotalPrice')).reduce(function(sum, el) {
+          return sum + parseMoney(el.value);
+        }, 0);
+        const carriage = parseMoney(getEditValue('editCarriage'));
+        const calculatedSubtotal = workTotal + materialsTotal + carriage;
+        const override = getEditValue('editManualSubtotalOverride') === 'YES';
+        const subtotal = override ? parseMoney(getEditValue('editManualSubtotal')) : calculatedSubtotal;
+        const vat = subtotal * 0.20;
+        const total = subtotal + vat;
+
+        if (!document.activeElement?.matches('#editSubTotal')) setEditValue('editSubTotal', subtotal ? subtotal.toFixed(2) : '');
+        if (!document.activeElement?.matches('#editVat')) setEditValue('editVat', subtotal ? vat.toFixed(2) : '');
+        if (!document.activeElement?.matches('#editTotal')) setEditValue('editTotal', subtotal ? total.toFixed(2) : '');
+
+        const subBox = document.getElementById('calcSubTotal');
+        const vatBox = document.getElementById('calcVat');
+        const totalBox = document.getElementById('calcTotal');
+        if (subBox) subBox.textContent = money(subtotal);
+        if (vatBox) vatBox.textContent = money(vat);
+        if (totalBox) totalBox.textContent = money(total);
+      }
+
+      function bindEditorChangeTracking() {
+        const form = document.getElementById('offlineWEditorForm');
+        if (!form || form.__fsdBound) return;
+        form.__fsdBound = true;
+        form.addEventListener('input', function(event) {
+          setEditorDirty(true);
+          if (event.target && (event.target.matches('input') || event.target.matches('textarea') || event.target.matches('select'))) {
+            calculateEditorTotals();
+          }
+        });
+        form.addEventListener('change', function() {
+          setEditorDirty(true);
+          calculateEditorTotals();
+        });
+      }
+
 
       function renderEditorMaterials(materials) {
         const wrap = document.getElementById('editorMaterials');
@@ -623,6 +767,10 @@
         loader.classList.add('hidden');
         fallback.classList.add('hidden');
         offlineEditor.classList.add('active');
+        updateEditorNetworkBadge();
+        bindEditorChangeTracking();
+        calculateEditorTotals();
+        setEditorDirty(false);
         setEditorStatus('Editing offline W draft saved on this iPad. Press Save Offline before leaving.');
       }
 
@@ -637,7 +785,7 @@
       }
 
       function makeOfflineId() {
-        return 'W-OFFLINE-' + new Date().toISOString().replace(/[-:.TZ]/g, '').slice(0, 14) + '-' + Math.random().toString(36).slice(2, 7).toUpperCase();
+        return 'W-OFFLINE-' + Date.now() + '-' + Math.random().toString(36).slice(2, 7).toUpperCase();
       }
 
       function createBlankOfflineWItem() {
@@ -690,6 +838,33 @@
         };
       }
 
+
+      window.autoNameOfflineW = function autoNameOfflineW(event) {
+        stopTap(event);
+        const draft = {
+          customer: getEditValue('editCustomer'),
+          site: getEditValue('editSite'),
+          serviceDate: getEditValue('editServiceDate')
+        };
+        setEditValue('editDraftName', buildEditorDraftName(draft));
+        setEditorDirty(true);
+        setEditorStatus('Draft name updated from customer/site.');
+      };
+
+      window.setCustomerDateToday = function setCustomerDateToday(event) {
+        stopTap(event);
+        setEditValue('editCustomerDate', new Date().toISOString().slice(0, 10));
+        setEditorDirty(true);
+        setEditorStatus('Customer date set to today.');
+      };
+
+      window.addThreeMaterialRows = function addThreeMaterialRows(event) {
+        stopTap(event);
+        addEditorMaterialRow({}); addEditorMaterialRow({}); addEditorMaterialRow({});
+        setEditorDirty(true);
+        setEditorStatus('Added 3 blank material/work rows.');
+      };
+
       window.startNewOfflineW = function startNewOfflineW(event) {
         stopTap(event);
         const item = createBlankOfflineWItem();
@@ -705,6 +880,7 @@
           setEditorStatus('Could not find this offline draft on the iPad. Go back and refresh Offline Drafts.');
           return null;
         }
+        calculateEditorTotals();
         const d = Object.assign({}, item.draft);
         d.savedAt = new Date().toISOString();
         d.engineer = getEditValue('editEngineer');
@@ -743,6 +919,7 @@
           savedAt: d.savedAt
         });
         upsertOfflineItem(updated);
+        setEditorDirty(false);
         setEditorStatus('Saved offline on this iPad at ' + new Date().toLocaleTimeString() + '.');
         return updated;
       }
@@ -800,7 +977,7 @@
           frame.name = OFFLINE_W_WINDOW_NAME_PREFIX + JSON.stringify(shellPayload);
         } catch (err) {}
         const offlineIdParam = item && item.offlineId ? '&offlineId=' + encodeURIComponent(item.offlineId) : '';
-        frame.src = APP_URL + '?page=esr&offlineBridge=1&shell=ipad&offlineAction=' + encodeURIComponent(action) + offlineIdParam + '&v=V6.3c51&ts=' + Date.now();
+        frame.src = APP_URL + '?page=esr&offlineBridge=1&shell=ipad&offlineAction=' + encodeURIComponent(action) + offlineIdParam + '&v=' + encodeURIComponent(SHELL_VER) + '&ts=' + Date.now();
         startFallbackTimer();
       }
 
@@ -897,7 +1074,7 @@
         if (targetUrl.indexOf('shell=') === -1) {
           targetUrl += (targetUrl.indexOf('?') === -1 ? '?' : '&') + 'shell=ipad';
         }
-        targetUrl += (targetUrl.indexOf('?') === -1 ? '?' : '&') + 'appShell=1&v=V6.3c51&ts=' + Date.now();
+        targetUrl += (targetUrl.indexOf('?') === -1 ? '?' : '&') + 'appShell=1&v=' + encodeURIComponent(SHELL_VER) + '&ts=' + Date.now();
         pendingShellAction = null;
         clearTimeout(shellActionTimer);
         home.classList.add('hidden');
@@ -927,7 +1104,7 @@
         loader.classList.remove('hidden');
         loaded = false;
         try { frame.name = ''; } catch (err) {}
-        frame.src = APP_URL + '?shell=ipad&v=V6.3c51&ts=' + Date.now();
+        frame.src = APP_URL + '?shell=ipad&v=' + encodeURIComponent(SHELL_VER) + '&ts=' + Date.now();
         hasStarted = true;
         startFallbackTimer();
       };
@@ -960,7 +1137,7 @@
         loader.classList.remove('hidden');
         loaded = false;
         try { frame.name = ''; } catch (err) {}
-        frame.src = APP_URL + '?shell=ipad&v=V6.3c51&reload=' + Date.now();
+        frame.src = APP_URL + '?shell=ipad&v=' + encodeURIComponent(SHELL_VER) + '&reload=' + Date.now();
         startFallbackTimer();
       };
 
@@ -1060,11 +1237,15 @@
         }
       });
 
+      window.addEventListener('online', updateEditorNetworkBadge);
+      window.addEventListener('offline', updateEditorNetworkBadge);
+      updateEditorNetworkBadge();
+
       document.addEventListener('gesturestart', function (event) {
         event.preventDefault();
       });
     }());
   </script>
-  <div class="fixed-version-badge">V6.3c51 · cloud drafts</div>
+  <div class="fixed-version-badge">V6.3c54 · speed polish</div>
 </body>
 </html>
