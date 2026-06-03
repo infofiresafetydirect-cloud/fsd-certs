@@ -741,7 +741,7 @@
 
     <footer class="ipad-footer">
       <span>Jared720 Labs</span>
-      <span>App Shell V6.3c63 · new FSD logo</span>
+      <span>App Shell V6.3c65 · callouts app page</span>
     </footer>
   </section>
 
@@ -873,10 +873,10 @@
     (function () {
       'use strict';
 
-      const SHELL_VER = 'V6.3c63';
+      const SHELL_VER = 'V6.3c65';
       const APP_URL = 'https://script.google.com/macros/s/AKfycbzq9FTETNZwUJWHMGnMHECbu3sJ3jy3FFvGYyeaRXtkoK1GHBtqOu-GLBle_WGfoFtI/exec';
       const SCHEDULE_URL = 'https://docs.google.com/spreadsheets/d/1SZK6igtKPVHcBRdkA49A6AKSobkWXI_pk-De7taZP6c/edit';
-      const CALLOUTS_URL = 'https://docs.google.com/spreadsheets/d/1eP59Z3wJj2N7QlZJ2sJIh2SIWeVkgXy24ER8kG6xICc/edit?gid=1031351657#gid=1031351657';
+      const CALLOUTS_PAGE = APP_URL + '?page=callouts&shell=ipad';
       const home = document.getElementById('home');
       const frame = document.getElementById('fsdFrame');
       const loader = document.getElementById('loader');
@@ -1541,7 +1541,7 @@
 
       window.openCallouts = function openCallouts(event) {
         stopTap(event);
-        goDirect(CALLOUTS_URL);
+        openAppUrlInShell(CALLOUTS_PAGE);
       };
 
       window.showHome = function showHome() {
@@ -1669,6 +1669,6 @@
       });
     }());
   </script>
-  <div class="fixed-version-badge">App Shell V6.3c63 · new FSD logo</div>
+  <div class="fixed-version-badge">App Shell V6.3c65 · callouts app page</div>
 </body>
 </html>
