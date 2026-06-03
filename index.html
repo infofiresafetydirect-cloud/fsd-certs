@@ -21,7 +21,7 @@
   <link rel="dns-prefetch" href="https://docs.google.com">
 
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
-  <link rel="icon" href="apple-touch-icon.png">
+  <link rel="icon" href="favicon.png">
   <link rel="preload" as="image" href="fsd-certs-logo.png" fetchpriority="high">
 
   <style>
@@ -60,8 +60,8 @@
       background:
         radial-gradient(circle at 12% 8%, rgba(59,130,246,.42), transparent 28%),
         radial-gradient(circle at 88% 18%, rgba(255,255,255,.28), transparent 26%),
-        radial-gradient(circle at 50% 95%, rgba(177,15,31,.32), transparent 32%),
-        linear-gradient(145deg, #111827 0%, #16355c 48%, #dbeafe 100%);
+        radial-gradient(circle at 50% 95%, rgba(212,175,55,.30), transparent 32%),
+        linear-gradient(145deg, #0b1020 0%, #123158 48%, #dbeafe 100%);
       transition: transform .2s ease, opacity .2s ease, visibility .2s ease;
     }
 
@@ -287,50 +287,473 @@
       .button .tile-icon { font-size: 36px; }
       .maker-mark { margin-top: 22px; }
     }
+
+    /* V6.3c62 - colourful real app-icon home screen */
+    .ipad-home {
+      display: block;
+      z-index: 30;
+      color: #ffffff;
+      background: #111827;
+      padding: calc(18px + var(--safe-top)) calc(18px + var(--safe-right)) calc(22px + var(--safe-bottom)) calc(18px + var(--safe-left));
+      transition: opacity .18s ease, transform .18s ease, visibility .18s ease;
+    }
+    .ipad-wallpaper {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 16% 18%, rgba(255,255,255,.34), transparent 18%),
+        radial-gradient(circle at 88% 12%, rgba(96,165,250,.32), transparent 24%),
+        radial-gradient(circle at 78% 78%, rgba(251,191,36,.24), transparent 26%),
+        linear-gradient(135deg, #ecf5ff 0%, #d9e8f8 34%, #c9d9eb 60%, #eef2f7 100%);
+    }
+    .ipad-wallpaper::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(15,23,42,.08), rgba(15,23,42,.16));
+      backdrop-filter: blur(0px);
+    }
+    .ipad-statusbar {
+      position: relative;
+      z-index: 2;
+      height: 34px;
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      color: rgba(15,23,42,.78);
+      font-size: 13px;
+      font-weight: 900;
+      letter-spacing: .02em;
+      text-shadow: 0 1px 0 rgba(255,255,255,.30);
+    }
+    .status-centre { color: rgba(15,23,42,.92); }
+    .status-right { justify-self: end; color: #166534; }
+    .ipad-home-grid {
+      position: relative;
+      z-index: 2;
+      width: min(900px, 100%);
+      margin: 12px auto 0;
+      display: grid;
+      gap: 26px;
+    }
+    .ipad-title-block {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      padding: 10px 8px 4px;
+      color: #111827;
+    }
+    .ipad-brand-logo {
+      width: 76px;
+      height: 76px;
+      object-fit: cover;
+      border-radius: 22px;
+      box-shadow: 0 20px 40px rgba(15,23,42,.18), 0 0 0 1px rgba(255,255,255,.65);
+    }
+    .ipad-brand-kicker {
+      margin-bottom: 2px;
+      color: rgba(15,23,42,.66);
+      font-size: 12px;
+      font-weight: 950;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+    }
+    .ipad-title-block h1 {
+      margin: 0;
+      color: #111827;
+      font-size: clamp(42px, 7vw, 72px);
+      line-height: .92;
+      letter-spacing: -0.06em;
+      font-weight: 950;
+      text-shadow: 0 1px 0 rgba(255,255,255,.35);
+    }
+    .ipad-title-block p {
+      margin: 8px 0 0;
+      color: rgba(15,23,42,.72);
+      font-size: 17px;
+      font-weight: 750;
+    }
+    .app-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 22px 26px;
+      padding: 4px 8px 110px;
+    }
+    .app-icon {
+      border: 0;
+      background: transparent;
+      color: #111827;
+      font: inherit;
+      display: grid;
+      place-items: center;
+      gap: 10px;
+      min-height: 128px;
+      padding: 8px 4px;
+      cursor: pointer;
+      touch-action: manipulation;
+      will-change: transform;
+    }
+    .app-icon:active { transform: scale(.94); }
+    .icon-square {
+      width: 82px;
+      height: 82px;
+      border-radius: 23px;
+      display: grid;
+      place-items: center;
+      font-size: 38px;
+      color: #fff;
+      box-shadow: 0 16px 28px rgba(15,23,42,.20), inset 0 1px 0 rgba(255,255,255,.35);
+      overflow: hidden;
+      position: relative;
+    }
+    .icon-square::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(255,255,255,.34), transparent 42%, rgba(0,0,0,.08));
+      pointer-events: none;
+    }
+    .icon-square span { position: relative; z-index: 1; filter: drop-shadow(0 3px 5px rgba(0,0,0,.20)); }
+    .app-icon strong {
+      color: #111827;
+      font-size: 14px;
+      line-height: 1.12;
+      font-weight: 900;
+      text-align: center;
+      text-shadow: 0 1px 0 rgba(255,255,255,.35);
+    }
+    .app-icon.certs .icon-square { background: linear-gradient(145deg, #111827, #334155); }
+    .app-icon.drafts .icon-square { background: linear-gradient(145deg, #0f766e, #14b8a6); }
+    .app-icon.schedule .icon-square { background: linear-gradient(145deg, #2563eb, #60a5fa); }
+    .app-icon.callouts .icon-square { background: linear-gradient(145deg, #f59e0b, #fb7185); }
+    .app-icon.cloud .icon-square { background: linear-gradient(145deg, #6366f1, #a78bfa); }
+    .app-icon.admin .icon-square { background: linear-gradient(145deg, #475569, #94a3b8); }
+    .ipad-dock {
+      position: absolute;
+      z-index: 3;
+      left: 50%;
+      bottom: calc(26px + var(--safe-bottom));
+      transform: translateX(-50%);
+      width: min(520px, calc(100% - 36px - var(--safe-left) - var(--safe-right)));
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      padding: 12px;
+      border-radius: 32px;
+      background: rgba(255,255,255,.42);
+      border: 1px solid rgba(255,255,255,.62);
+      box-shadow: 0 18px 46px rgba(15,23,42,.18);
+      backdrop-filter: blur(20px) saturate(150%);
+      -webkit-backdrop-filter: blur(20px) saturate(150%);
+    }
+    .dock-app {
+      border: 0;
+      border-radius: 22px;
+      min-height: 72px;
+      background: rgba(255,255,255,.72);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      color: #111827;
+      font: inherit;
+      font-weight: 950;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.55);
+      cursor: pointer;
+      touch-action: manipulation;
+    }
+    .dock-app span { font-size: 26px; }
+    .dock-app strong { font-size: 13px; }
+    .dock-app:active { transform: scale(.96); }
+    .ipad-footer {
+      position: absolute;
+      z-index: 3;
+      left: calc(18px + var(--safe-left));
+      right: calc(18px + var(--safe-right));
+      bottom: calc(6px + var(--safe-bottom));
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      color: rgba(15,23,42,.56);
+      font-size: 10px;
+      font-weight: 900;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      pointer-events: none;
+    }
+    @media (max-height: 740px) {
+      .ipad-title-block { padding-top: 0; }
+      .ipad-brand-logo { width: 60px; height: 60px; border-radius: 18px; }
+      .ipad-title-block h1 { font-size: clamp(34px, 6vw, 52px); }
+      .app-grid { gap: 12px 18px; padding-bottom: 92px; }
+      .icon-square { width: 68px; height: 68px; border-radius: 20px; font-size: 31px; }
+      .app-icon { min-height: 104px; gap: 8px; }
+      .dock-app { min-height: 58px; }
+    }
+    @media (max-width: 680px) {
+      .app-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; padding-bottom: 112px; }
+      .ipad-statusbar { grid-template-columns: 1fr auto; }
+      .status-centre { display: none; }
+      .ipad-title-block h1 { font-size: 42px; }
+      .icon-square { width: 74px; height: 74px; }
+    }
+
+
+    /* V6.3c62 - Option C: colourful real app icon style */
+    .ipad-home {
+      color: #ffffff;
+      background: #0b1020;
+      padding: calc(16px + var(--safe-top)) calc(18px + var(--safe-right)) calc(22px + var(--safe-bottom)) calc(18px + var(--safe-left));
+    }
+    .ipad-wallpaper {
+      background:
+        radial-gradient(circle at 16% 12%, rgba(34,211,238,.45), transparent 22%),
+        radial-gradient(circle at 86% 14%, rgba(168,85,247,.42), transparent 24%),
+        radial-gradient(circle at 70% 82%, rgba(251,191,36,.40), transparent 25%),
+        radial-gradient(circle at 20% 84%, rgba(244,63,94,.38), transparent 26%),
+        linear-gradient(135deg, #0f172a 0%, #1e3a8a 38%, #7c3aed 72%, #f8fafc 100%);
+    }
+    .ipad-wallpaper::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image:
+        radial-gradient(circle at 20px 20px, rgba(255,255,255,.22) 0 2px, transparent 3px),
+        radial-gradient(circle at 75px 70px, rgba(255,255,255,.14) 0 2px, transparent 3px);
+      background-size: 110px 110px;
+      opacity: .42;
+      pointer-events: none;
+    }
+    .ipad-wallpaper::after {
+      background: linear-gradient(180deg, rgba(2,6,23,.10), rgba(2,6,23,.28));
+      backdrop-filter: blur(0px);
+    }
+    .ipad-statusbar {
+      color: rgba(255,255,255,.90);
+      text-shadow: 0 2px 8px rgba(0,0,0,.26);
+    }
+    .status-centre { color: rgba(255,255,255,.94); }
+    .status-right { color: #bbf7d0; }
+    .ipad-home-grid { width: min(940px, 100%); gap: 22px; }
+    .ipad-title-block {
+      color: #ffffff;
+      padding: 12px 10px 2px;
+      text-shadow: 0 3px 16px rgba(0,0,0,.28);
+    }
+    .ipad-brand-logo {
+      border-radius: 26px;
+      box-shadow: 0 22px 42px rgba(0,0,0,.26), 0 0 0 1px rgba(255,255,255,.45), inset 0 1px 0 rgba(255,255,255,.35);
+    }
+    .ipad-brand-kicker { color: rgba(255,255,255,.78); }
+    .ipad-title-block h1 {
+      color: #ffffff;
+      letter-spacing: -.055em;
+      text-shadow: 0 6px 24px rgba(0,0,0,.30);
+    }
+    .ipad-title-block p { color: rgba(255,255,255,.82); }
+    .app-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 20px 26px;
+      padding: 4px 8px 116px;
+    }
+    .app-icon {
+      min-height: 134px;
+      color: #ffffff;
+      gap: 10px;
+      border-radius: 26px;
+    }
+    .app-icon strong {
+      color: #ffffff;
+      font-size: 14px;
+      text-shadow: 0 2px 10px rgba(0,0,0,.32);
+      letter-spacing: .01em;
+    }
+    .icon-square {
+      width: 86px;
+      height: 86px;
+      border-radius: 25px;
+      font-size: 40px;
+      box-shadow:
+        0 18px 34px rgba(2,6,23,.34),
+        0 0 0 1px rgba(255,255,255,.22),
+        inset 0 1px 0 rgba(255,255,255,.44),
+        inset 0 -10px 24px rgba(0,0,0,.10);
+    }
+    .icon-square::before {
+      content: "";
+      position: absolute;
+      left: 12%; right: 12%; top: 9%; height: 30%;
+      border-radius: 999px;
+      background: linear-gradient(180deg, rgba(255,255,255,.52), rgba(255,255,255,.08));
+      filter: blur(.2px);
+      pointer-events: none;
+      z-index: 1;
+    }
+    .icon-square::after {
+      background:
+        radial-gradient(circle at 32% 20%, rgba(255,255,255,.48), transparent 20%),
+        linear-gradient(180deg, rgba(255,255,255,.18), transparent 42%, rgba(0,0,0,.16));
+    }
+    .icon-square span { z-index: 2; filter: drop-shadow(0 4px 7px rgba(0,0,0,.24)); }
+
+    .app-logo-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: inherit;
+      display: block;
+      position: relative;
+      z-index: 2;
+      filter: none;
+    }
+    .app-icon.certs .icon-square {
+      background: #0b0f16;
+      padding: 0;
+      overflow: hidden;
+    }
+    .app-icon.certs .icon-square::before,
+    .app-icon.certs .icon-square::after {
+      display: none;
+    }
+
+    .app-icon.certs .icon-square { background: linear-gradient(145deg, #111827 0%, #0ea5e9 58%, #38bdf8 100%); }
+    .app-icon.drafts .icon-square { background: linear-gradient(145deg, #064e3b 0%, #10b981 54%, #a7f3d0 100%); }
+    .app-icon.schedule .icon-square { background: linear-gradient(145deg, #1d4ed8 0%, #6366f1 50%, #c084fc 100%); }
+    .app-icon.callouts .icon-square { background: linear-gradient(145deg, #b45309 0%, #f97316 45%, #fb7185 100%); }
+    .app-icon.cloud .icon-square { background: linear-gradient(145deg, #4338ca 0%, #8b5cf6 54%, #f0abfc 100%); }
+    .app-icon.admin .icon-square { background: linear-gradient(145deg, #334155 0%, #64748b 55%, #cbd5e1 100%); }
+    .ipad-dock {
+      width: min(560px, calc(100% - 36px - var(--safe-left) - var(--safe-right)));
+      background: rgba(255,255,255,.24);
+      border: 1px solid rgba(255,255,255,.42);
+      box-shadow: 0 24px 62px rgba(2,6,23,.28), inset 0 1px 0 rgba(255,255,255,.22);
+    }
+    .dock-app {
+      min-height: 76px;
+      background: rgba(255,255,255,.28);
+      color: #ffffff;
+      border: 1px solid rgba(255,255,255,.20);
+      text-shadow: 0 2px 9px rgba(0,0,0,.25);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.30), 0 8px 18px rgba(2,6,23,.16);
+    }
+    .dock-app span {
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      border-radius: 13px;
+      background: linear-gradient(145deg, #111827, #0ea5e9);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.32), 0 8px 18px rgba(0,0,0,.18);
+    }
+    .dock-app.drafts span { background: linear-gradient(145deg, #065f46, #10b981); }
+
+    .dock-app.certs span {
+      background: #0b0f16;
+      padding: 0;
+      overflow: hidden;
+    }
+    .dock-app.certs span img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: inherit;
+      display: block;
+    }
+
+    .dock-app.schedule span { background: linear-gradient(145deg, #1d4ed8, #a855f7); }
+    .ipad-footer { color: rgba(255,255,255,.62); text-shadow: 0 2px 8px rgba(0,0,0,.22); }
+    @media (max-height: 740px) {
+      .icon-square { width: 70px; height: 70px; border-radius: 21px; font-size: 32px; }
+      .app-icon { min-height: 108px; }
+      .dock-app { min-height: 60px; }
+      .dock-app span { width: 34px; height: 34px; border-radius: 11px; font-size: 22px; }
+    }
+    @media (max-width: 680px) {
+      .app-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .ipad-title-block { gap: 14px; }
+    }
+
   </style>
 </head>
 <body>
   <!--
-    Fire Safety Direct - FSD Certs V6.3c54 iPad Shell Speed Polish
-    Compact polished glass iPad launcher with Start Offline W trial.
+    Fire Safety Direct - FSD Certs V6.3c63 New FSD Logo App Icon Shell
+    Colourful iPad app-icon shell with new black/gold FSD logo.
     App shell mark: Jared720 Labs
   -->
 
-  <section id="home" class="screen home" aria-label="FSD Certs Launcher">
-    <main class="home-panel">
-      <section class="home-card">
-        <div class="brand-row">
-          <div class="brand-left">
-            <img class="brand-logo" src="fsd-certs-logo.png" alt="FSD Certs cloud logo" width="54" height="54" decoding="async" fetchpriority="high">
-            <div class="brand-name">FSD<small>CERTS</small></div>
-          </div>
-          <div class="company-name">Fire Safety Direct</div>
-        </div>
+  <section id="home" class="screen home ipad-home" aria-label="FSD Certs Home Screen">
+    <div class="ipad-wallpaper" aria-hidden="true"></div>
+    <header class="ipad-statusbar">
+      <div class="status-left">FSD Certs</div>
+      <div class="status-centre">Fire Safety Direct</div>
+      <div class="status-right">● Ready</div>
+    </header>
 
-        <h1>Welcome to FSD Certs</h1>
-        <p class="subtitle">Your hub for online certificates, engineer reports, scheduling, and callouts.</p>
-
-        <div class="actions">
-          <button class="button" type="button" onclick="openCerts(event)"><span class="tile-icon">📄</span><span>Open Certificate<br>Portal</span></button>
-          <button class="button secondary" type="button" onclick="openSchedule(event)"><span class="tile-icon">🗓️</span><span>Open FSD<br>Schedule</span></button>
-          <button class="button third" type="button" onclick="openCallouts(event)"><span class="tile-icon">🔔</span><span>Callouts</span></button>
-          <button class="button secondary" type="button" onclick="openOfflineDrafts(event)"><span class="tile-icon">📁</span><span>Offline Drafts</span></button>
+    <main class="ipad-home-grid" aria-label="FSD Certs apps">
+      <section class="ipad-title-block">
+        <img class="ipad-brand-logo" src="fsd-certs-logo.png" alt="FSD Certs cloud logo" width="76" height="76" decoding="async" fetchpriority="high">
+        <div>
+          <div class="ipad-brand-kicker">Fire Safety Direct</div>
+          <h1>FSD Certs</h1>
+          <p>Choose an app to start work.</p>
         </div>
       </section>
-      <div class="maker-mark">Built by Jared720 Labs</div>
-      <div class="shell-version-badge">App Shell V6.3c54 · shell speed polish</div>
+
+      <section class="app-grid" aria-label="Main apps">
+        <button class="app-icon certs" type="button" onclick="openCerts(event)" aria-label="Open Certificate Portal">
+          <span class="icon-square"><img class="app-logo-img" src="fsd-certs-logo.png" alt="" width="86" height="86" decoding="async"></span>
+          <strong>Certificate<br>Portal</strong>
+        </button>
+
+        <button class="app-icon drafts" type="button" onclick="openOfflineDrafts(event)" aria-label="Open Offline Certs and Reports">
+          <span class="icon-square"><span>▣</span></span>
+          <strong>Offline Certs<br>& Reports</strong>
+        </button>
+
+        <button class="app-icon schedule" type="button" onclick="openSchedule(event)" aria-label="Open FSD Schedule">
+          <span class="icon-square"><span>📅</span></span>
+          <strong>FSD<br>Schedule</strong>
+        </button>
+
+        <button class="app-icon callouts" type="button" onclick="openCallouts(event)" aria-label="Open Callouts">
+          <span class="icon-square"><span>⚡</span></span>
+          <strong>Callouts</strong>
+        </button>
+
+        <button class="app-icon cloud" type="button" onclick="openCerts(event)" aria-label="Open Cloud Drafts via Certificate Portal">
+          <span class="icon-square"><span>☁</span></span>
+          <strong>Cloud<br>Drafts</strong>
+        </button>
+
+        <button class="app-icon admin" type="button" onclick="openCerts(event)" aria-label="Open Submitted Reports via Certificate Portal">
+          <span class="icon-square"><span>📂</span></span>
+          <strong>Submitted<br>Reports</strong>
+        </button>
+      </section>
     </main>
+
+    <nav class="ipad-dock" aria-label="Dock">
+      <button class="dock-app certs" type="button" onclick="openCerts(event)"><span><img src="fsd-certs-logo.png" alt="" width="42" height="42" decoding="async"></span><strong>Portal</strong></button>
+      <button class="dock-app drafts" type="button" onclick="openOfflineDrafts(event)"><span>▣</span><strong>Offline</strong></button>
+      <button class="dock-app schedule" type="button" onclick="openSchedule(event)"><span>📅</span><strong>Schedule</strong></button>
+    </nav>
+
+    <footer class="ipad-footer">
+      <span>Jared720 Labs</span>
+      <span>App Shell V6.3c63 · new FSD logo</span>
+    </footer>
   </section>
 
   <section id="offlineDrafts" class="screen offline-screen" aria-label="Offline Drafts">
     <main class="offline-card">
-      <h2 class="offline-title">Offline Drafts</h2>
-      <p class="offline-help">Drafts saved without signal live on this iPad until they are synced to the FSD cloud Draft Manager.</p>
-      <p class="offline-help"><strong>GoFormz-style trial:</strong> W drafts can now be edited locally on this iPad before syncing. Sync first when signal returns, then open from Cloud Drafts to generate the PDF.</p>
+      <h2 class="offline-title">Offline Certs/Reports</h2>
+      <p class="offline-help">Certificate/report drafts saved without signal live on this iPad until they are synced to the FSD cloud Draft Manager.</p>
+      <p class="offline-help"><strong>Offline editor trial:</strong> W reports can currently be started and edited locally. More certificate/report types will be added here as they go live.</p>
       <div id="offlineList" class="offline-list"></div>
       <div class="actions">
-        <button class="button" type="button" onclick="startNewOfflineW(event)"><span class="tile-icon">📝</span><span>Start Offline W</span></button>
-        <button class="button secondary" type="button" onclick="refreshOfflineDrafts(event)"><span class="tile-icon">🔄</span><span>Refresh Offline Drafts</span></button>
+        <button class="button" type="button" onclick="startNewOfflineW(event)"><span class="tile-icon">📝</span><span>Start Offline Report</span></button>
+        <button class="button secondary" type="button" onclick="refreshOfflineDrafts(event)"><span class="tile-icon">🔄</span><span>Refresh Offline Reports</span></button>
         <button class="button third" type="button" onclick="closeOfflineDrafts(event)"><span class="tile-icon">↩️</span><span>Back to Menu</span></button>
       </div>
       <div id="offlineStatus" class="offline-status"></div>
@@ -340,12 +763,12 @@
 
 
 
-  <section id="offlineEditor" class="screen offline-editor-screen" aria-label="Edit Offline W Draft">
+  <section id="offlineEditor" class="screen offline-editor-screen" aria-label="Edit Offline Report Draft">
     <main class="editor-card">
       <div class="editor-head">
         <div>
-          <h2>Edit Offline W Draft</h2>
-          <p class="editor-note">This is the local iPad editor. It works without signal for saved W drafts. Live customer/material lookups and PDF creation still happen after syncing to Cloud Drafts.</p>
+          <h2>Edit Offline Report Draft</h2>
+          <p class="editor-note">This is the local iPad editor. It currently supports W reports offline. Live customer/material lookups and PDF creation still happen after syncing to Cloud Drafts.</p>
           <div class="editor-pill-row">
             <span id="editorNetBadge" class="net-badge">Checking signal</span>
             <span id="editorDirtyBadge" class="dirty-badge saved">Saved offline</span>
@@ -450,7 +873,7 @@
     (function () {
       'use strict';
 
-      const SHELL_VER = 'V6.3c54';
+      const SHELL_VER = 'V6.3c63';
       const APP_URL = 'https://script.google.com/macros/s/AKfycbzq9FTETNZwUJWHMGnMHECbu3sJ3jy3FFvGYyeaRXtkoK1GHBtqOu-GLBle_WGfoFtI/exec';
       const SCHEDULE_URL = 'https://docs.google.com/spreadsheets/d/1SZK6igtKPVHcBRdkA49A6AKSobkWXI_pk-De7taZP6c/edit';
       const CALLOUTS_URL = 'https://docs.google.com/spreadsheets/d/1eP59Z3wJj2N7QlZJ2sJIh2SIWeVkgXy24ER8kG6xICc/edit?gid=1031351657#gid=1031351657';
@@ -1246,6 +1669,6 @@
       });
     }());
   </script>
-  <div class="fixed-version-badge">V6.3c54 · speed polish</div>
+  <div class="fixed-version-badge">App Shell V6.3c63 · new FSD logo</div>
 </body>
 </html>
