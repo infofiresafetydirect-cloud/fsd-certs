@@ -677,7 +677,7 @@
 </head>
 <body>
   <!--
-    Fire Safety Direct - FSD Certs V6.3c63 New FSD Logo App Icon Shell
+    Fire Safety Direct - FSD Certs V6.3c66 Offline Certs/Reports Framework
     Colourful iPad app-icon shell with new black/gold FSD logo.
     App shell mark: Jared720 Labs
   -->
@@ -741,13 +741,13 @@
 
     <footer class="ipad-footer">
       <span>Jared720 Labs</span>
-      <span>App Shell V6.3c65 · callouts app page</span>
+      <span>App Shell V6.3c66 · offline framework</span>
     </footer>
   </section>
 
   <section id="offlineDrafts" class="screen offline-screen" aria-label="Offline Drafts">
     <main class="offline-card">
-      <h2 class="offline-title">Offline Certs/Reports</h2>
+      <h2 class="offline-title">Offline Certs &amp; Reports</h2>
       <p class="offline-help">Certificate/report drafts saved without signal live on this iPad until they are synced to the FSD cloud Draft Manager.</p>
       <p class="offline-help"><strong>Offline editor trial:</strong> W reports can currently be started and edited locally. More certificate/report types will be added here as they go live.</p>
       <div id="offlineList" class="offline-list"></div>
@@ -873,7 +873,7 @@
     (function () {
       'use strict';
 
-      const SHELL_VER = 'V6.3c65';
+      const SHELL_VER = 'V6.3c66';
       const APP_URL = 'https://script.google.com/macros/s/AKfycbzq9FTETNZwUJWHMGnMHECbu3sJ3jy3FFvGYyeaRXtkoK1GHBtqOu-GLBle_WGfoFtI/exec';
       const SCHEDULE_URL = 'https://docs.google.com/spreadsheets/d/1SZK6igtKPVHcBRdkA49A6AKSobkWXI_pk-De7taZP6c/edit';
       const CALLOUTS_PAGE = APP_URL + '?page=callouts&shell=ipad';
@@ -891,6 +891,17 @@
       const OFFLINE_W_QUEUE_KEY = 'fsd_esr_offline_w_queue_v6_3c37u';
       const OFFLINE_W_OLD_QUEUE_KEY = 'fsd_esr_offline_w_queue_v6_3c37s';
       const OFFLINE_W_WINDOW_NAME_PREFIX = 'FSD_OFFLINE_W_PAYLOAD::';
+
+      // V6.3c66 - Offline Certs/Reports framework registry.
+      // Safe first step only: W remains the only editable/syncable offline report.
+      // SFA/SEL/FAC are registered here so the shell has one shared place to grow from,
+      // without touching the proven W bridge or Apps Script cloud draft flow yet.
+      const OFFLINE_REPORT_TYPES = {
+        W:   { code: 'W',   label: 'Engineer Service Report',             page: 'esr', editableOffline: true,  syncableOffline: true },
+        SFA: { code: 'SFA', label: 'Fire Alarm Service Report',           page: 'sfa', editableOffline: false, syncableOffline: false },
+        SEL: { code: 'SEL', label: 'Emergency Lighting Report',           page: 'sel', editableOffline: false, syncableOffline: false },
+        FAC: { code: 'FAC', label: 'Fire Alarm Commissioning Certificate', page: 'fac', editableOffline: false, syncableOffline: false }
+      };
       let pendingShellAction = null;
       let shellActionTimer = null;
 
@@ -934,6 +945,19 @@
         if (offlineStatus) offlineStatus.textContent = message || '';
       }
 
+      function getOfflineReportType(item) {
+        const raw = item && (item.reportType || (item.draft && item.draft.reportType) || item.type || 'W');
+        const normalized = String(raw || 'W').toUpperCase();
+        if (OFFLINE_REPORT_TYPES[normalized]) return normalized;
+        // Older W drafts stored the long report name rather than the short code.
+        if (normalized.indexOf('ENGINEER SERVICE') >= 0) return 'W';
+        return 'W';
+      }
+
+      function getOfflineReportConfig(item) {
+        return OFFLINE_REPORT_TYPES[getOfflineReportType(item)] || OFFLINE_REPORT_TYPES.W;
+      }
+
       function readOfflineQueue() {
         let rows = [];
         try {
@@ -951,7 +975,12 @@
             localStorage.setItem(OFFLINE_W_QUEUE_KEY, JSON.stringify(rows));
           }
         } catch (err) {}
-        return Array.isArray(rows) ? rows.filter(function(row) { return row && row.offlineId && row.draft; }) : [];
+        return Array.isArray(rows) ? rows.filter(function(row) { return row && row.offlineId && row.draft; }).map(function(row) {
+          const type = getOfflineReportType(row);
+          if (!row.reportType) row.reportType = type;
+          if (row.draft && !row.draft.reportTypeCode) row.draft.reportTypeCode = type;
+          return row;
+        }) : [];
       }
 
       function writeOfflineQueue(rows) {
@@ -983,16 +1012,18 @@
         const rows = readOfflineQueue().sort(function(a, b) { return String(b.savedAt || '').localeCompare(String(a.savedAt || '')); });
         if (!offlineList) return;
         if (!rows.length) {
-          offlineList.innerHTML = '<div class="offline-empty">No offline W drafts found on this iPad.</div>';
+          offlineList.innerHTML = '<div class="offline-empty">No offline certificate/report drafts found on this iPad.</div>';
           setOfflineStatus('');
           return;
         }
 
         const parts = [];
         rows.forEach(function(row) {
-          const title = row.draftName || row.customer || 'Offline W draft';
+          const report = getOfflineReportConfig(row);
+          const title = row.draftName || row.customer || ('Offline ' + report.code + ' draft');
           const saved = row.savedAt ? new Date(row.savedAt).toLocaleString() : 'not known';
           const meta = [
+            'Type: ' + report.code + ' - ' + report.label,
             row.engineer ? 'Engineer: ' + row.engineer : '',
             row.customer ? 'Customer: ' + row.customer : '',
             row.site ? 'Site: ' + row.site : '',
@@ -1012,7 +1043,7 @@
           );
         });
         offlineList.innerHTML = parts.join('');
-        setOfflineStatus(rows.length + ' offline W draft' + (rows.length === 1 ? '' : 's') + ' waiting on this iPad.');
+        setOfflineStatus(rows.length + ' offline certificate/report draft' + (rows.length === 1 ? '' : 's') + ' waiting on this iPad.');
       }
 
 
@@ -1207,18 +1238,20 @@
         return name + ' - ' + date;
       }
 
-      function makeOfflineId() {
-        return 'W-OFFLINE-' + Date.now() + '-' + Math.random().toString(36).slice(2, 7).toUpperCase();
+      function makeOfflineId(reportType) {
+        const type = OFFLINE_REPORT_TYPES[String(reportType || 'W').toUpperCase()] ? String(reportType || 'W').toUpperCase() : 'W';
+        return type + '-OFFLINE-' + Date.now() + '-' + Math.random().toString(36).slice(2, 7).toUpperCase();
       }
 
       function createBlankOfflineWItem() {
         const now = new Date();
         const today = now.toISOString().slice(0, 10);
-        const offlineId = makeOfflineId();
+        const offlineId = makeOfflineId('W');
         const draft = {
           offlineCreated: true,
           offlineId: offlineId,
           reportType: 'Engineer Service Report',
+          reportTypeCode: 'W',
           draftName: 'New Offline W - ' + today,
           serviceDate: today,
           engineer: '',
@@ -1250,6 +1283,7 @@
         };
         return {
           offlineId: offlineId,
+          reportType: 'W',
           draftId: '',
           draftName: draft.draftName,
           engineer: '',
@@ -1669,6 +1703,6 @@
       });
     }());
   </script>
-  <div class="fixed-version-badge">App Shell V6.3c65 · callouts app page</div>
+  <div class="fixed-version-badge">App Shell V6.3c66 · offline framework</div>
 </body>
 </html>
