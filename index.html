@@ -677,7 +677,7 @@
 </head>
 <body>
   <!--
-    Fire Safety Direct - FSD Certs V6.3c66a Cloud Drafts Shell Route Fix
+    Fire Safety Direct - FSD Certs V6.3c67 Offline SFA Trial Metadata
     Colourful iPad app-icon shell with new black/gold FSD logo.
     App shell mark: Jared720 Labs
   -->
@@ -741,7 +741,7 @@
 
     <footer class="ipad-footer">
       <span>Jared720 Labs</span>
-      <span>App Shell V6.3c66a · cloud drafts route fix</span>
+      <span>App Shell V6.3c67 · offline SFA trial</span>
     </footer>
   </section>
 
@@ -749,10 +749,11 @@
     <main class="offline-card">
       <h2 class="offline-title">Offline Certs &amp; Reports</h2>
       <p class="offline-help">Certificate/report drafts saved without signal live on this iPad until they are synced to the FSD cloud Draft Manager.</p>
-      <p class="offline-help"><strong>Offline editor trial:</strong> W reports can currently be started and edited locally. More certificate/report types will be added here as they go live.</p>
+      <p class="offline-help"><strong>Offline editor trial:</strong> W reports can be started, edited and synced. SFA can now be started as a local metadata trial only. Full SFA offline editing comes next after this proves safe.</p>
       <div id="offlineList" class="offline-list"></div>
       <div class="actions">
-        <button class="button" type="button" onclick="startNewOfflineW(event)"><span class="tile-icon">📝</span><span>Start Offline Report</span></button>
+        <button class="button" type="button" onclick="startNewOfflineW(event)"><span class="tile-icon">📝</span><span>Start Offline W</span></button>
+        <button class="button secondary" type="button" onclick="startNewOfflineSfaTrial(event)"><span class="tile-icon">🔥</span><span>Start SFA Trial Draft</span></button>
         <button class="button secondary" type="button" onclick="refreshOfflineDrafts(event)"><span class="tile-icon">🔄</span><span>Refresh Offline Reports</span></button>
         <button class="button third" type="button" onclick="closeOfflineDrafts(event)"><span class="tile-icon">↩️</span><span>Back to Menu</span></button>
       </div>
@@ -873,7 +874,7 @@
     (function () {
       'use strict';
 
-      const SHELL_VER = 'V6.3c66a';
+      const SHELL_VER = 'V6.3c67';
       const APP_URL = 'https://script.google.com/macros/s/AKfycbzq9FTETNZwUJWHMGnMHECbu3sJ3jy3FFvGYyeaRXtkoK1GHBtqOu-GLBle_WGfoFtI/exec';
       const SCHEDULE_URL = 'https://docs.google.com/spreadsheets/d/1SZK6igtKPVHcBRdkA49A6AKSobkWXI_pk-De7taZP6c/edit';
       const CALLOUTS_PAGE = APP_URL + '?page=callouts&shell=ipad';
@@ -892,10 +893,10 @@
       const OFFLINE_W_OLD_QUEUE_KEY = 'fsd_esr_offline_w_queue_v6_3c37s';
       const OFFLINE_W_WINDOW_NAME_PREFIX = 'FSD_OFFLINE_W_PAYLOAD::';
 
-      // V6.3c66a - Cloud Drafts shell route fix + offline report framework registry.
-      // Safe first step only: W remains the only editable/syncable offline report.
-      // SFA/SEL/FAC are registered here so the shell has one shared place to grow from,
-      // without touching the proven W bridge or Apps Script cloud draft flow yet.
+      // V6.3c67 - Offline SFA trial metadata.
+      // W remains the only editable/syncable offline report.
+      // SFA can now create a safe local trial draft record only, proving the
+      // multi-report offline hub without touching the proven W editor/bridge.
       const OFFLINE_REPORT_TYPES = {
         W:   { code: 'W',   label: 'Engineer Service Report',             page: 'esr', editableOffline: true,  syncableOffline: true },
         SFA: { code: 'SFA', label: 'Fire Alarm Service Report',           page: 'sfa', editableOffline: false, syncableOffline: false },
@@ -1035,8 +1036,12 @@
               '<strong>', escapeHtml(title), '</strong>',
               '<div class="offline-meta">', escapeHtml(meta), '</div>',
               '<div class="offline-actions">',
-                '<button class="button secondary" type="button" data-offline-id="', id, '" data-offline-action="edit">Edit Offline</button>',
-                '<button class="button" type="button" data-offline-id="', id, '" data-offline-action="sync">Sync to Cloud</button>',
+                report.editableOffline
+                  ? '<button class="button secondary" type="button" data-offline-id="' + id + '" data-offline-action="edit">Edit Offline</button>'
+                  : '<button class="button secondary" type="button" disabled>Stage 1 only</button>',
+                report.syncableOffline
+                  ? '<button class="button" type="button" data-offline-id="' + id + '" data-offline-action="sync">Sync to Cloud</button>'
+                  : '<button class="button" type="button" disabled>No Sync Yet</button>',
                 '<button class="button third" type="button" data-offline-id="', id, '" data-offline-action="delete">Delete</button>',
               '</div>',
             '</article>'
@@ -1295,6 +1300,38 @@
         };
       }
 
+      function createBlankOfflineSfaTrialItem() {
+        const now = new Date();
+        const today = now.toISOString().slice(0, 10);
+        const offlineId = makeOfflineId('SFA');
+        const draft = {
+          offlineCreated: true,
+          offlineId: offlineId,
+          reportType: 'Fire Alarm Service Report',
+          reportTypeCode: 'SFA',
+          draftName: 'Offline SFA Trial - ' + today,
+          serviceDate: today,
+          engineer: '',
+          customer: '',
+          site: '',
+          stage: 'metadata-only',
+          note: 'V6.3c67 local SFA trial record only. Full offline SFA editor and cloud sync are not enabled yet.',
+          savedAt: now.toISOString()
+        };
+        return {
+          offlineId: offlineId,
+          reportType: 'SFA',
+          draftId: '',
+          draftName: draft.draftName,
+          engineer: '',
+          customer: '',
+          site: '',
+          savedAt: draft.savedAt,
+          source: 'github-shell-start-offline-sfa-trial',
+          draft: draft
+        };
+      }
+
 
       window.autoNameOfflineW = function autoNameOfflineW(event) {
         stopTap(event);
@@ -1328,6 +1365,14 @@
         upsertOfflineItem(item);
         openEditorForItem(item);
         setEditorStatus('New offline W draft started on this iPad. Fill it in and press Save Offline. Sync to Cloud Drafts when signal returns.');
+      };
+
+      window.startNewOfflineSfaTrial = function startNewOfflineSfaTrial(event) {
+        stopTap(event);
+        const item = createBlankOfflineSfaTrialItem();
+        upsertOfflineItem(item);
+        renderOfflineDrafts();
+        setOfflineStatus('SFA trial draft created locally only. This proves multi-report offline storage without touching W sync. Full SFA offline editor comes next.');
       };
 
       function saveEditorToQueue() {
@@ -1381,11 +1426,18 @@
         return updated;
       }
 
-      window.editOfflineWById = function editOfflineWById(offlineId) {
+      window.editOfflineItemById = function editOfflineItemById(offlineId) {
         const item = getOfflineItemById(offlineId);
         if (!item) return renderOfflineDrafts();
+        const report = getOfflineReportConfig(item);
+        if (!report.editableOffline) {
+          setOfflineStatus(report.code + ' is registered for the offline hub, but full offline editing is not enabled yet. W remains untouched.');
+          return;
+        }
         openEditorForItem(item);
       };
+
+      window.editOfflineWById = window.editOfflineItemById;
 
       window.closeOfflineEditor = function closeOfflineEditor(event) {
         stopTap(event);
@@ -1484,15 +1536,20 @@
           stopTap(event);
           const offlineId = btn.getAttribute('data-offline-id') || '';
           const action = btn.getAttribute('data-offline-action') || '';
-          if (action === 'edit') return window.editOfflineWById(offlineId);
-          if (action === 'sync') return window.syncOfflineWById(offlineId);
-          if (action === 'delete') return window.deleteOfflineWById(offlineId);
+          if (action === 'edit') return window.editOfflineItemById(offlineId);
+          if (action === 'sync') return window.syncOfflineItemById(offlineId);
+          if (action === 'delete') return window.deleteOfflineItemById(offlineId);
         });
       }
 
-      window.syncOfflineWById = function syncOfflineWById(offlineId) {
+      window.syncOfflineItemById = function syncOfflineItemById(offlineId) {
         const item = getOfflineItemById(offlineId);
         if (!item) return renderOfflineDrafts();
+        const report = getOfflineReportConfig(item);
+        if (!report.syncableOffline) {
+          setOfflineStatus(report.code + ' trial drafts are local-only in V6.3c67. No cloud sync is enabled yet.');
+          return;
+        }
         if (!navigator.onLine) {
           setOfflineStatus('Still offline. You can press Edit Offline and carry on working, or connect the iPad and press Sync again.');
           return;
@@ -1501,13 +1558,18 @@
         loadEsrForShellAction('sync', item);
       };
 
-      window.deleteOfflineWById = function deleteOfflineWById(offlineId) {
+      window.syncOfflineWById = window.syncOfflineItemById;
+
+      window.deleteOfflineItemById = function deleteOfflineItemById(offlineId) {
         const item = getOfflineItemById(offlineId);
         if (!item) return renderOfflineDrafts();
-        if (!confirm('Delete this offline W draft from this iPad?')) return;
+        const report = getOfflineReportConfig(item);
+        if (!confirm('Delete this offline ' + report.code + ' draft from this iPad?')) return;
         removeOfflineItem(item.offlineId);
         renderOfflineDrafts();
       };
+
+      window.deleteOfflineWById = window.deleteOfflineItemById;
 
       window.resumeOfflineW = function resumeOfflineW(index) {
         const item = readOfflineQueue()[index];
@@ -1709,6 +1771,6 @@
       });
     }());
   </script>
-  <div class="fixed-version-badge">App Shell V6.3c66a · cloud drafts route fix</div>
+  <div class="fixed-version-badge">App Shell V6.3c67 · offline SFA trial</div>
 </body>
 </html>
