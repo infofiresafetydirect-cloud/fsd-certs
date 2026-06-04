@@ -677,7 +677,7 @@
 </head>
 <body>
   <!--
-    Fire Safety Direct - FSD Certs V6.3c66 Offline Certs/Reports Framework
+    Fire Safety Direct - FSD Certs V6.3c66a Cloud Drafts Shell Route Fix
     Colourful iPad app-icon shell with new black/gold FSD logo.
     App shell mark: Jared720 Labs
   -->
@@ -721,7 +721,7 @@
           <strong>Callouts</strong>
         </button>
 
-        <button class="app-icon cloud" type="button" onclick="openCerts(event)" aria-label="Open Cloud Drafts via Certificate Portal">
+        <button class="app-icon cloud" type="button" onclick="openCloudDrafts(event)" aria-label="Open Cloud Drafts">
           <span class="icon-square"><span>☁</span></span>
           <strong>Cloud<br>Drafts</strong>
         </button>
@@ -741,7 +741,7 @@
 
     <footer class="ipad-footer">
       <span>Jared720 Labs</span>
-      <span>App Shell V6.3c66 · offline framework</span>
+      <span>App Shell V6.3c66a · cloud drafts route fix</span>
     </footer>
   </section>
 
@@ -873,7 +873,7 @@
     (function () {
       'use strict';
 
-      const SHELL_VER = 'V6.3c66';
+      const SHELL_VER = 'V6.3c66a';
       const APP_URL = 'https://script.google.com/macros/s/AKfycbzq9FTETNZwUJWHMGnMHECbu3sJ3jy3FFvGYyeaRXtkoK1GHBtqOu-GLBle_WGfoFtI/exec';
       const SCHEDULE_URL = 'https://docs.google.com/spreadsheets/d/1SZK6igtKPVHcBRdkA49A6AKSobkWXI_pk-De7taZP6c/edit';
       const CALLOUTS_PAGE = APP_URL + '?page=callouts&shell=ipad';
@@ -892,7 +892,7 @@
       const OFFLINE_W_OLD_QUEUE_KEY = 'fsd_esr_offline_w_queue_v6_3c37s';
       const OFFLINE_W_WINDOW_NAME_PREFIX = 'FSD_OFFLINE_W_PAYLOAD::';
 
-      // V6.3c66 - Offline Certs/Reports framework registry.
+      // V6.3c66a - Cloud Drafts shell route fix + offline report framework registry.
       // Safe first step only: W remains the only editable/syncable offline report.
       // SFA/SEL/FAC are registered here so the shell has one shared place to grow from,
       // without touching the proven W bridge or Apps Script cloud draft flow yet.
@@ -1546,6 +1546,12 @@
         startFallbackTimer();
       }
 
+
+      window.openCloudDrafts = function openCloudDrafts(event) {
+        stopTap(event);
+        openAppUrlInShell(APP_URL + '?page=drafts');
+      };
+
       window.openCerts = function openCerts(event) {
         stopTap(event);
         // V6.3c48: always load a fresh portal when the home button is pressed.
@@ -1703,6 +1709,6 @@
       });
     }());
   </script>
-  <div class="fixed-version-badge">App Shell V6.3c66 · offline framework</div>
+  <div class="fixed-version-badge">App Shell V6.3c66a · cloud drafts route fix</div>
 </body>
 </html>
