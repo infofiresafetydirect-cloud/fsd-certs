@@ -691,7 +691,7 @@
 </head>
 <body>
   <!--
-    Fire Safety Direct - FSD Certs V6.3c70 Offline SFA Cloud Payload Prep
+    Fire Safety Direct - FSD Certs V6.3c70a Offline SFA Payload Button Fix
     Colourful iPad app-icon shell with new black/gold FSD logo.
     App shell mark: Jared720 Labs
   -->
@@ -755,7 +755,7 @@
 
     <footer class="ipad-footer">
       <span>Jared720 Labs</span>
-      <span>App Shell V6.3c70 · SFA payload prep</span>
+      <span>App Shell V6.3c70a · SFA payload button fix</span>
     </footer>
   </section>
 
@@ -763,7 +763,7 @@
     <main class="offline-card">
       <h2 class="offline-title">Offline Certs &amp; Reports</h2>
       <p class="offline-help">Certificate/report drafts saved without signal live on this iPad until they are synced to the FSD cloud Draft Manager.</p>
-      <p class="offline-help"><strong>Offline editor trial:</strong> W reports can be started, edited and synced. SFA now mirrors the online Fire Alarm Service Report shape more closely: equipment checked table plus FA service/remedial costs. SFA cloud sync/PDF creation stays blocked, but V6.3c70 can preview the clean cloud payload before we connect the backend.</p>
+      <p class="offline-help"><strong>Offline editor trial:</strong> W reports can be started, edited and synced. SFA now mirrors the online Fire Alarm Service Report shape more closely: equipment checked table plus FA service/remedial costs. SFA cloud sync/PDF creation stays blocked, but V6.3c70a can preview the clean cloud payload before we connect the backend.</p>
       <div id="offlineList" class="offline-list"></div>
       <div class="actions">
         <button class="button" type="button" onclick="startNewOfflineW(event)"><span class="tile-icon">📝</span><span>Start Offline W</span></button>
@@ -808,7 +808,7 @@
           <div class="editor-field editor-wide"><label>Site address</label><textarea id="editSite"></textarea></div>
           <div id="sfaOfflineFields" class="nested-editor-grid hidden-report-fields">
             <div class="editor-section-title">SFA fire alarm report details</div>
-            <div class="sfa-local-note">SFA offline is still local-only. This now follows the online Fire Alarm Service Report shape more closely: equipment checked table, battery/test readings, FA costs and totals. No cloud sync/PDF creation yet. V6.3c70 adds a preview-only cloud payload check so we can verify the data before any backend bridge is enabled.</div>
+            <div class="sfa-local-note">SFA offline is still local-only. This now follows the online Fire Alarm Service Report shape more closely: equipment checked table, battery/test readings, FA costs and totals. No cloud sync/PDF creation yet. V6.3c70a adds a hardened preview-only cloud payload check so we can verify the data before any backend bridge is enabled.</div>
             <div class="editor-field"><label>Sage account no.</label><input id="editSfaSageAccountNo"></div>
             <div class="editor-field"><label>Contract ID No.</label><input id="editSfaContractId"></div>
             <div class="editor-field"><label>Order No.</label><input id="editSfaOrderNo"></div>
@@ -1271,6 +1271,10 @@
           setEditorDirty(true);
           calculateEditorTotals();
         });
+        form.addEventListener('click', function(event) {
+          const previewBtn = event.target && event.target.closest ? event.target.closest('#editorSfaPayloadPreviewBtn') : null;
+          if (previewBtn) runSfaPayloadPreview(event);
+        });
       }
 
 
@@ -1577,7 +1581,7 @@
           customer: '',
           site: '',
           stage: 'sfa-cloud-payload-prep-local-only',
-          note: 'V6.3c70 local SFA mirrors the online Fire Alarm Service Report field shape and can preview the cloud payload. Cloud sync and PDF creation are not enabled yet.',
+          note: 'V6.3c70a local SFA mirrors the online Fire Alarm Service Report field shape and has a hardened cloud payload preview. Cloud sync and PDF creation are not enabled yet.',
           sageAccountNo: '',
           contractId: '',
           orderNo: '',
@@ -1791,7 +1795,7 @@
         const equipmentRows = normalizeSfaEquipmentRows(d.faEquipmentRows || d.sfaEquipmentList || []);
         const draftName = item.draftName || d.draftName || buildEditorDraftName(d);
         return {
-          payloadVersion: 'V6.3c70-preview',
+          payloadVersion: 'V6.3c70a-preview',
           source: 'fsd-certs-github-shell',
           shellVersion: SHELL_VER,
           action: 'SFA_CLOUD_DRAFT_PREVIEW_ONLY',
@@ -1860,22 +1864,37 @@
         };
       }
 
-      window.previewSfaCloudPayload = function previewSfaCloudPayload(event) {
+      function runSfaPayloadPreview(event) {
         stopTap(event);
-        const updated = saveEditorToQueue();
-        if (!updated) return;
-        const report = getOfflineReportConfig(updated);
-        if (report.code !== 'SFA') {
-          setEditorStatus('Payload preview is only for SFA in V6.3c70. W sync remains unchanged.');
-          return;
+        try {
+          const updated = saveEditorToQueue();
+          if (!updated) {
+            setEditorStatus('Could not build the SFA payload because the local draft was not found. Go back to Offline Certs & Reports, reopen the SFA draft and try again.');
+            return;
+          }
+          const report = getOfflineReportConfig(updated);
+          if (report.code !== 'SFA') {
+            setEditorStatus('Payload preview is only for SFA in V6.3c70a. W sync remains unchanged.');
+            return;
+          }
+          const payload = buildSfaCloudPayload(updated);
+          const box = document.getElementById('sfaCloudPayloadPreview');
+          const out = document.getElementById('sfaCloudPayloadJson');
+          if (out) out.value = JSON.stringify(payload, null, 2);
+          if (box) {
+            box.classList.remove('hidden-report-fields');
+            box.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          }
+          setEditorStatus('SFA cloud payload preview generated locally. Nothing has been synced or sent to Apps Script.');
+        } catch (err) {
+          console.error('SFA payload preview failed', err);
+          const message = err && err.message ? err.message : String(err || 'Unknown preview error');
+          setEditorStatus('SFA payload preview failed locally: ' + message);
+          alert('SFA payload preview failed locally. Save still works. Error: ' + message);
         }
-        const payload = buildSfaCloudPayload(updated);
-        const box = document.getElementById('sfaCloudPayloadPreview');
-        const out = document.getElementById('sfaCloudPayloadJson');
-        if (out) out.value = JSON.stringify(payload, null, 2);
-        if (box) box.classList.remove('hidden-report-fields');
-        setEditorStatus('SFA cloud payload preview generated locally. Nothing has been synced or sent to Apps Script.');
-      };
+      }
+
+      window.previewSfaCloudPayload = runSfaPayloadPreview;
 
       window.editOfflineItemById = function editOfflineItemById(offlineId) {
         const item = getOfflineItemById(offlineId);
@@ -1908,7 +1927,7 @@
         if (!updated) return;
         const report = getOfflineReportConfig(updated);
         if (!report.syncableOffline) {
-          setEditorStatus('Saved locally. ' + report.code + ' cloud sync is still blocked in V6.3c70. Use Preview SFA Cloud Payload to check the data first.');
+          setEditorStatus('Saved locally. ' + report.code + ' cloud sync is still blocked in V6.3c70a. Use Preview SFA Cloud Payload to check the data first.');
           return;
         }
         if (!navigator.onLine) {
@@ -2003,7 +2022,7 @@
         if (!item) return renderOfflineDrafts();
         const report = getOfflineReportConfig(item);
         if (!report.syncableOffline) {
-          setOfflineStatus(report.code + ' drafts are local-only in V6.3c70. No cloud sync is enabled yet; preview the SFA cloud payload first.');
+          setOfflineStatus(report.code + ' drafts are local-only in V6.3c70a. No cloud sync is enabled yet; preview the SFA cloud payload first.');
           return;
         }
         if (!navigator.onLine) {
@@ -2227,6 +2246,6 @@
       });
     }());
   </script>
-  <div class="fixed-version-badge">App Shell V6.3c70 · SFA payload prep</div>
+  <div class="fixed-version-badge">App Shell V6.3c70a · SFA payload button fix</div>
 </body>
 </html>
