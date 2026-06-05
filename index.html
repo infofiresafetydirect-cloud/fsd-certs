@@ -755,7 +755,7 @@
 
     <footer class="ipad-footer">
       <span>Jared720 Labs</span>
-      <span>App Shell V6.3c71a · SFA route fix</span>
+      <span>App Shell V6.3c71b · SFA draft restore fix</span>
     </footer>
   </section>
 
@@ -1115,10 +1115,10 @@
         const parts = [];
         rows.forEach(function(row) {
           const report = getOfflineReportConfig(row);
-          const title = row.draftName || row.customer || ('Offline ' + report.code + ' draft');
+          const title = row.draftName || row.customer || ('Offline ' + report.label + ' draft');
           const saved = row.savedAt ? new Date(row.savedAt).toLocaleString() : 'not known';
           const meta = [
-            'Type: ' + report.code + ' - ' + report.label,
+            'Type: ' + report.label,
             row.engineer ? 'Engineer: ' + row.engineer : '',
             row.customer ? 'Customer: ' + row.customer : '',
             row.site ? 'Site: ' + row.site : '',
@@ -1523,7 +1523,7 @@
           offlineId: offlineId,
           reportType: 'Engineer Service Report',
           reportTypeCode: 'W',
-          draftName: 'New Offline W - ' + today,
+          draftName: 'Offline Engineer Service Report - ' + today,
           serviceDate: today,
           engineer: '',
           customer: '',
@@ -2248,6 +2248,6 @@
       });
     }());
   </script>
-  <div class="fixed-version-badge">App Shell V6.3c71a · SFA route fix</div>
+  <div class="fixed-version-badge">App Shell V6.3c71b · SFA draft restore fix</div>
 </body>
 </html>
