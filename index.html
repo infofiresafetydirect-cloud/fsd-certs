@@ -219,6 +219,14 @@
 
     .sfa-local-note { grid-column: 1 / -1; padding: 10px 12px; border-radius: 14px; background: #fff7ed; color: #7c2d12; border: 1px solid #fed7aa; font-weight: 850; font-size: 13px; line-height: 1.35; }
     .editor-materials { grid-column: 1 / -1; display: grid; gap: 8px; }
+    .nested-editor-grid { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+    .sfa-table-wrap { grid-column: 1 / -1; overflow-x: auto; border: 1px solid #e2e8f0; border-radius: 14px; background: #fff; }
+    table.sfa-equip-table { width: 100%; min-width: 920px; border-collapse: collapse; font-size: 13px; }
+    table.sfa-equip-table th { background: #b91c1c; color: #fff; padding: 8px; text-align: left; }
+    table.sfa-equip-table td { border-bottom: 1px solid #e5e7eb; padding: 6px; vertical-align: middle; }
+    table.sfa-equip-table input, table.sfa-equip-table select { margin-top: 0; padding: 8px; font-size: 14px; }
+    .hidden-report-fields { display: none !important; }
+
     .editor-material-row { display: grid; grid-template-columns: 74px minmax(0, 1fr) 96px 96px 44px; gap: 8px; align-items: end; padding: 10px; border-radius: 14px; background: #f8fafc; border: 1px solid #e2e8f0; }
     .editor-actions { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-top: 14px; }
     .editor-actions .button { min-height: 56px; padding: 10px; font-size: 16px; border-radius: 16px; }
@@ -257,6 +265,7 @@
     @media (max-width: 720px) {
       .editor-grid { grid-template-columns: 1fr; }
       .editor-material-row { grid-template-columns: 1fr; }
+      .nested-editor-grid { grid-template-columns: 1fr; }
       .editor-actions { grid-template-columns: 1fr; }
     }
 
@@ -679,7 +688,7 @@
 </head>
 <body>
   <!--
-    Fire Safety Direct - FSD Certs V6.3c69a Offline SFA Equipment List
+    Fire Safety Direct - FSD Certs V6.3c69b Offline SFA Online Field Shape Fix
     Colourful iPad app-icon shell with new black/gold FSD logo.
     App shell mark: Jared720 Labs
   -->
@@ -743,7 +752,7 @@
 
     <footer class="ipad-footer">
       <span>Jared720 Labs</span>
-      <span>App Shell V6.3c69a · SFA equipment list</span>
+      <span>App Shell V6.3c69b · SFA online field shape</span>
     </footer>
   </section>
 
@@ -751,7 +760,7 @@
     <main class="offline-card">
       <h2 class="offline-title">Offline Certs &amp; Reports</h2>
       <p class="offline-help">Certificate/report drafts saved without signal live on this iPad until they are synced to the FSD cloud Draft Manager.</p>
-      <p class="offline-help"><strong>Offline editor trial:</strong> W reports can be started, edited and synced. SFA now has a fuller local field shape plus a local equipment list for Fire Alarm Service details. SFA cloud sync/PDF creation stays blocked until the next safe stage.</p>
+      <p class="offline-help"><strong>Offline editor trial:</strong> W reports can be started, edited and synced. SFA now mirrors the online Fire Alarm Service Report shape more closely: equipment checked table plus FA service/remedial costs. SFA cloud sync/PDF creation stays blocked until the next safe stage.</p>
       <div id="offlineList" class="offline-list"></div>
       <div class="actions">
         <button class="button" type="button" onclick="startNewOfflineW(event)"><span class="tile-icon">📝</span><span>Start Offline W</span></button>
@@ -786,34 +795,73 @@
           <div class="editor-quick-row">
             <button class="editor-mini-btn" type="button" onclick="autoNameOfflineW(event)">Auto-name from customer/site</button>
             <button class="editor-mini-btn" type="button" onclick="setCustomerDateToday(event)">Set customer date today</button>
-            <button class="editor-mini-btn" type="button" onclick="addThreeMaterialRows(event)">Add 3 material rows</button>
-            <button class="editor-mini-btn" type="button" onclick="addCommonSfaEquipmentRows(event)">Add SFA equipment rows</button>
+            <button id="editorMaterialQuickBtn" class="editor-mini-btn" type="button" onclick="addThreeMaterialRows(event)">Add 3 material rows</button>
+            <button id="editorSfaEquipmentQuickBtn" class="editor-mini-btn" type="button" onclick="addCommonSfaEquipmentRows(event)">Add SFA equipment checked rows</button>
           </div>
           <div class="editor-field"><label>Engineer</label><input id="editEngineer"></div>
           <div class="editor-field"><label>Service date</label><input id="editServiceDate" type="date"></div>
           <div class="editor-field editor-wide"><label>Customer / Invoice address</label><textarea id="editCustomer"></textarea></div>
           <div class="editor-field editor-wide"><label>Site address</label><textarea id="editSite"></textarea></div>
-          <div class="editor-section-title">SFA fire alarm service details</div>
-          <div class="sfa-local-note">SFA offline is still local-only in this version. These fields are saved/resumed on this iPad, but they do not sync to Cloud Drafts or create PDFs yet.</div>
-          <div class="editor-field"><label>Site contact</label><input id="editContactName"></div>
-          <div class="editor-field"><label>System type</label><input id="editSfaSystemType" placeholder="Conventional / Addressable / Wireless"></div>
-          <div class="editor-field"><label>Panel make / model</label><input id="editSfaPanelMakeModel"></div>
-          <div class="editor-field"><label>Panel location</label><input id="editSfaPanelLocation"></div>
-          <div class="editor-field"><label>No. of zones</label><input id="editSfaZones" inputmode="numeric"></div>
-          <div class="editor-field"><label>Call points</label><input id="editSfaCallPoints" inputmode="numeric"></div>
-          <div class="editor-field"><label>Detectors</label><input id="editSfaDetectors" inputmode="numeric"></div>
-          <div class="editor-field"><label>Sounders / VADs</label><input id="editSfaSounders" inputmode="numeric"></div>
-          <div class="editor-field"><label>Batteries</label><input id="editSfaBatteries" placeholder="e.g. 2 x 12V 7Ah"></div>
-          <div class="editor-field editor-wide"><label>Faults / defects found</label><textarea id="editSfaFaults" rows="3"></textarea></div>
-          <div class="editor-field editor-wide"><label>Recommendations</label><textarea id="editSfaRecommendations" rows="3"></textarea></div>
-          <div class="editor-section-title">SFA equipment list</div>
-          <div class="sfa-local-note">Local-only equipment list for the SFA trial. This saves/resumes on this iPad, but does not sync or create PDFs yet.</div>
-          <div id="sfaEquipmentList" class="editor-materials"></div>
-          <div class="editor-wide"><button class="button secondary" style="min-height:48px;font-size:16px;" type="button" onclick="addSfaEquipmentRow()">+ Add SFA equipment row</button></div>
-          <div class="editor-field"><label>Sage account no.</label><input id="editSageAccountNo"></div>
-          <div class="editor-field"><label>Customer order no.</label><input id="editCustomerOrderNo"></div>
-          <div class="editor-field"><label>Our ref no.</label><input id="editOurRefNo"></div>
-          <div class="editor-field"><label>Asbestos register available?</label><select id="editAsbestosAvailable"><option value=""></option><option>Yes</option><option>No</option><option>N/A</option></select></div>
+          <div id="sfaOfflineFields" class="nested-editor-grid hidden-report-fields">
+            <div class="editor-section-title">SFA fire alarm report details</div>
+            <div class="sfa-local-note">SFA offline is still local-only. This now follows the online Fire Alarm Service Report shape more closely: equipment checked table, battery/test readings, FA costs and totals. No cloud sync/PDF creation yet.</div>
+            <div class="editor-field"><label>Sage account no.</label><input id="editSfaSageAccountNo"></div>
+            <div class="editor-field"><label>Contract ID No.</label><input id="editSfaContractId"></div>
+            <div class="editor-field"><label>Order No.</label><input id="editSfaOrderNo"></div>
+            <div class="editor-field"><label>Asbestos Report Available</label><select id="editSfaAsbestosAvailable"><option value="NO">NO</option><option value="YES">YES</option></select></div>
+            <div class="editor-field"><label>Last Service Visit</label><input id="editSfaLastServiceVisit" placeholder="e.g. May 2026"></div>
+            <div class="editor-field"><label>Next Service Visit</label><input id="editSfaNextServiceVisit" placeholder="e.g. Nov 2026"></div>
+            <div class="editor-field"><label>Fire Alarm Service Visit</label><select id="editSfaServiceVisit"><option>Annual</option><option>Bi-Annual</option><option>Quarterly</option><option>Weekly</option></select></div>
+            <div class="editor-field"><label>BAFE Certificate of Compliance</label><select id="editSfaBafeCompliance"><option value="NO">NO</option><option value="YES">YES</option></select></div>
+            <div class="editor-section-title">Fire Alarm Equipment List / Checked on Inspection</div>
+            <div class="sfa-local-note">This matches the online SFA table style: Equipment List, Total, Tested, Passed, Failed, Checked on Inspection and Result.</div>
+            <div class="sfa-table-wrap">
+              <table class="sfa-equip-table">
+                <thead>
+                  <tr>
+                    <th>Equipment List</th><th>Total</th><th>Tested</th><th>Passed</th><th>Failed</th><th>Checked on Inspection</th><th>Result</th>
+                  </tr>
+                </thead>
+                <tbody id="sfaEquipmentList"></tbody>
+              </table>
+            </div>
+            <div class="editor-field"><label>Save updated equipment totals back to this site?</label><select id="editSaveFaEquipmentTotals"><option value="NO">NO - do not update saved site equipment</option><option value="YES">YES - update saved totals for this site</option></select></div>
+            <div class="editor-section-title">Existing Battery Test Readings / Battery Calculations / Compliance</div>
+            <div class="editor-field"><label>Existing Battery Size (A/H)</label><input id="editFaExistingBatterySize" placeholder="e.g. 7Ah"></div>
+            <div class="editor-field"><label>Battery Date</label><input id="editFaBatteryDate" placeholder="e.g. 2025"></div>
+            <div class="editor-field"><label>False Alarms in Last 12 Months</label><input id="editFaFalseAlarms12Months" type="number" inputmode="numeric"></div>
+            <div class="editor-field"><label>Battery Voltage Reading</label><input id="editFaBatteryVoltageReading" placeholder="e.g. 24.6V"></div>
+            <div class="editor-field"><label>Quiescent Current</label><input id="editFaQuiescentCurrent" placeholder="e.g. 0.12A"></div>
+            <div class="editor-field"><label>Alarm Current</label><input id="editFaAlarmCurrent" placeholder="e.g. 0.65A"></div>
+            <div class="editor-field"><label>Charger Voltage</label><input id="editFaChargerVoltage" placeholder="e.g. 27.4V"></div>
+            <div class="editor-field"><label>Standby Time</label><input id="editFaStandbyTime" placeholder="e.g. 24 hrs"></div>
+            <div class="editor-field"><label>Battery Required</label><input id="editFaBatteryRequired" placeholder="e.g. 7Ah"></div>
+            <div class="editor-field"><label>System Operating Voltage</label><input id="editFaSystemOperatingVoltage" placeholder="e.g. 24V"></div>
+            <div class="editor-field"><label>False Alarms per 100 Detectors</label><input id="editFaFalseAlarmsPer100" placeholder="0 / N/A"></div>
+            <div class="editor-field"><label>Major Non-Compliance to BS5839-1:2017 Clause 46.2</label><select id="editFaMajorNonCompliance"><option value="NO">NO</option><option value="YES">YES</option></select></div>
+            <div class="editor-field editor-wide"><label>Fire Alarm Work Carried Out</label><textarea id="editFaWorkCarriedOut" rows="4"></textarea></div>
+            <div class="editor-field editor-wide"><label>Fire Alarm Non-Compliance / Recommendations</label><textarea id="editFaNonCompliance" rows="4"></textarea></div>
+            <div class="editor-field"><label>Fire Alarm Reason Code</label><input id="editFaReason" placeholder="NC / REC / notes"></div>
+            <div class="editor-section-title">Fire Alarm Costs</div>
+            <div class="editor-field"><label>FA Service Cost</label><input id="editFaServiceCost" type="number" step="0.01" value="0.00"></div>
+            <div class="editor-field"><label>FA Remedial Material Cost</label><input id="editFaMaterialCost" type="number" step="0.01" value="0.00"></div>
+            <div class="editor-field"><label>FA Remedial Labour Cost</label><input id="editFaLabourCost" type="number" step="0.01" value="0.00"></div>
+            <div class="editor-section-title">Totals</div>
+            <div class="editor-field"><label>Sub Total</label><input id="editSfaSubTotal" type="number" step="0.01" value="0.00"></div>
+            <div class="editor-field"><label>VAT @ 20%</label><input id="editSfaVat" type="number" step="0.01" value="0.00"></div>
+            <div class="editor-field"><label>Total</label><input id="editSfaTotal" type="number" step="0.01" value="0.00"></div>
+            <div class="editor-field"><label>Outstanding work / Quick Quote ref</label><input id="editFaQuickQuoteRequired" placeholder="e.g. QQ000123"></div>
+            <div class="editor-field"><label>Recommend detailed fire risk assessment</label><select id="editFaRiskAssessmentRecommended"><option value="NO">NO</option><option value="YES">YES</option></select></div>
+            <div class="editor-field"><label>Changes to report</label><select id="editFaChangesToReport"><option value="NO">NO</option><option value="YES">YES</option></select></div>
+            <div class="editor-field"><label>Tick Box if Non-Compliant</label><select id="editFaNonCompliantHeader"><option value="NO">NO - normal report</option><option value="YES">YES - show red Non-Compliant header</option></select></div>
+          </div>
+          <div id="wOfflineAdminFields" class="nested-editor-grid">
+            <div class="editor-field"><label>Sage account no.</label><input id="editSageAccountNo"></div>
+            <div class="editor-field"><label>Customer order no.</label><input id="editCustomerOrderNo"></div>
+            <div class="editor-field"><label>Our ref no.</label><input id="editOurRefNo"></div>
+            <div class="editor-field"><label>Asbestos register available?</label><select id="editAsbestosAvailable"><option value=""></option><option>Yes</option><option>No</option><option>N/A</option></select></div>
+          </div>
+          <div id="wOfflineWorkCostFields" class="nested-editor-grid">
           <div class="editor-section-title">Work description</div>
           <div class="editor-field editor-wide"><label>Material / work description</label><textarea id="editWorkDescription" rows="4"></textarea></div>
           <div class="editor-field"><label>Qty</label><input id="editWorkDescriptionQty"></div>
@@ -839,6 +887,7 @@
             <div><span>Offline subtotal</span><strong id="calcSubTotal">£0.00</strong></div>
             <div><span>VAT @ 20%</span><strong id="calcVat">£0.00</strong></div>
             <div><span>Total</span><strong id="calcTotal">£0.00</strong></div>
+          </div>
           </div>
           <div class="editor-section-title">Customer sign-off text</div>
           <div class="editor-field"><label>Customer name</label><input id="editCustomerName"></div>
@@ -894,7 +943,7 @@
     (function () {
       'use strict';
 
-      const SHELL_VER = 'V6.3c69';
+      const SHELL_VER = 'V6.3c69b';
       const APP_URL = 'https://script.google.com/macros/s/AKfycbzq9FTETNZwUJWHMGnMHECbu3sJ3jy3FFvGYyeaRXtkoK1GHBtqOu-GLBle_WGfoFtI/exec';
       const SCHEDULE_URL = 'https://docs.google.com/spreadsheets/d/1SZK6igtKPVHcBRdkA49A6AKSobkWXI_pk-De7taZP6c/edit';
       const CALLOUTS_PAGE = APP_URL + '?page=callouts&shell=ipad';
@@ -913,15 +962,32 @@
       const OFFLINE_W_OLD_QUEUE_KEY = 'fsd_esr_offline_w_queue_v6_3c37s';
       const OFFLINE_W_WINDOW_NAME_PREFIX = 'FSD_OFFLINE_W_PAYLOAD::';
 
-      // V6.3c69a - Offline SFA equipment list.
+      // V6.3c69b - Offline SFA online field-shape fix.
       // W remains the only offline report that can sync to Cloud Drafts.
-      // SFA can now save/resume a fuller local field shape plus a local equipment list, but cloud sync and PDF creation stay blocked.
+      // SFA now mirrors the online Fire Alarm Service Report structure more closely: equipment checked table + service/remedial costs, no W material rows.
       const OFFLINE_REPORT_TYPES = {
         W:   { code: 'W',   label: 'Engineer Service Report',             page: 'esr', editableOffline: true,  syncableOffline: true },
         SFA: { code: 'SFA', label: 'Fire Alarm Service Report',           page: 'sfa', editableOffline: true,  syncableOffline: false },
         SEL: { code: 'SEL', label: 'Emergency Lighting Report',           page: 'sel', editableOffline: false, syncableOffline: false },
         FAC: { code: 'FAC', label: 'Fire Alarm Commissioning Certificate', page: 'fac', editableOffline: false, syncableOffline: false }
       };
+
+      const SFA_EQUIPMENT_DEFAULT_ROWS = [
+        ['Control Panels (Function Led’s)', 'Equipment List'],
+        ['Power Supplies', 'Standby Power Supplies'],
+        ['Batteries', 'Any Alterations to System'],
+        ['Call Point Units (% in all zones)', 'Any Alterations to Building'],
+        ['Beam / Smoke Detectors (% in all zones)', 'Log Book'],
+        ['Heat Detectors (% in all zones)', 'Faults Reported'],
+        ['All Alarm Sounders / Visual Units', 'Any Area Change of Use'],
+        ['Remote Indicator Units', 'A.C. System Supply correct'],
+        ['All Relays / Ancillary Equipment', 'Labelling on all equipment'],
+        ['All Input / Output Units', 'Audibility Levels Checked'],
+        ['All Sounder Control Units', 'Zonal Layout Drawing Present'],
+        ['All Door Holder Units & Power Supplies', 'All Detectors Visually Inspected'],
+        ['Disconnection of A.C. Supply', 'All Call Points Visually Inspected'],
+        ['Link to manned Centre', 'Design Category Cert. Available']
+      ];
       let pendingShellAction = null;
       let shellActionTimer = null;
 
@@ -1113,40 +1179,66 @@
         editorNetBadge.textContent = online ? 'Online - can sync' : 'Offline - iPad only';
       }
 
+      function getCurrentEditorReportCode() {
+        const offlineId = getEditValue('editOfflineId');
+        const item = getOfflineItemById(offlineId);
+        return getOfflineReportConfig(item || {}).code || 'W';
+      }
+
       function calculateEditorTotals() {
-        // Work description line
-        const wdQty = parseMoney(getEditValue('editWorkDescriptionQty'));
-        const wdUnit = parseMoney(getEditValue('editWorkDescriptionUnitPrice'));
-        if (wdQty && wdUnit && !document.activeElement?.matches('#editWorkDescriptionTotalPrice')) {
-          setEditValue('editWorkDescriptionTotalPrice', (wdQty * wdUnit).toFixed(2));
-        }
+        const reportCode = getCurrentEditorReportCode();
+        let subtotal = 0;
+        let vat = 0;
+        let total = 0;
 
-        // Material rows
-        Array.from(document.querySelectorAll('.editor-material-row')).forEach(function(row) {
-          const qtyEl = row.querySelector('.emQty');
-          const unitEl = row.querySelector('.emUnitPrice');
-          const totalEl = row.querySelector('.emTotalPrice');
-          const qty = parseMoney(qtyEl && qtyEl.value);
-          const unit = parseMoney(unitEl && unitEl.value);
-          if (qty && unit && totalEl && document.activeElement !== totalEl) {
-            totalEl.value = (qty * unit).toFixed(2);
+        if (reportCode === 'SFA') {
+          const serviceCost = parseMoney(getEditValue('editFaServiceCost'));
+          const materialCost = parseMoney(getEditValue('editFaMaterialCost'));
+          const labourCost = parseMoney(getEditValue('editFaLabourCost'));
+          subtotal = serviceCost + materialCost + labourCost;
+          vat = subtotal * 0.20;
+          total = subtotal + vat;
+          if (!document.activeElement?.matches('#editSubTotal')) setEditValue('editSubTotal', subtotal ? subtotal.toFixed(2) : '');
+          if (!document.activeElement?.matches('#editVat')) setEditValue('editVat', subtotal ? vat.toFixed(2) : '');
+          if (!document.activeElement?.matches('#editTotal')) setEditValue('editTotal', subtotal ? total.toFixed(2) : '');
+          if (!document.activeElement?.matches('#editSfaSubTotal')) setEditValue('editSfaSubTotal', subtotal ? subtotal.toFixed(2) : '');
+          if (!document.activeElement?.matches('#editSfaVat')) setEditValue('editSfaVat', subtotal ? vat.toFixed(2) : '');
+          if (!document.activeElement?.matches('#editSfaTotal')) setEditValue('editSfaTotal', subtotal ? total.toFixed(2) : '');
+        } else {
+          // Work description line
+          const wdQty = parseMoney(getEditValue('editWorkDescriptionQty'));
+          const wdUnit = parseMoney(getEditValue('editWorkDescriptionUnitPrice'));
+          if (wdQty && wdUnit && !document.activeElement?.matches('#editWorkDescriptionTotalPrice')) {
+            setEditValue('editWorkDescriptionTotalPrice', (wdQty * wdUnit).toFixed(2));
           }
-        });
 
-        const workTotal = parseMoney(getEditValue('editWorkDescriptionTotalPrice'));
-        const materialsTotal = Array.from(document.querySelectorAll('.emTotalPrice')).reduce(function(sum, el) {
-          return sum + parseMoney(el.value);
-        }, 0);
-        const carriage = parseMoney(getEditValue('editCarriage'));
-        const calculatedSubtotal = workTotal + materialsTotal + carriage;
-        const override = getEditValue('editManualSubtotalOverride') === 'YES';
-        const subtotal = override ? parseMoney(getEditValue('editManualSubtotal')) : calculatedSubtotal;
-        const vat = subtotal * 0.20;
-        const total = subtotal + vat;
+          // W material rows only. SFA deliberately does not use these rows.
+          Array.from(document.querySelectorAll('#editorMaterials .editor-material-row')).forEach(function(row) {
+            const qtyEl = row.querySelector('.emQty');
+            const unitEl = row.querySelector('.emUnitPrice');
+            const totalEl = row.querySelector('.emTotalPrice');
+            const qty = parseMoney(qtyEl && qtyEl.value);
+            const unit = parseMoney(unitEl && unitEl.value);
+            if (qty && unit && totalEl && document.activeElement !== totalEl) {
+              totalEl.value = (qty * unit).toFixed(2);
+            }
+          });
 
-        if (!document.activeElement?.matches('#editSubTotal')) setEditValue('editSubTotal', subtotal ? subtotal.toFixed(2) : '');
-        if (!document.activeElement?.matches('#editVat')) setEditValue('editVat', subtotal ? vat.toFixed(2) : '');
-        if (!document.activeElement?.matches('#editTotal')) setEditValue('editTotal', subtotal ? total.toFixed(2) : '');
+          const workTotal = parseMoney(getEditValue('editWorkDescriptionTotalPrice'));
+          const materialsTotal = Array.from(document.querySelectorAll('#editorMaterials .emTotalPrice')).reduce(function(sum, el) {
+            return sum + parseMoney(el.value);
+          }, 0);
+          const carriage = parseMoney(getEditValue('editCarriage'));
+          const calculatedSubtotal = workTotal + materialsTotal + carriage;
+          const override = getEditValue('editManualSubtotalOverride') === 'YES';
+          subtotal = override ? parseMoney(getEditValue('editManualSubtotal')) : calculatedSubtotal;
+          vat = subtotal * 0.20;
+          total = subtotal + vat;
+
+          if (!document.activeElement?.matches('#editSubTotal')) setEditValue('editSubTotal', subtotal ? subtotal.toFixed(2) : '');
+          if (!document.activeElement?.matches('#editVat')) setEditValue('editVat', subtotal ? vat.toFixed(2) : '');
+          if (!document.activeElement?.matches('#editTotal')) setEditValue('editTotal', subtotal ? total.toFixed(2) : '');
+        }
 
         const subBox = document.getElementById('calcSubTotal');
         const vatBox = document.getElementById('calcVat');
@@ -1209,39 +1301,74 @@
         }).filter(function(item) { return item.qty || item.description || item.unitPrice || item.totalPrice; });
       }
 
+      function normalizeSfaEquipmentRows(items) {
+        const source = Array.isArray(items) && items.length ? items : SFA_EQUIPMENT_DEFAULT_ROWS.map(function(pair) {
+          return { equipment: pair[0], checkedOnInspection: pair[1], total: '', tested: '', passed: '', failed: '', result: '' };
+        });
+        return source.map(function(item, idx) {
+          const fallback = SFA_EQUIPMENT_DEFAULT_ROWS[idx] || ['', ''];
+          return {
+            equipment: item.equipment || item.type || fallback[0] || '',
+            total: item.total || item.qty || '',
+            tested: item.tested || '',
+            passed: item.passed || '',
+            failed: item.failed || '',
+            checkedOnInspection: item.checkedOnInspection || item.checked || fallback[1] || '',
+            result: item.result || item.notes || ''
+          };
+        });
+      }
+
       function renderSfaEquipmentList(items) {
         const wrap = document.getElementById('sfaEquipmentList');
         if (!wrap) return;
         wrap.innerHTML = '';
-        (Array.isArray(items) && items.length ? items : [{}, {}, {}]).forEach(function(item) {
-          addSfaEquipmentRow(item || {});
-        });
+        normalizeSfaEquipmentRows(items).forEach(function(item) { addSfaEquipmentRow(item || {}); });
       }
 
       window.addSfaEquipmentRow = function addSfaEquipmentRow(item) {
         const wrap = document.getElementById('sfaEquipmentList');
         if (!wrap) return;
         item = item || {};
-        const row = document.createElement('div');
-        row.className = 'editor-material-row sfa-equipment-row';
+        const row = document.createElement('tr');
+        row.className = 'sfa-equipment-row';
         row.innerHTML =
-          '<div class="editor-field"><label>Qty</label><input class="sfaEquipQty" value="' + escapeHtml(item.qty || '') + '"></div>' +
-          '<div class="editor-field"><label>Equipment</label><input class="sfaEquipType" placeholder="Detector / MCP / Sounder" value="' + escapeHtml(item.type || item.equipment || '') + '"></div>' +
-          '<div class="editor-field desc"><label>Location / zone</label><input class="sfaEquipLocation" value="' + escapeHtml(item.location || item.zone || '') + '"></div>' +
-          '<div class="editor-field desc"><label>Notes / result</label><input class="sfaEquipNotes" value="' + escapeHtml(item.notes || item.result || '') + '"></div>' +
-          '<button class="button third" style="min-height:42px;font-size:18px;padding:6px;" type="button" onclick="this.closest(&quot;.sfa-equipment-row&quot;).remove(); setEditorDirty(true);">×</button>';
+          '<td><input class="sfaEquipEquipment" value="' + escapeHtml(item.equipment || item.type || '') + '"></td>' +
+          '<td><input class="sfaEquipTotal" type="number" inputmode="numeric" value="' + escapeHtml(item.total || item.qty || '') + '"></td>' +
+          '<td><input class="sfaEquipTested" type="number" inputmode="numeric" value="' + escapeHtml(item.tested || '') + '"></td>' +
+          '<td><input class="sfaEquipPassed" type="number" inputmode="numeric" value="' + escapeHtml(item.passed || '') + '"></td>' +
+          '<td><input class="sfaEquipFailed" type="number" inputmode="numeric" value="' + escapeHtml(item.failed || '') + '"></td>' +
+          '<td><input class="sfaEquipChecked" value="' + escapeHtml(item.checkedOnInspection || item.checked || '') + '"></td>' +
+          '<td><select class="sfaEquipResult"><option value=""></option><option value="YES"' + (String(item.result || '').toUpperCase()==='YES' ? ' selected' : '') + '>YES</option><option value="NO"' + (String(item.result || '').toUpperCase()==='NO' ? ' selected' : '') + '>NO</option><option value="NA"' + (String(item.result || '').toUpperCase()==='NA' || String(item.result || '').toUpperCase()==='N/A' ? ' selected' : '') + '>N/A</option></select></td>';
         wrap.appendChild(row);
       };
 
       function collectSfaEquipmentList() {
         return Array.from(document.querySelectorAll('.sfa-equipment-row')).map(function(row) {
           return {
-            qty: (row.querySelector('.sfaEquipQty') || {}).value || '',
-            type: (row.querySelector('.sfaEquipType') || {}).value || '',
-            location: (row.querySelector('.sfaEquipLocation') || {}).value || '',
-            notes: (row.querySelector('.sfaEquipNotes') || {}).value || ''
+            equipment: (row.querySelector('.sfaEquipEquipment') || {}).value || '',
+            total: (row.querySelector('.sfaEquipTotal') || {}).value || '',
+            tested: (row.querySelector('.sfaEquipTested') || {}).value || '',
+            passed: (row.querySelector('.sfaEquipPassed') || {}).value || '',
+            failed: (row.querySelector('.sfaEquipFailed') || {}).value || '',
+            checkedOnInspection: (row.querySelector('.sfaEquipChecked') || {}).value || '',
+            result: (row.querySelector('.sfaEquipResult') || {}).value || ''
           };
-        }).filter(function(item) { return item.qty || item.type || item.location || item.notes; });
+        }).filter(function(item) { return item.equipment || item.total || item.tested || item.passed || item.failed || item.checkedOnInspection || item.result; });
+      }
+
+      function applyEditorReportLayout(report) {
+        const isSfa = report && report.code === 'SFA';
+        const sfaFields = document.getElementById('sfaOfflineFields');
+        const wAdmin = document.getElementById('wOfflineAdminFields');
+        const wWork = document.getElementById('wOfflineWorkCostFields');
+        const materialQuick = document.getElementById('editorMaterialQuickBtn');
+        const sfaQuick = document.getElementById('editorSfaEquipmentQuickBtn');
+        if (sfaFields) sfaFields.classList.toggle('hidden-report-fields', !isSfa);
+        if (wAdmin) wAdmin.classList.toggle('hidden-report-fields', isSfa);
+        if (wWork) wWork.classList.toggle('hidden-report-fields', isSfa);
+        if (materialQuick) materialQuick.classList.toggle('hidden-report-fields', isSfa);
+        if (sfaQuick) sfaQuick.classList.toggle('hidden-report-fields', !isSfa);
       }
 
       function openEditorForItem(item) {
@@ -1260,6 +1387,7 @@
           syncBtn.disabled = !report.syncableOffline;
           syncBtn.textContent = report.syncableOffline ? 'Save + Sync' : 'Save Local Only';
         }
+        applyEditorReportLayout(report);
         const d = item.draft || {};
         document.getElementById('editOfflineId').value = item.offlineId || '';
         setEditValue('editDraftName', item.draftName || d.draftName || buildEditorDraftName(d));
@@ -1267,6 +1395,40 @@
         setEditValue('editServiceDate', d.serviceDate || '');
         setEditValue('editCustomer', d.customer || item.customer || '');
         setEditValue('editSite', d.site || item.site || '');
+        setEditValue('editSfaSageAccountNo', d.sageAccountNo || d.sfaSageAccountNo || '');
+        setEditValue('editSfaContractId', d.contractId || d.sfaContractId || '');
+        setEditValue('editSfaOrderNo', d.orderNo || d.sfaOrderNo || d.customerOrderNo || '');
+        setEditValue('editSfaAsbestosAvailable', d.asbestosAvailable || 'NO');
+        setEditValue('editSfaLastServiceVisit', d.lastServiceVisit || d.sfaLastServiceVisit || '');
+        setEditValue('editSfaNextServiceVisit', d.nextServiceVisit || d.sfaNextServiceVisit || '');
+        setEditValue('editSfaServiceVisit', d.faServiceVisit || d.sfaServiceVisit || 'Annual');
+        setEditValue('editSfaBafeCompliance', d.bafeCompliance || d.sfaBafeCompliance || 'NO');
+        setEditValue('editSaveFaEquipmentTotals', d.saveFaEquipmentTotals || 'NO');
+        setEditValue('editFaExistingBatterySize', d.faExistingBatterySize || d.sfaBatteries || '');
+        setEditValue('editFaBatteryDate', d.faBatteryDate || '');
+        setEditValue('editFaFalseAlarms12Months', d.faFalseAlarms12Months || '');
+        setEditValue('editFaBatteryVoltageReading', d.faBatteryVoltageReading || '');
+        setEditValue('editFaQuiescentCurrent', d.faQuiescentCurrent || '');
+        setEditValue('editFaAlarmCurrent', d.faAlarmCurrent || '');
+        setEditValue('editFaChargerVoltage', d.faChargerVoltage || '');
+        setEditValue('editFaStandbyTime', d.faStandbyTime || '');
+        setEditValue('editFaBatteryRequired', d.faBatteryRequired || '');
+        setEditValue('editFaSystemOperatingVoltage', d.faSystemOperatingVoltage || d.sfaSystemType || '');
+        setEditValue('editFaFalseAlarmsPer100', d.faFalseAlarmsPer100 || '');
+        setEditValue('editFaMajorNonCompliance', d.faMajorNonCompliance || 'NO');
+        setEditValue('editFaWorkCarriedOut', d.faWorkCarriedOut || d.workDescription || '');
+        setEditValue('editFaNonCompliance', d.faNonCompliance || d.sfaRecommendations || d.sfaFaults || '');
+        setEditValue('editFaReason', d.faReason || '');
+        setEditValue('editFaServiceCost', d.faServiceCost || '0.00');
+        setEditValue('editFaMaterialCost', d.faMaterialCost || '0.00');
+        setEditValue('editFaLabourCost', d.faLabourCost || '0.00');
+        setEditValue('editSfaSubTotal', d.subTotal || '0.00');
+        setEditValue('editSfaVat', d.vat || '0.00');
+        setEditValue('editSfaTotal', d.total || '0.00');
+        setEditValue('editFaQuickQuoteRequired', d.faQuickQuoteRequired || '');
+        setEditValue('editFaRiskAssessmentRecommended', d.faRiskAssessmentRecommended || 'NO');
+        setEditValue('editFaChangesToReport', d.faChangesToReport || 'NO');
+        setEditValue('editFaNonCompliantHeader', d.faNonCompliantHeader || 'NO');
         setEditValue('editContactName', d.contactName || '');
         setEditValue('editSfaSystemType', d.sfaSystemType || '');
         setEditValue('editSfaPanelMakeModel', d.sfaPanelMakeModel || '');
@@ -1278,7 +1440,7 @@
         setEditValue('editSfaBatteries', d.sfaBatteries || '');
         setEditValue('editSfaFaults', d.sfaFaults || '');
         setEditValue('editSfaRecommendations', d.sfaRecommendations || '');
-        renderSfaEquipmentList(d.sfaEquipmentList || []);
+        renderSfaEquipmentList(d.faEquipmentRows || d.sfaEquipmentList || []);
         setEditValue('editSageAccountNo', d.sageAccountNo || '');
         setEditValue('editCustomerOrderNo', d.customerOrderNo || '');
         setEditValue('editOurRefNo', d.ourRefNo || '');
@@ -1397,24 +1559,43 @@
           engineer: '',
           customer: '',
           site: '',
-          stage: 'sfa-equipment-list-local-only',
-          note: 'V6.3c69a local SFA field shape + equipment list only. Cloud sync and PDF creation are not enabled yet.',
-          contactName: '',
-          sfaSystemType: '',
-          sfaPanelMakeModel: '',
-          sfaPanelLocation: '',
-          sfaZones: '',
-          sfaCallPoints: '',
-          sfaDetectors: '',
-          sfaSounders: '',
-          sfaBatteries: '',
-          sfaFaults: '',
-          sfaRecommendations: '',
-          sfaEquipmentList: [],
-          customerOrderNo: '',
-          ourRefNo: '',
-          workDescription: '',
-          comments: '',
+          stage: 'sfa-online-field-shape-local-only',
+          note: 'V6.3c69b local SFA mirrors the online Fire Alarm Service Report field shape. Cloud sync and PDF creation are not enabled yet.',
+          sageAccountNo: '',
+          contractId: '',
+          orderNo: '',
+          asbestosAvailable: 'NO',
+          lastServiceVisit: '',
+          nextServiceVisit: '',
+          faServiceVisit: 'Annual',
+          bafeCompliance: 'NO',
+          faEquipmentRows: normalizeSfaEquipmentRows([]),
+          saveFaEquipmentTotals: 'NO',
+          faExistingBatterySize: '',
+          faBatteryDate: '',
+          faFalseAlarms12Months: '',
+          faBatteryVoltageReading: '',
+          faQuiescentCurrent: '',
+          faAlarmCurrent: '',
+          faChargerVoltage: '',
+          faStandbyTime: '',
+          faBatteryRequired: '',
+          faSystemOperatingVoltage: '',
+          faFalseAlarmsPer100: '',
+          faMajorNonCompliance: 'NO',
+          faWorkCarriedOut: '',
+          faNonCompliance: '',
+          faReason: '',
+          faServiceCost: '0.00',
+          faMaterialCost: '0.00',
+          faLabourCost: '0.00',
+          faQuickQuoteRequired: '',
+          faRiskAssessmentRecommended: 'NO',
+          faChangesToReport: 'NO',
+          faNonCompliantHeader: 'NO',
+          subTotal: '',
+          vat: '',
+          total: '',
           customerName: '',
           customerDate: '',
           savedAt: now.toISOString()
@@ -1428,7 +1609,7 @@
           customer: '',
           site: '',
           savedAt: draft.savedAt,
-          source: 'github-shell-start-offline-sfa-equipment-list',
+          source: 'github-shell-start-offline-sfa-online-field-shape',
           draft: draft
         };
       }
@@ -1462,16 +1643,9 @@
 
       window.addCommonSfaEquipmentRows = function addCommonSfaEquipmentRows(event) {
         stopTap(event);
-        const commonRows = [
-          { type: 'Control Panel', qty: '1' },
-          { type: 'Manual Call Points', qty: getEditValue('editSfaCallPoints') || '' },
-          { type: 'Detectors', qty: getEditValue('editSfaDetectors') || '' },
-          { type: 'Sounders / VADs', qty: getEditValue('editSfaSounders') || '' },
-          { type: 'Batteries', qty: getEditValue('editSfaBatteries') || '' }
-        ];
-        commonRows.forEach(function(row) { addSfaEquipmentRow(row); });
+        renderSfaEquipmentList([]);
         setEditorDirty(true);
-        setEditorStatus('Added common SFA equipment rows locally.');
+        setEditorStatus('Reset SFA equipment checked table to the online default rows.');
       };
 
       window.startNewOfflineW = function startNewOfflineW(event) {
@@ -1505,6 +1679,44 @@
         d.serviceDate = getEditValue('editServiceDate');
         d.customer = getEditValue('editCustomer');
         d.site = getEditValue('editSite');
+        const savingSfa = String(d.reportTypeCode || item.reportType || '').toUpperCase() === 'SFA';
+        if (savingSfa) {
+          d.sageAccountNo = getEditValue('editSfaSageAccountNo');
+          d.contractId = getEditValue('editSfaContractId');
+          d.orderNo = getEditValue('editSfaOrderNo');
+          d.asbestosAvailable = getEditValue('editSfaAsbestosAvailable');
+          d.lastServiceVisit = getEditValue('editSfaLastServiceVisit');
+          d.nextServiceVisit = getEditValue('editSfaNextServiceVisit');
+          d.faServiceVisit = getEditValue('editSfaServiceVisit');
+          d.bafeCompliance = getEditValue('editSfaBafeCompliance');
+          d.faEquipmentRows = collectSfaEquipmentList();
+          d.saveFaEquipmentTotals = getEditValue('editSaveFaEquipmentTotals');
+          d.faExistingBatterySize = getEditValue('editFaExistingBatterySize');
+          d.faBatteryDate = getEditValue('editFaBatteryDate');
+          d.faFalseAlarms12Months = getEditValue('editFaFalseAlarms12Months');
+          d.faBatteryVoltageReading = getEditValue('editFaBatteryVoltageReading');
+          d.faQuiescentCurrent = getEditValue('editFaQuiescentCurrent');
+          d.faAlarmCurrent = getEditValue('editFaAlarmCurrent');
+          d.faChargerVoltage = getEditValue('editFaChargerVoltage');
+          d.faStandbyTime = getEditValue('editFaStandbyTime');
+          d.faBatteryRequired = getEditValue('editFaBatteryRequired');
+          d.faSystemOperatingVoltage = getEditValue('editFaSystemOperatingVoltage');
+          d.faFalseAlarmsPer100 = getEditValue('editFaFalseAlarmsPer100');
+          d.faMajorNonCompliance = getEditValue('editFaMajorNonCompliance');
+          d.faWorkCarriedOut = getEditValue('editFaWorkCarriedOut');
+          d.faNonCompliance = getEditValue('editFaNonCompliance');
+          d.faReason = getEditValue('editFaReason');
+          d.faServiceCost = getEditValue('editFaServiceCost');
+          d.faMaterialCost = getEditValue('editFaMaterialCost');
+          d.faLabourCost = getEditValue('editFaLabourCost');
+          d.subTotal = getEditValue('editSfaSubTotal');
+          d.vat = getEditValue('editSfaVat');
+          d.total = getEditValue('editSfaTotal');
+          d.faQuickQuoteRequired = getEditValue('editFaQuickQuoteRequired');
+          d.faRiskAssessmentRecommended = getEditValue('editFaRiskAssessmentRecommended');
+          d.faChangesToReport = getEditValue('editFaChangesToReport');
+          d.faNonCompliantHeader = getEditValue('editFaNonCompliantHeader');
+        }
         d.contactName = getEditValue('editContactName');
         d.sfaSystemType = getEditValue('editSfaSystemType');
         d.sfaPanelMakeModel = getEditValue('editSfaPanelMakeModel');
@@ -1517,23 +1729,25 @@
         d.sfaFaults = getEditValue('editSfaFaults');
         d.sfaRecommendations = getEditValue('editSfaRecommendations');
         d.sfaEquipmentList = collectSfaEquipmentList();
-        d.sageAccountNo = getEditValue('editSageAccountNo');
-        d.customerOrderNo = getEditValue('editCustomerOrderNo');
-        d.ourRefNo = getEditValue('editOurRefNo');
-        d.asbestosAvailable = getEditValue('editAsbestosAvailable');
-        d.workDescription = getEditValue('editWorkDescription');
-        d.workDescriptionQty = getEditValue('editWorkDescriptionQty');
-        d.workDescriptionUnitPrice = getEditValue('editWorkDescriptionUnitPrice');
-        d.workDescriptionTotalPrice = getEditValue('editWorkDescriptionTotalPrice');
-        d.workDescriptionChargeNote = getEditValue('editWorkDescriptionChargeNote');
-        d.materials = collectEditorMaterials();
-        d.comments = getEditValue('editComments');
-        d.travelTime = getEditValue('editTravelTime');
-        d.arrivalTime = getEditValue('editArrivalTime');
-        d.timeOnSite = getEditValue('editTimeOnSite');
-        d.carriage = getEditValue('editCarriage');
-        d.manualSubtotalOverride = getEditValue('editManualSubtotalOverride');
-        d.manualSubtotal = getEditValue('editManualSubtotal');
+        if (!savingSfa) {
+          d.sageAccountNo = getEditValue('editSageAccountNo');
+          d.customerOrderNo = getEditValue('editCustomerOrderNo');
+          d.ourRefNo = getEditValue('editOurRefNo');
+          d.asbestosAvailable = getEditValue('editAsbestosAvailable');
+          d.workDescription = getEditValue('editWorkDescription');
+          d.workDescriptionQty = getEditValue('editWorkDescriptionQty');
+          d.workDescriptionUnitPrice = getEditValue('editWorkDescriptionUnitPrice');
+          d.workDescriptionTotalPrice = getEditValue('editWorkDescriptionTotalPrice');
+          d.workDescriptionChargeNote = getEditValue('editWorkDescriptionChargeNote');
+          d.materials = collectEditorMaterials();
+          d.comments = getEditValue('editComments');
+          d.travelTime = getEditValue('editTravelTime');
+          d.arrivalTime = getEditValue('editArrivalTime');
+          d.timeOnSite = getEditValue('editTimeOnSite');
+          d.carriage = getEditValue('editCarriage');
+          d.manualSubtotalOverride = getEditValue('editManualSubtotalOverride');
+          d.manualSubtotal = getEditValue('editManualSubtotal');
+        }
         d.subTotal = getEditValue('editSubTotal');
         d.vat = getEditValue('editVat');
         d.total = getEditValue('editTotal');
@@ -1904,6 +2118,6 @@
       });
     }());
   </script>
-  <div class="fixed-version-badge">App Shell V6.3c69a · SFA equipment list</div>
+  <div class="fixed-version-badge">App Shell V6.3c69b · SFA online field shape</div>
 </body>
 </html>
