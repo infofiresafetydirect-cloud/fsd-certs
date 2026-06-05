@@ -1,28 +1,41 @@
 {
   "name": "FSD Certs",
   "short_name": "FSD Certs",
-  "start_url": "./",
+  "description": "Fire Safety Direct certificate and report shell",
+  "id": "/fsd-certs/?pwa=fsd-certs",
+  "start_url": "./?pwa=1&v=71d",
+  "scope": "./",
   "display": "standalone",
-  "background_color": "#0b1f3a",
-  "theme_color": "#0b1f3a",
+  "display_override": [
+    "standalone",
+    "minimal-ui",
+    "browser"
+  ],
+  "orientation": "portrait-primary",
+  "background_color": "#0f172a",
+  "theme_color": "#0f172a",
+  "categories": [
+    "business",
+    "productivity"
+  ],
   "icons": [
     {
-      "src": "fsd-icon.png",
+      "src": "fsd-certs-logo.png?v=71d",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "fsd-certs-logo.png?v=71d",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "apple-touch-icon.png?v=71d",
       "sizes": "180x180",
       "type": "image/png",
       "purpose": "any"
-    },
-    {
-      "src": "fsd-icon.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "fsd-icon.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "maskable"
     }
   ]
 }

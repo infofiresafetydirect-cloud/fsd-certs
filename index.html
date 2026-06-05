@@ -20,9 +20,12 @@
   <link rel="dns-prefetch" href="https://script.google.com">
   <link rel="dns-prefetch" href="https://docs.google.com">
 
-  <link rel="apple-touch-icon" href="apple-touch-icon.png">
-  <link rel="icon" href="favicon.png">
-  <link rel="preload" as="image" href="fsd-certs-logo.png" fetchpriority="high">
+  <link rel="manifest" href="manifest.webmanifest?v=71d">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png?v=71d">
+  <link rel="icon" href="favicon.png?v=71d">
+  <link rel="icon" type="image/png" sizes="192x192" href="fsd-certs-logo.png?v=71d">
+  <link rel="icon" type="image/png" sizes="512x512" href="fsd-certs-logo.png?v=71d">
+  <link rel="preload" as="image" href="fsd-certs-logo.png?v=71d" fetchpriority="high">
 
   <style>
     :root {
@@ -691,7 +694,7 @@
 </head>
 <body>
   <!--
-    Fire Safety Direct - FSD Certs V6.3c71c W Offline Name Fix
+    Fire Safety Direct - FSD Certs V6.3c71d Pixel PWA Install Fix
     Colourful iPad app-icon shell with new black/gold FSD logo.
     App shell mark: Jared720 Labs
   -->
@@ -755,7 +758,7 @@
 
     <footer class="ipad-footer">
       <span>Jared720 Labs</span>
-      <span>App Shell V6.3c71c · W name tidy</span>
+      <span>App Shell V6.3c71d · Pixel PWA install fix</span>
     </footer>
   </section>
 
@@ -952,7 +955,7 @@
     (function () {
       'use strict';
 
-      const SHELL_VER = 'V6.3c71c';
+      const SHELL_VER = 'V6.3c71d';
       const APP_URL = 'https://script.google.com/macros/s/AKfycbzq9FTETNZwUJWHMGnMHECbu3sJ3jy3FFvGYyeaRXtkoK1GHBtqOu-GLBle_WGfoFtI/exec';
       const SCHEDULE_URL = 'https://docs.google.com/spreadsheets/d/1SZK6igtKPVHcBRdkA49A6AKSobkWXI_pk-De7taZP6c/edit';
       const CALLOUTS_PAGE = APP_URL + '?page=callouts&shell=ipad';
@@ -2249,8 +2252,19 @@
       document.addEventListener('gesturestart', function (event) {
         event.preventDefault();
       });
+
+      // V6.3c71d: Android/Pixel PWA install hardening. This makes Chrome see
+      // the GitHub shell as a proper standalone app again, not just a bookmark.
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function () {
+          navigator.serviceWorker.register('./sw.js?v=71d', { scope: './' }).catch(function () {
+            // Silent by design: the app must still work even if Chrome blocks SW registration.
+          });
+        });
+      }
+
     }());
   </script>
-  <div class="fixed-version-badge">App Shell V6.3c71c · W name tidy</div>
+  <div class="fixed-version-badge">App Shell V6.3c71d · Pixel PWA install fix</div>
 </body>
 </html>
