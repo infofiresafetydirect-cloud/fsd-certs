@@ -679,7 +679,7 @@
 </head>
 <body>
   <!--
-    Fire Safety Direct - FSD Certs V6.3c69 Offline SFA Real Field Shape
+    Fire Safety Direct - FSD Certs V6.3c69a Offline SFA Equipment List
     Colourful iPad app-icon shell with new black/gold FSD logo.
     App shell mark: Jared720 Labs
   -->
@@ -743,7 +743,7 @@
 
     <footer class="ipad-footer">
       <span>Jared720 Labs</span>
-      <span>App Shell V6.3c69 · offline SFA real field shape</span>
+      <span>App Shell V6.3c69a · SFA equipment list</span>
     </footer>
   </section>
 
@@ -751,7 +751,7 @@
     <main class="offline-card">
       <h2 class="offline-title">Offline Certs &amp; Reports</h2>
       <p class="offline-help">Certificate/report drafts saved without signal live on this iPad until they are synced to the FSD cloud Draft Manager.</p>
-      <p class="offline-help"><strong>Offline editor trial:</strong> W reports can be started, edited and synced. SFA now has a fuller local field shape for Fire Alarm Service details. SFA cloud sync/PDF creation stays blocked until the next safe stage.</p>
+      <p class="offline-help"><strong>Offline editor trial:</strong> W reports can be started, edited and synced. SFA now has a fuller local field shape plus a local equipment list for Fire Alarm Service details. SFA cloud sync/PDF creation stays blocked until the next safe stage.</p>
       <div id="offlineList" class="offline-list"></div>
       <div class="actions">
         <button class="button" type="button" onclick="startNewOfflineW(event)"><span class="tile-icon">📝</span><span>Start Offline W</span></button>
@@ -787,6 +787,7 @@
             <button class="editor-mini-btn" type="button" onclick="autoNameOfflineW(event)">Auto-name from customer/site</button>
             <button class="editor-mini-btn" type="button" onclick="setCustomerDateToday(event)">Set customer date today</button>
             <button class="editor-mini-btn" type="button" onclick="addThreeMaterialRows(event)">Add 3 material rows</button>
+            <button class="editor-mini-btn" type="button" onclick="addCommonSfaEquipmentRows(event)">Add SFA equipment rows</button>
           </div>
           <div class="editor-field"><label>Engineer</label><input id="editEngineer"></div>
           <div class="editor-field"><label>Service date</label><input id="editServiceDate" type="date"></div>
@@ -805,6 +806,10 @@
           <div class="editor-field"><label>Batteries</label><input id="editSfaBatteries" placeholder="e.g. 2 x 12V 7Ah"></div>
           <div class="editor-field editor-wide"><label>Faults / defects found</label><textarea id="editSfaFaults" rows="3"></textarea></div>
           <div class="editor-field editor-wide"><label>Recommendations</label><textarea id="editSfaRecommendations" rows="3"></textarea></div>
+          <div class="editor-section-title">SFA equipment list</div>
+          <div class="sfa-local-note">Local-only equipment list for the SFA trial. This saves/resumes on this iPad, but does not sync or create PDFs yet.</div>
+          <div id="sfaEquipmentList" class="editor-materials"></div>
+          <div class="editor-wide"><button class="button secondary" style="min-height:48px;font-size:16px;" type="button" onclick="addSfaEquipmentRow()">+ Add SFA equipment row</button></div>
           <div class="editor-field"><label>Sage account no.</label><input id="editSageAccountNo"></div>
           <div class="editor-field"><label>Customer order no.</label><input id="editCustomerOrderNo"></div>
           <div class="editor-field"><label>Our ref no.</label><input id="editOurRefNo"></div>
@@ -908,9 +913,9 @@
       const OFFLINE_W_OLD_QUEUE_KEY = 'fsd_esr_offline_w_queue_v6_3c37s';
       const OFFLINE_W_WINDOW_NAME_PREFIX = 'FSD_OFFLINE_W_PAYLOAD::';
 
-      // V6.3c69 - Offline SFA real field shape.
+      // V6.3c69a - Offline SFA equipment list.
       // W remains the only offline report that can sync to Cloud Drafts.
-      // SFA can now save/resume a fuller local field shape, but cloud sync and PDF creation stay blocked.
+      // SFA can now save/resume a fuller local field shape plus a local equipment list, but cloud sync and PDF creation stay blocked.
       const OFFLINE_REPORT_TYPES = {
         W:   { code: 'W',   label: 'Engineer Service Report',             page: 'esr', editableOffline: true,  syncableOffline: true },
         SFA: { code: 'SFA', label: 'Fire Alarm Service Report',           page: 'sfa', editableOffline: true,  syncableOffline: false },
@@ -1204,6 +1209,41 @@
         }).filter(function(item) { return item.qty || item.description || item.unitPrice || item.totalPrice; });
       }
 
+      function renderSfaEquipmentList(items) {
+        const wrap = document.getElementById('sfaEquipmentList');
+        if (!wrap) return;
+        wrap.innerHTML = '';
+        (Array.isArray(items) && items.length ? items : [{}, {}, {}]).forEach(function(item) {
+          addSfaEquipmentRow(item || {});
+        });
+      }
+
+      window.addSfaEquipmentRow = function addSfaEquipmentRow(item) {
+        const wrap = document.getElementById('sfaEquipmentList');
+        if (!wrap) return;
+        item = item || {};
+        const row = document.createElement('div');
+        row.className = 'editor-material-row sfa-equipment-row';
+        row.innerHTML =
+          '<div class="editor-field"><label>Qty</label><input class="sfaEquipQty" value="' + escapeHtml(item.qty || '') + '"></div>' +
+          '<div class="editor-field"><label>Equipment</label><input class="sfaEquipType" placeholder="Detector / MCP / Sounder" value="' + escapeHtml(item.type || item.equipment || '') + '"></div>' +
+          '<div class="editor-field desc"><label>Location / zone</label><input class="sfaEquipLocation" value="' + escapeHtml(item.location || item.zone || '') + '"></div>' +
+          '<div class="editor-field desc"><label>Notes / result</label><input class="sfaEquipNotes" value="' + escapeHtml(item.notes || item.result || '') + '"></div>' +
+          '<button class="button third" style="min-height:42px;font-size:18px;padding:6px;" type="button" onclick="this.closest(&quot;.sfa-equipment-row&quot;).remove(); setEditorDirty(true);">×</button>';
+        wrap.appendChild(row);
+      };
+
+      function collectSfaEquipmentList() {
+        return Array.from(document.querySelectorAll('.sfa-equipment-row')).map(function(row) {
+          return {
+            qty: (row.querySelector('.sfaEquipQty') || {}).value || '',
+            type: (row.querySelector('.sfaEquipType') || {}).value || '',
+            location: (row.querySelector('.sfaEquipLocation') || {}).value || '',
+            notes: (row.querySelector('.sfaEquipNotes') || {}).value || ''
+          };
+        }).filter(function(item) { return item.qty || item.type || item.location || item.notes; });
+      }
+
       function openEditorForItem(item) {
         if (!item || !item.draft) return;
         const report = getOfflineReportConfig(item);
@@ -1238,6 +1278,7 @@
         setEditValue('editSfaBatteries', d.sfaBatteries || '');
         setEditValue('editSfaFaults', d.sfaFaults || '');
         setEditValue('editSfaRecommendations', d.sfaRecommendations || '');
+        renderSfaEquipmentList(d.sfaEquipmentList || []);
         setEditValue('editSageAccountNo', d.sageAccountNo || '');
         setEditValue('editCustomerOrderNo', d.customerOrderNo || '');
         setEditValue('editOurRefNo', d.ourRefNo || '');
@@ -1356,8 +1397,8 @@
           engineer: '',
           customer: '',
           site: '',
-          stage: 'real-field-shape-local-only',
-          note: 'V6.3c69 local SFA field shape only. Cloud sync and PDF creation are not enabled yet.',
+          stage: 'sfa-equipment-list-local-only',
+          note: 'V6.3c69a local SFA field shape + equipment list only. Cloud sync and PDF creation are not enabled yet.',
           contactName: '',
           sfaSystemType: '',
           sfaPanelMakeModel: '',
@@ -1369,6 +1410,7 @@
           sfaBatteries: '',
           sfaFaults: '',
           sfaRecommendations: '',
+          sfaEquipmentList: [],
           customerOrderNo: '',
           ourRefNo: '',
           workDescription: '',
@@ -1386,7 +1428,7 @@
           customer: '',
           site: '',
           savedAt: draft.savedAt,
-          source: 'github-shell-start-offline-sfa-real-field-shape',
+          source: 'github-shell-start-offline-sfa-equipment-list',
           draft: draft
         };
       }
@@ -1416,6 +1458,20 @@
         addEditorMaterialRow({}); addEditorMaterialRow({}); addEditorMaterialRow({});
         setEditorDirty(true);
         setEditorStatus('Added 3 blank material/work rows.');
+      };
+
+      window.addCommonSfaEquipmentRows = function addCommonSfaEquipmentRows(event) {
+        stopTap(event);
+        const commonRows = [
+          { type: 'Control Panel', qty: '1' },
+          { type: 'Manual Call Points', qty: getEditValue('editSfaCallPoints') || '' },
+          { type: 'Detectors', qty: getEditValue('editSfaDetectors') || '' },
+          { type: 'Sounders / VADs', qty: getEditValue('editSfaSounders') || '' },
+          { type: 'Batteries', qty: getEditValue('editSfaBatteries') || '' }
+        ];
+        commonRows.forEach(function(row) { addSfaEquipmentRow(row); });
+        setEditorDirty(true);
+        setEditorStatus('Added common SFA equipment rows locally.');
       };
 
       window.startNewOfflineW = function startNewOfflineW(event) {
@@ -1460,6 +1516,7 @@
         d.sfaBatteries = getEditValue('editSfaBatteries');
         d.sfaFaults = getEditValue('editSfaFaults');
         d.sfaRecommendations = getEditValue('editSfaRecommendations');
+        d.sfaEquipmentList = collectSfaEquipmentList();
         d.sageAccountNo = getEditValue('editSageAccountNo');
         d.customerOrderNo = getEditValue('editCustomerOrderNo');
         d.ourRefNo = getEditValue('editOurRefNo');
@@ -1528,7 +1585,7 @@
         if (!updated) return;
         const report = getOfflineReportConfig(updated);
         if (!report.syncableOffline) {
-          setEditorStatus('Saved locally. ' + report.code + ' cloud sync is not enabled yet in V6.3c69.');
+          setEditorStatus('Saved locally. ' + report.code + ' cloud sync is not enabled yet in V6.3c69a.');
           return;
         }
         if (!navigator.onLine) {
@@ -1847,6 +1904,6 @@
       });
     }());
   </script>
-  <div class="fixed-version-badge">App Shell V6.3c69 · offline SFA real field shape</div>
+  <div class="fixed-version-badge">App Shell V6.3c69a · SFA equipment list</div>
 </body>
 </html>
