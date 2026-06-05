@@ -691,7 +691,7 @@
 </head>
 <body>
   <!--
-    Fire Safety Direct - FSD Certs V6.3c70a Offline SFA Payload Button Fix
+    Fire Safety Direct - FSD Certs V6.3c71 Offline SFA Cloud Draft Bridge
     Colourful iPad app-icon shell with new black/gold FSD logo.
     App shell mark: Jared720 Labs
   -->
@@ -952,7 +952,7 @@
     (function () {
       'use strict';
 
-      const SHELL_VER = 'V6.3c70';
+      const SHELL_VER = 'V6.3c71';
       const APP_URL = 'https://script.google.com/macros/s/AKfycbzq9FTETNZwUJWHMGnMHECbu3sJ3jy3FFvGYyeaRXtkoK1GHBtqOu-GLBle_WGfoFtI/exec';
       const SCHEDULE_URL = 'https://docs.google.com/spreadsheets/d/1SZK6igtKPVHcBRdkA49A6AKSobkWXI_pk-De7taZP6c/edit';
       const CALLOUTS_PAGE = APP_URL + '?page=callouts&shell=ipad';
@@ -976,7 +976,7 @@
       // SFA now mirrors the online Fire Alarm Service Report structure more closely: equipment checked table + service/remedial costs, no W material rows.
       const OFFLINE_REPORT_TYPES = {
         W:   { code: 'W',   label: 'Engineer Service Report',             page: 'esr', editableOffline: true,  syncableOffline: true },
-        SFA: { code: 'SFA', label: 'Fire Alarm Service Report',           page: 'sfa', editableOffline: true,  syncableOffline: false },
+        SFA: { code: 'SFA', label: 'Fire Alarm Service Report',           page: 'sfa', editableOffline: true,  syncableOffline: true },
         SEL: { code: 'SEL', label: 'Emergency Lighting Report',           page: 'sel', editableOffline: false, syncableOffline: false },
         FAC: { code: 'FAC', label: 'Fire Alarm Commissioning Certificate', page: 'fac', editableOffline: false, syncableOffline: false }
       };
@@ -1795,11 +1795,11 @@
         const equipmentRows = normalizeSfaEquipmentRows(d.faEquipmentRows || d.sfaEquipmentList || []);
         const draftName = item.draftName || d.draftName || buildEditorDraftName(d);
         return {
-          payloadVersion: 'V6.3c70a-preview',
+          payloadVersion: 'V6.3c71-sfa-cloud-draft',
           source: 'fsd-certs-github-shell',
           shellVersion: SHELL_VER,
-          action: 'SFA_CLOUD_DRAFT_PREVIEW_ONLY',
-          syncEnabled: false,
+          action: 'SFA_CLOUD_DRAFT_READY',
+          syncEnabled: true,
           pdfEnabled: false,
           offlineId: item.offlineId || d.offlineId || '',
           reportTypeCode: 'SFA',
@@ -1859,7 +1859,7 @@
           backendBridge: {
             proposedMessageType: 'FSD_OFFLINE_SFA_SYNC',
             proposedPage: 'sfa',
-            status: 'preview-only-not-sent'
+            status: 'cloud-draft-sync-enabled'
           }
         };
       }
@@ -1874,7 +1874,7 @@
           }
           const report = getOfflineReportConfig(updated);
           if (report.code !== 'SFA') {
-            setEditorStatus('Payload preview is only for SFA in V6.3c70a. W sync remains unchanged.');
+            setEditorStatus('Payload preview is only for SFA. W sync remains unchanged.');
             return;
           }
           const payload = buildSfaCloudPayload(updated);
@@ -1927,7 +1927,7 @@
         if (!updated) return;
         const report = getOfflineReportConfig(updated);
         if (!report.syncableOffline) {
-          setEditorStatus('Saved locally. ' + report.code + ' cloud sync is still blocked in V6.3c70a. Use Preview SFA Cloud Payload to check the data first.');
+          setEditorStatus('Saved locally. ' + report.code + ' cannot sync yet in this version.');
           return;
         }
         if (!navigator.onLine) {
@@ -1936,10 +1936,10 @@
         }
         offlineEditor.classList.remove('active');
         setOfflineStatus('Saved offline changes. Syncing to Cloud Drafts...');
-        loadEsrForShellAction('sync', updated);
+        loadOfflineBridgeForShellAction('sync', updated);
       };
 
-      function loadEsrForShellAction(action, item) {
+      function loadOfflineBridgeForShellAction(action, item) {
         home.classList.add('hidden');
         offlineDrafts.classList.remove('active');
         fallback.classList.add('hidden');
@@ -1947,8 +1947,9 @@
         loaded = false;
         hasStarted = true;
         pendingShellAction = { action: action, item: item, attempts: 0 };
+        const report = getOfflineReportConfig(item);
         const shellPayload = {
-          type: action === 'sync' ? 'FSD_OFFLINE_W_SYNC' : 'FSD_OFFLINE_W_RESTORE',
+          type: action === 'sync' ? 'FSD_OFFLINE_' + report.code + '_SYNC' : 'FSD_OFFLINE_' + report.code + '_RESTORE',
           source: 'fsd-certs-shell',
           item: item,
           ts: Date.now()
@@ -1961,14 +1962,15 @@
           frame.name = OFFLINE_W_WINDOW_NAME_PREFIX + JSON.stringify(shellPayload);
         } catch (err) {}
         const offlineIdParam = item && item.offlineId ? '&offlineId=' + encodeURIComponent(item.offlineId) : '';
-        frame.src = APP_URL + '?page=esr&offlineBridge=1&shell=ipad&offlineAction=' + encodeURIComponent(action) + offlineIdParam + '&v=' + encodeURIComponent(SHELL_VER) + '&ts=' + Date.now();
+        frame.src = APP_URL + '?page=' + encodeURIComponent(report.page || 'esr') + '&offlineBridge=1&shell=ipad&offlineAction=' + encodeURIComponent(action) + offlineIdParam + '&v=' + encodeURIComponent(SHELL_VER) + '&ts=' + Date.now();
         startFallbackTimer();
       }
 
       function sendPendingShellAction() {
         if (!pendingShellAction || !frame || !frame.contentWindow) return;
         pendingShellAction.attempts += 1;
-        const type = pendingShellAction.action === 'sync' ? 'FSD_OFFLINE_W_SYNC' : 'FSD_OFFLINE_W_RESTORE';
+        const report = getOfflineReportConfig(pendingShellAction.item);
+        const type = pendingShellAction.action === 'sync' ? 'FSD_OFFLINE_' + report.code + '_SYNC' : 'FSD_OFFLINE_' + report.code + '_RESTORE';
         try {
           frame.contentWindow.postMessage({
             type: type,
@@ -2029,8 +2031,8 @@
           setOfflineStatus('Still offline. You can press Edit Offline and carry on working, or connect the iPad and press Sync again.');
           return;
         }
-        setOfflineStatus('Syncing offline W draft to Cloud Drafts. Keep this screen open...');
-        loadEsrForShellAction('sync', item);
+        setOfflineStatus('Syncing offline ' + report.code + ' draft to Cloud Drafts. Keep this screen open...');
+        loadOfflineBridgeForShellAction('sync', item);
       };
 
       window.syncOfflineWById = window.syncOfflineItemById;
@@ -2170,14 +2172,15 @@
           return;
         }
 
-        if (msg.source !== 'fsd-certs-esr') return;
+        if (msg.source !== 'fsd-certs-esr' && msg.source !== 'fsd-certs-sfa') return;
 
-        if (msg.type === 'FSD_OFFLINE_W_REQUEST' && pendingShellAction) {
+        if ((msg.type === 'FSD_OFFLINE_W_REQUEST' || msg.type === 'FSD_OFFLINE_SFA_REQUEST') && pendingShellAction) {
           // V6.3c37y: Apps Script may put the real W page inside a Google
           // wrapper frame. Sending to frame.contentWindow can hit the wrapper
           // instead of the report. Reply directly to the requesting window so
           // Resume/Sync receives the actual saved draft payload.
-          const type = pendingShellAction.action === 'sync' ? 'FSD_OFFLINE_W_SYNC' : 'FSD_OFFLINE_W_RESTORE';
+          const report = getOfflineReportConfig(pendingShellAction.item);
+        const type = pendingShellAction.action === 'sync' ? 'FSD_OFFLINE_' + report.code + '_SYNC' : 'FSD_OFFLINE_' + report.code + '_RESTORE';
           try {
             event.source.postMessage({
               type: type,
@@ -2185,7 +2188,7 @@
               item: pendingShellAction.item,
               ts: Date.now()
             }, '*');
-            setOfflineStatus('Sending offline W draft to report...');
+            setOfflineStatus('Sending offline ' + getOfflineReportConfig(pendingShellAction.item).code + ' draft to report...');
           } catch (err) {}
           return;
         }
@@ -2205,14 +2208,14 @@
           return;
         }
 
-        if (msg.type === 'FSD_OFFLINE_W_SYNC_RESULT') {
+        if (msg.type === 'FSD_OFFLINE_W_SYNC_RESULT' || msg.type === 'FSD_OFFLINE_SFA_SYNC_RESULT') {
           clearTimeout(shellActionTimer);
           const result = msg.item || {};
+          const resultCode = msg.type === 'FSD_OFFLINE_SFA_SYNC_RESULT' ? 'SFA' : 'W';
           if (result.ok && result.offlineId) {
             removeOfflineItem(result.offlineId);
             pendingShellAction = null;
-            // V6.3c48: clear the hidden tiny sync bridge so the next Open Portal
-            // starts clean instead of landing on the fallback/loading screen.
+            // Keep the hidden sync bridge clean so the next Open Portal starts fresh.
             hasStarted = false;
             try { frame.name = ''; frame.src = 'about:blank'; } catch (err) {}
             loader.classList.add('hidden');
@@ -2220,11 +2223,10 @@
             home.classList.add('hidden');
             offlineDrafts.classList.add('active');
             renderOfflineDrafts();
-            setOfflineStatus('Synced to cloud drafts: ' + (result.draftName || result.draftId || 'W draft') + '. Open Draft Manager to resume it.');
+            setOfflineStatus('Synced ' + resultCode + ' to cloud drafts: ' + (result.draftName || result.draftId || resultCode + ' draft') + '. Open Draft Manager to resume it.');
           } else {
             pendingShellAction = null;
-            // V6.3c48: clear the hidden tiny sync bridge so the next Open Portal
-            // starts clean instead of landing on the fallback/loading screen.
+            // Keep the hidden sync bridge clean so the next Open Portal starts fresh.
             hasStarted = false;
             try { frame.name = ''; frame.src = 'about:blank'; } catch (err) {}
             loader.classList.add('hidden');
@@ -2232,7 +2234,7 @@
             home.classList.add('hidden');
             offlineDrafts.classList.add('active');
             renderOfflineDrafts();
-            setOfflineStatus('Sync failed, so the iPad copy has been kept: ' + (result.error || 'Cloud save did not confirm.'));
+            setOfflineStatus(resultCode + ' sync failed, so the iPad copy has been kept: ' + (result.error || 'Cloud save did not confirm.'));
           }
         }
       });
@@ -2246,6 +2248,6 @@
       });
     }());
   </script>
-  <div class="fixed-version-badge">App Shell V6.3c70a · SFA payload button fix</div>
+  <div class="fixed-version-badge">App Shell V6.3c71 · SFA cloud draft bridge</div>
 </body>
 </html>
