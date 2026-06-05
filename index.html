@@ -216,6 +216,8 @@
     }
     .editor-field textarea { min-height: 74px; resize: vertical; }
     .editor-section-title { margin: 10px 0 0; padding: 9px 11px; border-radius: 12px; background: #e0f2fe; color: #0f172a; font-weight: 950; letter-spacing: .03em; }
+
+    .sfa-local-note { grid-column: 1 / -1; padding: 10px 12px; border-radius: 14px; background: #fff7ed; color: #7c2d12; border: 1px solid #fed7aa; font-weight: 850; font-size: 13px; line-height: 1.35; }
     .editor-materials { grid-column: 1 / -1; display: grid; gap: 8px; }
     .editor-material-row { display: grid; grid-template-columns: 74px minmax(0, 1fr) 96px 96px 44px; gap: 8px; align-items: end; padding: 10px; border-radius: 14px; background: #f8fafc; border: 1px solid #e2e8f0; }
     .editor-actions { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-top: 14px; }
@@ -677,7 +679,7 @@
 </head>
 <body>
   <!--
-    Fire Safety Direct - FSD Certs V6.3c68 Offline SFA Form Shell
+    Fire Safety Direct - FSD Certs V6.3c69 Offline SFA Real Field Shape
     Colourful iPad app-icon shell with new black/gold FSD logo.
     App shell mark: Jared720 Labs
   -->
@@ -741,7 +743,7 @@
 
     <footer class="ipad-footer">
       <span>Jared720 Labs</span>
-      <span>App Shell V6.3c68 · offline SFA form shell</span>
+      <span>App Shell V6.3c69 · offline SFA real field shape</span>
     </footer>
   </section>
 
@@ -749,7 +751,7 @@
     <main class="offline-card">
       <h2 class="offline-title">Offline Certs &amp; Reports</h2>
       <p class="offline-help">Certificate/report drafts saved without signal live on this iPad until they are synced to the FSD cloud Draft Manager.</p>
-      <p class="offline-help"><strong>Offline editor trial:</strong> W reports can be started, edited and synced. SFA can now be started and edited as a local form-shell draft. SFA cloud sync/PDF creation stays blocked until the next safe stage.</p>
+      <p class="offline-help"><strong>Offline editor trial:</strong> W reports can be started, edited and synced. SFA now has a fuller local field shape for Fire Alarm Service details. SFA cloud sync/PDF creation stays blocked until the next safe stage.</p>
       <div id="offlineList" class="offline-list"></div>
       <div class="actions">
         <button class="button" type="button" onclick="startNewOfflineW(event)"><span class="tile-icon">📝</span><span>Start Offline W</span></button>
@@ -790,6 +792,19 @@
           <div class="editor-field"><label>Service date</label><input id="editServiceDate" type="date"></div>
           <div class="editor-field editor-wide"><label>Customer / Invoice address</label><textarea id="editCustomer"></textarea></div>
           <div class="editor-field editor-wide"><label>Site address</label><textarea id="editSite"></textarea></div>
+          <div class="editor-section-title">SFA fire alarm service details</div>
+          <div class="sfa-local-note">SFA offline is still local-only in this version. These fields are saved/resumed on this iPad, but they do not sync to Cloud Drafts or create PDFs yet.</div>
+          <div class="editor-field"><label>Site contact</label><input id="editContactName"></div>
+          <div class="editor-field"><label>System type</label><input id="editSfaSystemType" placeholder="Conventional / Addressable / Wireless"></div>
+          <div class="editor-field"><label>Panel make / model</label><input id="editSfaPanelMakeModel"></div>
+          <div class="editor-field"><label>Panel location</label><input id="editSfaPanelLocation"></div>
+          <div class="editor-field"><label>No. of zones</label><input id="editSfaZones" inputmode="numeric"></div>
+          <div class="editor-field"><label>Call points</label><input id="editSfaCallPoints" inputmode="numeric"></div>
+          <div class="editor-field"><label>Detectors</label><input id="editSfaDetectors" inputmode="numeric"></div>
+          <div class="editor-field"><label>Sounders / VADs</label><input id="editSfaSounders" inputmode="numeric"></div>
+          <div class="editor-field"><label>Batteries</label><input id="editSfaBatteries" placeholder="e.g. 2 x 12V 7Ah"></div>
+          <div class="editor-field editor-wide"><label>Faults / defects found</label><textarea id="editSfaFaults" rows="3"></textarea></div>
+          <div class="editor-field editor-wide"><label>Recommendations</label><textarea id="editSfaRecommendations" rows="3"></textarea></div>
           <div class="editor-field"><label>Sage account no.</label><input id="editSageAccountNo"></div>
           <div class="editor-field"><label>Customer order no.</label><input id="editCustomerOrderNo"></div>
           <div class="editor-field"><label>Our ref no.</label><input id="editOurRefNo"></div>
@@ -874,7 +889,7 @@
     (function () {
       'use strict';
 
-      const SHELL_VER = 'V6.3c68';
+      const SHELL_VER = 'V6.3c69';
       const APP_URL = 'https://script.google.com/macros/s/AKfycbzq9FTETNZwUJWHMGnMHECbu3sJ3jy3FFvGYyeaRXtkoK1GHBtqOu-GLBle_WGfoFtI/exec';
       const SCHEDULE_URL = 'https://docs.google.com/spreadsheets/d/1SZK6igtKPVHcBRdkA49A6AKSobkWXI_pk-De7taZP6c/edit';
       const CALLOUTS_PAGE = APP_URL + '?page=callouts&shell=ipad';
@@ -893,9 +908,9 @@
       const OFFLINE_W_OLD_QUEUE_KEY = 'fsd_esr_offline_w_queue_v6_3c37s';
       const OFFLINE_W_WINDOW_NAME_PREFIX = 'FSD_OFFLINE_W_PAYLOAD::';
 
-      // V6.3c68 - Offline SFA form shell.
+      // V6.3c69 - Offline SFA real field shape.
       // W remains the only offline report that can sync to Cloud Drafts.
-      // SFA can now be edited/resumed locally, but cloud sync and PDF creation stay blocked.
+      // SFA can now save/resume a fuller local field shape, but cloud sync and PDF creation stay blocked.
       const OFFLINE_REPORT_TYPES = {
         W:   { code: 'W',   label: 'Engineer Service Report',             page: 'esr', editableOffline: true,  syncableOffline: true },
         SFA: { code: 'SFA', label: 'Fire Alarm Service Report',           page: 'sfa', editableOffline: true,  syncableOffline: false },
@@ -1199,7 +1214,7 @@
         if (noteEl) {
           noteEl.textContent = report.code === 'W'
             ? 'This is the local iPad editor. W reports can save offline and sync to Cloud Drafts when signal returns.'
-            : 'This is the local SFA form shell. It saves and resumes on this iPad only. Cloud sync and PDF creation are deliberately blocked in this stage.';
+            : 'This is the local SFA field-shape editor. It saves and resumes on this iPad only. Cloud sync and PDF creation are deliberately blocked in this stage.';
         }
         if (syncBtn) {
           syncBtn.disabled = !report.syncableOffline;
@@ -1212,6 +1227,17 @@
         setEditValue('editServiceDate', d.serviceDate || '');
         setEditValue('editCustomer', d.customer || item.customer || '');
         setEditValue('editSite', d.site || item.site || '');
+        setEditValue('editContactName', d.contactName || '');
+        setEditValue('editSfaSystemType', d.sfaSystemType || '');
+        setEditValue('editSfaPanelMakeModel', d.sfaPanelMakeModel || '');
+        setEditValue('editSfaPanelLocation', d.sfaPanelLocation || '');
+        setEditValue('editSfaZones', d.sfaZones || '');
+        setEditValue('editSfaCallPoints', d.sfaCallPoints || '');
+        setEditValue('editSfaDetectors', d.sfaDetectors || '');
+        setEditValue('editSfaSounders', d.sfaSounders || '');
+        setEditValue('editSfaBatteries', d.sfaBatteries || '');
+        setEditValue('editSfaFaults', d.sfaFaults || '');
+        setEditValue('editSfaRecommendations', d.sfaRecommendations || '');
         setEditValue('editSageAccountNo', d.sageAccountNo || '');
         setEditValue('editCustomerOrderNo', d.customerOrderNo || '');
         setEditValue('editOurRefNo', d.ourRefNo || '');
@@ -1243,7 +1269,7 @@
         bindEditorChangeTracking();
         calculateEditorTotals();
         setEditorDirty(false);
-        setEditorStatus(report.code === 'W' ? 'Editing offline W draft saved on this iPad. Press Save Offline before leaving.' : 'Editing offline SFA draft saved on this iPad. Form shell only: save/resume local, no sync yet.');
+        setEditorStatus(report.code === 'W' ? 'Editing offline W draft saved on this iPad. Press Save Offline before leaving.' : 'Editing offline SFA draft saved on this iPad. Real field-shape trial only: save/resume local, no sync yet.');
       }
 
       function firstLine(value) {
@@ -1330,8 +1356,19 @@
           engineer: '',
           customer: '',
           site: '',
-          stage: 'form-shell-local-only',
-          note: 'V6.3c68 local SFA form shell only. Cloud sync and PDF creation are not enabled yet.',
+          stage: 'real-field-shape-local-only',
+          note: 'V6.3c69 local SFA field shape only. Cloud sync and PDF creation are not enabled yet.',
+          contactName: '',
+          sfaSystemType: '',
+          sfaPanelMakeModel: '',
+          sfaPanelLocation: '',
+          sfaZones: '',
+          sfaCallPoints: '',
+          sfaDetectors: '',
+          sfaSounders: '',
+          sfaBatteries: '',
+          sfaFaults: '',
+          sfaRecommendations: '',
           customerOrderNo: '',
           ourRefNo: '',
           workDescription: '',
@@ -1349,7 +1386,7 @@
           customer: '',
           site: '',
           savedAt: draft.savedAt,
-          source: 'github-shell-start-offline-sfa-form-shell',
+          source: 'github-shell-start-offline-sfa-real-field-shape',
           draft: draft
         };
       }
@@ -1395,7 +1432,7 @@
         upsertOfflineItem(item);
         renderOfflineDrafts();
         openEditorForItem(item);
-        setEditorStatus('New offline SFA draft started on this iPad. This stage saves/resumes locally only. Cloud sync and PDF creation are deliberately blocked.');
+        setEditorStatus('New offline SFA draft started on this iPad. Fill the SFA details and save locally. Cloud sync and PDF creation are deliberately blocked.');
       };
 
       function saveEditorToQueue() {
@@ -1412,6 +1449,17 @@
         d.serviceDate = getEditValue('editServiceDate');
         d.customer = getEditValue('editCustomer');
         d.site = getEditValue('editSite');
+        d.contactName = getEditValue('editContactName');
+        d.sfaSystemType = getEditValue('editSfaSystemType');
+        d.sfaPanelMakeModel = getEditValue('editSfaPanelMakeModel');
+        d.sfaPanelLocation = getEditValue('editSfaPanelLocation');
+        d.sfaZones = getEditValue('editSfaZones');
+        d.sfaCallPoints = getEditValue('editSfaCallPoints');
+        d.sfaDetectors = getEditValue('editSfaDetectors');
+        d.sfaSounders = getEditValue('editSfaSounders');
+        d.sfaBatteries = getEditValue('editSfaBatteries');
+        d.sfaFaults = getEditValue('editSfaFaults');
+        d.sfaRecommendations = getEditValue('editSfaRecommendations');
         d.sageAccountNo = getEditValue('editSageAccountNo');
         d.customerOrderNo = getEditValue('editCustomerOrderNo');
         d.ourRefNo = getEditValue('editOurRefNo');
@@ -1480,7 +1528,7 @@
         if (!updated) return;
         const report = getOfflineReportConfig(updated);
         if (!report.syncableOffline) {
-          setEditorStatus('Saved locally. ' + report.code + ' cloud sync is not enabled yet in V6.3c68.');
+          setEditorStatus('Saved locally. ' + report.code + ' cloud sync is not enabled yet in V6.3c69.');
           return;
         }
         if (!navigator.onLine) {
@@ -1575,7 +1623,7 @@
         if (!item) return renderOfflineDrafts();
         const report = getOfflineReportConfig(item);
         if (!report.syncableOffline) {
-          setOfflineStatus(report.code + ' drafts are local-only in V6.3c68. No cloud sync is enabled yet.');
+          setOfflineStatus(report.code + ' drafts are local-only in V6.3c69. No cloud sync is enabled yet.');
           return;
         }
         if (!navigator.onLine) {
@@ -1799,6 +1847,6 @@
       });
     }());
   </script>
-  <div class="fixed-version-badge">App Shell V6.3c68 · offline SFA form shell</div>
+  <div class="fixed-version-badge">App Shell V6.3c69 · offline SFA real field shape</div>
 </body>
 </html>
