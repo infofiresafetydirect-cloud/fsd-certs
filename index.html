@@ -694,7 +694,7 @@
 </head>
 <body>
   <!--
-    Fire Safety Direct - FSD Certs V6.3c72 Offline SFA Cloud Draft PDF Test
+    Fire Safety Direct - FSD Certs V6.3c73 Offline SEL Cloud Draft Bridge
     Colourful iPad app-icon shell with new black/gold FSD logo.
     App shell mark: Jared720 Labs
   -->
@@ -758,7 +758,7 @@
 
     <footer class="ipad-footer">
       <span>Jared720 Labs</span>
-      <span>App Shell V6.3c72 · SFA cloud draft PDF test</span>
+      <span>App Shell V6.3c73 · SEL cloud draft bridge</span>
     </footer>
   </section>
 
@@ -766,11 +766,12 @@
     <main class="offline-card">
       <h2 class="offline-title">Offline Certs &amp; Reports</h2>
       <p class="offline-help">Certificate/report drafts saved without signal live on this iPad until they are synced to the FSD cloud Draft Manager.</p>
-      <p class="offline-help"><strong>Offline editor trial:</strong> Engineer Service Reports can be started, edited and synced. SFA now mirrors the online Fire Alarm Service Report shape more closely: equipment checked table plus FA service/remedial costs. SFA cloud draft sync is now bridged safely. V6.3c72 tests the safest PDF route: open SFA from Cloud Drafts and use the normal online Create Combined PDF Pack button.</p>
+      <p class="offline-help"><strong>Offline editor trial:</strong> Engineer Service Reports can be started, edited and synced. SFA now mirrors the online Fire Alarm Service Report shape more closely: equipment checked table plus FA service/remedial costs. SFA cloud draft sync is now bridged safely. V6.3c73 extends the proven offline pattern to SEL: local Emergency Lighting draft, sync to Cloud Drafts, then use the normal online SEL PDF button.</p>
       <div id="offlineList" class="offline-list"></div>
       <div class="actions">
         <button class="button" type="button" onclick="startNewOfflineW(event)"><span class="tile-icon">📝</span><span>Start Offline Engineer Service Report</span></button>
         <button class="button secondary" type="button" onclick="startNewOfflineSfaTrial(event)"><span class="tile-icon">🔥</span><span>Start Offline SFA</span></button>
+        <button class="button secondary" type="button" onclick="startNewOfflineSelTrial(event)"><span class="tile-icon">💡</span><span>Start Offline SEL</span></button>
         <button class="button secondary" type="button" onclick="refreshOfflineDrafts(event)"><span class="tile-icon">🔄</span><span>Refresh Offline Reports</span></button>
         <button class="button third" type="button" onclick="closeOfflineDrafts(event)"><span class="tile-icon">↩️</span><span>Back to Menu</span></button>
       </div>
@@ -867,6 +868,63 @@
               <textarea id="sfaCloudPayloadJson" readonly spellcheck="false"></textarea>
             </div>
           </div>
+
+          <div id="selOfflineFields" class="nested-editor-grid hidden-report-fields">
+            <div class="editor-section-title">SEL emergency lighting report details</div>
+            <div class="sfa-local-note">SEL offline follows the online Emergency Lighting Report shape. Save locally, sync to Cloud Drafts, then open from Cloud Drafts and use the normal online SEL PDF button.</div>
+            <div class="editor-field"><label>Sage Account No.</label><input id="editSelSageAccountNo"></div>
+            <div class="editor-field"><label>Contract ID No.</label><input id="editSelContractId"></div>
+            <div class="editor-field"><label>Asbestos Report Available</label><select id="editSelAsbestosAvailable"><option value="NO">NO</option><option value="YES">YES</option></select></div>
+            <div class="editor-field"><label>Inspection Type</label><select id="editSelServiceVisit"><option value="12 MONTHLY/3 HOUR">12 MONTHLY / 3 HOUR</option><option value="6 MONTHLY/1 HOUR">6 MONTHLY / 1 HOUR</option></select></div>
+            <div class="editor-field"><label>Last Service Visit</label><input id="editSelLastServiceVisit" placeholder="YYYY-MM or notes"></div>
+            <div class="editor-field"><label>Next Service Visit</label><input id="editSelNextServiceVisit" placeholder="YYYY-MM or notes"></div>
+            <div class="editor-section-title">Fittings / Quantities</div>
+            <div class="editor-field"><label>Total Number of Fittings</label><input id="editElTotalFittings" type="number" inputmode="numeric"></div>
+            <div class="editor-field"><label>No. Fittings Tested</label><input id="editElTested" type="number" inputmode="numeric"></div>
+            <div class="editor-field"><label>No. Fittings Passed</label><input id="editElPassed" type="number" inputmode="numeric"></div>
+            <div class="editor-field"><label>No. Fittings Failed</label><input id="editElFailed" type="number" inputmode="numeric"></div>
+            <div class="editor-field"><label>Reason Code</label><input id="editElReason" placeholder="NC / REC"></div>
+            <div class="editor-field"><label>Quick Quote Ref</label><input id="editElQuickQuoteRef" placeholder="e.g. QQ000123"></div>
+            <div class="editor-section-title">Emergency Lighting Type Quantities</div>
+            <div class="editor-field"><label>Bulkhead</label><input id="editElBulkhead" type="number" inputmode="numeric"></div>
+            <div class="editor-field"><label>Exit Signs</label><input id="editElExitSigns" type="number" inputmode="numeric"></div>
+            <div class="editor-field"><label>Round 2D / Round LED</label><input id="editElRound2d" type="number" inputmode="numeric"></div>
+            <div class="editor-field"><label>Fluorescent / LED</label><input id="editElFluorescentLed" type="number" inputmode="numeric"></div>
+            <div class="editor-field"><label>Twin Spots</label><input id="editElTwinSpots" type="number" inputmode="numeric"></div>
+            <div class="editor-field"><label>Spot Lights</label><input id="editElSpotLights" type="number" inputmode="numeric"></div>
+            <div class="editor-field"><label>Test Switches</label><input id="editElTestSwitches" type="number" inputmode="numeric"></div>
+            <div class="editor-field"><label>Central Battery</label><input id="editElCentralBattery" type="number" inputmode="numeric"></div>
+            <div class="editor-field"><label>Batteries</label><input id="editElBatteries" type="number" inputmode="numeric"></div>
+            <div class="editor-field"><label>Other</label><input id="editElOther" type="number" inputmode="numeric"></div>
+            <div class="editor-section-title">Emergency Lighting Inspection Checks</div>
+            <div class="editor-field"><label>Log book correct</label><select id="editElLogBookCorrect"><option>YES</option><option>NO</option><option>N/A</option></select></div>
+            <div class="editor-field"><label>Luminaires function</label><select id="editElLuminairesFunction"><option>YES</option><option>NO</option><option>N/A</option></select></div>
+            <div class="editor-field"><label>Drawings available</label><select id="editElDrawingsAvailable"><option>YES</option><option>NO</option><option>N/A</option></select></div>
+            <div class="editor-field"><label>Local circuit</label><select id="editElLocalCircuit"><option>YES</option><option>NO</option><option>N/A</option></select></div>
+            <div class="editor-field"><label>Test points present</label><select id="editElTestPointsPresent"><option>YES</option><option>NO</option><option>N/A</option></select></div>
+            <div class="editor-field"><label>Lamp batteries marked</label><select id="editElLampBatteriesMarked"><option>YES</option><option>NO</option><option>N/A</option></select></div>
+            <div class="editor-field"><label>Diffusers clean</label><select id="editElDiffusersClean"><option>YES</option><option>NO</option><option>N/A</option></select></div>
+            <div class="editor-field"><label>Satisfactory condition</label><select id="editElSatisfactoryCondition"><option>YES</option><option>NO</option><option>N/A</option></select></div>
+            <div class="editor-field"><label>Nominal voltage marked</label><select id="editElNominalVoltageMarked"><option>YES</option><option>NO</option><option>N/A</option></select></div>
+            <div class="editor-field"><label>Correct lamps</label><select id="editElCorrectLamps"><option>YES</option><option>NO</option><option>N/A</option></select></div>
+            <div class="editor-field"><label>Alterations / decor</label><select id="editElAlterationsDecor"><option>NO</option><option>YES</option><option>N/A</option></select></div>
+            <div class="editor-field"><label>Hazards covered</label><select id="editElHazardsCovered"><option>YES</option><option>NO</option><option>N/A</option></select></div>
+            <div class="editor-field"><label>Points of emphasis</label><select id="editElPointsOfEmphasis"><option>YES</option><option>NO</option><option>N/A</option></select></div>
+            <div class="editor-field"><label>Date installation recorded</label><select id="editElDateInstallationRecorded"><option>YES</option><option>NO</option><option>N/A</option></select></div>
+            <div class="editor-field"><label>Battery date visible</label><select id="editElBatteryDateVisible"><option>YES</option><option>NO</option><option>N/A</option></select></div>
+            <div class="editor-field"><label>Supplies normal</label><select id="editElSuppliesNormal"><option>YES</option><option>NO</option><option>N/A</option></select></div>
+            <div class="editor-field"><label>Charging restored</label><select id="editElChargingRestored"><option>YES</option><option>NO</option><option>N/A</option></select></div>
+            <div class="editor-field"><label>Indication lamps</label><select id="editElIndicationLamps"><option>YES</option><option>NO</option><option>N/A</option></select></div>
+            <div class="editor-field"><label>Battery electrolytes</label><select id="editElBatteryElectrolytes"><option>N/A</option><option>YES</option><option>NO</option></select></div>
+            <div class="editor-field"><label>User aware of unresolved failures</label><select id="editElUserAwareAction"><option>YES</option><option>NO</option><option>N/A</option></select></div>
+            <div class="editor-section-title">Corrective Action / Costs</div>
+            <div class="editor-field editor-wide"><label>Immediate Corrective Action Required / Undertaken</label><textarea id="editElCorrectiveAction" rows="4"></textarea></div>
+            <div class="editor-field"><label>Service Cost</label><input id="editElServiceCost" type="number" step="0.01" value="0.00"></div>
+            <div class="editor-field"><label>Remedial Material Cost</label><input id="editElMaterialCost" type="number" step="0.01" value="0.00"></div>
+            <div class="editor-field"><label>Remedial Labour Cost</label><input id="editElLabourCost" type="number" step="0.01" value="0.00"></div>
+            <div class="editor-field"><label>Cost Display</label><select id="editElCostDisplayMode"><option value="SEPARATE">Show costs on SEL report</option><option value="SEE_ATTACHED_SFA">Show tick / see attached report</option></select></div>
+            <div class="editor-field"><label>Tick Box if Non-Compliant</label><select id="editElNonCompliantHeader"><option value="NO">NO</option><option value="YES">YES - show red Non-Compliant header</option></select></div>
+          </div>
           <div id="wOfflineAdminFields" class="nested-editor-grid">
             <div class="editor-field"><label>Sage account no.</label><input id="editSageAccountNo"></div>
             <div class="editor-field"><label>Customer order no.</label><input id="editCustomerOrderNo"></div>
@@ -955,7 +1013,7 @@
     (function () {
       'use strict';
 
-      const SHELL_VER = 'V6.3c72';
+      const SHELL_VER = 'V6.3c73';
       const APP_URL = 'https://script.google.com/macros/s/AKfycbzq9FTETNZwUJWHMGnMHECbu3sJ3jy3FFvGYyeaRXtkoK1GHBtqOu-GLBle_WGfoFtI/exec';
       const SCHEDULE_URL = 'https://docs.google.com/spreadsheets/d/1SZK6igtKPVHcBRdkA49A6AKSobkWXI_pk-De7taZP6c/edit';
       const CALLOUTS_PAGE = APP_URL + '?page=callouts&shell=ipad';
@@ -980,7 +1038,7 @@
       const OFFLINE_REPORT_TYPES = {
         W:   { code: 'W',   label: 'Engineer Service Report',             page: 'esr', editableOffline: true,  syncableOffline: true },
         SFA: { code: 'SFA', label: 'Fire Alarm Service Report',           page: 'fael', editableOffline: true,  syncableOffline: true },
-        SEL: { code: 'SEL', label: 'Emergency Lighting Report',           page: 'sel', editableOffline: false, syncableOffline: false },
+        SEL: { code: 'SEL', label: 'Emergency Lighting Report',           page: 'sel',  editableOffline: true,  syncableOffline: true },
         FAC: { code: 'FAC', label: 'Fire Alarm Commissioning Certificate', page: 'fac', editableOffline: false, syncableOffline: false }
       };
 
@@ -1378,7 +1436,9 @@
 
       function applyEditorReportLayout(report) {
         const isSfa = report && report.code === 'SFA';
+        const isSel = report && report.code === 'SEL';
         const sfaFields = document.getElementById('sfaOfflineFields');
+        const selFields = document.getElementById('selOfflineFields');
         const wAdmin = document.getElementById('wOfflineAdminFields');
         const wWork = document.getElementById('wOfflineWorkCostFields');
         const materialQuick = document.getElementById('editorMaterialQuickBtn');
@@ -1386,9 +1446,10 @@
         const sfaPayloadBtn = document.getElementById('editorSfaPayloadPreviewBtn');
         const sfaPayloadPreview = document.getElementById('sfaCloudPayloadPreview');
         if (sfaFields) sfaFields.classList.toggle('hidden-report-fields', !isSfa);
-        if (wAdmin) wAdmin.classList.toggle('hidden-report-fields', isSfa);
-        if (wWork) wWork.classList.toggle('hidden-report-fields', isSfa);
-        if (materialQuick) materialQuick.classList.toggle('hidden-report-fields', isSfa);
+        if (selFields) selFields.classList.toggle('hidden-report-fields', !isSel);
+        if (wAdmin) wAdmin.classList.toggle('hidden-report-fields', isSfa || isSel);
+        if (wWork) wWork.classList.toggle('hidden-report-fields', isSfa || isSel);
+        if (materialQuick) materialQuick.classList.toggle('hidden-report-fields', isSfa || isSel);
         if (sfaQuick) sfaQuick.classList.toggle('hidden-report-fields', !isSfa);
         if (sfaPayloadBtn) sfaPayloadBtn.classList.toggle('hidden-report-fields', !isSfa);
         if (!isSfa && sfaPayloadPreview) sfaPayloadPreview.classList.add('hidden-report-fields');
@@ -1404,7 +1465,9 @@
         if (noteEl) {
           noteEl.textContent = report.code === 'W'
             ? 'This is the local iPad editor. Engineer Service Reports can save offline and sync to Cloud Drafts when signal returns.'
-            : 'This is the local SFA cloud-draft bridge editor. Save locally, then Sync to Cloud. Open from Cloud Drafts to use the normal online PDF button.';
+            : (report.code === 'SEL'
+              ? 'This is the local SEL cloud-draft bridge editor. Save locally, then Sync to Cloud. Open from Cloud Drafts to use the normal online SEL PDF button.'
+              : 'This is the local SFA cloud-draft bridge editor. Save locally, then Sync to Cloud. Open from Cloud Drafts to use the normal online PDF button.');
         }
         if (syncBtn) {
           syncBtn.disabled = !report.syncableOffline;
@@ -1468,6 +1531,54 @@
         setEditValue('editSfaFaults', d.sfaFaults || '');
         setEditValue('editSfaRecommendations', d.sfaRecommendations || '');
         renderSfaEquipmentList(d.faEquipmentRows || d.sfaEquipmentList || []);
+        setEditValue('editSelSageAccountNo', d.sageAccountNo || '');
+        setEditValue('editSelContractId', d.contractId || '');
+        setEditValue('editSelAsbestosAvailable', d.asbestosAvailable || 'NO');
+        setEditValue('editSelServiceVisit', d.elServiceVisit || '12 MONTHLY/3 HOUR');
+        setEditValue('editSelLastServiceVisit', d.lastServiceVisit || '');
+        setEditValue('editSelNextServiceVisit', d.nextServiceVisit || '');
+        setEditValue('editElTotalFittings', d.elTotalFittings || '');
+        setEditValue('editElTested', d.elTested || '');
+        setEditValue('editElPassed', d.elPassed || '');
+        setEditValue('editElFailed', d.elFailed || '');
+        setEditValue('editElReason', d.elReason || '');
+        setEditValue('editElQuickQuoteRef', d.elQuickQuoteRef || '');
+        setEditValue('editElBulkhead', d.elBulkhead || '');
+        setEditValue('editElExitSigns', d.elExitSigns || '');
+        setEditValue('editElRound2d', d.elRound2d || '');
+        setEditValue('editElFluorescentLed', d.elFluorescentLed || '');
+        setEditValue('editElTwinSpots', d.elTwinSpots || '');
+        setEditValue('editElSpotLights', d.elSpotLights || '');
+        setEditValue('editElTestSwitches', d.elTestSwitches || '');
+        setEditValue('editElCentralBattery', d.elCentralBattery || '');
+        setEditValue('editElBatteries', d.elBatteries || '');
+        setEditValue('editElOther', d.elOther || '');
+        setEditValue('editElLogBookCorrect', d.elLogBookCorrect || 'YES');
+        setEditValue('editElLuminairesFunction', d.elLuminairesFunction || 'YES');
+        setEditValue('editElDrawingsAvailable', d.elDrawingsAvailable || 'YES');
+        setEditValue('editElLocalCircuit', d.elLocalCircuit || 'YES');
+        setEditValue('editElTestPointsPresent', d.elTestPointsPresent || 'YES');
+        setEditValue('editElLampBatteriesMarked', d.elLampBatteriesMarked || 'YES');
+        setEditValue('editElDiffusersClean', d.elDiffusersClean || 'YES');
+        setEditValue('editElSatisfactoryCondition', d.elSatisfactoryCondition || 'YES');
+        setEditValue('editElNominalVoltageMarked', d.elNominalVoltageMarked || 'YES');
+        setEditValue('editElCorrectLamps', d.elCorrectLamps || 'YES');
+        setEditValue('editElAlterationsDecor', d.elAlterationsDecor || 'NO');
+        setEditValue('editElHazardsCovered', d.elHazardsCovered || 'YES');
+        setEditValue('editElPointsOfEmphasis', d.elPointsOfEmphasis || 'YES');
+        setEditValue('editElDateInstallationRecorded', d.elDateInstallationRecorded || 'YES');
+        setEditValue('editElBatteryDateVisible', d.elBatteryDateVisible || 'YES');
+        setEditValue('editElSuppliesNormal', d.elSuppliesNormal || 'YES');
+        setEditValue('editElChargingRestored', d.elChargingRestored || 'YES');
+        setEditValue('editElIndicationLamps', d.elIndicationLamps || 'YES');
+        setEditValue('editElBatteryElectrolytes', d.elBatteryElectrolytes || 'N/A');
+        setEditValue('editElUserAwareAction', d.elUserAwareAction || 'YES');
+        setEditValue('editElCorrectiveAction', d.elCorrectiveAction || '');
+        setEditValue('editElServiceCost', d.elServiceCost || '0.00');
+        setEditValue('editElMaterialCost', d.elMaterialCost || '0.00');
+        setEditValue('editElLabourCost', d.elLabourCost || '0.00');
+        setEditValue('editElCostDisplayMode', d.elCostDisplayMode || 'SEPARATE');
+        setEditValue('editElNonCompliantHeader', d.elNonCompliantHeader || 'NO');
         setEditValue('editSageAccountNo', d.sageAccountNo || '');
         setEditValue('editCustomerOrderNo', d.customerOrderNo || '');
         setEditValue('editOurRefNo', d.ourRefNo || '');
@@ -1499,7 +1610,7 @@
         bindEditorChangeTracking();
         calculateEditorTotals();
         setEditorDirty(false);
-        setEditorStatus(report.code === 'W' ? 'Editing offline Engineer Service Report draft saved on this iPad. Press Save Offline before leaving.' : 'Editing offline SFA draft saved on this iPad. Save locally, then Sync to Cloud when ready.');
+        setEditorStatus(report.code === 'W' ? 'Editing offline Engineer Service Report draft saved on this iPad. Press Save Offline before leaving.' : ('Editing offline ' + report.code + ' draft saved on this iPad. Save locally, then Sync to Cloud when ready.'));
       }
 
       function firstLine(value) {
@@ -1642,6 +1753,89 @@
       }
 
 
+
+      function createBlankOfflineSelTrialItem() {
+        const now = new Date();
+        const today = now.toISOString().slice(0, 10);
+        const offlineId = makeOfflineId('SEL');
+        const draft = {
+          offlineCreated: true,
+          offlineId: offlineId,
+          reportType: 'Emergency Lighting Report',
+          reportTypeCode: 'SEL',
+          draftName: 'Offline SEL - ' + today,
+          serviceDate: today,
+          customerDate: today,
+          engineer: '',
+          customer: '',
+          site: '',
+          stage: 'sel-cloud-draft-bridge',
+          note: 'V6.3c73 SEL offline can sync to Cloud Drafts via the sel backend route and then use the normal online SEL PDF path.',
+          sageAccountNo: '',
+          contractId: '',
+          asbestosAvailable: 'NO',
+          lastServiceVisit: '',
+          nextServiceVisit: '',
+          elServiceVisit: '12 MONTHLY/3 HOUR',
+          elTotalFittings: '',
+          elTested: '',
+          elPassed: '',
+          elFailed: '',
+          elBulkhead: '',
+          elExitSigns: '',
+          elRound2d: '',
+          elFluorescentLed: '',
+          elTwinSpots: '',
+          elSpotLights: '',
+          elTestSwitches: '',
+          elCentralBattery: '',
+          elBatteries: '',
+          elOther: '',
+          elLogBookCorrect: 'YES',
+          elLuminairesFunction: 'YES',
+          elDrawingsAvailable: 'YES',
+          elLocalCircuit: 'YES',
+          elTestPointsPresent: 'YES',
+          elLampBatteriesMarked: 'YES',
+          elDiffusersClean: 'YES',
+          elSatisfactoryCondition: 'YES',
+          elNominalVoltageMarked: 'YES',
+          elCorrectLamps: 'YES',
+          elAlterationsDecor: 'NO',
+          elHazardsCovered: 'YES',
+          elPointsOfEmphasis: 'YES',
+          elDateInstallationRecorded: 'YES',
+          elBatteryDateVisible: 'YES',
+          elSuppliesNormal: 'YES',
+          elChargingRestored: 'YES',
+          elIndicationLamps: 'YES',
+          elBatteryElectrolytes: 'N/A',
+          elUserAwareAction: 'YES',
+          elCorrectiveAction: '',
+          elReason: '',
+          elQuickQuoteRef: '',
+          elCostDisplayMode: 'SEPARATE',
+          elNonCompliantHeader: 'NO',
+          elServiceCost: '0.00',
+          elMaterialCost: '0.00',
+          elLabourCost: '0.00',
+          customerName: '',
+          savedAt: now.toISOString()
+        };
+        return {
+          offlineId: offlineId,
+          reportType: 'SEL',
+          draftId: '',
+          draftName: draft.draftName,
+          engineer: '',
+          customer: '',
+          site: '',
+          savedAt: draft.savedAt,
+          source: 'github-shell-start-offline-sel-cloud-bridge',
+          draft: draft
+        };
+      }
+
       window.autoNameOfflineW = function autoNameOfflineW(event) {
         stopTap(event);
         const draft = {
@@ -1689,7 +1883,16 @@
         upsertOfflineItem(item);
         renderOfflineDrafts();
         openEditorForItem(item);
-        setEditorStatus('New offline SFA draft started on this iPad. Fill the SFA details, save locally, then Sync to Cloud when ready. PDF creation remains blocked.');
+        setEditorStatus('New offline SFA draft started on this iPad. Fill the SFA details, save locally, then Sync to Cloud when ready.');
+      };
+
+      window.startNewOfflineSelTrial = function startNewOfflineSelTrial(event) {
+        stopTap(event);
+        const item = createBlankOfflineSelTrialItem();
+        upsertOfflineItem(item);
+        renderOfflineDrafts();
+        openEditorForItem(item);
+        setEditorStatus('New offline SEL draft started on this iPad. Fill the Emergency Lighting details, save locally, then Sync to Cloud when ready.');
       };
 
       function saveEditorToQueue() {
@@ -1706,7 +1909,9 @@
         d.serviceDate = getEditValue('editServiceDate');
         d.customer = getEditValue('editCustomer');
         d.site = getEditValue('editSite');
-        const savingSfa = String(d.reportTypeCode || item.reportType || '').toUpperCase() === 'SFA';
+        const reportCodeForSave = String(d.reportTypeCode || item.reportType || '').toUpperCase();
+        const savingSfa = reportCodeForSave === 'SFA';
+        const savingSel = reportCodeForSave === 'SEL';
         if (savingSfa) {
           d.sageAccountNo = getEditValue('editSfaSageAccountNo');
           d.contractId = getEditValue('editSfaContractId');
@@ -1744,6 +1949,56 @@
           d.faChangesToReport = getEditValue('editFaChangesToReport');
           d.faNonCompliantHeader = getEditValue('editFaNonCompliantHeader');
         }
+        if (savingSel) {
+          d.sageAccountNo = getEditValue('editSelSageAccountNo');
+          d.contractId = getEditValue('editSelContractId');
+          d.asbestosAvailable = getEditValue('editSelAsbestosAvailable');
+          d.elServiceVisit = getEditValue('editSelServiceVisit');
+          d.lastServiceVisit = getEditValue('editSelLastServiceVisit');
+          d.nextServiceVisit = getEditValue('editSelNextServiceVisit');
+          d.elTotalFittings = getEditValue('editElTotalFittings');
+          d.elTested = getEditValue('editElTested');
+          d.elPassed = getEditValue('editElPassed');
+          d.elFailed = getEditValue('editElFailed');
+          d.elReason = getEditValue('editElReason');
+          d.elQuickQuoteRef = getEditValue('editElQuickQuoteRef');
+          d.elBulkhead = getEditValue('editElBulkhead');
+          d.elExitSigns = getEditValue('editElExitSigns');
+          d.elRound2d = getEditValue('editElRound2d');
+          d.elFluorescentLed = getEditValue('editElFluorescentLed');
+          d.elTwinSpots = getEditValue('editElTwinSpots');
+          d.elSpotLights = getEditValue('editElSpotLights');
+          d.elTestSwitches = getEditValue('editElTestSwitches');
+          d.elCentralBattery = getEditValue('editElCentralBattery');
+          d.elBatteries = getEditValue('editElBatteries');
+          d.elOther = getEditValue('editElOther');
+          d.elLogBookCorrect = getEditValue('editElLogBookCorrect');
+          d.elLuminairesFunction = getEditValue('editElLuminairesFunction');
+          d.elDrawingsAvailable = getEditValue('editElDrawingsAvailable');
+          d.elLocalCircuit = getEditValue('editElLocalCircuit');
+          d.elTestPointsPresent = getEditValue('editElTestPointsPresent');
+          d.elLampBatteriesMarked = getEditValue('editElLampBatteriesMarked');
+          d.elDiffusersClean = getEditValue('editElDiffusersClean');
+          d.elSatisfactoryCondition = getEditValue('editElSatisfactoryCondition');
+          d.elNominalVoltageMarked = getEditValue('editElNominalVoltageMarked');
+          d.elCorrectLamps = getEditValue('editElCorrectLamps');
+          d.elAlterationsDecor = getEditValue('editElAlterationsDecor');
+          d.elHazardsCovered = getEditValue('editElHazardsCovered');
+          d.elPointsOfEmphasis = getEditValue('editElPointsOfEmphasis');
+          d.elDateInstallationRecorded = getEditValue('editElDateInstallationRecorded');
+          d.elBatteryDateVisible = getEditValue('editElBatteryDateVisible');
+          d.elSuppliesNormal = getEditValue('editElSuppliesNormal');
+          d.elChargingRestored = getEditValue('editElChargingRestored');
+          d.elIndicationLamps = getEditValue('editElIndicationLamps');
+          d.elBatteryElectrolytes = getEditValue('editElBatteryElectrolytes');
+          d.elUserAwareAction = getEditValue('editElUserAwareAction');
+          d.elCorrectiveAction = getEditValue('editElCorrectiveAction');
+          d.elServiceCost = getEditValue('editElServiceCost');
+          d.elMaterialCost = getEditValue('editElMaterialCost');
+          d.elLabourCost = getEditValue('editElLabourCost');
+          d.elCostDisplayMode = getEditValue('editElCostDisplayMode');
+          d.elNonCompliantHeader = getEditValue('editElNonCompliantHeader');
+        }
         d.contactName = getEditValue('editContactName');
         d.sfaSystemType = getEditValue('editSfaSystemType');
         d.sfaPanelMakeModel = getEditValue('editSfaPanelMakeModel');
@@ -1756,7 +2011,7 @@
         d.sfaFaults = getEditValue('editSfaFaults');
         d.sfaRecommendations = getEditValue('editSfaRecommendations');
         d.sfaEquipmentList = collectSfaEquipmentList();
-        if (!savingSfa) {
+        if (!savingSfa && !savingSel) {
           d.sageAccountNo = getEditValue('editSageAccountNo');
           d.customerOrderNo = getEditValue('editCustomerOrderNo');
           d.ourRefNo = getEditValue('editOurRefNo');
@@ -1780,7 +2035,7 @@
           d.subTotal = getEditValue('editSfaSubTotal');
           d.vat = getEditValue('editSfaVat');
           d.total = getEditValue('editSfaTotal');
-        } else {
+        } else if (!savingSel) {
           d.subTotal = getEditValue('editSubTotal');
           d.vat = getEditValue('editVat');
           d.total = getEditValue('editTotal');
@@ -1872,6 +2127,39 @@
           backendBridge: {
             proposedMessageType: 'FSD_OFFLINE_SFA_SYNC',
             proposedPage: 'fael',
+            status: 'cloud-draft-sync-enabled-online-pdf-test'
+          }
+        };
+      }
+
+
+      function buildSelCloudPayload(item) {
+        item = item || {};
+        const d = item.draft || {};
+        const draftName = item.draftName || d.draftName || buildEditorDraftName(d);
+        return {
+          payloadVersion: 'V6.3c73-sel-cloud-draft-bridge',
+          source: 'fsd-certs-github-shell',
+          shellVersion: SHELL_VER,
+          action: 'SEL_CLOUD_DRAFT_READY',
+          syncEnabled: true,
+          pdfEnabled: true,
+          offlineId: item.offlineId || d.offlineId || '',
+          reportTypeCode: 'SEL',
+          reportType: 'Emergency Lighting Report',
+          draftName: draftName,
+          savedAt: d.savedAt || item.savedAt || '',
+          preparedAt: new Date().toISOString(),
+          draft: Object.assign({}, d, {
+            offlineCreated: true,
+            offlineId: item.offlineId || d.offlineId || '',
+            reportTypeCode: 'SEL',
+            reportType: 'Emergency Lighting Report',
+            draftName: draftName
+          }),
+          backendBridge: {
+            proposedMessageType: 'FSD_OFFLINE_SEL_SYNC',
+            proposedPage: 'sel',
             status: 'cloud-draft-sync-enabled-online-pdf-test'
           }
         };
@@ -2185,9 +2473,9 @@
           return;
         }
 
-        if (msg.source !== 'fsd-certs-esr' && msg.source !== 'fsd-certs-sfa') return;
+        if (msg.source !== 'fsd-certs-esr' && msg.source !== 'fsd-certs-sfa' && msg.source !== 'fsd-certs-sel') return;
 
-        if ((msg.type === 'FSD_OFFLINE_W_REQUEST' || msg.type === 'FSD_OFFLINE_SFA_REQUEST') && pendingShellAction) {
+        if ((msg.type === 'FSD_OFFLINE_W_REQUEST' || msg.type === 'FSD_OFFLINE_SFA_REQUEST' || msg.type === 'FSD_OFFLINE_SEL_REQUEST') && pendingShellAction) {
           // V6.3c37y: Apps Script may put the real W page inside a Google
           // wrapper frame. Sending to frame.contentWindow can hit the wrapper
           // instead of the report. Reply directly to the requesting window so
@@ -2221,10 +2509,10 @@
           return;
         }
 
-        if (msg.type === 'FSD_OFFLINE_W_SYNC_RESULT' || msg.type === 'FSD_OFFLINE_SFA_SYNC_RESULT') {
+        if (msg.type === 'FSD_OFFLINE_W_SYNC_RESULT' || msg.type === 'FSD_OFFLINE_SFA_SYNC_RESULT' || msg.type === 'FSD_OFFLINE_SEL_SYNC_RESULT') {
           clearTimeout(shellActionTimer);
           const result = msg.item || {};
-          const resultCode = msg.type === 'FSD_OFFLINE_SFA_SYNC_RESULT' ? 'SFA' : 'W';
+          const resultCode = msg.type === 'FSD_OFFLINE_SFA_SYNC_RESULT' ? 'SFA' : (msg.type === 'FSD_OFFLINE_SEL_SYNC_RESULT' ? 'SEL' : 'W');
           if (result.ok && result.offlineId) {
             removeOfflineItem(result.offlineId);
             pendingShellAction = null;
@@ -2272,6 +2560,6 @@
 
     }());
   </script>
-  <div class="fixed-version-badge">App Shell V6.3c72 · SFA cloud draft PDF test</div>
+  <div class="fixed-version-badge">App Shell V6.3c73 · SEL cloud draft bridge</div>
 </body>
 </html>
