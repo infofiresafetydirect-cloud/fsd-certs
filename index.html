@@ -691,7 +691,7 @@
 </head>
 <body>
   <!--
-    Fire Safety Direct - FSD Certs V6.3c71 Offline SFA Cloud Draft Bridge
+    Fire Safety Direct - FSD Certs V6.3c71a Offline SFA Route Fix
     Colourful iPad app-icon shell with new black/gold FSD logo.
     App shell mark: Jared720 Labs
   -->
@@ -755,7 +755,7 @@
 
     <footer class="ipad-footer">
       <span>Jared720 Labs</span>
-      <span>App Shell V6.3c70a · SFA payload button fix</span>
+      <span>App Shell V6.3c71a · SFA route fix</span>
     </footer>
   </section>
 
@@ -763,7 +763,7 @@
     <main class="offline-card">
       <h2 class="offline-title">Offline Certs &amp; Reports</h2>
       <p class="offline-help">Certificate/report drafts saved without signal live on this iPad until they are synced to the FSD cloud Draft Manager.</p>
-      <p class="offline-help"><strong>Offline editor trial:</strong> W reports can be started, edited and synced. SFA now mirrors the online Fire Alarm Service Report shape more closely: equipment checked table plus FA service/remedial costs. SFA cloud sync/PDF creation stays blocked, but V6.3c70a can preview the clean cloud payload before we connect the backend.</p>
+      <p class="offline-help"><strong>Offline editor trial:</strong> W reports can be started, edited and synced. SFA now mirrors the online Fire Alarm Service Report shape more closely: equipment checked table plus FA service/remedial costs. SFA cloud draft sync is now bridged safely; PDF creation is still blocked until the cloud draft route is proven.</p>
       <div id="offlineList" class="offline-list"></div>
       <div class="actions">
         <button class="button" type="button" onclick="startNewOfflineW(event)"><span class="tile-icon">📝</span><span>Start Offline W</span></button>
@@ -808,7 +808,7 @@
           <div class="editor-field editor-wide"><label>Site address</label><textarea id="editSite"></textarea></div>
           <div id="sfaOfflineFields" class="nested-editor-grid hidden-report-fields">
             <div class="editor-section-title">SFA fire alarm report details</div>
-            <div class="sfa-local-note">SFA offline is still local-only. This now follows the online Fire Alarm Service Report shape more closely: equipment checked table, battery/test readings, FA costs and totals. No cloud sync/PDF creation yet. V6.3c70a adds a hardened preview-only cloud payload check so we can verify the data before any backend bridge is enabled.</div>
+            <div class="sfa-local-note">SFA offline is still local-only. This now follows the online Fire Alarm Service Report shape more closely: equipment checked table, battery/test readings, FA costs and totals. Cloud draft sync is enabled for testing. PDF creation is still blocked until the cloud draft route is proven.</div>
             <div class="editor-field"><label>Sage account no.</label><input id="editSfaSageAccountNo"></div>
             <div class="editor-field"><label>Contract ID No.</label><input id="editSfaContractId"></div>
             <div class="editor-field"><label>Order No.</label><input id="editSfaOrderNo"></div>
@@ -952,7 +952,7 @@
     (function () {
       'use strict';
 
-      const SHELL_VER = 'V6.3c71';
+      const SHELL_VER = 'V6.3c71a';
       const APP_URL = 'https://script.google.com/macros/s/AKfycbzq9FTETNZwUJWHMGnMHECbu3sJ3jy3FFvGYyeaRXtkoK1GHBtqOu-GLBle_WGfoFtI/exec';
       const SCHEDULE_URL = 'https://docs.google.com/spreadsheets/d/1SZK6igtKPVHcBRdkA49A6AKSobkWXI_pk-De7taZP6c/edit';
       const CALLOUTS_PAGE = APP_URL + '?page=callouts&shell=ipad';
@@ -976,7 +976,7 @@
       // SFA now mirrors the online Fire Alarm Service Report structure more closely: equipment checked table + service/remedial costs, no W material rows.
       const OFFLINE_REPORT_TYPES = {
         W:   { code: 'W',   label: 'Engineer Service Report',             page: 'esr', editableOffline: true,  syncableOffline: true },
-        SFA: { code: 'SFA', label: 'Fire Alarm Service Report',           page: 'sfa', editableOffline: true,  syncableOffline: true },
+        SFA: { code: 'SFA', label: 'Fire Alarm Service Report',           page: 'fael', editableOffline: true,  syncableOffline: true },
         SEL: { code: 'SEL', label: 'Emergency Lighting Report',           page: 'sel', editableOffline: false, syncableOffline: false },
         FAC: { code: 'FAC', label: 'Fire Alarm Commissioning Certificate', page: 'fac', editableOffline: false, syncableOffline: false }
       };
@@ -1398,7 +1398,7 @@
         if (noteEl) {
           noteEl.textContent = report.code === 'W'
             ? 'This is the local iPad editor. W reports can save offline and sync to Cloud Drafts when signal returns.'
-            : 'This is the local SFA payload-prep editor. It saves and resumes on this iPad only. Preview the cloud payload before we enable backend sync.';
+            : 'This is the local SFA cloud-draft bridge editor. Save locally, then Sync to Cloud. PDF creation is still blocked.';
         }
         if (syncBtn) {
           syncBtn.disabled = !report.syncableOffline;
@@ -1493,7 +1493,7 @@
         bindEditorChangeTracking();
         calculateEditorTotals();
         setEditorDirty(false);
-        setEditorStatus(report.code === 'W' ? 'Editing offline W draft saved on this iPad. Press Save Offline before leaving.' : 'Editing offline SFA draft saved on this iPad. Payload preview only: save/resume local, no cloud sync yet.');
+        setEditorStatus(report.code === 'W' ? 'Editing offline W draft saved on this iPad. Press Save Offline before leaving.' : 'Editing offline SFA draft saved on this iPad. Save locally, then Sync to Cloud when ready.');
       }
 
       function firstLine(value) {
@@ -1580,8 +1580,8 @@
           engineer: '',
           customer: '',
           site: '',
-          stage: 'sfa-cloud-payload-prep-local-only',
-          note: 'V6.3c70a local SFA mirrors the online Fire Alarm Service Report field shape and has a hardened cloud payload preview. Cloud sync and PDF creation are not enabled yet.',
+          stage: 'sfa-cloud-draft-bridge-route-fix',
+          note: 'V6.3c71a SFA offline can sync to Cloud Drafts via the fael backend route. PDF creation is not enabled yet.',
           sageAccountNo: '',
           contractId: '',
           orderNo: '',
@@ -1630,7 +1630,7 @@
           customer: '',
           site: '',
           savedAt: draft.savedAt,
-          source: 'github-shell-start-offline-sfa-payload-prep',
+          source: 'github-shell-start-offline-sfa-cloud-bridge-route-fix',
           draft: draft
         };
       }
@@ -1683,7 +1683,7 @@
         upsertOfflineItem(item);
         renderOfflineDrafts();
         openEditorForItem(item);
-        setEditorStatus('New offline SFA draft started on this iPad. Fill the SFA details, save locally, then preview the SFA cloud payload. Cloud sync/PDF creation remain blocked.');
+        setEditorStatus('New offline SFA draft started on this iPad. Fill the SFA details, save locally, then Sync to Cloud when ready. PDF creation remains blocked.');
       };
 
       function saveEditorToQueue() {
@@ -2024,7 +2024,7 @@
         if (!item) return renderOfflineDrafts();
         const report = getOfflineReportConfig(item);
         if (!report.syncableOffline) {
-          setOfflineStatus(report.code + ' drafts are local-only in V6.3c70a. No cloud sync is enabled yet; preview the SFA cloud payload first.');
+          setOfflineStatus(report.code + ' drafts are not syncable in this version.');
           return;
         }
         if (!navigator.onLine) {
@@ -2248,6 +2248,6 @@
       });
     }());
   </script>
-  <div class="fixed-version-badge">App Shell V6.3c71 · SFA cloud draft bridge</div>
+  <div class="fixed-version-badge">App Shell V6.3c71a · SFA route fix</div>
 </body>
 </html>
