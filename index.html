@@ -694,7 +694,7 @@
 </head>
 <body>
   <!--
-    Fire Safety Direct - FSD Certs V6.3c73 Offline SEL Cloud Draft Bridge
+    Fire Safety Direct - FSD Certs V6.3c73a SEL Draft Restore Fix
     Colourful iPad app-icon shell with new black/gold FSD logo.
     App shell mark: Jared720 Labs
   -->
@@ -758,7 +758,7 @@
 
     <footer class="ipad-footer">
       <span>Jared720 Labs</span>
-      <span>App Shell V6.3c73 · SEL cloud draft bridge</span>
+      <span>App Shell V6.3c73a · SEL draft restore fix</span>
     </footer>
   </section>
 
@@ -766,7 +766,7 @@
     <main class="offline-card">
       <h2 class="offline-title">Offline Certs &amp; Reports</h2>
       <p class="offline-help">Certificate/report drafts saved without signal live on this iPad until they are synced to the FSD cloud Draft Manager.</p>
-      <p class="offline-help"><strong>Offline editor trial:</strong> Engineer Service Reports can be started, edited and synced. SFA now mirrors the online Fire Alarm Service Report shape more closely: equipment checked table plus FA service/remedial costs. SFA cloud draft sync is now bridged safely. V6.3c73 extends the proven offline pattern to SEL: local Emergency Lighting draft, sync to Cloud Drafts, then use the normal online SEL PDF button.</p>
+      <p class="offline-help"><strong>Offline editor trial:</strong> Engineer Service Reports can be started, edited and synced. SFA now mirrors the online Fire Alarm Service Report shape more closely: equipment checked table plus FA service/remedial costs. SFA cloud draft sync is now bridged safely. V6.3c73a fixes SEL Cloud Draft resume/restore after sync. SEL still uses the normal online PDF button once opened from Cloud Drafts.</p>
       <div id="offlineList" class="offline-list"></div>
       <div class="actions">
         <button class="button" type="button" onclick="startNewOfflineW(event)"><span class="tile-icon">📝</span><span>Start Offline Engineer Service Report</span></button>
@@ -1013,7 +1013,7 @@
     (function () {
       'use strict';
 
-      const SHELL_VER = 'V6.3c73';
+      const SHELL_VER = 'V6.3c73a';
       const APP_URL = 'https://script.google.com/macros/s/AKfycbzq9FTETNZwUJWHMGnMHECbu3sJ3jy3FFvGYyeaRXtkoK1GHBtqOu-GLBle_WGfoFtI/exec';
       const SCHEDULE_URL = 'https://docs.google.com/spreadsheets/d/1SZK6igtKPVHcBRdkA49A6AKSobkWXI_pk-De7taZP6c/edit';
       const CALLOUTS_PAGE = APP_URL + '?page=callouts&shell=ipad';
@@ -1770,7 +1770,7 @@
           customer: '',
           site: '',
           stage: 'sel-cloud-draft-bridge',
-          note: 'V6.3c73 SEL offline can sync to Cloud Drafts via the sel backend route and then use the normal online SEL PDF path.',
+          note: 'V6.3c73a SEL offline syncs to Cloud Drafts and restores into the online SEL form before using the normal PDF path.',
           sageAccountNo: '',
           contractId: '',
           asbestosAvailable: 'NO',
@@ -2138,7 +2138,7 @@
         const d = item.draft || {};
         const draftName = item.draftName || d.draftName || buildEditorDraftName(d);
         return {
-          payloadVersion: 'V6.3c73-sel-cloud-draft-bridge',
+          payloadVersion: 'V6.3c73a-sel-draft-restore-fix',
           source: 'fsd-certs-github-shell',
           shellVersion: SHELL_VER,
           action: 'SEL_CLOUD_DRAFT_READY',
@@ -2560,6 +2560,6 @@
 
     }());
   </script>
-  <div class="fixed-version-badge">App Shell V6.3c73 · SEL cloud draft bridge</div>
+  <div class="fixed-version-badge">App Shell V6.3c73a · SEL draft restore fix</div>
 </body>
 </html>
