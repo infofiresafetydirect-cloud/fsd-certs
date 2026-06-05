@@ -694,7 +694,7 @@
 </head>
 <body>
   <!--
-    Fire Safety Direct - FSD Certs V6.3c73a SEL Draft Restore Fix
+    Fire Safety Direct - FSD Certs V6.3c73b SEL Route Smooth + Totals
     Colourful iPad app-icon shell with new black/gold FSD logo.
     App shell mark: Jared720 Labs
   -->
@@ -758,7 +758,7 @@
 
     <footer class="ipad-footer">
       <span>Jared720 Labs</span>
-      <span>App Shell V6.3c73a · SEL draft restore fix</span>
+      <span>App Shell V6.3c73b · SEL route smooth + totals</span>
     </footer>
   </section>
 
@@ -766,7 +766,7 @@
     <main class="offline-card">
       <h2 class="offline-title">Offline Certs &amp; Reports</h2>
       <p class="offline-help">Certificate/report drafts saved without signal live on this iPad until they are synced to the FSD cloud Draft Manager.</p>
-      <p class="offline-help"><strong>Offline editor trial:</strong> Engineer Service Reports can be started, edited and synced. SFA now mirrors the online Fire Alarm Service Report shape more closely: equipment checked table plus FA service/remedial costs. SFA cloud draft sync is now bridged safely. V6.3c73a fixes SEL Cloud Draft resume/restore after sync. SEL still uses the normal online PDF button once opened from Cloud Drafts.</p>
+      <p class="offline-help"><strong>Offline editor trial:</strong> Engineer Service Reports can be started, edited and synced. SFA now mirrors the online Fire Alarm Service Report shape more closely: equipment checked table plus FA service/remedial costs. SFA cloud draft sync is now bridged safely. V6.3c73b smooths the SEL cloud sync route and adds visible SEL subtotal / VAT / total fields. SEL still uses the normal online PDF button once opened from Cloud Drafts.</p>
       <div id="offlineList" class="offline-list"></div>
       <div class="actions">
         <button class="button" type="button" onclick="startNewOfflineW(event)"><span class="tile-icon">📝</span><span>Start Offline Engineer Service Report</span></button>
@@ -922,6 +922,10 @@
             <div class="editor-field"><label>Service Cost</label><input id="editElServiceCost" type="number" step="0.01" value="0.00"></div>
             <div class="editor-field"><label>Remedial Material Cost</label><input id="editElMaterialCost" type="number" step="0.01" value="0.00"></div>
             <div class="editor-field"><label>Remedial Labour Cost</label><input id="editElLabourCost" type="number" step="0.01" value="0.00"></div>
+            <div class="editor-section-title">SEL Totals</div>
+            <div class="editor-field"><label>Sub Total</label><input id="editSelSubTotal" type="number" step="0.01" value="0.00" readonly></div>
+            <div class="editor-field"><label>VAT @ 20%</label><input id="editSelVat" type="number" step="0.01" value="0.00" readonly></div>
+            <div class="editor-field"><label>Total</label><input id="editSelTotal" type="number" step="0.01" value="0.00" readonly></div>
             <div class="editor-field"><label>Cost Display</label><select id="editElCostDisplayMode"><option value="SEPARATE">Show costs on SEL report</option><option value="SEE_ATTACHED_SFA">Show tick / see attached report</option></select></div>
             <div class="editor-field"><label>Tick Box if Non-Compliant</label><select id="editElNonCompliantHeader"><option value="NO">NO</option><option value="YES">YES - show red Non-Compliant header</option></select></div>
           </div>
@@ -1013,7 +1017,7 @@
     (function () {
       'use strict';
 
-      const SHELL_VER = 'V6.3c73a';
+      const SHELL_VER = 'V6.3c73b';
       const APP_URL = 'https://script.google.com/macros/s/AKfycbzq9FTETNZwUJWHMGnMHECbu3sJ3jy3FFvGYyeaRXtkoK1GHBtqOu-GLBle_WGfoFtI/exec';
       const SCHEDULE_URL = 'https://docs.google.com/spreadsheets/d/1SZK6igtKPVHcBRdkA49A6AKSobkWXI_pk-De7taZP6c/edit';
       const CALLOUTS_PAGE = APP_URL + '?page=callouts&shell=ipad';
@@ -1067,9 +1071,13 @@
 
       function startFallbackTimer() {
         clearTimeout(fallbackTimer);
+        // V6.3c73b: offline bridge pages can legitimately take longer on Pixel/iPad
+        // while Apps Script wakes up. Do not show the scary fallback panel during
+        // a known W/SFA/SEL sync bridge unless it really has stalled.
+        const delay = pendingShellAction ? 65000 : 12000;
         fallbackTimer = setTimeout(function () {
           if (!loaded) fallback.classList.remove('hidden');
-        }, 12000);
+        }, delay);
       }
 
       function hideLoader() {
@@ -1264,7 +1272,21 @@
         let vat = 0;
         let total = 0;
 
-        if (reportCode === 'SFA') {
+        if (reportCode === 'SEL') {
+          const serviceCost = parseMoney(getEditValue('editElServiceCost'));
+          const materialCost = parseMoney(getEditValue('editElMaterialCost'));
+          const labourCost = parseMoney(getEditValue('editElLabourCost'));
+          subtotal = serviceCost + materialCost + labourCost;
+          vat = subtotal * 0.20;
+          total = subtotal + vat;
+          setEditValue('editSelSubTotal', subtotal ? subtotal.toFixed(2) : '0.00');
+          setEditValue('editSelVat', subtotal ? vat.toFixed(2) : '0.00');
+          setEditValue('editSelTotal', subtotal ? total.toFixed(2) : '0.00');
+          // Keep the shared total fields aligned for draft payload compatibility.
+          if (!document.activeElement?.matches('#editSubTotal')) setEditValue('editSubTotal', subtotal ? subtotal.toFixed(2) : '');
+          if (!document.activeElement?.matches('#editVat')) setEditValue('editVat', subtotal ? vat.toFixed(2) : '');
+          if (!document.activeElement?.matches('#editTotal')) setEditValue('editTotal', subtotal ? total.toFixed(2) : '');
+        } else if (reportCode === 'SFA') {
           const serviceCost = parseMoney(getEditValue('editFaServiceCost'));
           const materialCost = parseMoney(getEditValue('editFaMaterialCost'));
           const labourCost = parseMoney(getEditValue('editFaLabourCost'));
@@ -1577,6 +1599,9 @@
         setEditValue('editElServiceCost', d.elServiceCost || '0.00');
         setEditValue('editElMaterialCost', d.elMaterialCost || '0.00');
         setEditValue('editElLabourCost', d.elLabourCost || '0.00');
+        setEditValue('editSelSubTotal', d.elSubTotal || d.subTotal || '0.00');
+        setEditValue('editSelVat', d.elVat || d.vat || '0.00');
+        setEditValue('editSelTotal', d.elTotal || d.total || '0.00');
         setEditValue('editElCostDisplayMode', d.elCostDisplayMode || 'SEPARATE');
         setEditValue('editElNonCompliantHeader', d.elNonCompliantHeader || 'NO');
         setEditValue('editSageAccountNo', d.sageAccountNo || '');
@@ -1770,7 +1795,7 @@
           customer: '',
           site: '',
           stage: 'sel-cloud-draft-bridge',
-          note: 'V6.3c73a SEL offline syncs to Cloud Drafts and restores into the online SEL form before using the normal PDF path.',
+          note: 'V6.3c73b SEL offline syncs to Cloud Drafts, restores into the online SEL form, and shows local subtotal/VAT/total before PDF.',
           sageAccountNo: '',
           contractId: '',
           asbestosAvailable: 'NO',
@@ -1819,6 +1844,12 @@
           elServiceCost: '0.00',
           elMaterialCost: '0.00',
           elLabourCost: '0.00',
+          elSubTotal: '0.00',
+          elVat: '0.00',
+          elTotal: '0.00',
+          subTotal: '0.00',
+          vat: '0.00',
+          total: '0.00',
           customerName: '',
           savedAt: now.toISOString()
         };
@@ -1996,6 +2027,12 @@
           d.elServiceCost = getEditValue('editElServiceCost');
           d.elMaterialCost = getEditValue('editElMaterialCost');
           d.elLabourCost = getEditValue('editElLabourCost');
+          d.elSubTotal = getEditValue('editSelSubTotal');
+          d.elVat = getEditValue('editSelVat');
+          d.elTotal = getEditValue('editSelTotal');
+          d.subTotal = d.elSubTotal;
+          d.vat = d.elVat;
+          d.total = d.elTotal;
           d.elCostDisplayMode = getEditValue('editElCostDisplayMode');
           d.elNonCompliantHeader = getEditValue('editElNonCompliantHeader');
         }
@@ -2062,6 +2099,9 @@
         const d = item.draft || {};
         const equipmentRows = normalizeSfaEquipmentRows(d.faEquipmentRows || d.sfaEquipmentList || []);
         const draftName = item.draftName || d.draftName || buildEditorDraftName(d);
+        const selSubtotal = (parseMoney(d.elServiceCost) + parseMoney(d.elMaterialCost) + parseMoney(d.elLabourCost)).toFixed(2);
+        const selVat = (Number(selSubtotal) * 0.20).toFixed(2);
+        const selTotal = (Number(selSubtotal) + Number(selVat)).toFixed(2);
         return {
           payloadVersion: 'V6.3c72-sfa-cloud-draft-pdf-test',
           source: 'fsd-certs-github-shell',
@@ -2137,8 +2177,11 @@
         item = item || {};
         const d = item.draft || {};
         const draftName = item.draftName || d.draftName || buildEditorDraftName(d);
+        const selSubtotal = (parseMoney(d.elServiceCost) + parseMoney(d.elMaterialCost) + parseMoney(d.elLabourCost)).toFixed(2);
+        const selVat = (Number(selSubtotal) * 0.20).toFixed(2);
+        const selTotal = (Number(selSubtotal) + Number(selVat)).toFixed(2);
         return {
-          payloadVersion: 'V6.3c73a-sel-draft-restore-fix',
+          payloadVersion: 'V6.3c73b-sel-route-smooth-totals',
           source: 'fsd-certs-github-shell',
           shellVersion: SHELL_VER,
           action: 'SEL_CLOUD_DRAFT_READY',
@@ -2155,7 +2198,13 @@
             offlineId: item.offlineId || d.offlineId || '',
             reportTypeCode: 'SEL',
             reportType: 'Emergency Lighting Report',
-            draftName: draftName
+            draftName: draftName,
+            elSubTotal: d.elSubTotal || selSubtotal,
+            elVat: d.elVat || selVat,
+            elTotal: d.elTotal || selTotal,
+            subTotal: d.elSubTotal || selSubtotal,
+            vat: d.elVat || selVat,
+            total: d.elTotal || selTotal
           }),
           backendBridge: {
             proposedMessageType: 'FSD_OFFLINE_SEL_SYNC',
@@ -2560,6 +2609,6 @@
 
     }());
   </script>
-  <div class="fixed-version-badge">App Shell V6.3c73a · SEL draft restore fix</div>
+  <div class="fixed-version-badge">App Shell V6.3c73b · SEL route smooth + totals</div>
 </body>
 </html>
