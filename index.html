@@ -694,7 +694,7 @@
 </head>
 <body>
   <!--
-    Fire Safety Direct - FSD Certs V6.3c71d Pixel PWA Install Fix
+    Fire Safety Direct - FSD Certs V6.3c72 Offline SFA Cloud Draft PDF Test
     Colourful iPad app-icon shell with new black/gold FSD logo.
     App shell mark: Jared720 Labs
   -->
@@ -758,7 +758,7 @@
 
     <footer class="ipad-footer">
       <span>Jared720 Labs</span>
-      <span>App Shell V6.3c71d · Pixel PWA install fix</span>
+      <span>App Shell V6.3c72 · SFA cloud draft PDF test</span>
     </footer>
   </section>
 
@@ -766,7 +766,7 @@
     <main class="offline-card">
       <h2 class="offline-title">Offline Certs &amp; Reports</h2>
       <p class="offline-help">Certificate/report drafts saved without signal live on this iPad until they are synced to the FSD cloud Draft Manager.</p>
-      <p class="offline-help"><strong>Offline editor trial:</strong> Engineer Service Reports can be started, edited and synced. SFA now mirrors the online Fire Alarm Service Report shape more closely: equipment checked table plus FA service/remedial costs. SFA cloud draft sync is now bridged safely; PDF creation is still blocked until the cloud draft route is proven.</p>
+      <p class="offline-help"><strong>Offline editor trial:</strong> Engineer Service Reports can be started, edited and synced. SFA now mirrors the online Fire Alarm Service Report shape more closely: equipment checked table plus FA service/remedial costs. SFA cloud draft sync is now bridged safely. V6.3c72 tests the safest PDF route: open SFA from Cloud Drafts and use the normal online Create Combined PDF Pack button.</p>
       <div id="offlineList" class="offline-list"></div>
       <div class="actions">
         <button class="button" type="button" onclick="startNewOfflineW(event)"><span class="tile-icon">📝</span><span>Start Offline Engineer Service Report</span></button>
@@ -811,7 +811,7 @@
           <div class="editor-field editor-wide"><label>Site address</label><textarea id="editSite"></textarea></div>
           <div id="sfaOfflineFields" class="nested-editor-grid hidden-report-fields">
             <div class="editor-section-title">SFA fire alarm report details</div>
-            <div class="sfa-local-note">SFA offline is still local-only. This now follows the online Fire Alarm Service Report shape more closely: equipment checked table, battery/test readings, FA costs and totals. Cloud draft sync is enabled for testing. PDF creation is still blocked until the cloud draft route is proven.</div>
+            <div class="sfa-local-note">SFA offline follows the online Fire Alarm Service Report shape. Save locally, sync to Cloud Drafts, then open from Cloud Drafts and use the normal online Create Combined PDF Pack button for the V6.3c72 PDF test.</div>
             <div class="editor-field"><label>Sage account no.</label><input id="editSfaSageAccountNo"></div>
             <div class="editor-field"><label>Contract ID No.</label><input id="editSfaContractId"></div>
             <div class="editor-field"><label>Order No.</label><input id="editSfaOrderNo"></div>
@@ -955,7 +955,7 @@
     (function () {
       'use strict';
 
-      const SHELL_VER = 'V6.3c71d';
+      const SHELL_VER = 'V6.3c72';
       const APP_URL = 'https://script.google.com/macros/s/AKfycbzq9FTETNZwUJWHMGnMHECbu3sJ3jy3FFvGYyeaRXtkoK1GHBtqOu-GLBle_WGfoFtI/exec';
       const SCHEDULE_URL = 'https://docs.google.com/spreadsheets/d/1SZK6igtKPVHcBRdkA49A6AKSobkWXI_pk-De7taZP6c/edit';
       const CALLOUTS_PAGE = APP_URL + '?page=callouts&shell=ipad';
@@ -1404,7 +1404,7 @@
         if (noteEl) {
           noteEl.textContent = report.code === 'W'
             ? 'This is the local iPad editor. Engineer Service Reports can save offline and sync to Cloud Drafts when signal returns.'
-            : 'This is the local SFA cloud-draft bridge editor. Save locally, then Sync to Cloud. PDF creation is still blocked.';
+            : 'This is the local SFA cloud-draft bridge editor. Save locally, then Sync to Cloud. Open from Cloud Drafts to use the normal online PDF button.';
         }
         if (syncBtn) {
           syncBtn.disabled = !report.syncableOffline;
@@ -1775,9 +1775,16 @@
           d.manualSubtotalOverride = getEditValue('editManualSubtotalOverride');
           d.manualSubtotal = getEditValue('editManualSubtotal');
         }
-        d.subTotal = getEditValue('editSubTotal');
-        d.vat = getEditValue('editVat');
-        d.total = getEditValue('editTotal');
+        if (savingSfa) {
+          // V6.3c72: keep SFA totals from the SFA cost fields. Do not overwrite them with the hidden Engineer Service Report/W total fields.
+          d.subTotal = getEditValue('editSfaSubTotal');
+          d.vat = getEditValue('editSfaVat');
+          d.total = getEditValue('editSfaTotal');
+        } else {
+          d.subTotal = getEditValue('editSubTotal');
+          d.vat = getEditValue('editVat');
+          d.total = getEditValue('editTotal');
+        }
         d.customerName = getEditValue('editCustomerName');
         d.customerDate = getEditValue('editCustomerDate');
         const draftName = getEditValue('editDraftName') || item.draftName || buildEditorDraftName(d);
@@ -1801,12 +1808,12 @@
         const equipmentRows = normalizeSfaEquipmentRows(d.faEquipmentRows || d.sfaEquipmentList || []);
         const draftName = item.draftName || d.draftName || buildEditorDraftName(d);
         return {
-          payloadVersion: 'V6.3c71-sfa-cloud-draft',
+          payloadVersion: 'V6.3c72-sfa-cloud-draft-pdf-test',
           source: 'fsd-certs-github-shell',
           shellVersion: SHELL_VER,
           action: 'SFA_CLOUD_DRAFT_READY',
           syncEnabled: true,
-          pdfEnabled: false,
+          pdfEnabled: true,
           offlineId: item.offlineId || d.offlineId || '',
           reportTypeCode: 'SFA',
           reportType: 'Fire Alarm Service Report',
@@ -1864,8 +1871,8 @@
           },
           backendBridge: {
             proposedMessageType: 'FSD_OFFLINE_SFA_SYNC',
-            proposedPage: 'sfa',
-            status: 'cloud-draft-sync-enabled'
+            proposedPage: 'fael',
+            status: 'cloud-draft-sync-enabled-online-pdf-test'
           }
         };
       }
@@ -2265,6 +2272,6 @@
 
     }());
   </script>
-  <div class="fixed-version-badge">App Shell V6.3c71d · Pixel PWA install fix</div>
+  <div class="fixed-version-badge">App Shell V6.3c72 · SFA cloud draft PDF test</div>
 </body>
 </html>
