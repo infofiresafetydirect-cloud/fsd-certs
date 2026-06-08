@@ -694,7 +694,7 @@
 </head>
 <body>
   <!--
-    Fire Safety Direct - FSD Certs V6.3c73c SEL Cloud Draft Loader Timing
+    Fire Safety Direct - FSD Certs V6.3c73d SFA Tick Choices
     Colourful iPad app-icon shell with new black/gold FSD logo.
     App shell mark: Jared720 Labs
   -->
@@ -758,7 +758,7 @@
 
     <footer class="ipad-footer">
       <span>Jared720 Labs</span>
-      <span>App Shell V6.3c73c · SEL cloud draft loader timing</span>
+      <span>App Shell V6.3c73d · SFA tick choices</span>
     </footer>
   </section>
 
@@ -766,7 +766,7 @@
     <main class="offline-card">
       <h2 class="offline-title">Offline Certs &amp; Reports</h2>
       <p class="offline-help">Certificate/report drafts saved without signal live on this iPad until they are synced to the FSD cloud Draft Manager.</p>
-      <p class="offline-help"><strong>Offline editor trial:</strong> Engineer Service Reports can be started, edited and synced. SFA now mirrors the online Fire Alarm Service Report shape more closely: equipment checked table plus FA service/remedial costs. SFA cloud draft sync is now bridged safely. V6.3c73c keeps the SEL cloud draft route covered for longer so slow Apps Script loads do not flash the fallback panel. SEL still uses the normal online PDF button once opened from Cloud Drafts.</p>
+      <p class="offline-help"><strong>Offline editor trial:</strong> Engineer Service Reports can be started, edited and synced. SFA now mirrors the online Fire Alarm Service Report shape more closely: equipment checked table plus FA service/remedial costs. SFA cloud draft sync is now bridged safely. V6.3c73d keeps the SEL loader timing and changes SFA Checked on Inspection choices to tick-style values instead of YES/NO/N/A. SEL still uses the normal online PDF button once opened from Cloud Drafts.</p>
       <div id="offlineList" class="offline-list"></div>
       <div class="actions">
         <button class="button" type="button" onclick="startNewOfflineW(event)"><span class="tile-icon">📝</span><span>Start Offline Engineer Service Report</span></button>
@@ -1017,7 +1017,7 @@
     (function () {
       'use strict';
 
-      const SHELL_VER = 'V6.3c73c';
+      const SHELL_VER = 'V6.3c73d';
       const APP_URL = 'https://script.google.com/macros/s/AKfycbzq9FTETNZwUJWHMGnMHECbu3sJ3jy3FFvGYyeaRXtkoK1GHBtqOu-GLBle_WGfoFtI/exec';
       const SCHEDULE_URL = 'https://docs.google.com/spreadsheets/d/1SZK6igtKPVHcBRdkA49A6AKSobkWXI_pk-De7taZP6c/edit';
       const CALLOUTS_PAGE = APP_URL + '?page=callouts&shell=ipad';
@@ -1071,7 +1071,7 @@
 
       function startFallbackTimer() {
         clearTimeout(fallbackTimer);
-        // V6.3c73c: Apps Script can be slow when opening Cloud Drafts/resumed SEL
+        // V6.3c73c/c73d: Apps Script can be slow when opening Cloud Drafts/resumed SEL
         // inside the shell. Keep the friendly loader up for longer before showing
         // the scary fallback panel. Data is already working; this is timing polish.
         const delay = pendingShellAction ? 90000 : 90000;
@@ -1418,6 +1418,18 @@
         });
       }
 
+      function normalizeSfaCheckedTick(value) {
+        const v = String(value || '').trim().toUpperCase();
+        if (v === 'YES' || v === 'Y' || v === 'TRUE' || v === '✓' || v === '✔' || v === 'CHECK' || v === 'TICK') return '✓';
+        if (v === 'NO' || v === 'N' || v === 'FALSE' || v === '✗' || v === 'X' || v === 'CROSS') return '✗';
+        if (v === 'NA' || v === 'N/A' || v === '-' || v === '—') return '—';
+        return value || '';
+      }
+
+      function sfaTickOption(value, current, label) {
+        return '<option value="' + value + '"' + (normalizeSfaCheckedTick(current) === value ? ' selected' : '') + '>' + label + '</option>';
+      }
+
       function renderSfaEquipmentList(items) {
         const wrap = document.getElementById('sfaEquipmentList');
         if (!wrap) return;
@@ -1437,7 +1449,12 @@
           '<td><input class="sfaEquipTested" type="number" inputmode="numeric" value="' + escapeHtml(item.tested || '') + '"></td>' +
           '<td><input class="sfaEquipPassed" type="number" inputmode="numeric" value="' + escapeHtml(item.passed || '') + '"></td>' +
           '<td><input class="sfaEquipFailed" type="number" inputmode="numeric" value="' + escapeHtml(item.failed || '') + '"></td>' +
-          '<td><input class="sfaEquipChecked" value="' + escapeHtml(item.checkedOnInspection || item.checked || '') + '"></td>' +
+          '<td><select class="sfaEquipChecked">' +
+            '<option value=""></option>' +
+            sfaTickOption('✓', item.checkedOnInspection || item.checked || '', '✓') +
+            sfaTickOption('✗', item.checkedOnInspection || item.checked || '', '✗') +
+            sfaTickOption('—', item.checkedOnInspection || item.checked || '', '— / N/A') +
+          '</select></td>' +
           '<td><select class="sfaEquipResult"><option value=""></option><option value="YES"' + (String(item.result || '').toUpperCase()==='YES' ? ' selected' : '') + '>YES</option><option value="NO"' + (String(item.result || '').toUpperCase()==='NO' ? ' selected' : '') + '>NO</option><option value="NA"' + (String(item.result || '').toUpperCase()==='NA' || String(item.result || '').toUpperCase()==='N/A' ? ' selected' : '') + '>N/A</option></select></td>';
         wrap.appendChild(row);
       };
@@ -1450,7 +1467,7 @@
             tested: (row.querySelector('.sfaEquipTested') || {}).value || '',
             passed: (row.querySelector('.sfaEquipPassed') || {}).value || '',
             failed: (row.querySelector('.sfaEquipFailed') || {}).value || '',
-            checkedOnInspection: (row.querySelector('.sfaEquipChecked') || {}).value || '',
+            checkedOnInspection: normalizeSfaCheckedTick((row.querySelector('.sfaEquipChecked') || {}).value || ''),
             result: (row.querySelector('.sfaEquipResult') || {}).value || ''
           };
         }).filter(function(item) { return item.equipment || item.total || item.tested || item.passed || item.failed || item.checkedOnInspection || item.result; });
@@ -1795,7 +1812,7 @@
           customer: '',
           site: '',
           stage: 'sel-cloud-draft-bridge',
-          note: 'V6.3c73c SEL cloud draft opens stay covered by the loader for longer, preventing the fallback bump while Apps Script wakes up.',
+          note: 'V6.3c73d keeps SEL loader timing and uses tick-style SFA Checked on Inspection choices.',
           sageAccountNo: '',
           contractId: '',
           asbestosAvailable: 'NO',
@@ -2181,7 +2198,7 @@
         const selVat = (Number(selSubtotal) * 0.20).toFixed(2);
         const selTotal = (Number(selSubtotal) + Number(selVat)).toFixed(2);
         return {
-          payloadVersion: 'V6.3c73c-sel-loader-timing',
+          payloadVersion: 'V6.3c73d-sfa-tick-choices',
           source: 'fsd-certs-github-shell',
           shellVersion: SHELL_VER,
           action: 'SEL_CLOUD_DRAFT_READY',
@@ -2609,6 +2626,6 @@
 
     }());
   </script>
-  <div class="fixed-version-badge">App Shell V6.3c73c · SEL cloud draft loader timing</div>
+  <div class="fixed-version-badge">App Shell V6.3c73d · SFA tick choices</div>
 </body>
 </html>
