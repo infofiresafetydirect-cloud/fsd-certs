@@ -768,7 +768,7 @@
 
     <footer class="ipad-footer">
       <span>Jared720 Labs</span>
-      <span>App Shell V6.3c74h · draft confirmations + offline complete save</span>
+      <span>App Shell V6.3c74j · offline complete real save fix</span>
     </footer>
   </section>
 
@@ -1050,7 +1050,7 @@
     (function () {
       'use strict';
 
-      const SHELL_VER = 'V6.3c74';
+      const SHELL_VER = 'V6.3c74j';
       const APP_URL = 'https://script.google.com/macros/s/AKfycbzq9FTETNZwUJWHMGnMHECbu3sJ3jy3FFvGYyeaRXtkoK1GHBtqOu-GLBle_WGfoFtI/exec';
       const SCHEDULE_URL = 'https://docs.google.com/spreadsheets/d/1SZK6igtKPVHcBRdkA49A6AKSobkWXI_pk-De7taZP6c/edit';
       const CALLOUTS_PAGE = APP_URL + '?page=callouts&shell=ipad';
@@ -1097,6 +1097,7 @@
       ];
       let pendingShellAction = null;
       let shellActionTimer = null;
+      let pendingOfflineEditorItem = null;
 
       let loaded = false;
       let hasStarted = false;
@@ -2130,32 +2131,33 @@
       window.startNewOfflineW = function startNewOfflineW(event) {
         stopTap(event);
         const item = createBlankOfflineWItem();
-        upsertOfflineItem(item);
+        pendingOfflineEditorItem = item;
         openEditorForItem(item);
-        setEditorStatus('New offline Engineer Service Report draft started on this iPad. Fill it in and press Complete Job - Save Offline. Sync to Cloud Drafts when signal returns.');
+        setEditorStatus('New offline Engineer Service Report started. Nothing is saved yet - press Complete Job - Save Offline when ready.');
       };
 
       window.startNewOfflineSfaTrial = function startNewOfflineSfaTrial(event) {
         stopTap(event);
         const item = createBlankOfflineSfaTrialItem();
-        upsertOfflineItem(item);
-        renderOfflineDrafts();
+        pendingOfflineEditorItem = item;
         openEditorForItem(item);
-        setEditorStatus('New offline SFA draft started on this iPad. Fill the SFA details, save locally, then Sync to Cloud when ready.');
+        setEditorStatus('New offline SFA started. Nothing is saved yet - press Complete Job - Save Offline when ready, then Sync to Cloud when signal returns.');
       };
 
       window.startNewOfflineSelTrial = function startNewOfflineSelTrial(event) {
         stopTap(event);
         const item = createBlankOfflineSelTrialItem();
-        upsertOfflineItem(item);
-        renderOfflineDrafts();
+        pendingOfflineEditorItem = item;
         openEditorForItem(item);
-        setEditorStatus('New offline SEL draft started on this iPad. Fill the Emergency Lighting details, save locally, then Sync to Cloud when ready.');
+        setEditorStatus('New offline SEL started. Nothing is saved yet - press Complete Job - Save Offline when ready, then Sync to Cloud when signal returns.');
       };
 
       function saveEditorToQueue() {
         const offlineId = getEditValue('editOfflineId');
-        const item = getOfflineItemById(offlineId);
+        let item = getOfflineItemById(offlineId);
+        if ((!item || !item.draft) && pendingOfflineEditorItem && pendingOfflineEditorItem.offlineId === offlineId) {
+          item = pendingOfflineEditorItem;
+        }
         if (!item || !item.draft) {
           setEditorStatus('Could not find this offline draft on the iPad. Go back and refresh Offline Drafts.');
           return null;
@@ -2320,6 +2322,8 @@
           savedAt: d.savedAt
         });
         upsertOfflineItem(updated);
+        pendingOfflineEditorItem = null;
+        renderOfflineDrafts();
         setEditorDirty(false);
         setEditorStatus('Draft saved offline on this device at ' + new Date().toLocaleTimeString() + '.');
         try { alert('Draft saved offline on this device.'); } catch (e) {}
@@ -2756,6 +2760,21 @@
           return;
         }
 
+        if (msg.type === 'FSD_SAVE_OFFLINE_DRAFT' && msg.source === 'fsd-certs-draft-client' && msg.item) {
+          upsertOfflineItem(msg.item);
+          renderOfflineDrafts();
+          try {
+            event.source.postMessage({
+              type: 'FSD_SAVE_OFFLINE_DRAFT_RESULT',
+              source: 'fsd-certs-shell',
+              ok: true,
+              offlineId: msg.item.offlineId,
+              draftName: msg.item.draftName || 'Draft'
+            }, '*');
+          } catch (ackErr) {}
+          return;
+        }
+
         if (msg.source !== 'fsd-certs-esr' && msg.source !== 'fsd-certs-sfa' && msg.source !== 'fsd-certs-sel') return;
 
         if ((msg.type === 'FSD_OFFLINE_W_REQUEST' || msg.type === 'FSD_OFFLINE_SFA_REQUEST' || msg.type === 'FSD_OFFLINE_SEL_REQUEST') && pendingShellAction) {
@@ -2848,6 +2867,6 @@
 
     }());
   </script>
-  <div class="fixed-version-badge">App Shell V6.3c74h · draft confirmations + offline complete save</div>
+  <div class="fixed-version-badge">App Shell V6.3c74j · offline complete real save fix</div>
 </body>
 </html>
