@@ -768,7 +768,7 @@
 
     <footer class="ipad-footer">
       <span>Jared720 Labs</span>
-      <span>App Shell V6.3c74 · complete job + offline signatures</span>
+      <span>App Shell V6.3c74h · draft confirmations + offline complete save</span>
     </footer>
   </section>
 
@@ -2321,7 +2321,8 @@
         });
         upsertOfflineItem(updated);
         setEditorDirty(false);
-        setEditorStatus('Saved offline on this iPad at ' + new Date().toLocaleTimeString() + '.');
+        setEditorStatus('Draft saved offline on this device at ' + new Date().toLocaleTimeString() + '.');
+        try { alert('Draft saved offline on this device.'); } catch (e) {}
         return updated;
       }
 
@@ -2847,6 +2848,6 @@
 
     }());
   </script>
-  <div class="fixed-version-badge">App Shell V6.3c74 · complete job + offline signatures</div>
+  <div class="fixed-version-badge">App Shell V6.3c74h · draft confirmations + offline complete save</div>
 </body>
 </html>
