@@ -768,7 +768,7 @@
 
     <footer class="ipad-footer">
       <span>Jared720 Labs</span>
-      <span>App Shell V6.3c74j · offline complete real save fix</span>
+      <span>App Shell V6.3c74l · offline complete real save fix</span>
     </footer>
   </section>
 
@@ -1050,7 +1050,7 @@
     (function () {
       'use strict';
 
-      const SHELL_VER = 'V6.3c74j';
+      const SHELL_VER = 'V6.3c74l';
       const APP_URL = 'https://script.google.com/macros/s/AKfycbzq9FTETNZwUJWHMGnMHECbu3sJ3jy3FFvGYyeaRXtkoK1GHBtqOu-GLBle_WGfoFtI/exec';
       const SCHEDULE_URL = 'https://docs.google.com/spreadsheets/d/1SZK6igtKPVHcBRdkA49A6AKSobkWXI_pk-De7taZP6c/edit';
       const CALLOUTS_PAGE = APP_URL + '?page=callouts&shell=ipad';
@@ -2534,7 +2534,7 @@
         loader.classList.remove('hidden');
         loaded = false;
         hasStarted = true;
-        pendingShellAction = { action: action, item: item, attempts: 0 };
+        pendingShellAction = { action: action, item: item, attempts: 0, createdAt: Date.now() }; // V6.3c74l stale-bridge guard
         const report = getOfflineReportConfig(item);
         const shellPayload = {
           type: action === 'sync' ? 'FSD_OFFLINE_' + report.code + '_SYNC' : 'FSD_OFFLINE_' + report.code + '_RESTORE',
@@ -2761,15 +2761,32 @@
         }
 
         if (msg.type === 'FSD_SAVE_OFFLINE_DRAFT' && msg.source === 'fsd-certs-draft-client' && msg.item) {
-          upsertOfflineItem(msg.item);
-          renderOfflineDrafts();
+          // V6.3c74l: this is the only real GitHub/PWA offline draft queue.
+          // Do not tell the report iframe "saved" until we can read the item back.
+          let ok = false;
+          let error = '';
+          try {
+            if (!msg.item.offlineId) throw new Error('Missing offlineId');
+            if (!msg.item.draft) throw new Error('Missing draft payload');
+            upsertOfflineItem(msg.item);
+            const saved = readOfflineQueue().find(function(row) { return row && row.offlineId === msg.item.offlineId; });
+            ok = !!(saved && saved.draft);
+            if (!ok) throw new Error('Draft was not found after saving');
+            renderOfflineDrafts();
+            setOfflineStatus('Offline draft saved: ' + (msg.item.draftName || msg.item.offlineId));
+          } catch (saveErr) {
+            ok = false;
+            error = saveErr && saveErr.message ? saveErr.message : String(saveErr || 'Unknown offline save error');
+            setOfflineStatus('Offline draft save failed: ' + error);
+          }
           try {
             event.source.postMessage({
               type: 'FSD_SAVE_OFFLINE_DRAFT_RESULT',
               source: 'fsd-certs-shell',
-              ok: true,
-              offlineId: msg.item.offlineId,
-              draftName: msg.item.draftName || 'Draft'
+              ok: ok,
+              offlineId: msg.item.offlineId || '',
+              draftName: msg.item.draftName || 'Draft',
+              error: error
             }, '*');
           } catch (ackErr) {}
           return;
@@ -2778,6 +2795,13 @@
         if (msg.source !== 'fsd-certs-esr' && msg.source !== 'fsd-certs-sfa' && msg.source !== 'fsd-certs-sel') return;
 
         if ((msg.type === 'FSD_OFFLINE_W_REQUEST' || msg.type === 'FSD_OFFLINE_SFA_REQUEST' || msg.type === 'FSD_OFFLINE_SEL_REQUEST') && pendingShellAction) {
+          // V6.3c74l: do not let an old/stale bridge request fire a cloud draft save when a report is opened normally.
+          if (pendingShellAction.createdAt && (Date.now() - pendingShellAction.createdAt > 120000)) {
+            pendingShellAction = null;
+            clearTimeout(shellActionTimer);
+            setOfflineStatus('Ignored stale offline bridge request. No cloud draft was saved.');
+            return;
+          }
           // V6.3c37y: Apps Script may put the real W page inside a Google
           // wrapper frame. Sending to frame.contentWindow can hit the wrapper
           // instead of the report. Reply directly to the requesting window so
@@ -2867,6 +2891,6 @@
 
     }());
   </script>
-  <div class="fixed-version-badge">App Shell V6.3c74j · offline complete real save fix</div>
+  <div class="fixed-version-badge">App Shell V6.3c74l · offline complete real save fix</div>
 </body>
 </html>
