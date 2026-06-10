@@ -693,7 +693,14 @@
       .ipad-title-block { gap: 14px; }
     }
 
-  </style>
+  
+    .offline-signature-panel { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: 8px; }
+    .offline-signature-box { background:#fff; border:1px solid #e5e7eb; border-radius:16px; padding:12px; }
+    .offline-signature-box label { display:block; margin-bottom:8px; font-weight:900; color:#111827; }
+    .offline-signature-canvas { width:100%; height:145px; border:2px dashed #b91c1c; border-radius:14px; background:#fff; touch-action:none; display:block; }
+    .offline-signature-actions { display:flex; gap:8px; margin-top:8px; }
+    @media (max-width: 760px) { .offline-signature-panel { grid-template-columns:1fr; } }
+</style>
 </head>
 <body>
   <!--
@@ -761,7 +768,7 @@
 
     <footer class="ipad-footer">
       <span>Jared720 Labs</span>
-      <span>App Shell V6.3c73e · SFA photo upload</span>
+      <span>App Shell V6.3c74 · complete job + offline signatures</span>
     </footer>
   </section>
 
@@ -769,7 +776,7 @@
     <main class="offline-card">
       <h2 class="offline-title">Offline Certs &amp; Reports</h2>
       <p class="offline-help">Certificate/report drafts saved without signal live on this iPad until they are synced to the FSD cloud Draft Manager.</p>
-      <p class="offline-help"><strong>Offline editor trial:</strong> Engineer Service Reports can be started, edited and synced. SFA now mirrors the online Fire Alarm Service Report shape more closely: equipment checked table plus FA service/remedial costs. SFA cloud draft sync is now bridged safely. V6.3c73e keeps the SFA tick choices and adds SFA panel photo capture for online/offline drafts. SEL still uses the normal online PDF button once opened from Cloud Drafts.</p>
+      <p class="offline-help"><strong>Offline editor trial:</strong> Engineer Service Reports can be started, edited and synced. SFA now mirrors the online Fire Alarm Service Report shape more closely: equipment checked table plus FA service/remedial costs. SFA cloud draft sync is now bridged safely. V6.3c74 keeps SFA/SEL cloud draft flow, adds offline signature boxes and renames complete buttons. SEL/SFA still open from Cloud Drafts for the normal online PDF creation.</p>
       <div id="offlineList" class="offline-list"></div>
       <div class="actions">
         <button class="button" type="button" onclick="startNewOfflineW(event)"><span class="tile-icon">📝</span><span>Start Offline Engineer Service Report</span></button>
@@ -981,9 +988,21 @@
           <div class="editor-field"><label>Customer name</label><input id="editCustomerName"></div>
           <div class="editor-field"><label>Customer date</label><input id="editCustomerDate" type="date"></div>
         </div>
+        <div class="offline-signature-panel" id="offlineSignaturePanel">
+          <div class="offline-signature-box">
+            <label>Engineer Signature</label>
+            <canvas id="editEngineerSignature" class="offline-signature-canvas"></canvas>
+            <div class="offline-signature-actions"><button class="editor-mini-btn" type="button" onclick="clearOfflineSignature(event, 'editEngineerSignature')">Clear Engineer Signature</button></div>
+          </div>
+          <div class="offline-signature-box">
+            <label>Customer Signature</label>
+            <canvas id="editCustomerSignature" class="offline-signature-canvas"></canvas>
+            <div class="offline-signature-actions"><button class="editor-mini-btn" type="button" onclick="clearOfflineSignature(event, 'editCustomerSignature')">Clear Customer Signature</button></div>
+          </div>
+        </div>
         <div class="editor-actions">
-          <button class="button" type="submit">Save Offline</button>
-          <button id="offlineEditorSyncBtn" class="button secondary" type="button" onclick="saveOfflineEditorAndSync(event)">Save + Sync</button>
+          <button class="button" type="submit">Complete Job - Save Offline</button>
+          <button id="offlineEditorSyncBtn" class="button secondary" type="button" onclick="saveOfflineEditorAndSync(event)">Complete Job - Save + Sync</button>
           <button class="button third" type="button" onclick="closeOfflineEditor(event)">Back to Offline Drafts</button>
         </div>
         <div id="editorStatus" class="editor-status"></div>
@@ -1031,7 +1050,7 @@
     (function () {
       'use strict';
 
-      const SHELL_VER = 'V6.3c73d';
+      const SHELL_VER = 'V6.3c74';
       const APP_URL = 'https://script.google.com/macros/s/AKfycbzq9FTETNZwUJWHMGnMHECbu3sJ3jy3FFvGYyeaRXtkoK1GHBtqOu-GLBle_WGfoFtI/exec';
       const SCHEDULE_URL = 'https://docs.google.com/spreadsheets/d/1SZK6igtKPVHcBRdkA49A6AKSobkWXI_pk-De7taZP6c/edit';
       const CALLOUTS_PAGE = APP_URL + '?page=callouts&shell=ipad';
@@ -1250,6 +1269,101 @@
         const el = document.getElementById(id);
         return el ? el.value : '';
       }
+
+      function resizeOfflineSignatureCanvas(canvas) {
+        if (!canvas) return;
+        const rect = canvas.getBoundingClientRect();
+        const ratio = window.devicePixelRatio || 1;
+        const data = canvas.dataset.signatureData || '';
+        canvas.width = Math.max(1, Math.round(rect.width * ratio));
+        canvas.height = Math.max(1, Math.round(rect.height * ratio));
+        const ctx = canvas.getContext('2d');
+        ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+        ctx.lineWidth = 2.4;
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+        ctx.strokeStyle = '#111827';
+        if (data) setOfflineSignatureData(canvas.id, data);
+      }
+
+      function setupOfflineSignatureCanvas(canvas) {
+        if (!canvas || canvas.dataset.bound === '1') return;
+        canvas.dataset.bound = '1';
+        resizeOfflineSignatureCanvas(canvas);
+        let drawing = false;
+        let last = null;
+        function point(evt) {
+          const e = evt.touches && evt.touches[0] ? evt.touches[0] : evt;
+          const rect = canvas.getBoundingClientRect();
+          return { x: e.clientX - rect.left, y: e.clientY - rect.top };
+        }
+        function start(evt) {
+          evt.preventDefault();
+          drawing = true;
+          last = point(evt);
+          setEditorDirty(true);
+        }
+        function move(evt) {
+          if (!drawing) return;
+          evt.preventDefault();
+          const now = point(evt);
+          const ctx = canvas.getContext('2d');
+          ctx.beginPath();
+          ctx.moveTo(last.x, last.y);
+          ctx.lineTo(now.x, now.y);
+          ctx.stroke();
+          last = now;
+          canvas.dataset.signatureData = canvas.toDataURL('image/png');
+        }
+        function end(evt) {
+          if (!drawing) return;
+          evt.preventDefault();
+          drawing = false;
+          canvas.dataset.signatureData = canvas.toDataURL('image/png');
+          setEditorDirty(true);
+        }
+        canvas.addEventListener('mousedown', start);
+        canvas.addEventListener('mousemove', move);
+        window.addEventListener('mouseup', end);
+        canvas.addEventListener('touchstart', start, { passive:false });
+        canvas.addEventListener('touchmove', move, { passive:false });
+        canvas.addEventListener('touchend', end, { passive:false });
+      }
+
+      function setupOfflineSignatureCanvases() {
+        ['editEngineerSignature','editCustomerSignature'].forEach(function(id) {
+          setupOfflineSignatureCanvas(document.getElementById(id));
+        });
+      }
+
+      function getOfflineSignatureData(id) {
+        const canvas = document.getElementById(id);
+        if (!canvas) return '';
+        return canvas.dataset.signatureData || '';
+      }
+
+      function setOfflineSignatureData(id, dataUrl) {
+        const canvas = document.getElementById(id);
+        if (!canvas) return;
+        canvas.dataset.signatureData = dataUrl || '';
+        const ctx = canvas.getContext('2d');
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        if (!dataUrl) return;
+        const img = new Image();
+        img.onload = function() {
+          const rect = canvas.getBoundingClientRect();
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          ctx.drawImage(img, 0, 0, rect.width, rect.height);
+        };
+        img.src = dataUrl;
+      }
+
+      window.clearOfflineSignature = function(event, id) {
+        if (event) event.preventDefault();
+        setOfflineSignatureData(id, '');
+        setEditorDirty(true);
+        setEditorStatus('Signature cleared. Press Complete Job - Save Offline to keep the change.');
+      };
 
 
       function setOfflineSfaPhotoPreview(dataUrl) {
@@ -1592,8 +1706,8 @@
           noteEl.textContent = report.code === 'W'
             ? 'This is the local iPad editor. Engineer Service Reports can save offline and sync to Cloud Drafts when signal returns.'
             : (report.code === 'SEL'
-              ? 'This is the local SEL cloud-draft bridge editor. Save locally, then Sync to Cloud. Open from Cloud Drafts to use the normal online SEL PDF button.'
-              : 'This is the local SFA cloud-draft bridge editor. Save locally, then Sync to Cloud. Open from Cloud Drafts to use the normal online PDF button.');
+              ? 'This is the local SEL cloud-draft bridge editor. Save locally, then Sync to Cloud. Open from Cloud Drafts to use the normal online Complete Job button.'
+              : 'This is the local SFA cloud-draft bridge editor. Save locally, then Sync to Cloud. Open from Cloud Drafts to use the normal online Complete Job button.');
         }
         if (syncBtn) {
           syncBtn.disabled = !report.syncableOffline;
@@ -1738,11 +1852,17 @@
         loader.classList.add('hidden');
         fallback.classList.add('hidden');
         offlineEditor.classList.add('active');
+        setupOfflineSignatureCanvases();
+        setTimeout(function() {
+          setupOfflineSignatureCanvases();
+          setOfflineSignatureData('editEngineerSignature', d.engineerSignature || '');
+          setOfflineSignatureData('editCustomerSignature', d.customerSignature || '');
+        }, 80);
         updateEditorNetworkBadge();
         bindEditorChangeTracking();
         calculateEditorTotals();
         setEditorDirty(false);
-        setEditorStatus(report.code === 'W' ? 'Editing offline Engineer Service Report draft saved on this iPad. Press Save Offline before leaving.' : ('Editing offline ' + report.code + ' draft saved on this iPad. Save locally, then Sync to Cloud when ready.'));
+        setEditorStatus(report.code === 'W' ? 'Editing offline Engineer Service Report draft saved on this iPad. Press Complete Job - Save Offline before leaving.' : ('Editing offline ' + report.code + ' draft saved on this iPad. Complete Job - Save Offline, then Sync to Cloud when ready.'));
       }
 
       function firstLine(value) {
@@ -2012,7 +2132,7 @@
         const item = createBlankOfflineWItem();
         upsertOfflineItem(item);
         openEditorForItem(item);
-        setEditorStatus('New offline Engineer Service Report draft started on this iPad. Fill it in and press Save Offline. Sync to Cloud Drafts when signal returns.');
+        setEditorStatus('New offline Engineer Service Report draft started on this iPad. Fill it in and press Complete Job - Save Offline. Sync to Cloud Drafts when signal returns.');
       };
 
       window.startNewOfflineSfaTrial = function startNewOfflineSfaTrial(event) {
@@ -2188,6 +2308,8 @@
         }
         d.customerName = getEditValue('editCustomerName');
         d.customerDate = getEditValue('editCustomerDate');
+        d.engineerSignature = getOfflineSignatureData('editEngineerSignature');
+        d.customerSignature = getOfflineSignatureData('editCustomerSignature');
         const draftName = getEditValue('editDraftName') || item.draftName || buildEditorDraftName(d);
         const updated = Object.assign({}, item, {
           draft: d,
@@ -2271,7 +2393,9 @@
             faQuickQuoteRequired: d.faQuickQuoteRequired || '',
             faRiskAssessmentRecommended: d.faRiskAssessmentRecommended || 'NO',
             faChangesToReport: d.faChangesToReport || 'NO',
-            faNonCompliantHeader: d.faNonCompliantHeader || 'NO'
+            faNonCompliantHeader: d.faNonCompliantHeader || 'NO',
+            engineerSignature: d.engineerSignature || '',
+            customerSignature: d.customerSignature || ''
           },
           backendBridge: {
             proposedMessageType: 'FSD_OFFLINE_SFA_SYNC',
@@ -2723,6 +2847,6 @@
 
     }());
   </script>
-  <div class="fixed-version-badge">App Shell V6.3c73e · SFA photo upload</div>
+  <div class="fixed-version-badge">App Shell V6.3c74 · complete job + offline signatures</div>
 </body>
 </html>
