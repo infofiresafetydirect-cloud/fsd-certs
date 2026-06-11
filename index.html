@@ -704,7 +704,7 @@
 </head>
 <body>
   <!--
-    Fire Safety Direct - FSD Certs V6.3c74q Signature Response Q
+    Fire Safety Direct - FSD Certs V6.3c74r Tap Sign Modal R
     Colourful iPad app-icon shell with new black/gold FSD logo.
     App shell mark: Jared720 Labs
   -->
@@ -768,7 +768,7 @@
 
     <footer class="ipad-footer">
       <span>Jared720 Labs</span>
-      <span>App Shell V6.3c74q · signature response + visible markers</span>
+      <span>App Shell V6.3c74r · tap-to-sign modal signatures</span>
     </footer>
   </section>
 
@@ -1050,7 +1050,7 @@
     (function () {
       'use strict';
 
-      const SHELL_VER = 'V6.3c74q';
+      const SHELL_VER = 'V6.3c74r';
       const APP_URL = 'https://script.google.com/macros/s/AKfycbzq9FTETNZwUJWHMGnMHECbu3sJ3jy3FFvGYyeaRXtkoK1GHBtqOu-GLBle_WGfoFtI/exec';
       const SCHEDULE_URL = 'https://docs.google.com/spreadsheets/d/1SZK6igtKPVHcBRdkA49A6AKSobkWXI_pk-De7taZP6c/edit';
       const CALLOUTS_PAGE = APP_URL + '?page=callouts&shell=ipad';
@@ -2534,7 +2534,7 @@
         loader.classList.remove('hidden');
         loaded = false;
         hasStarted = true;
-        pendingShellAction = { action: action, item: item, attempts: 0, createdAt: Date.now() }; // V6.3c74q stale-bridge guard
+        pendingShellAction = { action: action, item: item, attempts: 0, createdAt: Date.now() }; // V6.3c74r stale-bridge guard
         const report = getOfflineReportConfig(item);
         const shellPayload = {
           type: action === 'sync' ? 'FSD_OFFLINE_' + report.code + '_SYNC' : 'FSD_OFFLINE_' + report.code + '_RESTORE',
@@ -2761,7 +2761,7 @@
         }
 
         if (msg.type === 'FSD_SAVE_OFFLINE_DRAFT' && msg.source === 'fsd-certs-draft-client' && msg.item) {
-          // V6.3c74q: this is the only real GitHub/PWA offline draft queue.
+          // V6.3c74r: this is the only real GitHub/PWA offline draft queue.
           // Do not tell the report iframe "saved" until we can read the item back.
           let ok = false;
           let error = '';
@@ -2795,7 +2795,7 @@
         if (msg.source !== 'fsd-certs-esr' && msg.source !== 'fsd-certs-sfa' && msg.source !== 'fsd-certs-sel') return;
 
         if ((msg.type === 'FSD_OFFLINE_W_REQUEST' || msg.type === 'FSD_OFFLINE_SFA_REQUEST' || msg.type === 'FSD_OFFLINE_SEL_REQUEST') && pendingShellAction) {
-          // V6.3c74q: do not let an old/stale bridge request fire a cloud draft save when a report is opened normally.
+          // V6.3c74r: do not let an old/stale bridge request fire a cloud draft save when a report is opened normally.
           if (pendingShellAction.createdAt && (Date.now() - pendingShellAction.createdAt > 120000)) {
             pendingShellAction = null;
             clearTimeout(shellActionTimer);
@@ -2891,6 +2891,6 @@
 
     }());
   </script>
-  <div class="fixed-version-badge">App Shell V6.3c74q · signature response + visible markers</div>
+  <div class="fixed-version-badge">App Shell V6.3c74r · tap-to-sign modal signatures</div>
 </body>
 </html>
