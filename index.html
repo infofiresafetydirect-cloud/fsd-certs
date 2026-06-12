@@ -236,8 +236,6 @@
     .lookup-result-item:active, .lookup-result-item:hover { background:#eef2ff; }
     .lookup-result-title { display:block; font-weight:800; color:#111827; }
     .lookup-result-meta { display:block; margin-top:3px; color:#475569; font-size:12px; white-space:normal; }
-    .lookup-mini-row.lookup-empty { border:2px solid #ef4444 !important; background:#fff1f2 !important; }
-    .lookup-mini-row.lookup-empty .lookup-hint { color:#b91c1c; font-weight:900; }
     .editor-material-row { position:relative; }
     .editor-material-row .lookup-result-panel { grid-column:1 / -1; }
     .lookup-hint { grid-column:1 / -1; color:#6b7280; font-size:13px; font-weight:700; }
@@ -717,11 +715,31 @@
     .offline-signature-canvas { width:100%; height:145px; border:2px dashed #b91c1c; border-radius:14px; background:#fff; touch-action:none; display:block; }
     .offline-signature-actions { display:flex; gap:8px; margin-top:8px; }
     @media (max-width: 760px) { .offline-signature-panel { grid-template-columns:1fr; } }
-</style>
+
+    .lookup-sync-warning {
+      display: block;
+      width: 100%;
+      border: 2px solid rgba(220, 38, 38, 0.55);
+      background: rgba(254, 226, 226, 0.95);
+      color: #991b1b;
+      border-radius: 12px;
+      padding: 10px 12px;
+      font-weight: 900;
+      text-align: left;
+      cursor: pointer;
+      touch-action: manipulation;
+    }
+    .lookup-sync-warning.ready {
+      border-color: rgba(22, 163, 74, 0.45);
+      background: rgba(220, 252, 231, 0.95);
+      color: #166534;
+    }
+
+  </style>
 </head>
 <body>
   <!--
-    Fire Safety Direct - FSD Certs V6.3c76 ESR Offline-First Beta Custom Picker Confirmed
+    Fire Safety Direct - FSD Certs V6.3c77 ESR Offline-First Beta Custom Picker Confirmed
     Colourful iPad app-icon shell with new black/gold FSD logo.
     App shell mark: Jared720 Labs
   -->
@@ -790,7 +808,7 @@
 
     <footer class="ipad-footer">
       <span>Jared720 Labs</span>
-      <span>App Shell V6.3c76 · custom picker active</span>
+      <span>App Shell V6.3c77 · custom picker active</span>
     </footer>
   </section>
 
@@ -798,8 +816,8 @@
     <main class="offline-card">
       <h2 class="offline-title">Offline Certs &amp; Reports</h2>
       <p class="offline-help">Certificate/report drafts saved without signal live on this iPad until they are synced to the FSD cloud Draft Manager.</p>
-      <p class="offline-help"><strong>ESR Offline-First Beta V6.3c76:</strong> This is a safe test route only. It uses the fast GitHub/offline editor for ESR/W so we can test signatures, materials, totals and sync without replacing the normal live ESR report.</p>
-          <p class="offline-help" style="border-color:#dc2626;background:#fff1f2;color:#991b1b;"><strong>V6.3c76 custom picker active:</strong> customer/site/material results should appear as tappable rows below the search boxes. Materials only apply when you tap a result.</p>
+      <p class="offline-help"><strong>ESR Offline-First Beta V6.3c77:</strong> This is a safe test route only. It uses the fast GitHub/offline editor for ESR/W so we can test signatures, materials, totals and sync without replacing the normal live ESR report.</p>
+          <p class="offline-help" style="border-color:#dc2626;background:#fff1f2;color:#991b1b;"><strong>V6.3c77 custom picker active:</strong> customer/site/material results should appear as tappable rows below the search boxes. Materials only apply when you tap a result.</p>
       <div id="offlineList" class="offline-list"></div>
       <div class="actions">
         <button class="button" type="button" onclick="startEsrOfflineFirstBeta(event)"><span class="tile-icon">🧪</span><span>Start ESR Offline-First Beta</span></button>
@@ -839,15 +857,15 @@
             <button id="editorMaterialQuickBtn" class="editor-mini-btn" type="button" onclick="addThreeMaterialRows(event)">Add 3 material rows</button>
             <button id="editorSfaEquipmentQuickBtn" class="editor-mini-btn" type="button" onclick="addCommonSfaEquipmentRows(event)">Add SFA equipment checked rows</button>
             <button id="editorSfaPayloadPreviewBtn" class="editor-mini-btn" type="button" onclick="previewSfaCloudPayload(event)">Preview SFA Cloud Payload</button>
-            <button id="editorLookupSyncBtn" class="editor-mini-btn" type="button" onclick="syncOfflineLookups(event)">Sync customer/material pickers</button>
+            <button id="editorLookupSyncBtn" class="editor-mini-btn" type="button" onclick="syncOfflineLookups(event)">SYNC LOOKUPS FIRST</button>
           </div>
-          <div class="lookup-mini-row" id="lookupPickerBox">
+          <div class="lookup-mini-row">
             <div class="editor-field"><label>Customer picker</label><input id="editCustomerLookup" autocomplete="off" oninput="showCustomerLookupResults(this.value)" onfocus="showCustomerLookupResults(this.value)" placeholder="Start typing customer / invoice address"><div id="fsdCustomerResults" class="lookup-result-panel"></div></div>
             <button class="editor-mini-btn" type="button" onclick="applyCustomerLookup(event)">Use Customer</button>
             <div class="editor-field"><label>Site picker</label><input id="editSiteLookup" autocomplete="off" oninput="showSiteLookupResults(this.value)" onfocus="showSiteLookupResults(this.value)" placeholder="Start typing site address / postcode"></div>
             <button class="editor-mini-btn" type="button" onclick="applySiteLookup(event)">Use Site</button>
             <div id="fsdSiteResults" class="lookup-result-panel"></div>
-            <div class="lookup-hint" id="lookupCacheStatus">Lookup pickers use the last synced customer/site/material data on this device.</div>
+            <button class="lookup-hint lookup-sync-warning" id="lookupCacheStatus" type="button" onclick="syncOfflineLookups(event)">Lookup pickers use the last synced customer/site/material data on this device.</button>
           </div>
           <datalist id="fsdCustomerList"></datalist>
           <datalist id="fsdSiteList"></datalist>
@@ -1086,7 +1104,7 @@
     (function () {
       'use strict';
 
-      const SHELL_VER = 'V6.3c76';
+      const SHELL_VER = 'V6.3c77';
       const APP_URL = 'https://script.google.com/macros/s/AKfycbzq9FTETNZwUJWHMGnMHECbu3sJ3jy3FFvGYyeaRXtkoK1GHBtqOu-GLBle_WGfoFtI/exec';
       const SCHEDULE_URL = 'https://docs.google.com/spreadsheets/d/1SZK6igtKPVHcBRdkA49A6AKSobkWXI_pk-De7taZP6c/edit';
       const CALLOUTS_PAGE = APP_URL + '?page=callouts&shell=ipad';
@@ -1582,7 +1600,7 @@
       }
 
 
-      const FSD_LOOKUP_CACHE_KEY = 'fsd_offline_lookup_cache_v6_3c76';
+      const FSD_LOOKUP_CACHE_KEY = 'fsd_offline_lookup_cache_v6_3c77';
 
       function normaliseLookupText(value) {
         return String(value || '').toLowerCase().replace(/\s+/g, ' ').trim();
@@ -1622,13 +1640,13 @@
       function populateOfflineLookupPickers() {
         const data = getOfflineLookupCache();
         populateDatalist('fsdCustomerList', data.customers, function(row) {
-          // V6.3c76: use the full invoice/customer address as the value so mobile datalist search can find every address line.
+          // V6.3c77: use the full invoice/customer address as the value so mobile datalist search can find every address line.
           return row.customerAddress || row.lookupName || '';
         }, function(row) {
           return row.lookupName || row.customerAddress || '';
         });
         populateDatalist('fsdSiteList', data.sites, function(row) {
-          // V6.3c76: use the full site address as the value so sites are findable by postcode/road/town, not just the short lookup name.
+          // V6.3c77: use the full site address as the value so sites are findable by postcode/road/town, not just the short lookup name.
           return row.siteAddress || row.lookupName || row.customerName || '';
         }, function(row) {
           return row.lookupName || row.customerName || row.siteAddress || '';
@@ -1642,41 +1660,11 @@
         const status = document.getElementById('lookupCacheStatus');
         if (status) {
           const when = data.syncedAt ? new Date(data.syncedAt).toLocaleString() : 'not synced yet';
-          status.textContent = 'Pickers: ' + data.customers.length + ' customers, ' + data.sites.length + ' sites, ' + data.materials.length + ' materials. Last sync: ' + when + '.';
-        }
-      }
-
-
-      function getOfflineLookupCounts() {
-        const data = getOfflineLookupCache();
-        return {
-          customers: (data.customers || []).length,
-          sites: (data.sites || []).length,
-          materials: (data.materials || []).length,
-          total: (data.customers || []).length + (data.sites || []).length + (data.materials || []).length
-        };
-      }
-
-      function refreshLookupSyncWarning() {
-        const counts = getOfflineLookupCounts();
-        const box = document.getElementById('lookupPickerBox');
-        const status = document.getElementById('lookupCacheStatus');
-        if (box) box.classList.toggle('lookup-empty', counts.total === 0);
-        if (status && counts.total === 0) {
-          status.textContent = 'NO LOOKUP DATA ON THIS DEVICE YET - press Sync customer/material pickers while online, then wait for customer/site/material counts.';
-        }
-        return counts;
-      }
-
-      function autoSyncLookupsIfEmpty(reason) {
-        const counts = refreshLookupSyncWarning();
-        if (counts.total === 0 && navigator.onLine) {
-          setEditorStatus((reason || 'Lookup cache empty') + ' - auto syncing customer/site/material pickers now...');
-          setTimeout(function() {
-            try { syncOfflineLookups(null); } catch (err) {
-              setEditorStatus('Auto lookup sync failed: ' + (err && err.message ? err.message : err));
-            }
-          }, 300);
+          const totalRows = data.customers.length + data.sites.length + data.materials.length;
+          status.classList.toggle('ready', totalRows > 0);
+          status.textContent = totalRows > 0
+            ? ('LOOKUPS READY - ' + data.customers.length + ' customers, ' + data.sites.length + ' sites, ' + data.materials.length + ' materials. Last sync: ' + when + '. Tap to refresh.')
+            : 'NO LOOKUP DATA ON THIS DEVICE YET - TAP HERE TO SYNC CUSTOMER / SITE / MATERIAL PICKERS.';
         }
       }
 
@@ -1691,8 +1679,12 @@
           };
           localStorage.setItem(FSD_LOOKUP_CACHE_KEY, JSON.stringify(cache));
           populateOfflineLookupPickers();
-          refreshLookupSyncWarning();
-          setEditorStatus('V6.3c76 lookup data synced: ' + cache.customers.length + ' customers, ' + cache.sites.length + ' sites, ' + cache.materials.length + ' materials.');
+          const btn = document.getElementById('editorLookupSyncBtn');
+          if (btn) {
+            btn.disabled = false;
+            btn.textContent = 'SYNC LOOKUPS FIRST';
+          }
+          setEditorStatus('V6.3c77 lookup data synced: ' + cache.customers.length + ' customers, ' + cache.sites.length + ' sites, ' + cache.materials.length + ' materials.');
         } catch (err) {
           setEditorStatus('Lookup sync received but could not save on this device: ' + (err && err.message ? err.message : err));
         }
@@ -1705,6 +1697,11 @@
           setEditorStatus('Offline - using last synced lookup data on this device.');
           return;
         }
+        const btn = document.getElementById('editorLookupSyncBtn');
+        if (btn) {
+          btn.disabled = true;
+          btn.textContent = 'Syncing lookups...';
+        }
         setEditorStatus('Syncing customer/site/material pickers...');
         const old = document.getElementById('fsdLookupJsonpScript');
         if (old && old.parentNode) old.parentNode.removeChild(old);
@@ -1712,10 +1709,36 @@
         script.id = 'fsdLookupJsonpScript';
         script.src = APP_URL + '?page=offlineLookupJsonp&callback=fsdReceiveOfflineLookupData&v=' + Date.now();
         script.onerror = function() {
-          setEditorStatus('Lookup sync failed. Check the Apps Script Offline_Lookup_API.gs and Routing.gs patch is installed and redeployed.');
+          if (btn) {
+            btn.disabled = false;
+            btn.textContent = 'SYNC LOOKUPS FIRST';
+          }
+          setEditorStatus('Lookup sync failed. Check the Apps Script Offline_Lookup_API.gs is installed and the web app has been redeployed.');
+          const status = document.getElementById('lookupCacheStatus');
+          if (status) status.textContent = 'SYNC FAILED - TAP HERE TO TRY AGAIN. Check Apps Script deploy if it keeps failing.';
         };
         document.body.appendChild(script);
+        setTimeout(function() {
+          if (btn) {
+            btn.disabled = false;
+            btn.textContent = 'SYNC LOOKUPS FIRST';
+          }
+        }, 12000);
       };
+
+      function maybeAutoSyncLookupsOnBetaOpen() {
+        try {
+          const data = getOfflineLookupCache();
+          const totalRows = (data.customers || []).length + (data.sites || []).length + (data.materials || []).length;
+          populateOfflineLookupPickers();
+          if (totalRows === 0 && navigator.onLine) {
+            setEditorStatus('No lookup data on this device yet - auto-syncing now...');
+            setTimeout(function() { syncOfflineLookups(); }, 450);
+          }
+        } catch (err) {
+          populateOfflineLookupPickers();
+        }
+      }
 
       function lookupRowSearchText(row) {
         if (!row) return '';
@@ -1726,84 +1749,42 @@
         }).join(' ');
       }
 
-      const FSD_LOOKUP_STOP_WORDS = {
-        the:1, ltd:1, limited:1, fire:1, safety:1, direct:1, and:1, '&':1, co:1, company:1,
-        uk:1, unit:1, floor:1, road:1, street:1, avenue:1, close:1, lane:1, drive:1
-      };
-
       function lookupTerms(value) {
-        return normaliseLookupText(value).split(' ').filter(function(term) {
-          return term.length >= 2 && !FSD_LOOKUP_STOP_WORDS[term];
-        });
-      }
-
-      function lookupWordStarts(field, term) {
-        field = normaliseLookupText(field);
-        term = normaliseLookupText(term);
-        if (!field || !term) return false;
-        return field.split(' ').some(function(word) { return word.indexOf(term) === 0; });
-      }
-
-      function lookupContainsAllTerms(text, terms) {
-        text = normaliseLookupText(text);
-        return terms.every(function(term) { return text.indexOf(term) !== -1; });
-      }
-
-      function lookupWordStartsAllTerms(text, terms) {
-        text = normaliseLookupText(text);
-        return terms.every(function(term) { return lookupWordStarts(text, term); });
+        return normaliseLookupText(value).split(' ').filter(function(term) { return term.length >= 2; });
       }
 
       function scoreLookupRow(row, value, preferredKeys) {
         const needle = normaliseLookupText(value);
         const terms = lookupTerms(value);
-        if (!needle || !terms.length) return 9999;
-        const keys = preferredKeys || [];
-        const fields = keys.map(function(key) { return normaliseLookupText(row && row[key]); }).filter(Boolean);
-        const primaryFields = keys.slice(0, 2).map(function(key) { return normaliseLookupText(row && row[key]); }).filter(Boolean);
-        const primaryText = primaryFields.join(' ');
-        const preferredText = fields.join(' ');
-        const hay = normaliseLookupText(preferredText + ' ' + lookupRowSearchText(row));
-        if (!hay || !lookupContainsAllTerms(hay, terms)) return 9999;
-
-        let score = 700;
-
-        // Strongly prefer real names / descriptions over address-only matches.
-        if (lookupContainsAllTerms(primaryText, terms)) score = Math.min(score, 20);
-        if (lookupWordStartsAllTerms(primaryText, terms)) score = Math.min(score, 5);
-        if (primaryText === needle) score = Math.min(score, 0);
-        if (primaryText.indexOf(needle) === 0) score = Math.min(score, 8);
-        if (primaryText.indexOf(needle) !== -1) score = Math.min(score, 15);
-
-        fields.forEach(function(field, idx) {
-          const base = idx < 2 ? 40 : 180;
-          if (field === needle) score = Math.min(score, base);
-          else if (field.indexOf(needle) === 0) score = Math.min(score, base + 10);
-          else if (field.indexOf(needle) !== -1) score = Math.min(score, base + 40);
-          else if (lookupWordStartsAllTerms(field, terms)) score = Math.min(score, base + 60);
-          else if (lookupContainsAllTerms(field, terms)) score = Math.min(score, base + 100);
+        if (!needle) return 9999;
+        const fields = (preferredKeys || []).map(function(key) {
+          return normaliseLookupText(row && row[key]);
+        }).filter(Boolean);
+        const hay = normaliseLookupText(fields.join(' ') + ' ' + lookupRowSearchText(row));
+        if (!hay) return 9999;
+        if (terms.length && !terms.every(function(term) { return hay.indexOf(term) !== -1; })) return 9999;
+        let score = 500;
+        fields.forEach(function(field) {
+          if (field === needle) score = Math.min(score, 0);
+          else if (field.indexOf(needle) === 0) score = Math.min(score, 10);
+          else if (field.indexOf(needle) !== -1) score = Math.min(score, 50);
         });
-
-        if (hay.indexOf(needle) === 0) score = Math.min(score, 300);
-        else if (hay.indexOf(needle) !== -1) score = Math.min(score, 350);
+        if (hay.indexOf(needle) === 0) score = Math.min(score, 75);
+        else if (hay.indexOf(needle) !== -1) score = Math.min(score, 100);
         score += Math.min(hay.length / 1000, 50);
         return score;
       }
 
       function searchLookupRows(rows, value, preferredKeys, limit) {
         const needle = normaliseLookupText(value);
-        const terms = lookupTerms(value);
-        if (!needle || !terms.length) return [];
-        const scored = (rows || []).map(function(row, index) {
+        if (!needle || needle.length < 2) return [];
+        return (rows || []).map(function(row, index) {
           return { row: row, index: index, score: scoreLookupRow(row, value, preferredKeys) };
-        }).filter(function(item) { return item.score < 9999; })
-          .sort(function(a, b) { return a.score - b.score; });
-
-        if (!scored.length) return [];
-        const best = scored[0].score;
-        // If we have good name/description matches, hide weak address-only noise like Walter Road when searching Wallich.
-        const filtered = best < 100 ? scored.filter(function(item) { return item.score < 220; }) : scored;
-        return filtered.slice(0, limit || 40);
+        }).filter(function(item) {
+          return item.score < 9999;
+        }).sort(function(a, b) {
+          return a.score - b.score;
+        }).slice(0, limit || 40);
       }
 
       function resultText(value) {
@@ -1877,32 +1858,17 @@
       }
 
       window.showCustomerLookupResults = function showCustomerLookupResults(value) {
-        const counts = refreshLookupSyncWarning();
-        if (counts.total === 0) { setEditorStatus('No lookup data on this device yet - press Sync customer/material pickers and wait for counts before searching.'); return; }
         const cache = getOfflineLookupCache();
         const panel = document.getElementById('fsdCustomerResults');
-        const customerMatches = searchLookupRows(cache.customers, value, ['lookupName', 'customerAddress', 'sageAccountNo', 'defaultEmail'], 80);
-        const siteCustomerMatches = searchLookupRows(cache.sites, value, ['customerName', 'customerAddress', 'lookupName', 'siteAddress', 'sageAccountNo'], 80)
-          .map(function(item) {
-            const row = Object.assign({ __fsdLookupSource: 'site' }, item.row || {});
-            return { row: row, index: item.index, score: item.score + 25 };
-          });
-        const merged = customerMatches.concat(siteCustomerMatches)
-          .sort(function(a, b) { return a.score - b.score; })
-          .slice(0, 120);
-        renderLookupPanel(panel, merged, function(row) {
-          return row.customerName || row.lookupName || firstLine(row.customerAddress) || row.customerAddress || row.siteAddress;
+        const matches = searchLookupRows(cache.customers, value, ['lookupName', 'customerAddress', 'sageAccountNo', 'defaultEmail'], 80);
+        renderLookupPanel(panel, matches, function(row) {
+          return row.lookupName || firstLine(row.customerAddress) || row.customerAddress;
         }, function(row) {
-          return [row.customerAddress, row.siteAddress, row.sageAccountNo, row.__fsdLookupSource ? 'from site list' : ''].filter(Boolean).join(' | ');
-        }, function(row) {
-          if (row && row.__fsdLookupSource === 'site') applySiteRow(row);
-          else applyCustomerRow(row);
-        });
+          return [row.customerAddress, row.sageAccountNo].filter(Boolean).join(' | ');
+        }, applyCustomerRow);
       };
 
       window.showSiteLookupResults = function showSiteLookupResults(value) {
-        const counts = refreshLookupSyncWarning();
-        if (counts.total === 0) { setEditorStatus('No lookup data on this device yet - press Sync customer/material pickers and wait for counts before searching.'); return; }
         const cache = getOfflineLookupCache();
         const panel = document.getElementById('fsdSiteResults');
         const matches = searchLookupRows(cache.sites, value, ['lookupName', 'siteAddress', 'customerAddress', 'customerName', 'sageAccountNo'], 150);
@@ -1934,8 +1900,6 @@
       }
 
       window.showMaterialLookupResults = function showMaterialLookupResults(input) {
-        const counts = refreshLookupSyncWarning();
-        if (counts.total === 0) { setEditorStatus('No material lookup data on this device yet - press Sync customer/material pickers and wait for material count before searching.'); return; }
         const rowEl = input && input.closest ? input.closest('.editor-material-row') : null;
         if (!rowEl) return;
         const panel = rowEl.querySelector('.fsd-material-results');
@@ -2147,7 +2111,7 @@
         const noteEl = document.getElementById('offlineEditorNote');
         const syncBtn = document.getElementById('offlineEditorSyncBtn');
         const isEsrBeta = !!(item && item.draft && item.draft.esrOfflineFirstBeta);
-        if (titleEl) titleEl.textContent = isEsrBeta ? 'ESR Offline-First Beta · V6.3c76' : ('Edit Offline ' + report.code + ' Draft');
+        if (titleEl) titleEl.textContent = isEsrBeta ? 'ESR Offline-First Beta · V6.3c77' : ('Edit Offline ' + report.code + ' Draft');
         if (noteEl) {
           noteEl.textContent = isEsrBeta
             ? 'Safe beta route: fast GitHub/offline ESR form. Normal live ESR remains unchanged until you choose to sync/create PDF.'
@@ -2579,23 +2543,21 @@
       window.startEsrOfflineFirstBeta = function startEsrOfflineFirstBeta(event) {
         stopTap(event);
         const item = createBlankOfflineWItem();
-        item.source = 'github-shell-esr-offline-first-beta-v6_3c76';
+        item.source = 'github-shell-esr-offline-first-beta-v6_3c77';
         item.draftName = 'ESR Offline-First Beta - ' + new Date().toISOString().slice(0, 10);
         if (item.draft) {
           item.draft.draftName = item.draftName;
           item.draft.esrOfflineFirstBeta = true;
-          item.draft.betaVersion = 'V6.3c76';
+          item.draft.betaVersion = 'V6.3c77';
           item.draft.comments = item.draft.comments || 'ESR Offline-First Beta test draft.';
         }
         pendingOfflineEditorItem = item;
         openEditorForItem(item);
         const title = document.getElementById('offlineEditorTitle');
-        if (title) title.textContent = 'ESR Offline-First Beta · V6.3c76';
+        if (title) title.textContent = 'ESR Offline-First Beta · V6.3c77';
         const note = document.getElementById('offlineEditorNote');
         if (note) note.textContent = 'Safe beta route: fast GitHub/offline ESR form. Normal live ESR remains unchanged until you choose to sync/create PDF.';
-        populateOfflineLookupPickers();
-        autoSyncLookupsIfEmpty('ESR Beta opened with empty pickers');
-        setEditorStatus('ESR Offline-First Beta started. If picker counts say zero, wait for the auto sync or press Sync customer/material pickers.');
+        setEditorStatus('ESR Offline-First Beta V6.3c77 started. If lookups are empty, use the red LOOKUP box or SYNC LOOKUPS FIRST.');
       };
 
       window.startNewOfflineW = function startNewOfflineW(event) {
@@ -3361,6 +3323,6 @@
 
     }());
   </script>
-  <div class="fixed-version-badge">App Shell V6.3c76 · custom picker active</div>
+  <div class="fixed-version-badge">App Shell V6.3c77 · custom picker active</div>
 </body>
 </html>
