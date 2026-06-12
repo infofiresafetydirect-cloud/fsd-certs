@@ -225,6 +225,11 @@
     .editor-photo-preview img { max-width:100%; max-height:180px; border-radius:12px; object-fit:contain; display:block; }
     .sfa-local-note { grid-column: 1 / -1; padding: 10px 12px; border-radius: 14px; background: #fff7ed; color: #7c2d12; border: 1px solid #fed7aa; font-weight: 850; font-size: 13px; line-height: 1.35; }
     .editor-materials { grid-column: 1 / -1; display: grid; gap: 8px; }
+    .lookup-mini-row { grid-column: 1 / -1; display:flex; gap:8px; flex-wrap:wrap; align-items:flex-end; padding:10px; border:1px solid #fee2e2; background:#fff7f7; border-radius:14px; }
+    .lookup-mini-row .editor-field { min-width:240px; flex:1; }
+    .lookup-mini-row .editor-mini-btn { width:auto; min-width:160px; }
+    .lookup-hint { grid-column:1 / -1; color:#6b7280; font-size:13px; font-weight:700; }
+
     .nested-editor-grid { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
     .sfa-table-wrap { grid-column: 1 / -1; overflow-x: auto; border: 1px solid #e2e8f0; border-radius: 14px; background: #fff; }
     table.sfa-equip-table { width: 100%; min-width: 920px; border-collapse: collapse; font-size: 13px; }
@@ -704,7 +709,7 @@
 </head>
 <body>
   <!--
-    Fire Safety Direct - FSD Certs V6.3c74u ESR Offline-First Beta
+    Fire Safety Direct - FSD Certs V6.3c74v ESR Offline-First Beta Lookup Pickers
     Colourful iPad app-icon shell with new black/gold FSD logo.
     App shell mark: Jared720 Labs
   -->
@@ -781,7 +786,7 @@
     <main class="offline-card">
       <h2 class="offline-title">Offline Certs &amp; Reports</h2>
       <p class="offline-help">Certificate/report drafts saved without signal live on this iPad until they are synced to the FSD cloud Draft Manager.</p>
-      <p class="offline-help"><strong>ESR Offline-First Beta V6.3c74u:</strong> This is a safe test route only. It uses the fast GitHub/offline editor for ESR/W so we can test signatures, materials, totals and sync without replacing the normal live ESR report.</p>
+      <p class="offline-help"><strong>ESR Offline-First Beta V6.3c74v:</strong> This is a safe test route only. It uses the fast GitHub/offline editor for ESR/W so we can test signatures, materials, totals and sync without replacing the normal live ESR report.</p>
       <div id="offlineList" class="offline-list"></div>
       <div class="actions">
         <button class="button" type="button" onclick="startEsrOfflineFirstBeta(event)"><span class="tile-icon">🧪</span><span>Start ESR Offline-First Beta</span></button>
@@ -821,7 +826,18 @@
             <button id="editorMaterialQuickBtn" class="editor-mini-btn" type="button" onclick="addThreeMaterialRows(event)">Add 3 material rows</button>
             <button id="editorSfaEquipmentQuickBtn" class="editor-mini-btn" type="button" onclick="addCommonSfaEquipmentRows(event)">Add SFA equipment checked rows</button>
             <button id="editorSfaPayloadPreviewBtn" class="editor-mini-btn" type="button" onclick="previewSfaCloudPayload(event)">Preview SFA Cloud Payload</button>
+            <button id="editorLookupSyncBtn" class="editor-mini-btn" type="button" onclick="syncOfflineLookups(event)">Sync customer/material pickers</button>
           </div>
+          <div class="lookup-mini-row">
+            <div class="editor-field"><label>Customer picker</label><input id="editCustomerLookup" list="fsdCustomerList" placeholder="Start typing customer / invoice address"></div>
+            <button class="editor-mini-btn" type="button" onclick="applyCustomerLookup(event)">Use Customer</button>
+            <div class="editor-field"><label>Site picker</label><input id="editSiteLookup" list="fsdSiteList" placeholder="Start typing site address"></div>
+            <button class="editor-mini-btn" type="button" onclick="applySiteLookup(event)">Use Site</button>
+            <div class="lookup-hint" id="lookupCacheStatus">Lookup pickers use the last synced customer/site/material data on this device.</div>
+          </div>
+          <datalist id="fsdCustomerList"></datalist>
+          <datalist id="fsdSiteList"></datalist>
+          <datalist id="fsdMaterialList"></datalist>
           <div class="editor-field"><label>Engineer</label><input id="editEngineer"></div>
           <div class="editor-field"><label>Service date</label><input id="editServiceDate" type="date"></div>
           <div class="editor-field editor-wide"><label>Customer / Invoice address</label><textarea id="editCustomer"></textarea></div>
@@ -1551,6 +1567,159 @@
         if (totalBox) totalBox.textContent = money(total);
       }
 
+
+      const FSD_LOOKUP_CACHE_KEY = 'fsd_offline_lookup_cache_v6_3c74v';
+
+      function normaliseLookupText(value) {
+        return String(value || '').toLowerCase().replace(/\s+/g, ' ').trim();
+      }
+
+      function getOfflineLookupCache() {
+        try {
+          const raw = localStorage.getItem(FSD_LOOKUP_CACHE_KEY);
+          if (!raw) return { customers: [], sites: [], materials: [], syncedAt: '' };
+          const parsed = JSON.parse(raw);
+          return {
+            customers: Array.isArray(parsed.customers) ? parsed.customers : [],
+            sites: Array.isArray(parsed.sites) ? parsed.sites : [],
+            materials: Array.isArray(parsed.materials) ? parsed.materials : [],
+            syncedAt: parsed.syncedAt || ''
+          };
+        } catch (err) {
+          return { customers: [], sites: [], materials: [], syncedAt: '' };
+        }
+      }
+
+      function populateDatalist(id, rows, getValue, getLabel) {
+        const list = document.getElementById(id);
+        if (!list) return;
+        list.innerHTML = '';
+        (rows || []).slice(0, 1500).forEach(function(row) {
+          const value = getValue(row);
+          if (!value) return;
+          const opt = document.createElement('option');
+          opt.value = value;
+          const label = getLabel ? getLabel(row) : '';
+          if (label) opt.label = label;
+          list.appendChild(opt);
+        });
+      }
+
+      function populateOfflineLookupPickers() {
+        const data = getOfflineLookupCache();
+        populateDatalist('fsdCustomerList', data.customers, function(row) {
+          return row.lookupName || row.customerAddress || '';
+        }, function(row) {
+          return row.customerAddress || row.lookupName || '';
+        });
+        populateDatalist('fsdSiteList', data.sites, function(row) {
+          return row.lookupName || row.siteAddress || row.customerName || '';
+        }, function(row) {
+          return row.siteAddress || row.lookupName || '';
+        });
+        populateDatalist('fsdMaterialList', data.materials, function(row) {
+          return row.material || row.description || '';
+        }, function(row) {
+          const price = row.unitPrice || row.price || '';
+          return price ? ('£' + price) : '';
+        });
+        const status = document.getElementById('lookupCacheStatus');
+        if (status) {
+          const when = data.syncedAt ? new Date(data.syncedAt).toLocaleString() : 'not synced yet';
+          status.textContent = 'Pickers: ' + data.customers.length + ' customers, ' + data.sites.length + ' sites, ' + data.materials.length + ' materials. Last sync: ' + when + '.';
+        }
+      }
+
+      window.fsdReceiveOfflineLookupData = function fsdReceiveOfflineLookupData(payload) {
+        try {
+          const data = payload && typeof payload === 'object' ? payload : {};
+          const cache = {
+            customers: Array.isArray(data.customers) ? data.customers : [],
+            sites: Array.isArray(data.sites) ? data.sites : [],
+            materials: Array.isArray(data.materials) ? data.materials : [],
+            syncedAt: new Date().toISOString()
+          };
+          localStorage.setItem(FSD_LOOKUP_CACHE_KEY, JSON.stringify(cache));
+          populateOfflineLookupPickers();
+          setEditorStatus('Lookup data synced: ' + cache.customers.length + ' customers, ' + cache.sites.length + ' sites, ' + cache.materials.length + ' materials.');
+        } catch (err) {
+          setEditorStatus('Lookup sync received but could not save on this device: ' + (err && err.message ? err.message : err));
+        }
+      };
+
+      window.syncOfflineLookups = function syncOfflineLookups(event) {
+        stopTap(event);
+        if (!navigator.onLine) {
+          populateOfflineLookupPickers();
+          setEditorStatus('Offline - using last synced lookup data on this device.');
+          return;
+        }
+        setEditorStatus('Syncing customer/site/material pickers...');
+        const old = document.getElementById('fsdLookupJsonpScript');
+        if (old && old.parentNode) old.parentNode.removeChild(old);
+        const script = document.createElement('script');
+        script.id = 'fsdLookupJsonpScript';
+        script.src = APP_URL + '?page=offlineLookupJsonp&callback=fsdReceiveOfflineLookupData&v=' + Date.now();
+        script.onerror = function() {
+          setEditorStatus('Lookup sync failed. Check the Apps Script Offline_Lookup_API.gs and Routing.gs patch is installed and redeployed.');
+        };
+        document.body.appendChild(script);
+      };
+
+      function findLookupRow(rows, value, keys) {
+        const needle = normaliseLookupText(value);
+        if (!needle) return null;
+        return (rows || []).find(function(row) {
+          return keys.some(function(key) {
+            return normaliseLookupText(row && row[key]).indexOf(needle) !== -1 || needle.indexOf(normaliseLookupText(row && row[key])) !== -1;
+          });
+        }) || null;
+      }
+
+      window.applyCustomerLookup = function applyCustomerLookup(event) {
+        stopTap(event);
+        const cache = getOfflineLookupCache();
+        const value = getEditValue('editCustomerLookup');
+        const row = findLookupRow(cache.customers, value, ['lookupName', 'customerAddress']);
+        if (!row) { setEditorStatus('No matching customer found in the offline lookup cache. Press Sync customer/material pickers while online.'); return; }
+        setEditValue('editCustomer', row.customerAddress || row.lookupName || '');
+        if (row.siteAddress && !getEditValue('editSite')) setEditValue('editSite', row.siteAddress);
+        if (row.sageAccountNo) setEditValue('editSageAccountNo', row.sageAccountNo);
+        if (row.defaultCustomerOrderNo) setEditValue('editCustomerOrderNo', row.defaultCustomerOrderNo);
+        if (row.defaultOurRefNo) setEditValue('editOurRefNo', row.defaultOurRefNo);
+        setEditorDirty(true);
+        autoNameOfflineW(event);
+        setEditorStatus('Customer applied from offline picker.');
+      };
+
+      window.applySiteLookup = function applySiteLookup(event) {
+        stopTap(event);
+        const cache = getOfflineLookupCache();
+        const value = getEditValue('editSiteLookup');
+        const row = findLookupRow(cache.sites, value, ['lookupName', 'siteAddress', 'customerName']);
+        if (!row) { setEditorStatus('No matching site found in the offline lookup cache. Press Sync customer/material pickers while online.'); return; }
+        setEditValue('editSite', row.siteAddress || row.lookupName || '');
+        if (row.customerAddress && !getEditValue('editCustomer')) setEditValue('editCustomer', row.customerAddress);
+        if (row.sageAccountNo && !getEditValue('editSageAccountNo')) setEditValue('editSageAccountNo', row.sageAccountNo);
+        setEditorDirty(true);
+        autoNameOfflineW(event);
+        setEditorStatus('Site applied from offline picker.');
+      };
+
+      window.applyMaterialLookupToRow = function applyMaterialLookupToRow(input) {
+        const rowEl = input && input.closest ? input.closest('.editor-material-row') : null;
+        if (!rowEl) return;
+        const cache = getOfflineLookupCache();
+        const row = findLookupRow(cache.materials, input.value, ['material', 'description']);
+        if (!row) return;
+        const desc = rowEl.querySelector('.emDescription');
+        const unit = rowEl.querySelector('.emUnitPrice');
+        if (desc) desc.value = row.material || row.description || input.value;
+        if (unit && !unit.value) unit.value = row.unitPrice || row.price || '';
+        calculateEditorTotals();
+        setEditorDirty(true);
+      };
+
       function bindEditorChangeTracking() {
         const form = document.getElementById('offlineWEditorForm');
         if (!form || form.__fsdBound) return;
@@ -1589,7 +1758,7 @@
         row.className = 'editor-material-row';
         row.innerHTML =
           '<div class="editor-field"><label>Qty</label><input class="emQty" value="' + escapeHtml(item.qty || '') + '"></div>' +
-          '<div class="editor-field desc"><label>Description</label><input class="emDescription" value="' + escapeHtml(item.description || item.searchText || '') + '"></div>' +
+          '<div class="editor-field desc"><label>Description</label><input class="emDescription" list="fsdMaterialList" onchange="applyMaterialLookupToRow(this)" value="' + escapeHtml(item.description || item.searchText || '') + '"></div>' +
           '<div class="editor-field"><label>Unit</label><input class="emUnitPrice" type="number" step="0.01" value="' + escapeHtml(item.unitPrice || '') + '"></div>' +
           '<div class="editor-field"><label>Total</label><input class="emTotalPrice" type="number" step="0.01" value="' + escapeHtml(item.totalPrice || '') + '"></div>' +
           '<button class="button third" style="min-height:42px;font-size:18px;padding:6px;" type="button" onclick="this.closest(\'.editor-material-row\').remove()">×</button>';
@@ -1709,7 +1878,7 @@
         const noteEl = document.getElementById('offlineEditorNote');
         const syncBtn = document.getElementById('offlineEditorSyncBtn');
         const isEsrBeta = !!(item && item.draft && item.draft.esrOfflineFirstBeta);
-        if (titleEl) titleEl.textContent = isEsrBeta ? 'ESR Offline-First Beta · V6.3c74u' : ('Edit Offline ' + report.code + ' Draft');
+        if (titleEl) titleEl.textContent = isEsrBeta ? 'ESR Offline-First Beta · V6.3c74v' : ('Edit Offline ' + report.code + ' Draft');
         if (noteEl) {
           noteEl.textContent = isEsrBeta
             ? 'Safe beta route: fast GitHub/offline ESR form. Normal live ESR remains unchanged until you choose to sync/create PDF.'
@@ -1870,6 +2039,7 @@
         }, 80);
         updateEditorNetworkBadge();
         bindEditorChangeTracking();
+        populateOfflineLookupPickers();
         calculateEditorTotals();
         setEditorDirty(false);
         setEditorStatus(report.code === 'W' ? 'Editing offline Engineer Service Report draft saved on this iPad. Press Complete Job - Save Offline before leaving.' : ('Editing offline ' + report.code + ' draft saved on this iPad. Complete Job - Save Offline, then Sync to Cloud when ready.'));
@@ -2145,13 +2315,13 @@
         if (item.draft) {
           item.draft.draftName = item.draftName;
           item.draft.esrOfflineFirstBeta = true;
-          item.draft.betaVersion = 'V6.3c74u';
+          item.draft.betaVersion = 'V6.3c74v';
           item.draft.comments = item.draft.comments || 'ESR Offline-First Beta test draft.';
         }
         pendingOfflineEditorItem = item;
         openEditorForItem(item);
         const title = document.getElementById('offlineEditorTitle');
-        if (title) title.textContent = 'ESR Offline-First Beta · V6.3c74u';
+        if (title) title.textContent = 'ESR Offline-First Beta · V6.3c74v';
         const note = document.getElementById('offlineEditorNote');
         if (note) note.textContent = 'Safe beta route: fast GitHub/offline ESR form. Normal live ESR remains unchanged until you choose to sync/create PDF.';
         setEditorStatus('ESR Offline-First Beta started. Nothing is saved yet - press Complete Job - Save Offline when ready.');
