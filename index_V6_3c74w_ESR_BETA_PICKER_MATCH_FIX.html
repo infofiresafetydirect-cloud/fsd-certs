@@ -1,0 +1,3116 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="FSD Certs">
+  <meta name="application-name" content="FSD Certs by Jared720 Labs">
+  <meta name="theme-color" content="#0f172a">
+  <meta name="format-detection" content="telephone=no">
+  <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
+  <meta http-equiv="Pragma" content="no-cache">
+
+  <title>FSD Certs</title>
+
+  <link rel="preconnect" href="https://script.google.com" crossorigin>
+  <link rel="preconnect" href="https://docs.google.com" crossorigin>
+  <link rel="dns-prefetch" href="https://script.google.com">
+  <link rel="dns-prefetch" href="https://docs.google.com">
+
+  <link rel="manifest" href="manifest.webmanifest?v=71d">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png?v=71d">
+  <link rel="icon" href="favicon.png?v=71d">
+  <link rel="icon" type="image/png" sizes="192x192" href="fsd-certs-logo.png?v=71d">
+  <link rel="icon" type="image/png" sizes="512x512" href="fsd-certs-logo.png?v=71d">
+  <link rel="preload" as="image" href="fsd-certs-logo.png?v=71d" fetchpriority="high">
+
+  <style>
+    :root {
+      --fsd-red: #b10f1f;
+      --fsd-red-dark: #7f0d19;
+      --fsd-blue: #0f5faa;
+      --fsd-blue-dark: #0f172a;
+      --fsd-ink: #0b1220;
+      --glass: rgba(255,255,255,.76);
+      --glass-line: rgba(255,255,255,.48);
+      --safe-top: env(safe-area-inset-top, 0px);
+      --safe-right: env(safe-area-inset-right, 0px);
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+      --safe-left: env(safe-area-inset-left, 0px);
+    }
+
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+    html, body {
+      width: 100%; height: 100%; min-height: 100%;
+      margin: 0; padding: 0; overflow: hidden;
+      background: #0f172a;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+      -webkit-text-size-adjust: 100%;
+    }
+
+    body { position: fixed; inset: 0; overscroll-behavior: none; touch-action: manipulation; }
+
+    .screen { position: fixed; inset: 0; width: 100vw; height: 100vh; height: 100dvh; overflow: hidden; }
+
+    .home {
+      display: flex; align-items: center; justify-content: center;
+      padding: calc(22px + var(--safe-top)) calc(22px + var(--safe-right)) calc(28px + var(--safe-bottom)) calc(22px + var(--safe-left));
+      color: var(--fsd-ink); z-index: 30;
+      background:
+        radial-gradient(circle at 12% 8%, rgba(59,130,246,.42), transparent 28%),
+        radial-gradient(circle at 88% 18%, rgba(255,255,255,.28), transparent 26%),
+        radial-gradient(circle at 50% 95%, rgba(212,175,55,.30), transparent 32%),
+        linear-gradient(145deg, #0b1020 0%, #123158 48%, #dbeafe 100%);
+      transition: transform .2s ease, opacity .2s ease, visibility .2s ease;
+    }
+
+    .home::before {
+      content: ""; position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,.045) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px);
+      background-size: 38px 38px;
+      mask-image: radial-gradient(circle at 50% 42%, black 0%, transparent 72%);
+      pointer-events: none;
+    }
+
+    .home.hidden { transform: translateY(-10px); opacity: 0; visibility: hidden; pointer-events: none; }
+
+    .home-panel { width: min(700px, 100%); text-align: center; position: relative; z-index: 1; }
+
+    .home-card {
+      width: 100%; border-radius: 28px; padding: 20px;
+      background: linear-gradient(180deg, rgba(255,255,255,.86), rgba(255,255,255,.58));
+      border: 1px solid rgba(255,255,255,.64);
+      box-shadow: 0 34px 90px rgba(2, 8, 23, .36), inset 0 1px 0 rgba(255,255,255,.85);
+      backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+    }
+
+    .brand-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 16px; }
+
+    .brand-left { display: flex; align-items: center; gap: 12px; text-align: left; }
+
+    .brand-logo {
+      width: 54px; height: 54px; border-radius: 15px; object-fit: cover; display: block;
+      box-shadow: 0 12px 26px rgba(15, 95, 170, .28);
+      background: #fff;
+    }
+
+    .brand-name { font-size: 24px; line-height: .92; letter-spacing: .12em; font-weight: 950; color: #0f172a; }
+    .brand-name small { display: block; font-size: 14px; letter-spacing: .16em; margin-top: 3px; }
+
+    .company-name { font-size: 25px; letter-spacing: -.02em; font-weight: 500; color: #0b1220; }
+
+    h1 {
+      margin: 0; font-size: clamp(32px, 5.6vw, 48px); line-height: 1.02;
+      letter-spacing: .08em; font-weight: 500; color: #0b1220;
+      text-shadow: 0 1px 0 rgba(255,255,255,.7);
+    }
+
+    .subtitle {
+      margin: 12px auto 18px; max-width: 560px; color: rgba(15,23,42,.80);
+      line-height: 1.35; font-size: clamp(17px, 2.8vw, 22px); font-weight: 500; letter-spacing: .02em;
+    }
+
+    .actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: 12px; }
+
+    .button, button.button {
+      will-change: transform;
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;
+      width: 100%; min-height: 112px; padding: 14px 12px; border: 1px solid rgba(255,255,255,.70);
+      border-radius: 22px; background: linear-gradient(180deg, rgba(255,255,255,.68), rgba(226,232,240,.48));
+      color: #0b1220; text-decoration: none; font: inherit; font-weight: 500; font-size: clamp(20px, 3.2vw, 28px);
+      letter-spacing: .05em; cursor: pointer;
+      box-shadow: 0 18px 34px rgba(15,23,42,.13), inset 0 1px 0 rgba(255,255,255,.74);
+      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    }
+
+    .button .tile-icon { font-size: 32px; line-height: 1; filter: drop-shadow(0 10px 14px rgba(15,95,170,.18)); }
+    .button:active { transform: scale(.982); }
+    .button.secondary, .button.third { background: linear-gradient(180deg, rgba(255,255,255,.62), rgba(219,234,254,.42)); color: #0b1220; }
+
+    .maker-mark { margin-top: 16px; color: rgba(255,255,255,.82); font-size: 13px; font-weight: 700; letter-spacing: .04em; }
+
+    .shell-version-badge {
+      display: inline-flex; align-items: center; justify-content: center; margin-top: 6px; padding: 5px 10px;
+      border-radius: 999px; color: rgba(255,255,255,.88); font-size: 13px; font-weight: 700; letter-spacing: .03em;
+    }
+
+    .fixed-version-badge {
+      position: fixed; right: calc(10px + var(--safe-right)); bottom: calc(10px + var(--safe-bottom)); z-index: 60;
+      padding: 7px 10px; border-radius: 999px; background: rgba(15, 23, 42, .70); border: 1px solid rgba(255,255,255,.24);
+      color: rgba(255,255,255,.92); font-size: 11px; font-weight: 950; letter-spacing: .03em; pointer-events: none; backdrop-filter: blur(8px);
+    }
+
+    .app-shell { background: #ffffff; z-index: 10; }
+    .top-safe-fill { position: fixed; top: 0; left: 0; right: 0; height: var(--safe-top); background: #0f172a; z-index: 15; pointer-events: none; }
+    iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; background: #ffffff; display: block; contain: strict; }
+
+    .mini-home {
+      position: fixed; top: calc(8px + var(--safe-top)); left: calc(8px + var(--safe-left)); z-index: 25;
+      border: 0; border-radius: 999px; padding: 9px 13px; background: rgba(15,23,42,.86); color: #ffffff;
+      font: inherit; font-size: 13px; font-weight: 900; box-shadow: 0 8px 22px rgba(0,0,0,.18); cursor: pointer; opacity: .94;
+    }
+    .mini-home:active { transform: scale(.96); }
+
+    .loader, .fallback {
+      position: fixed; inset: 0; display: flex; align-items: center; justify-content: center;
+      padding: calc(22px + var(--safe-top)) calc(22px + var(--safe-right)) calc(22px + var(--safe-bottom)) calc(22px + var(--safe-left));
+      background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%); color: var(--fsd-ink); z-index: 20; transition: opacity .18s ease, visibility .18s ease;
+    }
+    .loader.hidden, .fallback.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+    .panel { width: min(420px, 100%); text-align: center; }
+    .panel .logo { width: 104px; height: 104px; border-radius: 22px; margin: 0 auto 18px; box-shadow: 0 18px 44px rgba(15,95,170,.25); }
+    .panel h2 { margin: 0; font-size: 30px; line-height: 1.05; color: var(--fsd-blue); letter-spacing: -.04em; }
+    .panel p { margin: 10px 0 0; color: #4b5563; font-size: 15px; line-height: 1.4; }
+    .panel .maker-mark { color: #9ca3af; margin-top: 14px; }
+    .spinner { width: 34px; height: 34px; border: 4px solid #dbeafe; border-top-color: var(--fsd-blue); border-radius: 999px; margin: 22px auto 0; animation: spin .85s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .offline-screen {
+      display: none; align-items: center; justify-content: center;
+      padding: calc(24px + var(--safe-top)) calc(22px + var(--safe-right)) calc(24px + var(--safe-bottom)) calc(22px + var(--safe-left));
+      background: linear-gradient(145deg, #0f172a 0%, #16355c 55%, #dbeafe 100%); color: #ffffff; z-index: 35; overflow-y: auto; -webkit-overflow-scrolling: touch;
+    }
+    .offline-screen.active { display: flex; }
+    .offline-card {
+      width: min(720px, 100%); max-height: calc(100dvh - 48px - var(--safe-top) - var(--safe-bottom)); overflow-y: auto;
+      border-radius: 30px; padding: 24px; background: rgba(255,255,255,.18); border: 1px solid rgba(255,255,255,.28);
+      box-shadow: 0 24px 70px rgba(0,0,0,.30), inset 0 1px 0 rgba(255,255,255,.20); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+    }
+    .offline-title { margin: 0 0 6px; font-size: 34px; font-weight: 800; letter-spacing: -.03em; }
+    .offline-help { margin: 0 0 16px; color: rgba(255,255,255,.86); line-height: 1.38; font-weight: 650; }
+    .offline-list { display: grid; gap: 12px; margin: 16px 0; }
+    .offline-item { padding: 14px; border-radius: 18px; background: rgba(255,255,255,.94); color: #111827; text-align: left; box-shadow: 0 12px 28px rgba(0,0,0,.18); }
+    .offline-item strong { display: block; color: var(--fsd-blue-dark); font-size: 17px; margin-bottom: 4px; }
+    .offline-meta { color: #4b5563; font-size: 13px; line-height: 1.35; font-weight: 650; margin-bottom: 12px; }
+    .offline-actions { display: grid; gap: 8px; grid-template-columns: repeat(3, 1fr); }
+    .offline-actions .button { min-height: 44px; padding: 10px 12px; border-radius: 14px; font-size: 14px; box-shadow: none; }
+    .offline-empty { padding: 18px; border-radius: 18px; background: rgba(255,255,255,.13); border: 1px dashed rgba(255,255,255,.32); color: rgba(255,255,255,.90); font-weight: 750; }
+    .offline-status { min-height: 22px; margin-top: 12px; color: rgba(255,255,255,.90); font-size: 14px; font-weight: 750; }
+
+
+    .offline-editor-screen {
+      display: none; align-items: stretch; justify-content: center;
+      padding: calc(18px + var(--safe-top)) calc(16px + var(--safe-right)) calc(18px + var(--safe-bottom)) calc(16px + var(--safe-left));
+      background: linear-gradient(145deg, #07111f 0%, #123a64 52%, #dbeafe 100%);
+      color: #0b1220; z-index: 45; overflow-y: auto; -webkit-overflow-scrolling: touch;
+    }
+    .offline-editor-screen.active { display: flex; }
+    .editor-card {
+      width: min(920px, 100%); max-height: calc(100dvh - 36px - var(--safe-top) - var(--safe-bottom)); overflow-y: auto;
+      border-radius: 24px; padding: 18px; background: rgba(255,255,255,.94); border: 1px solid rgba(255,255,255,.55);
+      box-shadow: 0 24px 70px rgba(0,0,0,.32); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+    }
+    .editor-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
+    .editor-head h2 { margin: 0 0 5px; font-size: clamp(24px, 3.6vw, 34px); line-height: 1.05; color: var(--fsd-blue-dark); }
+    .editor-note { margin: 0; color: #475569; font-size: 14px; line-height: 1.35; font-weight: 650; }
+    .editor-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+    .editor-wide, .editor-section-title { grid-column: 1 / -1; }
+    .editor-field { display: grid; gap: 4px; }
+    .editor-field label { font-size: 12px; line-height: 1.1; color: #475569; font-weight: 900; letter-spacing: .03em; text-transform: uppercase; }
+    .editor-field input, .editor-field textarea, .editor-field select {
+      width: 100%; min-height: 42px; border: 1px solid #cbd5e1; border-radius: 12px; padding: 9px 10px;
+      font: inherit; font-size: 16px; color: #0f172a; background: #ffffff; outline: none;
+    }
+    .editor-field textarea { min-height: 74px; resize: vertical; }
+    .editor-section-title { margin: 10px 0 0; padding: 9px 11px; border-radius: 12px; background: #e0f2fe; color: #0f172a; font-weight: 950; letter-spacing: .03em; }
+
+
+    .editor-photo-preview { min-height: 110px; border: 1px dashed rgba(148,163,184,.75); border-radius: 16px; background: rgba(15,23,42,.04); padding: 10px; display:flex; align-items:center; justify-content:center; color:#64748b; font-size:13px; overflow:hidden; }
+    .editor-photo-preview img { max-width:100%; max-height:180px; border-radius:12px; object-fit:contain; display:block; }
+    .sfa-local-note { grid-column: 1 / -1; padding: 10px 12px; border-radius: 14px; background: #fff7ed; color: #7c2d12; border: 1px solid #fed7aa; font-weight: 850; font-size: 13px; line-height: 1.35; }
+    .editor-materials { grid-column: 1 / -1; display: grid; gap: 8px; }
+    .lookup-mini-row { grid-column: 1 / -1; display:flex; gap:8px; flex-wrap:wrap; align-items:flex-end; padding:10px; border:1px solid #fee2e2; background:#fff7f7; border-radius:14px; }
+    .lookup-mini-row .editor-field { min-width:240px; flex:1; }
+    .lookup-mini-row .editor-mini-btn { width:auto; min-width:160px; }
+    .lookup-hint { grid-column:1 / -1; color:#6b7280; font-size:13px; font-weight:700; }
+
+    .nested-editor-grid { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+    .sfa-table-wrap { grid-column: 1 / -1; overflow-x: auto; border: 1px solid #e2e8f0; border-radius: 14px; background: #fff; }
+    table.sfa-equip-table { width: 100%; min-width: 920px; border-collapse: collapse; font-size: 13px; }
+    table.sfa-equip-table th { background: #b91c1c; color: #fff; padding: 8px; text-align: left; }
+    table.sfa-equip-table td { border-bottom: 1px solid #e5e7eb; padding: 6px; vertical-align: middle; }
+    table.sfa-equip-table input, table.sfa-equip-table select { margin-top: 0; padding: 8px; font-size: 14px; }
+    .sfa-payload-preview { grid-column: 1 / -1; display: grid; gap: 8px; padding: 12px; border-radius: 14px; border: 1px solid #bfdbfe; background: #eff6ff; }
+    .sfa-payload-preview textarea { width: 100%; min-height: 220px; border: 1px solid #93c5fd; border-radius: 12px; padding: 10px; font: 12px/1.45 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; color: #0f172a; background: #fff; }
+    .sfa-payload-preview-note { margin: 0; color: #1e3a8a; font-size: 13px; font-weight: 850; line-height: 1.35; }
+    .hidden-report-fields { display: none !important; }
+
+    .editor-material-row { display: grid; grid-template-columns: 74px minmax(0, 1fr) 96px 96px 44px; gap: 8px; align-items: end; padding: 10px; border-radius: 14px; background: #f8fafc; border: 1px solid #e2e8f0; }
+    .editor-actions { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-top: 14px; }
+    .editor-actions .button { min-height: 56px; padding: 10px; font-size: 16px; border-radius: 16px; }
+    .editor-status { min-height: 22px; margin-top: 10px; color: #0f5faa; font-size: 14px; font-weight: 850; }
+
+
+    .editor-pill-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-top: 8px; }
+    .net-badge, .dirty-badge {
+      display: inline-flex; align-items: center; gap: 6px; padding: 7px 10px; border-radius: 999px;
+      font-size: 12px; font-weight: 950; letter-spacing: .03em; text-transform: uppercase;
+      background: #e2e8f0; color: #0f172a; border: 1px solid #cbd5e1;
+    }
+    .net-badge.online { background: #dcfce7; color: #14532d; border-color: #86efac; }
+    .net-badge.offline { background: #fee2e2; color: #7f1d1d; border-color: #fecaca; }
+    .dirty-badge { background: #fef3c7; color: #78350f; border-color: #fcd34d; }
+    .dirty-badge.saved { background: #e0f2fe; color: #075985; border-color: #7dd3fc; }
+    .editor-quick-row { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 8px; margin-top: -2px; }
+    .editor-mini-btn {
+      min-height: 38px; padding: 8px 12px; border-radius: 12px; border: 1px solid #cbd5e1;
+      background: #f8fafc; color: #0f172a; font: inherit; font-size: 14px; font-weight: 900; cursor: pointer;
+    }
+    .editor-mini-btn:active { transform: scale(.98); }
+    .editor-summary {
+      grid-column: 1 / -1; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px;
+      padding: 10px; border-radius: 16px; background: #f8fafc; border: 1px solid #e2e8f0;
+    }
+    .editor-summary div { padding: 10px; border-radius: 12px; background: #ffffff; border: 1px solid #e2e8f0; }
+    .editor-summary span { display: block; color: #64748b; font-size: 11px; font-weight: 950; text-transform: uppercase; letter-spacing: .04em; }
+    .editor-summary strong { display: block; margin-top: 4px; font-size: 20px; color: #0f172a; }
+    .editor-actions {
+      position: sticky; bottom: 0; padding-top: 10px; padding-bottom: 2px;
+      background: linear-gradient(180deg, rgba(255,255,255,0), rgba(255,255,255,.94) 24%, rgba(255,255,255,.96));
+    }
+    .editor-material-row .remove-material { min-height:42px;font-size:18px;padding:6px; }
+
+    @media (max-width: 720px) {
+      .editor-grid { grid-template-columns: 1fr; }
+      .editor-material-row { grid-template-columns: 1fr; }
+      .nested-editor-grid { grid-template-columns: 1fr; }
+      .editor-actions { grid-template-columns: 1fr; }
+    }
+
+
+
+    @media (max-height: 760px) {
+      .home { padding: calc(10px + var(--safe-top)) calc(14px + var(--safe-right)) calc(12px + var(--safe-bottom)) calc(14px + var(--safe-left)); }
+      .home-card { padding: 16px 18px; border-radius: 26px; }
+      .brand-row { margin-bottom: 12px; }
+      .brand-logo { width: 48px; height: 48px; border-radius: 14px; }
+      .brand-name { font-size: 21px; }
+      .brand-name small { font-size: 12px; }
+      .company-name { font-size: 22px; }
+      h1 { font-size: clamp(30px, 5vw, 42px); }
+      .subtitle { margin: 10px auto 14px; font-size: clamp(16px, 2.5vw, 20px); line-height: 1.25; }
+      .button, button.button { min-height: 96px; padding: 11px 10px; gap: 6px; font-size: clamp(18px, 2.9vw, 24px); border-radius: 20px; }
+      .button .tile-icon { font-size: 28px; }
+      .maker-mark { margin-top: 12px; font-size: 12px; }
+      .shell-version-badge { margin-top: 3px; font-size: 12px; padding: 4px 8px; }
+    }
+
+    @media (max-width: 620px) {
+      .home { padding: calc(16px + var(--safe-top)) calc(14px + var(--safe-right)) calc(18px + var(--safe-bottom)) calc(14px + var(--safe-left)); }
+      .home-card { padding: 20px 18px 18px; border-radius: 28px; }
+      .brand-logo { width: 54px; height: 54px; border-radius: 15px; }
+      .brand-name { font-size: 22px; } .brand-name small { font-size: 14px; }
+      .company-name { font-size: 21px; }
+      .actions { gap: 12px; }
+      .button, button.button { min-height: 128px; border-radius: 22px; font-size: 25px; letter-spacing: .04em; }
+      .button .tile-icon { font-size: 36px; }
+      .maker-mark { margin-top: 22px; }
+    }
+
+    /* V6.3c62 - colourful real app-icon home screen */
+    .ipad-home {
+      display: block;
+      z-index: 30;
+      color: #ffffff;
+      background: #111827;
+      padding: calc(18px + var(--safe-top)) calc(18px + var(--safe-right)) calc(22px + var(--safe-bottom)) calc(18px + var(--safe-left));
+      transition: opacity .18s ease, transform .18s ease, visibility .18s ease;
+    }
+    .ipad-wallpaper {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 16% 18%, rgba(255,255,255,.34), transparent 18%),
+        radial-gradient(circle at 88% 12%, rgba(96,165,250,.32), transparent 24%),
+        radial-gradient(circle at 78% 78%, rgba(251,191,36,.24), transparent 26%),
+        linear-gradient(135deg, #ecf5ff 0%, #d9e8f8 34%, #c9d9eb 60%, #eef2f7 100%);
+    }
+    .ipad-wallpaper::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(15,23,42,.08), rgba(15,23,42,.16));
+      backdrop-filter: blur(0px);
+    }
+    .ipad-statusbar {
+      position: relative;
+      z-index: 2;
+      height: 34px;
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      color: rgba(15,23,42,.78);
+      font-size: 13px;
+      font-weight: 900;
+      letter-spacing: .02em;
+      text-shadow: 0 1px 0 rgba(255,255,255,.30);
+    }
+    .status-centre { color: rgba(15,23,42,.92); }
+    .status-right { justify-self: end; color: #166534; }
+    .ipad-home-grid {
+      position: relative;
+      z-index: 2;
+      width: min(900px, 100%);
+      margin: 12px auto 0;
+      display: grid;
+      gap: 26px;
+    }
+    .ipad-title-block {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      padding: 10px 8px 4px;
+      color: #111827;
+    }
+    .ipad-brand-logo {
+      width: 76px;
+      height: 76px;
+      object-fit: cover;
+      border-radius: 22px;
+      box-shadow: 0 20px 40px rgba(15,23,42,.18), 0 0 0 1px rgba(255,255,255,.65);
+    }
+    .ipad-brand-kicker {
+      margin-bottom: 2px;
+      color: rgba(15,23,42,.66);
+      font-size: 12px;
+      font-weight: 950;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+    }
+    .ipad-title-block h1 {
+      margin: 0;
+      color: #111827;
+      font-size: clamp(42px, 7vw, 72px);
+      line-height: .92;
+      letter-spacing: -0.06em;
+      font-weight: 950;
+      text-shadow: 0 1px 0 rgba(255,255,255,.35);
+    }
+    .ipad-title-block p {
+      margin: 8px 0 0;
+      color: rgba(15,23,42,.72);
+      font-size: 17px;
+      font-weight: 750;
+    }
+    .app-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 22px 26px;
+      padding: 4px 8px 110px;
+    }
+    .app-icon {
+      border: 0;
+      background: transparent;
+      color: #111827;
+      font: inherit;
+      display: grid;
+      place-items: center;
+      gap: 10px;
+      min-height: 128px;
+      padding: 8px 4px;
+      cursor: pointer;
+      touch-action: manipulation;
+      will-change: transform;
+    }
+    .app-icon:active { transform: scale(.94); }
+    .icon-square {
+      width: 82px;
+      height: 82px;
+      border-radius: 23px;
+      display: grid;
+      place-items: center;
+      font-size: 38px;
+      color: #fff;
+      box-shadow: 0 16px 28px rgba(15,23,42,.20), inset 0 1px 0 rgba(255,255,255,.35);
+      overflow: hidden;
+      position: relative;
+    }
+    .icon-square::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(255,255,255,.34), transparent 42%, rgba(0,0,0,.08));
+      pointer-events: none;
+    }
+    .icon-square span { position: relative; z-index: 1; filter: drop-shadow(0 3px 5px rgba(0,0,0,.20)); }
+    .app-icon strong {
+      color: #111827;
+      font-size: 14px;
+      line-height: 1.12;
+      font-weight: 900;
+      text-align: center;
+      text-shadow: 0 1px 0 rgba(255,255,255,.35);
+    }
+    .app-icon.certs .icon-square { background: linear-gradient(145deg, #111827, #334155); }
+    .app-icon.drafts .icon-square { background: linear-gradient(145deg, #0f766e, #14b8a6); }
+    .app-icon.schedule .icon-square { background: linear-gradient(145deg, #2563eb, #60a5fa); }
+    .app-icon.callouts .icon-square { background: linear-gradient(145deg, #f59e0b, #fb7185); }
+    .app-icon.cloud .icon-square { background: linear-gradient(145deg, #6366f1, #a78bfa); }
+    .app-icon.admin .icon-square { background: linear-gradient(145deg, #475569, #94a3b8); }
+    .ipad-dock {
+      position: absolute;
+      z-index: 3;
+      left: 50%;
+      bottom: calc(26px + var(--safe-bottom));
+      transform: translateX(-50%);
+      width: min(520px, calc(100% - 36px - var(--safe-left) - var(--safe-right)));
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      padding: 12px;
+      border-radius: 32px;
+      background: rgba(255,255,255,.42);
+      border: 1px solid rgba(255,255,255,.62);
+      box-shadow: 0 18px 46px rgba(15,23,42,.18);
+      backdrop-filter: blur(20px) saturate(150%);
+      -webkit-backdrop-filter: blur(20px) saturate(150%);
+    }
+    .dock-app {
+      border: 0;
+      border-radius: 22px;
+      min-height: 72px;
+      background: rgba(255,255,255,.72);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      color: #111827;
+      font: inherit;
+      font-weight: 950;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.55);
+      cursor: pointer;
+      touch-action: manipulation;
+    }
+    .dock-app span { font-size: 26px; }
+    .dock-app strong { font-size: 13px; }
+    .dock-app:active { transform: scale(.96); }
+    .ipad-footer {
+      position: absolute;
+      z-index: 3;
+      left: calc(18px + var(--safe-left));
+      right: calc(18px + var(--safe-right));
+      bottom: calc(6px + var(--safe-bottom));
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      color: rgba(15,23,42,.56);
+      font-size: 10px;
+      font-weight: 900;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      pointer-events: none;
+    }
+    @media (max-height: 740px) {
+      .ipad-title-block { padding-top: 0; }
+      .ipad-brand-logo { width: 60px; height: 60px; border-radius: 18px; }
+      .ipad-title-block h1 { font-size: clamp(34px, 6vw, 52px); }
+      .app-grid { gap: 12px 18px; padding-bottom: 92px; }
+      .icon-square { width: 68px; height: 68px; border-radius: 20px; font-size: 31px; }
+      .app-icon { min-height: 104px; gap: 8px; }
+      .dock-app { min-height: 58px; }
+    }
+    @media (max-width: 680px) {
+      .app-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; padding-bottom: 112px; }
+      .ipad-statusbar { grid-template-columns: 1fr auto; }
+      .status-centre { display: none; }
+      .ipad-title-block h1 { font-size: 42px; }
+      .icon-square { width: 74px; height: 74px; }
+    }
+
+
+    /* V6.3c62 - Option C: colourful real app icon style */
+    .ipad-home {
+      color: #ffffff;
+      background: #0b1020;
+      padding: calc(16px + var(--safe-top)) calc(18px + var(--safe-right)) calc(22px + var(--safe-bottom)) calc(18px + var(--safe-left));
+    }
+    .ipad-wallpaper {
+      background:
+        radial-gradient(circle at 16% 12%, rgba(34,211,238,.45), transparent 22%),
+        radial-gradient(circle at 86% 14%, rgba(168,85,247,.42), transparent 24%),
+        radial-gradient(circle at 70% 82%, rgba(251,191,36,.40), transparent 25%),
+        radial-gradient(circle at 20% 84%, rgba(244,63,94,.38), transparent 26%),
+        linear-gradient(135deg, #0f172a 0%, #1e3a8a 38%, #7c3aed 72%, #f8fafc 100%);
+    }
+    .ipad-wallpaper::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image:
+        radial-gradient(circle at 20px 20px, rgba(255,255,255,.22) 0 2px, transparent 3px),
+        radial-gradient(circle at 75px 70px, rgba(255,255,255,.14) 0 2px, transparent 3px);
+      background-size: 110px 110px;
+      opacity: .42;
+      pointer-events: none;
+    }
+    .ipad-wallpaper::after {
+      background: linear-gradient(180deg, rgba(2,6,23,.10), rgba(2,6,23,.28));
+      backdrop-filter: blur(0px);
+    }
+    .ipad-statusbar {
+      color: rgba(255,255,255,.90);
+      text-shadow: 0 2px 8px rgba(0,0,0,.26);
+    }
+    .status-centre { color: rgba(255,255,255,.94); }
+    .status-right { color: #bbf7d0; }
+    .ipad-home-grid { width: min(940px, 100%); gap: 22px; }
+    .ipad-title-block {
+      color: #ffffff;
+      padding: 12px 10px 2px;
+      text-shadow: 0 3px 16px rgba(0,0,0,.28);
+    }
+    .ipad-brand-logo {
+      border-radius: 26px;
+      box-shadow: 0 22px 42px rgba(0,0,0,.26), 0 0 0 1px rgba(255,255,255,.45), inset 0 1px 0 rgba(255,255,255,.35);
+    }
+    .ipad-brand-kicker { color: rgba(255,255,255,.78); }
+    .ipad-title-block h1 {
+      color: #ffffff;
+      letter-spacing: -.055em;
+      text-shadow: 0 6px 24px rgba(0,0,0,.30);
+    }
+    .ipad-title-block p { color: rgba(255,255,255,.82); }
+    .app-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 20px 26px;
+      padding: 4px 8px 116px;
+    }
+    .app-icon {
+      min-height: 134px;
+      color: #ffffff;
+      gap: 10px;
+      border-radius: 26px;
+    }
+    .app-icon strong {
+      color: #ffffff;
+      font-size: 14px;
+      text-shadow: 0 2px 10px rgba(0,0,0,.32);
+      letter-spacing: .01em;
+    }
+    .icon-square {
+      width: 86px;
+      height: 86px;
+      border-radius: 25px;
+      font-size: 40px;
+      box-shadow:
+        0 18px 34px rgba(2,6,23,.34),
+        0 0 0 1px rgba(255,255,255,.22),
+        inset 0 1px 0 rgba(255,255,255,.44),
+        inset 0 -10px 24px rgba(0,0,0,.10);
+    }
+    .icon-square::before {
+      content: "";
+      position: absolute;
+      left: 12%; right: 12%; top: 9%; height: 30%;
+      border-radius: 999px;
+      background: linear-gradient(180deg, rgba(255,255,255,.52), rgba(255,255,255,.08));
+      filter: blur(.2px);
+      pointer-events: none;
+      z-index: 1;
+    }
+    .icon-square::after {
+      background:
+        radial-gradient(circle at 32% 20%, rgba(255,255,255,.48), transparent 20%),
+        linear-gradient(180deg, rgba(255,255,255,.18), transparent 42%, rgba(0,0,0,.16));
+    }
+    .icon-square span { z-index: 2; filter: drop-shadow(0 4px 7px rgba(0,0,0,.24)); }
+
+    .app-logo-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: inherit;
+      display: block;
+      position: relative;
+      z-index: 2;
+      filter: none;
+    }
+    .app-icon.certs .icon-square {
+      background: #0b0f16;
+      padding: 0;
+      overflow: hidden;
+    }
+    .app-icon.certs .icon-square::before,
+    .app-icon.certs .icon-square::after {
+      display: none;
+    }
+
+    .app-icon.certs .icon-square { background: linear-gradient(145deg, #111827 0%, #0ea5e9 58%, #38bdf8 100%); }
+    .app-icon.drafts .icon-square { background: linear-gradient(145deg, #064e3b 0%, #10b981 54%, #a7f3d0 100%); }
+    .app-icon.schedule .icon-square { background: linear-gradient(145deg, #1d4ed8 0%, #6366f1 50%, #c084fc 100%); }
+    .app-icon.callouts .icon-square { background: linear-gradient(145deg, #b45309 0%, #f97316 45%, #fb7185 100%); }
+    .app-icon.cloud .icon-square { background: linear-gradient(145deg, #4338ca 0%, #8b5cf6 54%, #f0abfc 100%); }
+    .app-icon.admin .icon-square { background: linear-gradient(145deg, #334155 0%, #64748b 55%, #cbd5e1 100%); }
+    .ipad-dock {
+      width: min(560px, calc(100% - 36px - var(--safe-left) - var(--safe-right)));
+      background: rgba(255,255,255,.24);
+      border: 1px solid rgba(255,255,255,.42);
+      box-shadow: 0 24px 62px rgba(2,6,23,.28), inset 0 1px 0 rgba(255,255,255,.22);
+    }
+    .dock-app {
+      min-height: 76px;
+      background: rgba(255,255,255,.28);
+      color: #ffffff;
+      border: 1px solid rgba(255,255,255,.20);
+      text-shadow: 0 2px 9px rgba(0,0,0,.25);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.30), 0 8px 18px rgba(2,6,23,.16);
+    }
+    .dock-app span {
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      border-radius: 13px;
+      background: linear-gradient(145deg, #111827, #0ea5e9);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.32), 0 8px 18px rgba(0,0,0,.18);
+    }
+    .dock-app.drafts span { background: linear-gradient(145deg, #065f46, #10b981); }
+
+    .dock-app.certs span {
+      background: #0b0f16;
+      padding: 0;
+      overflow: hidden;
+    }
+    .dock-app.certs span img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: inherit;
+      display: block;
+    }
+
+    .dock-app.schedule span { background: linear-gradient(145deg, #1d4ed8, #a855f7); }
+    .ipad-footer { color: rgba(255,255,255,.62); text-shadow: 0 2px 8px rgba(0,0,0,.22); }
+    @media (max-height: 740px) {
+      .icon-square { width: 70px; height: 70px; border-radius: 21px; font-size: 32px; }
+      .app-icon { min-height: 108px; }
+      .dock-app { min-height: 60px; }
+      .dock-app span { width: 34px; height: 34px; border-radius: 11px; font-size: 22px; }
+    }
+    @media (max-width: 680px) {
+      .app-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .ipad-title-block { gap: 14px; }
+    }
+
+  
+    .offline-signature-panel { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: 8px; }
+    .offline-signature-box { background:#fff; border:1px solid #e5e7eb; border-radius:16px; padding:12px; }
+    .offline-signature-box label { display:block; margin-bottom:8px; font-weight:900; color:#111827; }
+    .offline-signature-canvas { width:100%; height:145px; border:2px dashed #b91c1c; border-radius:14px; background:#fff; touch-action:none; display:block; }
+    .offline-signature-actions { display:flex; gap:8px; margin-top:8px; }
+    @media (max-width: 760px) { .offline-signature-panel { grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+  <!--
+    Fire Safety Direct - FSD Certs V6.3c74w ESR Offline-First Beta Lookup Pickers
+    Colourful iPad app-icon shell with new black/gold FSD logo.
+    App shell mark: Jared720 Labs
+  -->
+
+  <section id="home" class="screen home ipad-home" aria-label="FSD Certs Home Screen">
+    <div class="ipad-wallpaper" aria-hidden="true"></div>
+    <header class="ipad-statusbar">
+      <div class="status-left">FSD Certs</div>
+      <div class="status-centre">Fire Safety Direct</div>
+      <div class="status-right">● Ready</div>
+    </header>
+
+    <main class="ipad-home-grid" aria-label="FSD Certs apps">
+      <section class="ipad-title-block">
+        <img class="ipad-brand-logo" src="fsd-certs-logo.png" alt="FSD Certs cloud logo" width="76" height="76" decoding="async" fetchpriority="high">
+        <div>
+          <div class="ipad-brand-kicker">Fire Safety Direct</div>
+          <h1>FSD Certs</h1>
+          <p>Choose an app to start work.</p>
+        </div>
+      </section>
+
+      <section class="app-grid" aria-label="Main apps">
+        <button class="app-icon certs" type="button" onclick="openCerts(event)" aria-label="Open Certificate Portal">
+          <span class="icon-square"><img class="app-logo-img" src="fsd-certs-logo.png" alt="" width="86" height="86" decoding="async"></span>
+          <strong>Certificate<br>Portal</strong>
+        </button>
+
+        <button class="app-icon drafts" type="button" onclick="openOfflineDrafts(event)" aria-label="Open Offline Certs and Reports">
+          <span class="icon-square"><span>▣</span></span>
+          <strong>Offline Certs<br>& Reports</strong>
+        </button>
+
+        <button class="app-icon certs" type="button" onclick="startEsrOfflineFirstBeta(event)" aria-label="Start ESR Offline First Beta">
+          <span class="icon-square"><span>🧪</span></span>
+          <strong>ESR Offline<br>Beta</strong>
+        </button>
+
+        <button class="app-icon schedule" type="button" onclick="openSchedule(event)" aria-label="Open FSD Schedule">
+          <span class="icon-square"><span>📅</span></span>
+          <strong>FSD<br>Schedule</strong>
+        </button>
+
+        <button class="app-icon callouts" type="button" onclick="openCallouts(event)" aria-label="Open Callouts">
+          <span class="icon-square"><span>⚡</span></span>
+          <strong>Callouts</strong>
+        </button>
+
+        <button class="app-icon cloud" type="button" onclick="openCloudDrafts(event)" aria-label="Open Cloud Drafts">
+          <span class="icon-square"><span>☁</span></span>
+          <strong>Cloud<br>Drafts</strong>
+        </button>
+
+        <button class="app-icon admin" type="button" onclick="openCerts(event)" aria-label="Open Submitted Reports via Certificate Portal">
+          <span class="icon-square"><span>📂</span></span>
+          <strong>Submitted<br>Reports</strong>
+        </button>
+      </section>
+    </main>
+
+    <nav class="ipad-dock" aria-label="Dock">
+      <button class="dock-app certs" type="button" onclick="openCerts(event)"><span><img src="fsd-certs-logo.png" alt="" width="42" height="42" decoding="async"></span><strong>Portal</strong></button>
+      <button class="dock-app drafts" type="button" onclick="openOfflineDrafts(event)"><span>▣</span><strong>Offline</strong></button>
+      <button class="dock-app schedule" type="button" onclick="openSchedule(event)"><span>📅</span><strong>Schedule</strong></button>
+    </nav>
+
+    <footer class="ipad-footer">
+      <span>Jared720 Labs</span>
+      <span>App Shell V6.3c74u · ESR offline-first beta route</span>
+    </footer>
+  </section>
+
+  <section id="offlineDrafts" class="screen offline-screen" aria-label="Offline Drafts">
+    <main class="offline-card">
+      <h2 class="offline-title">Offline Certs &amp; Reports</h2>
+      <p class="offline-help">Certificate/report drafts saved without signal live on this iPad until they are synced to the FSD cloud Draft Manager.</p>
+      <p class="offline-help"><strong>ESR Offline-First Beta V6.3c74w:</strong> This is a safe test route only. It uses the fast GitHub/offline editor for ESR/W so we can test signatures, materials, totals and sync without replacing the normal live ESR report.</p>
+      <div id="offlineList" class="offline-list"></div>
+      <div class="actions">
+        <button class="button" type="button" onclick="startEsrOfflineFirstBeta(event)"><span class="tile-icon">🧪</span><span>Start ESR Offline-First Beta</span></button>
+        <button class="button secondary" type="button" onclick="startNewOfflineW(event)"><span class="tile-icon">📝</span><span>Start Offline Engineer Service Report</span></button>
+        <button class="button secondary" type="button" onclick="startNewOfflineSfaTrial(event)"><span class="tile-icon">🔥</span><span>Start Offline SFA</span></button>
+        <button class="button secondary" type="button" onclick="startNewOfflineSelTrial(event)"><span class="tile-icon">💡</span><span>Start Offline SEL</span></button>
+        <button class="button secondary" type="button" onclick="refreshOfflineDrafts(event)"><span class="tile-icon">🔄</span><span>Refresh Offline Reports</span></button>
+        <button class="button third" type="button" onclick="closeOfflineDrafts(event)"><span class="tile-icon">↩️</span><span>Back to Menu</span></button>
+      </div>
+      <div id="offlineStatus" class="offline-status"></div>
+      <div class="maker-mark">Jared720 Labs</div>
+    </main>
+  </section>
+
+
+
+  <section id="offlineEditor" class="screen offline-editor-screen" aria-label="Edit Offline Report Draft">
+    <main class="editor-card">
+      <div class="editor-head">
+        <div>
+          <h2 id="offlineEditorTitle">Edit Offline Report Draft</h2>
+          <p id="offlineEditorNote" class="editor-note">This is the local iPad editor. Engineer Service Reports can sync to Cloud Drafts. SFA is currently local save/resume only.</p>
+          <div class="editor-pill-row">
+            <span id="editorNetBadge" class="net-badge">Checking signal</span>
+            <span id="editorDirtyBadge" class="dirty-badge saved">Saved offline</span>
+          </div>
+        </div>
+        <button class="mini-home" style="position:static;" type="button" onclick="closeOfflineEditor(event)">Back</button>
+      </div>
+      <form id="offlineWEditorForm" onsubmit="saveOfflineEditor(event)">
+        <div class="editor-grid">
+          <input type="hidden" id="editOfflineId">
+          <div class="editor-field editor-wide"><label>Draft name</label><input id="editDraftName"></div>
+          <div class="editor-quick-row">
+            <button class="editor-mini-btn" type="button" onclick="autoNameOfflineW(event)">Auto-name from customer/site</button>
+            <button class="editor-mini-btn" type="button" onclick="setCustomerDateToday(event)">Set customer date today</button>
+            <button id="editorMaterialQuickBtn" class="editor-mini-btn" type="button" onclick="addThreeMaterialRows(event)">Add 3 material rows</button>
+            <button id="editorSfaEquipmentQuickBtn" class="editor-mini-btn" type="button" onclick="addCommonSfaEquipmentRows(event)">Add SFA equipment checked rows</button>
+            <button id="editorSfaPayloadPreviewBtn" class="editor-mini-btn" type="button" onclick="previewSfaCloudPayload(event)">Preview SFA Cloud Payload</button>
+            <button id="editorLookupSyncBtn" class="editor-mini-btn" type="button" onclick="syncOfflineLookups(event)">Sync customer/material pickers</button>
+          </div>
+          <div class="lookup-mini-row">
+            <div class="editor-field"><label>Customer picker</label><input id="editCustomerLookup" list="fsdCustomerList" placeholder="Start typing customer / invoice address"></div>
+            <button class="editor-mini-btn" type="button" onclick="applyCustomerLookup(event)">Use Customer</button>
+            <div class="editor-field"><label>Site picker</label><input id="editSiteLookup" list="fsdSiteList" placeholder="Start typing site address"></div>
+            <button class="editor-mini-btn" type="button" onclick="applySiteLookup(event)">Use Site</button>
+            <div class="lookup-hint" id="lookupCacheStatus">Lookup pickers use the last synced customer/site/material data on this device.</div>
+          </div>
+          <datalist id="fsdCustomerList"></datalist>
+          <datalist id="fsdSiteList"></datalist>
+          <datalist id="fsdMaterialList"></datalist>
+          <div class="editor-field"><label>Engineer</label><input id="editEngineer"></div>
+          <div class="editor-field"><label>Service date</label><input id="editServiceDate" type="date"></div>
+          <div class="editor-field editor-wide"><label>Customer / Invoice address</label><textarea id="editCustomer"></textarea></div>
+          <div class="editor-field editor-wide"><label>Site address</label><textarea id="editSite"></textarea></div>
+          <div id="sfaOfflineFields" class="nested-editor-grid hidden-report-fields">
+            <div class="editor-section-title">SFA fire alarm report details</div>
+            <div class="sfa-local-note">SFA offline follows the online Fire Alarm Service Report shape. Save locally, sync to Cloud Drafts, then open from Cloud Drafts and use the normal online Create Combined PDF Pack button for the V6.3c72 PDF test.</div>
+            <div class="editor-field"><label>Sage account no.</label><input id="editSfaSageAccountNo"></div>
+            <div class="editor-field"><label>Contract ID No.</label><input id="editSfaContractId"></div>
+            <div class="editor-field"><label>Order No.</label><input id="editSfaOrderNo"></div>
+            <div class="editor-field"><label>Asbestos Report Available</label><select id="editSfaAsbestosAvailable"><option value="NO">NO</option><option value="YES">YES</option></select></div>
+            <div class="editor-field"><label>Last Service Visit</label><input id="editSfaLastServiceVisit" placeholder="e.g. May 2026"></div>
+            <div class="editor-field"><label>Next Service Visit</label><input id="editSfaNextServiceVisit" placeholder="e.g. Nov 2026"></div>
+            <div class="editor-field"><label>Fire Alarm Service Visit</label><select id="editSfaServiceVisit"><option>Annual</option><option>Bi-Annual</option><option>Quarterly</option><option>Weekly</option></select></div>
+            <div class="editor-field"><label>BAFE Certificate of Compliance</label><select id="editSfaBafeCompliance"><option value="NO">NO</option><option value="YES">YES</option></select></div>
+            <div class="editor-section-title">Fire Alarm Equipment List / Checked on Inspection</div>
+            <div class="sfa-local-note">This matches the online SFA table style: Equipment List, Total, Tested, Passed, Failed, Checked on Inspection and Result.</div>
+            <div class="sfa-table-wrap">
+              <table class="sfa-equip-table">
+                <thead>
+                  <tr>
+                    <th>Equipment List</th><th>Total</th><th>Tested</th><th>Passed</th><th>Failed</th><th>Checked on Inspection</th><th>Result</th>
+                  </tr>
+                </thead>
+                <tbody id="sfaEquipmentList"></tbody>
+              </table>
+            </div>
+            <div class="editor-field"><label>Save updated equipment totals back to this site?</label><select id="editSaveFaEquipmentTotals"><option value="NO">NO - do not update saved site equipment</option><option value="YES">YES - update saved totals for this site</option></select></div>
+            <div class="editor-section-title">Existing Battery Test Readings / Battery Calculations / Compliance</div>
+            <div class="editor-field"><label>Existing Battery Size (A/H)</label><input id="editFaExistingBatterySize" placeholder="e.g. 7Ah"></div>
+            <div class="editor-field"><label>Battery Date</label><input id="editFaBatteryDate" placeholder="e.g. 2025"></div>
+            <div class="editor-field"><label>False Alarms in Last 12 Months</label><input id="editFaFalseAlarms12Months" type="number" inputmode="numeric"></div>
+            <div class="editor-field"><label>Battery Voltage Reading</label><input id="editFaBatteryVoltageReading" placeholder="e.g. 24.6V"></div>
+            <div class="editor-field"><label>Quiescent Current</label><input id="editFaQuiescentCurrent" placeholder="e.g. 0.12A"></div>
+            <div class="editor-field"><label>Alarm Current</label><input id="editFaAlarmCurrent" placeholder="e.g. 0.65A"></div>
+            <div class="editor-field"><label>Charger Voltage</label><input id="editFaChargerVoltage" placeholder="e.g. 27.4V"></div>
+            <div class="editor-field"><label>Standby Time</label><input id="editFaStandbyTime" placeholder="e.g. 24 hrs"></div>
+            <div class="editor-field"><label>Battery Required</label><input id="editFaBatteryRequired" placeholder="e.g. 7Ah"></div>
+            <div class="editor-field"><label>System Operating Voltage</label><input id="editFaSystemOperatingVoltage" placeholder="e.g. 24V"></div>
+            <div class="editor-field"><label>False Alarms per 100 Detectors</label><input id="editFaFalseAlarmsPer100" placeholder="0 / N/A"></div>
+            <div class="editor-field"><label>Major Non-Compliance to BS5839-1:2017 Clause 46.2</label><select id="editFaMajorNonCompliance"><option value="NO">NO</option><option value="YES">YES</option></select></div>
+            <div class="editor-field editor-wide"><label>Fire Alarm Work Carried Out</label><textarea id="editFaWorkCarriedOut" rows="4"></textarea></div>
+            <div class="editor-field editor-wide"><label>Fire Alarm Non-Compliance / Recommendations</label><textarea id="editFaNonCompliance" rows="4"></textarea></div>
+            <div class="editor-field"><label>Fire Alarm Reason Code</label><input id="editFaReason" placeholder="NC / REC / notes"></div>
+            <div class="editor-section-title">Panel / System Photo</div>
+            <div class="editor-field">
+              <label>Panel photo at time of inspection</label>
+              <input id="editSfaPanelPhoto" type="file" accept="image/*">
+            </div>
+            <div class="editor-field">
+              <label>Photo Preview</label>
+              <div id="editSfaPanelPhotoPreview" class="editor-photo-preview">No photo selected</div>
+              <button class="editor-mini-btn" type="button" onclick="clearOfflineSfaPanelPhoto(event)">Clear Photo</button>
+            </div>
+            <div class="sfa-local-note editor-wide">Optional but recommended. This photo syncs to the cloud draft and prints in the photo box on the SFA PDF.</div>
+            <div class="editor-section-title">Fire Alarm Costs</div>
+            <div class="editor-field"><label>FA Service Cost</label><input id="editFaServiceCost" type="number" step="0.01" value="0.00"></div>
+            <div class="editor-field"><label>FA Remedial Material Cost</label><input id="editFaMaterialCost" type="number" step="0.01" value="0.00"></div>
+            <div class="editor-field"><label>FA Remedial Labour Cost</label><input id="editFaLabourCost" type="number" step="0.01" value="0.00"></div>
+            <div class="editor-section-title">Totals</div>
+            <div class="editor-field"><label>Sub Total</label><input id="editSfaSubTotal" type="number" step="0.01" value="0.00"></div>
+            <div class="editor-field"><label>VAT @ 20%</label><input id="editSfaVat" type="number" step="0.01" value="0.00"></div>
+            <div class="editor-field"><label>Total</label><input id="editSfaTotal" type="number" step="0.01" value="0.00"></div>
+            <div class="editor-field"><label>Outstanding work / Quick Quote ref</label><input id="editFaQuickQuoteRequired" placeholder="e.g. QQ000123"></div>
+            <div class="editor-field"><label>Recommend detailed fire risk assessment</label><select id="editFaRiskAssessmentRecommended"><option value="NO">NO</option><option value="YES">YES</option></select></div>
+            <div class="editor-field"><label>Changes to report</label><select id="editFaChangesToReport"><option value="NO">NO</option><option value="YES">YES</option></select></div>
+            <div class="editor-field"><label>Tick Box if Non-Compliant</label><select id="editFaNonCompliantHeader"><option value="NO">NO - normal report</option><option value="YES">YES - show red Non-Compliant header</option></select></div>
+            <div id="sfaCloudPayloadPreview" class="sfa-payload-preview hidden-report-fields">
+              <div class="editor-section-title">SFA Cloud Payload Preview</div>
+              <p class="sfa-payload-preview-note">Preview only. This shows the data shape we will send to Apps Script later. It does not sync, create a PDF, or update Cloud Drafts.</p>
+              <textarea id="sfaCloudPayloadJson" readonly spellcheck="false"></textarea>
+            </div>
+          </div>
+
+          <div id="selOfflineFields" class="nested-editor-grid hidden-report-fields">
+            <div class="editor-section-title">SEL emergency lighting report details</div>
+            <div class="sfa-local-note">SEL offline follows the online Emergency Lighting Report shape. Save locally, sync to Cloud Drafts, then open from Cloud Drafts and use the normal online SEL PDF button.</div>
+            <div class="editor-field"><label>Sage Account No.</label><input id="editSelSageAccountNo"></div>
+            <div class="editor-field"><label>Contract ID No.</label><input id="editSelContractId"></div>
+            <div class="editor-field"><label>Asbestos Report Available</label><select id="editSelAsbestosAvailable"><option value="NO">NO</option><option value="YES">YES</option></select></div>
+            <div class="editor-field"><label>Inspection Type</label><select id="editSelServiceVisit"><option value="12 MONTHLY/3 HOUR">12 MONTHLY / 3 HOUR</option><option value="6 MONTHLY/1 HOUR">6 MONTHLY / 1 HOUR</option></select></div>
+            <div class="editor-field"><label>Last Service Visit</label><input id="editSelLastServiceVisit" placeholder="YYYY-MM or notes"></div>
+            <div class="editor-field"><label>Next Service Visit</label><input id="editSelNextServiceVisit" placeholder="YYYY-MM or notes"></div>
+            <div class="editor-section-title">Fittings / Quantities</div>
+            <div class="editor-field"><label>Total Number of Fittings</label><input id="editElTotalFittings" type="number" inputmode="numeric"></div>
+            <div class="editor-field"><label>No. Fittings Tested</label><input id="editElTested" type="number" inputmode="numeric"></div>
+            <div class="editor-field"><label>No. Fittings Passed</label><input id="editElPassed" type="number" inputmode="numeric"></div>
+            <div class="editor-field"><label>No. Fittings Failed</label><input id="editElFailed" type="number" inputmode="numeric"></div>
+            <div class="editor-field"><label>Reason Code</label><input id="editElReason" placeholder="NC / REC"></div>
+            <div class="editor-field"><label>Quick Quote Ref</label><input id="editElQuickQuoteRef" placeholder="e.g. QQ000123"></div>
+            <div class="editor-section-title">Emergency Lighting Type Quantities</div>
+            <div class="editor-field"><label>Bulkhead</label><input id="editElBulkhead" type="number" inputmode="numeric"></div>
+            <div class="editor-field"><label>Exit Signs</label><input id="editElExitSigns" type="number" inputmode="numeric"></div>
+            <div class="editor-field"><label>Round 2D / Round LED</label><input id="editElRound2d" type="number" inputmode="numeric"></div>
+            <div class="editor-field"><label>Fluorescent / LED</label><input id="editElFluorescentLed" type="number" inputmode="numeric"></div>
+            <div class="editor-field"><label>Twin Spots</label><input id="editElTwinSpots" type="number" inputmode="numeric"></div>
+            <div class="editor-field"><label>Spot Lights</label><input id="editElSpotLights" type="number" inputmode="numeric"></div>
+            <div class="editor-field"><label>Test Switches</label><input id="editElTestSwitches" type="number" inputmode="numeric"></div>
+            <div class="editor-field"><label>Central Battery</label><input id="editElCentralBattery" type="number" inputmode="numeric"></div>
+            <div class="editor-field"><label>Batteries</label><input id="editElBatteries" type="number" inputmode="numeric"></div>
+            <div class="editor-field"><label>Other</label><input id="editElOther" type="number" inputmode="numeric"></div>
+            <div class="editor-section-title">Emergency Lighting Inspection Checks</div>
+            <div class="editor-field"><label>Log book correct</label><select id="editElLogBookCorrect"><option>YES</option><option>NO</option><option>N/A</option></select></div>
+            <div class="editor-field"><label>Luminaires function</label><select id="editElLuminairesFunction"><option>YES</option><option>NO</option><option>N/A</option></select></div>
+            <div class="editor-field"><label>Drawings available</label><select id="editElDrawingsAvailable"><option>YES</option><option>NO</option><option>N/A</option></select></div>
+            <div class="editor-field"><label>Local circuit</label><select id="editElLocalCircuit"><option>YES</option><option>NO</option><option>N/A</option></select></div>
+            <div class="editor-field"><label>Test points present</label><select id="editElTestPointsPresent"><option>YES</option><option>NO</option><option>N/A</option></select></div>
+            <div class="editor-field"><label>Lamp batteries marked</label><select id="editElLampBatteriesMarked"><option>YES</option><option>NO</option><option>N/A</option></select></div>
+            <div class="editor-field"><label>Diffusers clean</label><select id="editElDiffusersClean"><option>YES</option><option>NO</option><option>N/A</option></select></div>
+            <div class="editor-field"><label>Satisfactory condition</label><select id="editElSatisfactoryCondition"><option>YES</option><option>NO</option><option>N/A</option></select></div>
+            <div class="editor-field"><label>Nominal voltage marked</label><select id="editElNominalVoltageMarked"><option>YES</option><option>NO</option><option>N/A</option></select></div>
+            <div class="editor-field"><label>Correct lamps</label><select id="editElCorrectLamps"><option>YES</option><option>NO</option><option>N/A</option></select></div>
+            <div class="editor-field"><label>Alterations / decor</label><select id="editElAlterationsDecor"><option>NO</option><option>YES</option><option>N/A</option></select></div>
+            <div class="editor-field"><label>Hazards covered</label><select id="editElHazardsCovered"><option>YES</option><option>NO</option><option>N/A</option></select></div>
+            <div class="editor-field"><label>Points of emphasis</label><select id="editElPointsOfEmphasis"><option>YES</option><option>NO</option><option>N/A</option></select></div>
+            <div class="editor-field"><label>Date installation recorded</label><select id="editElDateInstallationRecorded"><option>YES</option><option>NO</option><option>N/A</option></select></div>
+            <div class="editor-field"><label>Battery date visible</label><select id="editElBatteryDateVisible"><option>YES</option><option>NO</option><option>N/A</option></select></div>
+            <div class="editor-field"><label>Supplies normal</label><select id="editElSuppliesNormal"><option>YES</option><option>NO</option><option>N/A</option></select></div>
+            <div class="editor-field"><label>Charging restored</label><select id="editElChargingRestored"><option>YES</option><option>NO</option><option>N/A</option></select></div>
+            <div class="editor-field"><label>Indication lamps</label><select id="editElIndicationLamps"><option>YES</option><option>NO</option><option>N/A</option></select></div>
+            <div class="editor-field"><label>Battery electrolytes</label><select id="editElBatteryElectrolytes"><option>N/A</option><option>YES</option><option>NO</option></select></div>
+            <div class="editor-field"><label>User aware of unresolved failures</label><select id="editElUserAwareAction"><option>YES</option><option>NO</option><option>N/A</option></select></div>
+            <div class="editor-section-title">Corrective Action / Costs</div>
+            <div class="editor-field editor-wide"><label>Immediate Corrective Action Required / Undertaken</label><textarea id="editElCorrectiveAction" rows="4"></textarea></div>
+            <div class="editor-field"><label>Service Cost</label><input id="editElServiceCost" type="number" step="0.01" value="0.00"></div>
+            <div class="editor-field"><label>Remedial Material Cost</label><input id="editElMaterialCost" type="number" step="0.01" value="0.00"></div>
+            <div class="editor-field"><label>Remedial Labour Cost</label><input id="editElLabourCost" type="number" step="0.01" value="0.00"></div>
+            <div class="editor-section-title">SEL Totals</div>
+            <div class="editor-field"><label>Sub Total</label><input id="editSelSubTotal" type="number" step="0.01" value="0.00" readonly></div>
+            <div class="editor-field"><label>VAT @ 20%</label><input id="editSelVat" type="number" step="0.01" value="0.00" readonly></div>
+            <div class="editor-field"><label>Total</label><input id="editSelTotal" type="number" step="0.01" value="0.00" readonly></div>
+            <div class="editor-field"><label>Cost Display</label><select id="editElCostDisplayMode"><option value="SEPARATE">Show costs on SEL report</option><option value="SEE_ATTACHED_SFA">Show tick / see attached report</option></select></div>
+            <div class="editor-field"><label>Tick Box if Non-Compliant</label><select id="editElNonCompliantHeader"><option value="NO">NO</option><option value="YES">YES - show red Non-Compliant header</option></select></div>
+          </div>
+          <div id="wOfflineAdminFields" class="nested-editor-grid">
+            <div class="editor-field"><label>Sage account no.</label><input id="editSageAccountNo"></div>
+            <div class="editor-field"><label>Customer order no.</label><input id="editCustomerOrderNo"></div>
+            <div class="editor-field"><label>Our ref no.</label><input id="editOurRefNo"></div>
+            <div class="editor-field"><label>Asbestos register available?</label><select id="editAsbestosAvailable"><option value=""></option><option>Yes</option><option>No</option><option>N/A</option></select></div>
+          </div>
+          <div id="wOfflineWorkCostFields" class="nested-editor-grid">
+          <div class="editor-section-title">Work description</div>
+          <div class="editor-field editor-wide"><label>Material / work description</label><textarea id="editWorkDescription" rows="4"></textarea></div>
+          <div class="editor-field"><label>Qty</label><input id="editWorkDescriptionQty"></div>
+          <div class="editor-field"><label>Unit price</label><input id="editWorkDescriptionUnitPrice" type="number" step="0.01"></div>
+          <div class="editor-field"><label>Total price</label><input id="editWorkDescriptionTotalPrice" type="number" step="0.01"></div>
+          <div class="editor-field"><label>Charge note</label><input id="editWorkDescriptionChargeNote"></div>
+          <div class="editor-section-title">Materials / work rows</div>
+          <div id="editorMaterials" class="editor-materials"></div>
+          <div class="editor-wide"><button class="button secondary" style="min-height:48px;font-size:16px;" type="button" onclick="addEditorMaterialRow()">+ Add material/work row</button></div>
+          <div class="editor-section-title">Comments and time</div>
+          <div class="editor-field editor-wide"><label>Comments</label><textarea id="editComments" rows="4"></textarea></div>
+          <div class="editor-field"><label>Travel time</label><input id="editTravelTime"></div>
+          <div class="editor-field"><label>Arrival time</label><input id="editArrivalTime"></div>
+          <div class="editor-field"><label>Time on site</label><input id="editTimeOnSite"></div>
+          <div class="editor-field"><label>Carriage</label><input id="editCarriage" type="number" step="0.01"></div>
+          <div class="editor-section-title">Costs</div>
+          <div class="editor-field"><label>Manual subtotal override</label><select id="editManualSubtotalOverride"><option value=""></option><option value="YES">YES</option><option value="NO">NO</option></select></div>
+          <div class="editor-field"><label>Manual subtotal</label><input id="editManualSubtotal" type="number" step="0.01"></div>
+          <div class="editor-field"><label>Sub total</label><input id="editSubTotal" type="number" step="0.01"></div>
+          <div class="editor-field"><label>VAT</label><input id="editVat" type="number" step="0.01"></div>
+          <div class="editor-field"><label>Total</label><input id="editTotal" type="number" step="0.01"></div>
+          <div class="editor-summary">
+            <div><span>Offline subtotal</span><strong id="calcSubTotal">£0.00</strong></div>
+            <div><span>VAT @ 20%</span><strong id="calcVat">£0.00</strong></div>
+            <div><span>Total</span><strong id="calcTotal">£0.00</strong></div>
+          </div>
+          </div>
+          <div class="editor-section-title">Customer sign-off text</div>
+          <div class="editor-field"><label>Customer name</label><input id="editCustomerName"></div>
+          <div class="editor-field"><label>Customer date</label><input id="editCustomerDate" type="date"></div>
+        </div>
+        <div class="offline-signature-panel" id="offlineSignaturePanel">
+          <div class="offline-signature-box">
+            <label>Engineer Signature</label>
+            <canvas id="editEngineerSignature" class="offline-signature-canvas"></canvas>
+            <div class="offline-signature-actions"><button class="editor-mini-btn" type="button" onclick="clearOfflineSignature(event, 'editEngineerSignature')">Clear Engineer Signature</button></div>
+          </div>
+          <div class="offline-signature-box">
+            <label>Customer Signature</label>
+            <canvas id="editCustomerSignature" class="offline-signature-canvas"></canvas>
+            <div class="offline-signature-actions"><button class="editor-mini-btn" type="button" onclick="clearOfflineSignature(event, 'editCustomerSignature')">Clear Customer Signature</button></div>
+          </div>
+        </div>
+        <div class="editor-actions">
+          <button class="button" type="submit">Complete Job - Save Offline</button>
+          <button id="offlineEditorSyncBtn" class="button secondary" type="button" onclick="saveOfflineEditorAndSync(event)">Complete Job - Save + Sync</button>
+          <button class="button third" type="button" onclick="closeOfflineEditor(event)">Back to Offline Drafts</button>
+        </div>
+        <div id="editorStatus" class="editor-status"></div>
+      </form>
+    </main>
+  </section>
+
+  <section class="screen app-shell" aria-label="FSD Certs App Shell">
+    <div class="top-safe-fill"></div>
+    <button class="mini-home" type="button" onclick="showHome()">⌂ Menu</button>
+    <iframe
+      id="fsdFrame"
+      title="FSD Certs"
+      src="about:blank"
+      allow="camera *; microphone *; clipboard-read *; clipboard-write *; fullscreen *"
+      loading="lazy"
+      referrerpolicy="no-referrer-when-downgrade">
+    </iframe>
+  </section>
+
+  <div id="loader" class="loader hidden">
+    <div class="panel">
+      <img class="logo" src="fsd-certs-logo.png" alt="FSD Certs cloud logo" width="104" height="104" decoding="async">
+      <h2>FSD Certs</h2>
+      <p>Loading the certificate system…</p>
+      <div class="maker-mark">Jared720 Labs</div>
+      <div class="spinner" aria-hidden="true"></div>
+    </div>
+  </div>
+
+  <div id="fallback" class="fallback hidden">
+    <div class="panel">
+      <img class="logo" src="fsd-certs-logo.png" alt="FSD Certs cloud logo" width="104" height="104" decoding="async">
+      <h2>Still loading?</h2>
+      <p>If iPad Safari is being awkward, reload the shell or open the cert system directly.</p>
+      <div class="maker-mark">Jared720 Labs</div>
+      <div class="actions">
+        <button class="button" type="button" onclick="reloadApp()">Reload FSD Certs</button>
+        <a class="button secondary" href="https://script.google.com/macros/s/AKfycbzq9FTETNZwUJWHMGnMHECbu3sJ3jy3FFvGYyeaRXtkoK1GHBtqOu-GLBle_WGfoFtI/exec" target="_self" rel="noopener">Open Direct</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      'use strict';
+
+      const SHELL_VER = 'V6.3c74u';
+      const APP_URL = 'https://script.google.com/macros/s/AKfycbzq9FTETNZwUJWHMGnMHECbu3sJ3jy3FFvGYyeaRXtkoK1GHBtqOu-GLBle_WGfoFtI/exec';
+      const SCHEDULE_URL = 'https://docs.google.com/spreadsheets/d/1SZK6igtKPVHcBRdkA49A6AKSobkWXI_pk-De7taZP6c/edit';
+      const CALLOUTS_PAGE = APP_URL + '?page=callouts&shell=ipad';
+      const home = document.getElementById('home');
+      const frame = document.getElementById('fsdFrame');
+      const loader = document.getElementById('loader');
+      const fallback = document.getElementById('fallback');
+      const offlineDrafts = document.getElementById('offlineDrafts');
+      const offlineList = document.getElementById('offlineList');
+      const offlineStatus = document.getElementById('offlineStatus');
+      const offlineEditor = document.getElementById('offlineEditor');
+      const editorStatus = document.getElementById('editorStatus');
+      const editorNetBadge = document.getElementById('editorNetBadge');
+      const editorDirtyBadge = document.getElementById('editorDirtyBadge');
+      const OFFLINE_W_QUEUE_KEY = 'fsd_esr_offline_w_queue_v6_3c37u';
+      const OFFLINE_W_OLD_QUEUE_KEY = 'fsd_esr_offline_w_queue_v6_3c37s';
+      const OFFLINE_W_WINDOW_NAME_PREFIX = 'FSD_OFFLINE_W_PAYLOAD::';
+
+      // V6.3c69b - Offline SFA online field-shape fix.
+      // W remains the only offline report that can sync to Cloud Drafts.
+      // SFA now mirrors the online Fire Alarm Service Report structure more closely: equipment checked table + service/remedial costs, no W material rows.
+      const OFFLINE_REPORT_TYPES = {
+        W:   { code: 'W',   label: 'Engineer Service Report',             page: 'esr', editableOffline: true,  syncableOffline: true },
+        SFA: { code: 'SFA', label: 'Fire Alarm Service Report',           page: 'fael', editableOffline: true,  syncableOffline: true },
+        SEL: { code: 'SEL', label: 'Emergency Lighting Report',           page: 'sel',  editableOffline: true,  syncableOffline: true },
+        FAC: { code: 'FAC', label: 'Fire Alarm Commissioning Certificate', page: 'fac', editableOffline: false, syncableOffline: false }
+      };
+
+      const SFA_EQUIPMENT_DEFAULT_ROWS = [
+        ['Control Panels (Function Led’s)', 'Equipment List'],
+        ['Power Supplies', 'Standby Power Supplies'],
+        ['Batteries', 'Any Alterations to System'],
+        ['Call Point Units (% in all zones)', 'Any Alterations to Building'],
+        ['Beam / Smoke Detectors (% in all zones)', 'Log Book'],
+        ['Heat Detectors (% in all zones)', 'Faults Reported'],
+        ['All Alarm Sounders / Visual Units', 'Any Area Change of Use'],
+        ['Remote Indicator Units', 'A.C. System Supply correct'],
+        ['All Relays / Ancillary Equipment', 'Labelling on all equipment'],
+        ['All Input / Output Units', 'Audibility Levels Checked'],
+        ['All Sounder Control Units', 'Zonal Layout Drawing Present'],
+        ['All Door Holder Units & Power Supplies', 'All Detectors Visually Inspected'],
+        ['Disconnection of A.C. Supply', 'All Call Points Visually Inspected'],
+        ['Link to manned Centre', 'Design Category Cert. Available']
+      ];
+      let pendingShellAction = null;
+      let shellActionTimer = null;
+      let pendingOfflineEditorItem = null;
+
+      let loaded = false;
+      let hasStarted = false;
+      let fallbackTimer = null;
+
+      function startFallbackTimer() {
+        clearTimeout(fallbackTimer);
+        // V6.3c73c/c73d: Apps Script can be slow when opening Cloud Drafts/resumed SEL
+        // inside the shell. Keep the friendly loader up for longer before showing
+        // the scary fallback panel. Data is already working; this is timing polish.
+        const delay = pendingShellAction ? 90000 : 90000;
+        fallbackTimer = setTimeout(function () {
+          if (!loaded) fallback.classList.remove('hidden');
+        }, delay);
+      }
+
+      function hideLoader() {
+        loaded = true;
+        clearTimeout(fallbackTimer);
+        loader.classList.add('hidden');
+        fallback.classList.add('hidden');
+      }
+
+      function stopTap(event) {
+        if (!event) return;
+        event.preventDefault();
+        event.stopPropagation();
+      }
+
+      function goDirect(url) {
+        // iPad home-screen apps handle button-driven navigation more reliably
+        // than normal anchor tags. This keeps Schedule/Callouts behaving like
+        // the Certificate Portal button instead of doing nothing on some iPads.
+        try {
+          window.location.assign(url);
+        } catch (err) {
+          window.location.href = url;
+        }
+      }
+
+
+      function setOfflineStatus(message) {
+        if (offlineStatus) offlineStatus.textContent = message || '';
+      }
+
+      function getOfflineReportType(item) {
+        const raw = item && (item.reportType || (item.draft && item.draft.reportType) || item.type || 'W');
+        const normalized = String(raw || 'W').toUpperCase();
+        if (OFFLINE_REPORT_TYPES[normalized]) return normalized;
+        // Older W drafts stored the long report name rather than the short code.
+        if (normalized.indexOf('ENGINEER SERVICE') >= 0) return 'W';
+        return 'W';
+      }
+
+      function getOfflineReportConfig(item) {
+        return OFFLINE_REPORT_TYPES[getOfflineReportType(item)] || OFFLINE_REPORT_TYPES.W;
+      }
+
+      function readOfflineQueue() {
+        let rows = [];
+        try {
+          rows = JSON.parse(localStorage.getItem(OFFLINE_W_QUEUE_KEY) || '[]') || [];
+        } catch (err) {
+          rows = [];
+        }
+        try {
+          const oldRows = JSON.parse(localStorage.getItem(OFFLINE_W_OLD_QUEUE_KEY) || '[]') || [];
+          if (Array.isArray(oldRows) && oldRows.length) {
+            const seen = new Set(rows.map(function(row) { return row && row.offlineId; }));
+            oldRows.forEach(function(row) {
+              if (row && row.offlineId && !seen.has(row.offlineId)) rows.push(row);
+            });
+            localStorage.setItem(OFFLINE_W_QUEUE_KEY, JSON.stringify(rows));
+          }
+        } catch (err) {}
+        return Array.isArray(rows) ? rows.filter(function(row) { return row && row.offlineId && row.draft; }).map(function(row) {
+          const type = getOfflineReportType(row);
+          if (!row.reportType) row.reportType = type;
+          if (row.draft && !row.draft.reportTypeCode) row.draft.reportTypeCode = type;
+          return row;
+        }) : [];
+      }
+
+      function writeOfflineQueue(rows) {
+        localStorage.setItem(OFFLINE_W_QUEUE_KEY, JSON.stringify(rows || []));
+      }
+
+      function upsertOfflineItem(item) {
+        if (!item || !item.offlineId) return;
+        const rows = readOfflineQueue();
+        const idx = rows.findIndex(function(row) { return row && row.offlineId === item.offlineId; });
+        if (idx >= 0) rows[idx] = item; else rows.push(item);
+        writeOfflineQueue(rows);
+      }
+
+      function removeOfflineItem(offlineId) {
+        if (!offlineId) return;
+        writeOfflineQueue(readOfflineQueue().filter(function(row) { return row && row.offlineId !== offlineId; }));
+      }
+
+      const ESC_MAP = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
+
+      function escapeHtml(value) {
+        return String(value || '').replace(/[&<>"']/g, function(ch) {
+          return ESC_MAP[ch];
+        });
+      }
+
+      function renderOfflineDrafts() {
+        const rows = readOfflineQueue().sort(function(a, b) { return String(b.savedAt || '').localeCompare(String(a.savedAt || '')); });
+        if (!offlineList) return;
+        if (!rows.length) {
+          offlineList.innerHTML = '<div class="offline-empty">No offline certificate/report drafts found on this iPad.</div>';
+          setOfflineStatus('');
+          return;
+        }
+
+        const parts = [];
+        rows.forEach(function(row) {
+          const report = getOfflineReportConfig(row);
+          let title = row.draftName || row.customer || ('Offline ' + report.label + ' draft');
+          if (report.code === 'W') {
+            title = String(title || '').replace(/Offline\s+W\b/gi, 'Offline Engineer Service Report').replace(/\bW\s+draft\b/gi, 'Engineer Service Report draft');
+          }
+          const saved = row.savedAt ? new Date(row.savedAt).toLocaleString() : 'not known';
+          const meta = [
+            'Type: ' + report.label,
+            row.engineer ? 'Engineer: ' + row.engineer : '',
+            row.customer ? 'Customer: ' + row.customer : '',
+            row.site ? 'Site: ' + row.site : '',
+            'Saved: ' + saved
+          ].filter(Boolean).join(' · ');
+          const id = escapeHtml(row.offlineId);
+          parts.push(
+            '<article class="offline-item">',
+              '<strong>', escapeHtml(title), '</strong>',
+              '<div class="offline-meta">', escapeHtml(meta), '</div>',
+              '<div class="offline-actions">',
+                report.editableOffline
+                  ? '<button class="button secondary" type="button" data-offline-id="' + id + '" data-offline-action="edit">Edit Offline</button>'
+                  : '<button class="button secondary" type="button" disabled>Not Editable Yet</button>',
+                report.syncableOffline
+                  ? '<button class="button" type="button" data-offline-id="' + id + '" data-offline-action="sync">Sync to Cloud</button>'
+                  : '<button class="button" type="button" disabled>No Sync Yet</button>',
+                '<button class="button third" type="button" data-offline-id="', id, '" data-offline-action="delete">Delete</button>',
+              '</div>',
+            '</article>'
+          );
+        });
+        offlineList.innerHTML = parts.join('');
+        setOfflineStatus(rows.length + ' offline certificate/report draft' + (rows.length === 1 ? '' : 's') + ' waiting on this iPad.');
+      }
+
+
+
+      function getOfflineItemById(offlineId) {
+        return readOfflineQueue().find(function(row) { return row && row.offlineId === offlineId; }) || null;
+      }
+
+      function setEditorStatus(message) {
+        if (editorStatus) editorStatus.textContent = message || '';
+      }
+
+      function setEditValue(id, value) {
+        const el = document.getElementById(id);
+        if (el) el.value = value == null ? '' : value;
+      }
+
+      function getEditValue(id) {
+        const el = document.getElementById(id);
+        return el ? el.value : '';
+      }
+
+      function resizeOfflineSignatureCanvas(canvas) {
+        if (!canvas) return;
+        const rect = canvas.getBoundingClientRect();
+        const ratio = window.devicePixelRatio || 1;
+        const data = canvas.dataset.signatureData || '';
+        canvas.width = Math.max(1, Math.round(rect.width * ratio));
+        canvas.height = Math.max(1, Math.round(rect.height * ratio));
+        const ctx = canvas.getContext('2d');
+        ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+        ctx.lineWidth = 2.4;
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+        ctx.strokeStyle = '#111827';
+        if (data) setOfflineSignatureData(canvas.id, data);
+      }
+
+      function setupOfflineSignatureCanvas(canvas) {
+        if (!canvas || canvas.dataset.bound === '1') return;
+        canvas.dataset.bound = '1';
+        resizeOfflineSignatureCanvas(canvas);
+        let drawing = false;
+        let last = null;
+        function point(evt) {
+          const e = evt.touches && evt.touches[0] ? evt.touches[0] : evt;
+          const rect = canvas.getBoundingClientRect();
+          return { x: e.clientX - rect.left, y: e.clientY - rect.top };
+        }
+        function start(evt) {
+          evt.preventDefault();
+          drawing = true;
+          last = point(evt);
+          setEditorDirty(true);
+        }
+        function move(evt) {
+          if (!drawing) return;
+          evt.preventDefault();
+          const now = point(evt);
+          const ctx = canvas.getContext('2d');
+          ctx.beginPath();
+          ctx.moveTo(last.x, last.y);
+          ctx.lineTo(now.x, now.y);
+          ctx.stroke();
+          last = now;
+          canvas.dataset.signatureData = canvas.toDataURL('image/png');
+        }
+        function end(evt) {
+          if (!drawing) return;
+          evt.preventDefault();
+          drawing = false;
+          canvas.dataset.signatureData = canvas.toDataURL('image/png');
+          setEditorDirty(true);
+        }
+        canvas.addEventListener('mousedown', start);
+        canvas.addEventListener('mousemove', move);
+        window.addEventListener('mouseup', end);
+        canvas.addEventListener('touchstart', start, { passive:false });
+        canvas.addEventListener('touchmove', move, { passive:false });
+        canvas.addEventListener('touchend', end, { passive:false });
+      }
+
+      function setupOfflineSignatureCanvases() {
+        ['editEngineerSignature','editCustomerSignature'].forEach(function(id) {
+          setupOfflineSignatureCanvas(document.getElementById(id));
+        });
+      }
+
+      function getOfflineSignatureData(id) {
+        const canvas = document.getElementById(id);
+        if (!canvas) return '';
+        return canvas.dataset.signatureData || '';
+      }
+
+      function setOfflineSignatureData(id, dataUrl) {
+        const canvas = document.getElementById(id);
+        if (!canvas) return;
+        canvas.dataset.signatureData = dataUrl || '';
+        const ctx = canvas.getContext('2d');
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        if (!dataUrl) return;
+        const img = new Image();
+        img.onload = function() {
+          const rect = canvas.getBoundingClientRect();
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          ctx.drawImage(img, 0, 0, rect.width, rect.height);
+        };
+        img.src = dataUrl;
+      }
+
+      window.clearOfflineSignature = function(event, id) {
+        if (event) event.preventDefault();
+        setOfflineSignatureData(id, '');
+        setEditorDirty(true);
+        setEditorStatus('Signature cleared. Press Complete Job - Save Offline to keep the change.');
+      };
+
+
+      function setOfflineSfaPhotoPreview(dataUrl) {
+        const preview = document.getElementById('editSfaPanelPhotoPreview');
+        if (!preview) return;
+        if (dataUrl) {
+          preview.innerHTML = '<img alt="SFA panel photo preview" src="' + dataUrl + '">';
+        } else {
+          preview.textContent = 'No photo selected';
+        }
+      }
+
+      function compressOfflineSfaImageFile(file, maxWidth, quality) {
+        maxWidth = maxWidth || 1100;
+        quality = quality || 0.72;
+        return new Promise(function(resolve, reject) {
+          if (!file) { resolve(''); return; }
+          const reader = new FileReader();
+          reader.onload = function(event) {
+            const img = new Image();
+            img.onload = function() {
+              const scale = Math.min(1, maxWidth / img.width);
+              const width = Math.max(1, Math.round(img.width * scale));
+              const height = Math.max(1, Math.round(img.height * scale));
+              const canvas = document.createElement('canvas');
+              canvas.width = width;
+              canvas.height = height;
+              const ctx = canvas.getContext('2d');
+              ctx.drawImage(img, 0, 0, width, height);
+              resolve(canvas.toDataURL('image/jpeg', quality));
+            };
+            img.onerror = function(){ reject(new Error('Could not compress SFA panel photo.')); };
+            img.src = event.target.result;
+          };
+          reader.onerror = function(){ reject(new Error('Could not read SFA panel photo.')); };
+          reader.readAsDataURL(file);
+        });
+      }
+
+      function clearOfflineSfaPanelPhoto(event) {
+        if (event) event.preventDefault();
+        const id = document.getElementById('editOfflineId')?.value || '';
+        const item = getOfflineItemById(id);
+        if (item && item.draft) {
+          item.draft.panelPhoto = '';
+          item.draft.sfaPanelPhoto = '';
+          item.draft.savedAt = new Date().toISOString();
+          upsertOfflineItem(item);
+        }
+        const input = document.getElementById('editSfaPanelPhoto');
+        if (input) input.value = '';
+        setOfflineSfaPhotoPreview('');
+        setEditorStatus('SFA panel photo cleared.');
+      }
+
+      function handleOfflineSfaPanelPhotoChange() {
+        const input = document.getElementById('editSfaPanelPhoto');
+        if (!input || !input.files || !input.files[0]) return;
+        compressOfflineSfaImageFile(input.files[0], 1100, 0.72).then(function(dataUrl) {
+          const id = document.getElementById('editOfflineId')?.value || '';
+          const item = getOfflineItemById(id);
+          if (item && item.draft) {
+            item.draft.panelPhoto = dataUrl || '';
+            item.draft.sfaPanelPhoto = dataUrl || '';
+            item.draft.savedAt = new Date().toISOString();
+            upsertOfflineItem(item);
+          }
+          setOfflineSfaPhotoPreview(dataUrl || '');
+          setEditorStatus('SFA panel photo compressed and saved locally.');
+        }).catch(function(err) {
+          alert(err && err.message ? err.message : err);
+        });
+      }
+
+      function money(value) {
+        const n = Number(value || 0);
+        return '£' + (Number.isFinite(n) ? n : 0).toFixed(2);
+      }
+
+      function parseMoney(value) {
+        const n = Number(String(value || '').replace(/[^0-9.-]/g, ''));
+        return Number.isFinite(n) ? n : 0;
+      }
+
+      function setEditorDirty(isDirty) {
+        if (!editorDirtyBadge) return;
+        editorDirtyBadge.className = isDirty ? 'dirty-badge' : 'dirty-badge saved';
+        editorDirtyBadge.textContent = isDirty ? 'Unsaved changes' : 'Saved offline';
+      }
+
+      function updateEditorNetworkBadge() {
+        if (!editorNetBadge) return;
+        const online = navigator.onLine;
+        editorNetBadge.className = 'net-badge ' + (online ? 'online' : 'offline');
+        editorNetBadge.textContent = online ? 'Online - can sync' : 'Offline - iPad only';
+      }
+
+      function getCurrentEditorReportCode() {
+        const offlineId = getEditValue('editOfflineId');
+        const item = getOfflineItemById(offlineId);
+        return getOfflineReportConfig(item || {}).code || 'W';
+      }
+
+      function calculateEditorTotals() {
+        const reportCode = getCurrentEditorReportCode();
+        let subtotal = 0;
+        let vat = 0;
+        let total = 0;
+
+        if (reportCode === 'SEL') {
+          const serviceCost = parseMoney(getEditValue('editElServiceCost'));
+          const materialCost = parseMoney(getEditValue('editElMaterialCost'));
+          const labourCost = parseMoney(getEditValue('editElLabourCost'));
+          subtotal = serviceCost + materialCost + labourCost;
+          vat = subtotal * 0.20;
+          total = subtotal + vat;
+          setEditValue('editSelSubTotal', subtotal ? subtotal.toFixed(2) : '0.00');
+          setEditValue('editSelVat', subtotal ? vat.toFixed(2) : '0.00');
+          setEditValue('editSelTotal', subtotal ? total.toFixed(2) : '0.00');
+          // Keep the shared total fields aligned for draft payload compatibility.
+          if (!document.activeElement?.matches('#editSubTotal')) setEditValue('editSubTotal', subtotal ? subtotal.toFixed(2) : '');
+          if (!document.activeElement?.matches('#editVat')) setEditValue('editVat', subtotal ? vat.toFixed(2) : '');
+          if (!document.activeElement?.matches('#editTotal')) setEditValue('editTotal', subtotal ? total.toFixed(2) : '');
+        } else if (reportCode === 'SFA') {
+          const serviceCost = parseMoney(getEditValue('editFaServiceCost'));
+          const materialCost = parseMoney(getEditValue('editFaMaterialCost'));
+          const labourCost = parseMoney(getEditValue('editFaLabourCost'));
+          subtotal = serviceCost + materialCost + labourCost;
+          vat = subtotal * 0.20;
+          total = subtotal + vat;
+          if (!document.activeElement?.matches('#editSubTotal')) setEditValue('editSubTotal', subtotal ? subtotal.toFixed(2) : '');
+          if (!document.activeElement?.matches('#editVat')) setEditValue('editVat', subtotal ? vat.toFixed(2) : '');
+          if (!document.activeElement?.matches('#editTotal')) setEditValue('editTotal', subtotal ? total.toFixed(2) : '');
+          if (!document.activeElement?.matches('#editSfaSubTotal')) setEditValue('editSfaSubTotal', subtotal ? subtotal.toFixed(2) : '');
+          if (!document.activeElement?.matches('#editSfaVat')) setEditValue('editSfaVat', subtotal ? vat.toFixed(2) : '');
+          if (!document.activeElement?.matches('#editSfaTotal')) setEditValue('editSfaTotal', subtotal ? total.toFixed(2) : '');
+        } else {
+          // Work description line
+          const wdQty = parseMoney(getEditValue('editWorkDescriptionQty'));
+          const wdUnit = parseMoney(getEditValue('editWorkDescriptionUnitPrice'));
+          if (wdQty && wdUnit && !document.activeElement?.matches('#editWorkDescriptionTotalPrice')) {
+            setEditValue('editWorkDescriptionTotalPrice', (wdQty * wdUnit).toFixed(2));
+          }
+
+          // W material rows only. SFA deliberately does not use these rows.
+          Array.from(document.querySelectorAll('#editorMaterials .editor-material-row')).forEach(function(row) {
+            const qtyEl = row.querySelector('.emQty');
+            const unitEl = row.querySelector('.emUnitPrice');
+            const totalEl = row.querySelector('.emTotalPrice');
+            const qty = parseMoney(qtyEl && qtyEl.value);
+            const unit = parseMoney(unitEl && unitEl.value);
+            if (qty && unit && totalEl && document.activeElement !== totalEl) {
+              totalEl.value = (qty * unit).toFixed(2);
+            }
+          });
+
+          const workTotal = parseMoney(getEditValue('editWorkDescriptionTotalPrice'));
+          const materialsTotal = Array.from(document.querySelectorAll('#editorMaterials .emTotalPrice')).reduce(function(sum, el) {
+            return sum + parseMoney(el.value);
+          }, 0);
+          const carriage = parseMoney(getEditValue('editCarriage'));
+          const calculatedSubtotal = workTotal + materialsTotal + carriage;
+          const override = getEditValue('editManualSubtotalOverride') === 'YES';
+          subtotal = override ? parseMoney(getEditValue('editManualSubtotal')) : calculatedSubtotal;
+          vat = subtotal * 0.20;
+          total = subtotal + vat;
+
+          if (!document.activeElement?.matches('#editSubTotal')) setEditValue('editSubTotal', subtotal ? subtotal.toFixed(2) : '');
+          if (!document.activeElement?.matches('#editVat')) setEditValue('editVat', subtotal ? vat.toFixed(2) : '');
+          if (!document.activeElement?.matches('#editTotal')) setEditValue('editTotal', subtotal ? total.toFixed(2) : '');
+        }
+
+        const subBox = document.getElementById('calcSubTotal');
+        const vatBox = document.getElementById('calcVat');
+        const totalBox = document.getElementById('calcTotal');
+        if (subBox) subBox.textContent = money(subtotal);
+        if (vatBox) vatBox.textContent = money(vat);
+        if (totalBox) totalBox.textContent = money(total);
+      }
+
+
+      const FSD_LOOKUP_CACHE_KEY = 'fsd_offline_lookup_cache_v6_3c74w';
+
+      function normaliseLookupText(value) {
+        return String(value || '').toLowerCase().replace(/\s+/g, ' ').trim();
+      }
+
+      function getOfflineLookupCache() {
+        try {
+          const raw = localStorage.getItem(FSD_LOOKUP_CACHE_KEY);
+          if (!raw) return { customers: [], sites: [], materials: [], syncedAt: '' };
+          const parsed = JSON.parse(raw);
+          return {
+            customers: Array.isArray(parsed.customers) ? parsed.customers : [],
+            sites: Array.isArray(parsed.sites) ? parsed.sites : [],
+            materials: Array.isArray(parsed.materials) ? parsed.materials : [],
+            syncedAt: parsed.syncedAt || ''
+          };
+        } catch (err) {
+          return { customers: [], sites: [], materials: [], syncedAt: '' };
+        }
+      }
+
+      function populateDatalist(id, rows, getValue, getLabel) {
+        const list = document.getElementById(id);
+        if (!list) return;
+        list.innerHTML = '';
+        (rows || []).slice(0, 10000).forEach(function(row) {
+          const value = getValue(row);
+          if (!value) return;
+          const opt = document.createElement('option');
+          opt.value = value;
+          const label = getLabel ? getLabel(row) : '';
+          if (label) opt.label = label;
+          list.appendChild(opt);
+        });
+      }
+
+      function populateOfflineLookupPickers() {
+        const data = getOfflineLookupCache();
+        populateDatalist('fsdCustomerList', data.customers, function(row) {
+          // V6.3c74w: use the full invoice/customer address as the value so mobile datalist search can find every address line.
+          return row.customerAddress || row.lookupName || '';
+        }, function(row) {
+          return row.lookupName || row.customerAddress || '';
+        });
+        populateDatalist('fsdSiteList', data.sites, function(row) {
+          // V6.3c74w: use the full site address as the value so sites are findable by postcode/road/town, not just the short lookup name.
+          return row.siteAddress || row.lookupName || row.customerName || '';
+        }, function(row) {
+          return row.lookupName || row.customerName || row.siteAddress || '';
+        });
+        populateDatalist('fsdMaterialList', data.materials, function(row) {
+          return row.material || row.description || '';
+        }, function(row) {
+          const price = row.unitPrice || row.price || '';
+          return price ? ('£' + price) : '';
+        });
+        const status = document.getElementById('lookupCacheStatus');
+        if (status) {
+          const when = data.syncedAt ? new Date(data.syncedAt).toLocaleString() : 'not synced yet';
+          status.textContent = 'Pickers: ' + data.customers.length + ' customers, ' + data.sites.length + ' sites, ' + data.materials.length + ' materials. Last sync: ' + when + '.';
+        }
+      }
+
+      window.fsdReceiveOfflineLookupData = function fsdReceiveOfflineLookupData(payload) {
+        try {
+          const data = payload && typeof payload === 'object' ? payload : {};
+          const cache = {
+            customers: Array.isArray(data.customers) ? data.customers : [],
+            sites: Array.isArray(data.sites) ? data.sites : [],
+            materials: Array.isArray(data.materials) ? data.materials : [],
+            syncedAt: new Date().toISOString()
+          };
+          localStorage.setItem(FSD_LOOKUP_CACHE_KEY, JSON.stringify(cache));
+          populateOfflineLookupPickers();
+          setEditorStatus('Lookup data synced: ' + cache.customers.length + ' customers, ' + cache.sites.length + ' sites, ' + cache.materials.length + ' materials.');
+        } catch (err) {
+          setEditorStatus('Lookup sync received but could not save on this device: ' + (err && err.message ? err.message : err));
+        }
+      };
+
+      window.syncOfflineLookups = function syncOfflineLookups(event) {
+        stopTap(event);
+        if (!navigator.onLine) {
+          populateOfflineLookupPickers();
+          setEditorStatus('Offline - using last synced lookup data on this device.');
+          return;
+        }
+        setEditorStatus('Syncing customer/site/material pickers...');
+        const old = document.getElementById('fsdLookupJsonpScript');
+        if (old && old.parentNode) old.parentNode.removeChild(old);
+        const script = document.createElement('script');
+        script.id = 'fsdLookupJsonpScript';
+        script.src = APP_URL + '?page=offlineLookupJsonp&callback=fsdReceiveOfflineLookupData&v=' + Date.now();
+        script.onerror = function() {
+          setEditorStatus('Lookup sync failed. Check the Apps Script Offline_Lookup_API.gs and Routing.gs patch is installed and redeployed.');
+        };
+        document.body.appendChild(script);
+      };
+
+      function findLookupRow(rows, value, keys) {
+        const needle = normaliseLookupText(value);
+        if (!needle) return null;
+
+        function valuesFor(row) {
+          return (keys || []).map(function(key) {
+            return normaliseLookupText(row && row[key]);
+          }).filter(function(candidate) {
+            // V6.3c74w: never allow a blank lookup value to match everything.
+            return !!candidate;
+          });
+        }
+
+        // Prefer exact selection from the datalist.
+        const exact = (rows || []).find(function(row) {
+          return valuesFor(row).some(function(candidate) { return candidate === needle; });
+        });
+        if (exact) return exact;
+
+        // Then allow partial/fuzzy matching.
+        return (rows || []).find(function(row) {
+          return valuesFor(row).some(function(candidate) {
+            if (candidate.length < 2) return false;
+            return candidate.indexOf(needle) !== -1 || needle.indexOf(candidate) !== -1;
+          });
+        }) || null;
+      }
+
+      window.applyCustomerLookup = function applyCustomerLookup(event) {
+        stopTap(event);
+        const cache = getOfflineLookupCache();
+        const value = getEditValue('editCustomerLookup');
+        const row = findLookupRow(cache.customers, value, ['lookupName', 'customerAddress']);
+        if (!row) { setEditorStatus('No matching customer found in the offline lookup cache. Press Sync customer/material pickers while online.'); return; }
+        setEditValue('editCustomer', row.customerAddress || row.lookupName || '');
+        if (row.siteAddress && !getEditValue('editSite')) setEditValue('editSite', row.siteAddress);
+        if (row.sageAccountNo) setEditValue('editSageAccountNo', row.sageAccountNo);
+        if (row.defaultCustomerOrderNo) setEditValue('editCustomerOrderNo', row.defaultCustomerOrderNo);
+        if (row.defaultOurRefNo) setEditValue('editOurRefNo', row.defaultOurRefNo);
+        setEditorDirty(true);
+        autoNameOfflineW(event);
+        setEditorStatus('Customer applied from offline picker.');
+      };
+
+      window.applySiteLookup = function applySiteLookup(event) {
+        stopTap(event);
+        const cache = getOfflineLookupCache();
+        const value = getEditValue('editSiteLookup');
+        const row = findLookupRow(cache.sites, value, ['lookupName', 'siteAddress', 'customerName']);
+        if (!row) { setEditorStatus('No matching site found in the offline lookup cache. Press Sync customer/material pickers while online.'); return; }
+        setEditValue('editSite', row.siteAddress || row.lookupName || '');
+        if (row.customerAddress && !getEditValue('editCustomer')) setEditValue('editCustomer', row.customerAddress);
+        if (row.sageAccountNo && !getEditValue('editSageAccountNo')) setEditValue('editSageAccountNo', row.sageAccountNo);
+        setEditorDirty(true);
+        autoNameOfflineW(event);
+        setEditorStatus('Site applied from offline picker.');
+      };
+
+      window.applyMaterialLookupToRow = function applyMaterialLookupToRow(input) {
+        const rowEl = input && input.closest ? input.closest('.editor-material-row') : null;
+        if (!rowEl) return;
+        const cache = getOfflineLookupCache();
+        const row = findLookupRow(cache.materials, input.value, ['material', 'description']);
+        if (!row) return;
+        const desc = rowEl.querySelector('.emDescription');
+        const unit = rowEl.querySelector('.emUnitPrice');
+        if (desc) desc.value = row.material || row.description || input.value;
+        // V6.3c74w: when changing the selected material, update the unit price as well.
+        if (unit) unit.value = row.unitPrice || row.price || '';
+        calculateEditorTotals();
+        setEditorDirty(true);
+      };
+
+      function bindEditorChangeTracking() {
+        const form = document.getElementById('offlineWEditorForm');
+        if (!form || form.__fsdBound) return;
+        form.__fsdBound = true;
+        form.addEventListener('input', function(event) {
+          setEditorDirty(true);
+          if (event.target && (event.target.matches('input') || event.target.matches('textarea') || event.target.matches('select'))) {
+            calculateEditorTotals();
+          }
+        });
+        form.addEventListener('change', function() {
+          setEditorDirty(true);
+          calculateEditorTotals();
+        });
+        form.addEventListener('click', function(event) {
+          const previewBtn = event.target && event.target.closest ? event.target.closest('#editorSfaPayloadPreviewBtn') : null;
+          if (previewBtn) runSfaPayloadPreview(event);
+        });
+      }
+
+
+      function renderEditorMaterials(materials) {
+        const wrap = document.getElementById('editorMaterials');
+        if (!wrap) return;
+        wrap.innerHTML = '';
+        (Array.isArray(materials) && materials.length ? materials : [{}, {}]).forEach(function(item) {
+          addEditorMaterialRow(item || {});
+        });
+      }
+
+      window.addEditorMaterialRow = function addEditorMaterialRow(item) {
+        const wrap = document.getElementById('editorMaterials');
+        if (!wrap) return;
+        item = item || {};
+        const row = document.createElement('div');
+        row.className = 'editor-material-row';
+        row.innerHTML =
+          '<div class="editor-field"><label>Qty</label><input class="emQty" value="' + escapeHtml(item.qty || '') + '"></div>' +
+          '<div class="editor-field desc"><label>Description</label><input class="emDescription" list="fsdMaterialList" onchange="applyMaterialLookupToRow(this)" value="' + escapeHtml(item.description || item.searchText || '') + '"></div>' +
+          '<div class="editor-field"><label>Unit</label><input class="emUnitPrice" type="number" step="0.01" value="' + escapeHtml(item.unitPrice || '') + '"></div>' +
+          '<div class="editor-field"><label>Total</label><input class="emTotalPrice" type="number" step="0.01" value="' + escapeHtml(item.totalPrice || '') + '"></div>' +
+          '<button class="button third" style="min-height:42px;font-size:18px;padding:6px;" type="button" onclick="this.closest(\'.editor-material-row\').remove()">×</button>';
+        wrap.appendChild(row);
+      };
+
+      function collectEditorMaterials() {
+        return Array.from(document.querySelectorAll('.editor-material-row')).map(function(row) {
+          return {
+            qty: (row.querySelector('.emQty') || {}).value || '',
+            searchText: '',
+            description: (row.querySelector('.emDescription') || {}).value || '',
+            unitPrice: (row.querySelector('.emUnitPrice') || {}).value || '',
+            totalPrice: (row.querySelector('.emTotalPrice') || {}).value || ''
+          };
+        }).filter(function(item) { return item.qty || item.description || item.unitPrice || item.totalPrice; });
+      }
+
+      function normalizeSfaEquipmentRows(items) {
+        const source = Array.isArray(items) && items.length ? items : SFA_EQUIPMENT_DEFAULT_ROWS.map(function(pair) {
+          return { equipment: pair[0], checkedOnInspection: pair[1], total: '', tested: '', passed: '', failed: '', result: '' };
+        });
+        return source.map(function(item, idx) {
+          const fallback = SFA_EQUIPMENT_DEFAULT_ROWS[idx] || ['', ''];
+          return {
+            equipment: item.equipment || item.type || fallback[0] || '',
+            total: item.total || item.qty || '',
+            tested: item.tested || '',
+            passed: item.passed || '',
+            failed: item.failed || '',
+            checkedOnInspection: item.checkedOnInspection || item.checked || fallback[1] || '',
+            result: item.result || item.notes || ''
+          };
+        });
+      }
+
+      function normalizeSfaCheckedTick(value) {
+        const v = String(value || '').trim().toUpperCase();
+        if (v === 'YES' || v === 'Y' || v === 'TRUE' || v === '✓' || v === '✔' || v === 'CHECK' || v === 'TICK') return '✓';
+        if (v === 'NO' || v === 'N' || v === 'FALSE' || v === '✗' || v === 'X' || v === 'CROSS') return '✗';
+        if (v === 'NA' || v === 'N/A' || v === '-' || v === '—') return '—';
+        return value || '';
+      }
+
+      function sfaTickOption(value, current, label) {
+        return '<option value="' + value + '"' + (normalizeSfaCheckedTick(current) === value ? ' selected' : '') + '>' + label + '</option>';
+      }
+
+      function renderSfaEquipmentList(items) {
+        const wrap = document.getElementById('sfaEquipmentList');
+        if (!wrap) return;
+        wrap.innerHTML = '';
+        normalizeSfaEquipmentRows(items).forEach(function(item) { addSfaEquipmentRow(item || {}); });
+      }
+
+      window.addSfaEquipmentRow = function addSfaEquipmentRow(item) {
+        const wrap = document.getElementById('sfaEquipmentList');
+        if (!wrap) return;
+        item = item || {};
+        const row = document.createElement('tr');
+        row.className = 'sfa-equipment-row';
+        row.innerHTML =
+          '<td><input class="sfaEquipEquipment" value="' + escapeHtml(item.equipment || item.type || '') + '"></td>' +
+          '<td><input class="sfaEquipTotal" type="number" inputmode="numeric" value="' + escapeHtml(item.total || item.qty || '') + '"></td>' +
+          '<td><input class="sfaEquipTested" type="number" inputmode="numeric" value="' + escapeHtml(item.tested || '') + '"></td>' +
+          '<td><input class="sfaEquipPassed" type="number" inputmode="numeric" value="' + escapeHtml(item.passed || '') + '"></td>' +
+          '<td><input class="sfaEquipFailed" type="number" inputmode="numeric" value="' + escapeHtml(item.failed || '') + '"></td>' +
+          '<td><select class="sfaEquipChecked">' +
+            '<option value=""></option>' +
+            sfaTickOption('✓', item.checkedOnInspection || item.checked || '', '✓') +
+            sfaTickOption('✗', item.checkedOnInspection || item.checked || '', '✗') +
+            sfaTickOption('—', item.checkedOnInspection || item.checked || '', '— / N/A') +
+          '</select></td>' +
+          '<td><select class="sfaEquipResult"><option value=""></option><option value="YES"' + (String(item.result || '').toUpperCase()==='YES' ? ' selected' : '') + '>YES</option><option value="NO"' + (String(item.result || '').toUpperCase()==='NO' ? ' selected' : '') + '>NO</option><option value="NA"' + (String(item.result || '').toUpperCase()==='NA' || String(item.result || '').toUpperCase()==='N/A' ? ' selected' : '') + '>N/A</option></select></td>';
+        wrap.appendChild(row);
+      };
+
+      function collectSfaEquipmentList() {
+        return Array.from(document.querySelectorAll('.sfa-equipment-row')).map(function(row) {
+          return {
+            equipment: (row.querySelector('.sfaEquipEquipment') || {}).value || '',
+            total: (row.querySelector('.sfaEquipTotal') || {}).value || '',
+            tested: (row.querySelector('.sfaEquipTested') || {}).value || '',
+            passed: (row.querySelector('.sfaEquipPassed') || {}).value || '',
+            failed: (row.querySelector('.sfaEquipFailed') || {}).value || '',
+            checkedOnInspection: normalizeSfaCheckedTick((row.querySelector('.sfaEquipChecked') || {}).value || ''),
+            result: (row.querySelector('.sfaEquipResult') || {}).value || ''
+          };
+        }).filter(function(item) { return item.equipment || item.total || item.tested || item.passed || item.failed || item.checkedOnInspection || item.result; });
+      }
+
+      function applyEditorReportLayout(report) {
+        const isSfa = report && report.code === 'SFA';
+        const isSel = report && report.code === 'SEL';
+        const sfaFields = document.getElementById('sfaOfflineFields');
+        const selFields = document.getElementById('selOfflineFields');
+        const wAdmin = document.getElementById('wOfflineAdminFields');
+        const wWork = document.getElementById('wOfflineWorkCostFields');
+        const materialQuick = document.getElementById('editorMaterialQuickBtn');
+        const sfaQuick = document.getElementById('editorSfaEquipmentQuickBtn');
+        const sfaPayloadBtn = document.getElementById('editorSfaPayloadPreviewBtn');
+        const sfaPayloadPreview = document.getElementById('sfaCloudPayloadPreview');
+        if (sfaFields) sfaFields.classList.toggle('hidden-report-fields', !isSfa);
+        if (selFields) selFields.classList.toggle('hidden-report-fields', !isSel);
+        if (wAdmin) wAdmin.classList.toggle('hidden-report-fields', isSfa || isSel);
+        if (wWork) wWork.classList.toggle('hidden-report-fields', isSfa || isSel);
+        if (materialQuick) materialQuick.classList.toggle('hidden-report-fields', isSfa || isSel);
+        if (sfaQuick) sfaQuick.classList.toggle('hidden-report-fields', !isSfa);
+        if (sfaPayloadBtn) sfaPayloadBtn.classList.toggle('hidden-report-fields', !isSfa);
+        if (!isSfa && sfaPayloadPreview) sfaPayloadPreview.classList.add('hidden-report-fields');
+      }
+
+      function openEditorForItem(item) {
+        if (!item || !item.draft) return;
+        const report = getOfflineReportConfig(item);
+        const titleEl = document.getElementById('offlineEditorTitle');
+        const noteEl = document.getElementById('offlineEditorNote');
+        const syncBtn = document.getElementById('offlineEditorSyncBtn');
+        const isEsrBeta = !!(item && item.draft && item.draft.esrOfflineFirstBeta);
+        if (titleEl) titleEl.textContent = isEsrBeta ? 'ESR Offline-First Beta · V6.3c74w' : ('Edit Offline ' + report.code + ' Draft');
+        if (noteEl) {
+          noteEl.textContent = isEsrBeta
+            ? 'Safe beta route: fast GitHub/offline ESR form. Normal live ESR remains unchanged until you choose to sync/create PDF.'
+            : (report.code === 'W'
+              ? 'This is the local iPad editor. Engineer Service Reports can save offline and sync to Cloud Drafts when signal returns.'
+              : (report.code === 'SEL'
+                ? 'This is the local SEL cloud-draft bridge editor. Save locally, then Sync to Cloud. Open from Cloud Drafts to use the normal online Complete Job button.'
+                : 'This is the local SFA cloud-draft bridge editor. Save locally, then Sync to Cloud. Open from Cloud Drafts to use the normal online Complete Job button.'));
+        }
+        if (syncBtn) {
+          syncBtn.disabled = !report.syncableOffline;
+          syncBtn.textContent = report.syncableOffline ? 'Save + Sync' : 'Save Local Only';
+        }
+        applyEditorReportLayout(report);
+        const sfaPayloadPreview = document.getElementById('sfaCloudPayloadPreview');
+        const sfaPayloadJson = document.getElementById('sfaCloudPayloadJson');
+        if (sfaPayloadPreview) sfaPayloadPreview.classList.add('hidden-report-fields');
+        if (sfaPayloadJson) sfaPayloadJson.value = '';
+        const d = item.draft || {};
+        document.getElementById('editOfflineId').value = item.offlineId || '';
+        setEditValue('editDraftName', item.draftName || d.draftName || buildEditorDraftName(d));
+        setEditValue('editEngineer', d.engineer || item.engineer || '');
+        setEditValue('editServiceDate', d.serviceDate || '');
+        setEditValue('editCustomer', d.customer || item.customer || '');
+        setEditValue('editSite', d.site || item.site || '');
+        setEditValue('editSfaSageAccountNo', d.sageAccountNo || d.sfaSageAccountNo || '');
+        setEditValue('editSfaContractId', d.contractId || d.sfaContractId || '');
+        setEditValue('editSfaOrderNo', d.orderNo || d.sfaOrderNo || d.customerOrderNo || '');
+        setEditValue('editSfaAsbestosAvailable', d.asbestosAvailable || 'NO');
+        setEditValue('editSfaLastServiceVisit', d.lastServiceVisit || d.sfaLastServiceVisit || '');
+        setEditValue('editSfaNextServiceVisit', d.nextServiceVisit || d.sfaNextServiceVisit || '');
+        setEditValue('editSfaServiceVisit', d.faServiceVisit || d.sfaServiceVisit || 'Annual');
+        setEditValue('editSfaBafeCompliance', d.bafeCompliance || d.sfaBafeCompliance || 'NO');
+        setEditValue('editSaveFaEquipmentTotals', d.saveFaEquipmentTotals || 'NO');
+        setEditValue('editFaExistingBatterySize', d.faExistingBatterySize || d.sfaBatteries || '');
+        setEditValue('editFaBatteryDate', d.faBatteryDate || '');
+        setEditValue('editFaFalseAlarms12Months', d.faFalseAlarms12Months || '');
+        setEditValue('editFaBatteryVoltageReading', d.faBatteryVoltageReading || '');
+        setEditValue('editFaQuiescentCurrent', d.faQuiescentCurrent || '');
+        setEditValue('editFaAlarmCurrent', d.faAlarmCurrent || '');
+        setEditValue('editFaChargerVoltage', d.faChargerVoltage || '');
+        setEditValue('editFaStandbyTime', d.faStandbyTime || '');
+        setEditValue('editFaBatteryRequired', d.faBatteryRequired || '');
+        setEditValue('editFaSystemOperatingVoltage', d.faSystemOperatingVoltage || d.sfaSystemType || '');
+        setEditValue('editFaFalseAlarmsPer100', d.faFalseAlarmsPer100 || '');
+        setEditValue('editFaMajorNonCompliance', d.faMajorNonCompliance || 'NO');
+        setEditValue('editFaWorkCarriedOut', d.faWorkCarriedOut || d.workDescription || '');
+        setEditValue('editFaNonCompliance', d.faNonCompliance || d.sfaRecommendations || d.sfaFaults || '');
+        setEditValue('editFaReason', d.faReason || '');
+        setOfflineSfaPhotoPreview(d.panelPhoto || d.sfaPanelPhoto || '');
+        const sfaPhotoInput = document.getElementById('editSfaPanelPhoto');
+        if (sfaPhotoInput) sfaPhotoInput.value = '';
+        setEditValue('editFaServiceCost', d.faServiceCost || '0.00');
+        setEditValue('editFaMaterialCost', d.faMaterialCost || '0.00');
+        setEditValue('editFaLabourCost', d.faLabourCost || '0.00');
+        setEditValue('editSfaSubTotal', d.subTotal || '0.00');
+        setEditValue('editSfaVat', d.vat || '0.00');
+        setEditValue('editSfaTotal', d.total || '0.00');
+        setEditValue('editFaQuickQuoteRequired', d.faQuickQuoteRequired || '');
+        setEditValue('editFaRiskAssessmentRecommended', d.faRiskAssessmentRecommended || 'NO');
+        setEditValue('editFaChangesToReport', d.faChangesToReport || 'NO');
+        setEditValue('editFaNonCompliantHeader', d.faNonCompliantHeader || 'NO');
+        setEditValue('editContactName', d.contactName || '');
+        setEditValue('editSfaSystemType', d.sfaSystemType || '');
+        setEditValue('editSfaPanelMakeModel', d.sfaPanelMakeModel || '');
+        setEditValue('editSfaPanelLocation', d.sfaPanelLocation || '');
+        setEditValue('editSfaZones', d.sfaZones || '');
+        setEditValue('editSfaCallPoints', d.sfaCallPoints || '');
+        setEditValue('editSfaDetectors', d.sfaDetectors || '');
+        setEditValue('editSfaSounders', d.sfaSounders || '');
+        setEditValue('editSfaBatteries', d.sfaBatteries || '');
+        setEditValue('editSfaFaults', d.sfaFaults || '');
+        setEditValue('editSfaRecommendations', d.sfaRecommendations || '');
+        renderSfaEquipmentList(d.faEquipmentRows || d.sfaEquipmentList || []);
+        setEditValue('editSelSageAccountNo', d.sageAccountNo || '');
+        setEditValue('editSelContractId', d.contractId || '');
+        setEditValue('editSelAsbestosAvailable', d.asbestosAvailable || 'NO');
+        setEditValue('editSelServiceVisit', d.elServiceVisit || '12 MONTHLY/3 HOUR');
+        setEditValue('editSelLastServiceVisit', d.lastServiceVisit || '');
+        setEditValue('editSelNextServiceVisit', d.nextServiceVisit || '');
+        setEditValue('editElTotalFittings', d.elTotalFittings || '');
+        setEditValue('editElTested', d.elTested || '');
+        setEditValue('editElPassed', d.elPassed || '');
+        setEditValue('editElFailed', d.elFailed || '');
+        setEditValue('editElReason', d.elReason || '');
+        setEditValue('editElQuickQuoteRef', d.elQuickQuoteRef || '');
+        setEditValue('editElBulkhead', d.elBulkhead || '');
+        setEditValue('editElExitSigns', d.elExitSigns || '');
+        setEditValue('editElRound2d', d.elRound2d || '');
+        setEditValue('editElFluorescentLed', d.elFluorescentLed || '');
+        setEditValue('editElTwinSpots', d.elTwinSpots || '');
+        setEditValue('editElSpotLights', d.elSpotLights || '');
+        setEditValue('editElTestSwitches', d.elTestSwitches || '');
+        setEditValue('editElCentralBattery', d.elCentralBattery || '');
+        setEditValue('editElBatteries', d.elBatteries || '');
+        setEditValue('editElOther', d.elOther || '');
+        setEditValue('editElLogBookCorrect', d.elLogBookCorrect || 'YES');
+        setEditValue('editElLuminairesFunction', d.elLuminairesFunction || 'YES');
+        setEditValue('editElDrawingsAvailable', d.elDrawingsAvailable || 'YES');
+        setEditValue('editElLocalCircuit', d.elLocalCircuit || 'YES');
+        setEditValue('editElTestPointsPresent', d.elTestPointsPresent || 'YES');
+        setEditValue('editElLampBatteriesMarked', d.elLampBatteriesMarked || 'YES');
+        setEditValue('editElDiffusersClean', d.elDiffusersClean || 'YES');
+        setEditValue('editElSatisfactoryCondition', d.elSatisfactoryCondition || 'YES');
+        setEditValue('editElNominalVoltageMarked', d.elNominalVoltageMarked || 'YES');
+        setEditValue('editElCorrectLamps', d.elCorrectLamps || 'YES');
+        setEditValue('editElAlterationsDecor', d.elAlterationsDecor || 'NO');
+        setEditValue('editElHazardsCovered', d.elHazardsCovered || 'YES');
+        setEditValue('editElPointsOfEmphasis', d.elPointsOfEmphasis || 'YES');
+        setEditValue('editElDateInstallationRecorded', d.elDateInstallationRecorded || 'YES');
+        setEditValue('editElBatteryDateVisible', d.elBatteryDateVisible || 'YES');
+        setEditValue('editElSuppliesNormal', d.elSuppliesNormal || 'YES');
+        setEditValue('editElChargingRestored', d.elChargingRestored || 'YES');
+        setEditValue('editElIndicationLamps', d.elIndicationLamps || 'YES');
+        setEditValue('editElBatteryElectrolytes', d.elBatteryElectrolytes || 'N/A');
+        setEditValue('editElUserAwareAction', d.elUserAwareAction || 'YES');
+        setEditValue('editElCorrectiveAction', d.elCorrectiveAction || '');
+        setEditValue('editElServiceCost', d.elServiceCost || '0.00');
+        setEditValue('editElMaterialCost', d.elMaterialCost || '0.00');
+        setEditValue('editElLabourCost', d.elLabourCost || '0.00');
+        setEditValue('editSelSubTotal', d.elSubTotal || d.subTotal || '0.00');
+        setEditValue('editSelVat', d.elVat || d.vat || '0.00');
+        setEditValue('editSelTotal', d.elTotal || d.total || '0.00');
+        setEditValue('editElCostDisplayMode', d.elCostDisplayMode || 'SEPARATE');
+        setEditValue('editElNonCompliantHeader', d.elNonCompliantHeader || 'NO');
+        setEditValue('editSageAccountNo', d.sageAccountNo || '');
+        setEditValue('editCustomerOrderNo', d.customerOrderNo || '');
+        setEditValue('editOurRefNo', d.ourRefNo || '');
+        setEditValue('editAsbestosAvailable', d.asbestosAvailable || '');
+        setEditValue('editWorkDescription', d.workDescription || '');
+        setEditValue('editWorkDescriptionQty', d.workDescriptionQty || '');
+        setEditValue('editWorkDescriptionUnitPrice', d.workDescriptionUnitPrice || '');
+        setEditValue('editWorkDescriptionTotalPrice', d.workDescriptionTotalPrice || '');
+        setEditValue('editWorkDescriptionChargeNote', d.workDescriptionChargeNote || '');
+        renderEditorMaterials(d.materials || []);
+        setEditValue('editComments', d.comments || '');
+        setEditValue('editTravelTime', d.travelTime || '');
+        setEditValue('editArrivalTime', d.arrivalTime || '');
+        setEditValue('editTimeOnSite', d.timeOnSite || '');
+        setEditValue('editCarriage', d.carriage || '');
+        setEditValue('editManualSubtotalOverride', d.manualSubtotalOverride || '');
+        setEditValue('editManualSubtotal', d.manualSubtotal || '');
+        setEditValue('editSubTotal', d.subTotal || '');
+        setEditValue('editVat', d.vat || '');
+        setEditValue('editTotal', d.total || '');
+        setEditValue('editCustomerName', d.customerName || '');
+        setEditValue('editCustomerDate', d.customerDate || '');
+        home.classList.add('hidden');
+        offlineDrafts.classList.remove('active');
+        loader.classList.add('hidden');
+        fallback.classList.add('hidden');
+        offlineEditor.classList.add('active');
+        setupOfflineSignatureCanvases();
+        setTimeout(function() {
+          setupOfflineSignatureCanvases();
+          setOfflineSignatureData('editEngineerSignature', d.engineerSignature || '');
+          setOfflineSignatureData('editCustomerSignature', d.customerSignature || '');
+        }, 80);
+        updateEditorNetworkBadge();
+        bindEditorChangeTracking();
+        populateOfflineLookupPickers();
+        calculateEditorTotals();
+        setEditorDirty(false);
+        setEditorStatus(report.code === 'W' ? 'Editing offline Engineer Service Report draft saved on this iPad. Press Complete Job - Save Offline before leaving.' : ('Editing offline ' + report.code + ' draft saved on this iPad. Complete Job - Save Offline, then Sync to Cloud when ready.'));
+      }
+
+      function firstLine(value) {
+        return String(value || '').split(/\r?\n/).map(function(x) { return x.trim(); }).filter(Boolean)[0] || '';
+      }
+
+      function buildEditorDraftName(draft) {
+        draft = draft || {};
+        const typeCode = String(draft.reportTypeCode || '').toUpperCase();
+        const label = (OFFLINE_REPORT_TYPES[typeCode] && OFFLINE_REPORT_TYPES[typeCode].label) || 'Engineer Service Report';
+        const name = firstLine(draft.customer || draft.site) || label;
+        const date = draft.serviceDate || new Date().toISOString().slice(0, 10);
+        return name + ' - ' + date;
+      }
+
+      function makeOfflineId(reportType) {
+        const type = OFFLINE_REPORT_TYPES[String(reportType || 'W').toUpperCase()] ? String(reportType || 'W').toUpperCase() : 'W';
+        return type + '-OFFLINE-' + Date.now() + '-' + Math.random().toString(36).slice(2, 7).toUpperCase();
+      }
+
+      function createBlankOfflineWItem() {
+        const now = new Date();
+        const today = now.toISOString().slice(0, 10);
+        const offlineId = makeOfflineId('W');
+        const draft = {
+          offlineCreated: true,
+          offlineId: offlineId,
+          reportType: 'Engineer Service Report',
+          reportTypeCode: 'W',
+          draftName: 'Offline Engineer Service Report - ' + today,
+          serviceDate: today,
+          engineer: '',
+          customer: '',
+          site: '',
+          sageAccountNo: '',
+          customerOrderNo: '',
+          ourRefNo: '',
+          asbestosAvailable: '',
+          workDescription: '',
+          workDescriptionQty: '',
+          workDescriptionUnitPrice: '',
+          workDescriptionTotalPrice: '',
+          workDescriptionChargeNote: '',
+          materials: [],
+          comments: '',
+          travelTime: '',
+          arrivalTime: '',
+          timeOnSite: '',
+          carriage: '',
+          manualSubtotalOverride: '',
+          manualSubtotal: '',
+          subTotal: '',
+          vat: '',
+          total: '',
+          customerName: '',
+          customerDate: '',
+          savedAt: now.toISOString()
+        };
+        return {
+          offlineId: offlineId,
+          reportType: 'W',
+          draftId: '',
+          draftName: draft.draftName,
+          engineer: '',
+          customer: '',
+          site: '',
+          savedAt: draft.savedAt,
+          source: 'github-shell-start-offline-w',
+          draft: draft
+        };
+      }
+
+      function createBlankOfflineSfaTrialItem() {
+        const now = new Date();
+        const today = now.toISOString().slice(0, 10);
+        const offlineId = makeOfflineId('SFA');
+        const draft = {
+          offlineCreated: true,
+          offlineId: offlineId,
+          reportType: 'Fire Alarm Service Report',
+          reportTypeCode: 'SFA',
+          draftName: 'Offline SFA - ' + today,
+          serviceDate: today,
+          engineer: '',
+          customer: '',
+          site: '',
+          stage: 'sfa-cloud-draft-bridge-route-fix',
+          note: 'V6.3c71a SFA offline can sync to Cloud Drafts via the fael backend route. PDF creation is not enabled yet.',
+          sageAccountNo: '',
+          contractId: '',
+          orderNo: '',
+          asbestosAvailable: 'NO',
+          lastServiceVisit: '',
+          nextServiceVisit: '',
+          faServiceVisit: 'Annual',
+          bafeCompliance: 'NO',
+          faEquipmentRows: normalizeSfaEquipmentRows([]),
+          saveFaEquipmentTotals: 'NO',
+          faExistingBatterySize: '',
+          faBatteryDate: '',
+          faFalseAlarms12Months: '',
+          faBatteryVoltageReading: '',
+          faQuiescentCurrent: '',
+          faAlarmCurrent: '',
+          faChargerVoltage: '',
+          faStandbyTime: '',
+          faBatteryRequired: '',
+          faSystemOperatingVoltage: '',
+          faFalseAlarmsPer100: '',
+          faMajorNonCompliance: 'NO',
+          faWorkCarriedOut: '',
+          faNonCompliance: '',
+          faReason: '',
+          faServiceCost: '0.00',
+          faMaterialCost: '0.00',
+          faLabourCost: '0.00',
+          faQuickQuoteRequired: '',
+          faRiskAssessmentRecommended: 'NO',
+          faChangesToReport: 'NO',
+          faNonCompliantHeader: 'NO',
+          subTotal: '',
+          vat: '',
+          total: '',
+          customerName: '',
+          customerDate: '',
+          savedAt: now.toISOString()
+        };
+        return {
+          offlineId: offlineId,
+          reportType: 'SFA',
+          draftId: '',
+          draftName: draft.draftName,
+          engineer: '',
+          customer: '',
+          site: '',
+          savedAt: draft.savedAt,
+          source: 'github-shell-start-offline-sfa-cloud-bridge-route-fix',
+          draft: draft
+        };
+      }
+
+
+
+      function createBlankOfflineSelTrialItem() {
+        const now = new Date();
+        const today = now.toISOString().slice(0, 10);
+        const offlineId = makeOfflineId('SEL');
+        const draft = {
+          offlineCreated: true,
+          offlineId: offlineId,
+          reportType: 'Emergency Lighting Report',
+          reportTypeCode: 'SEL',
+          draftName: 'Offline SEL - ' + today,
+          serviceDate: today,
+          customerDate: today,
+          engineer: '',
+          customer: '',
+          site: '',
+          stage: 'sel-cloud-draft-bridge',
+          note: 'V6.3c73e adds SFA panel photo capture to the tick-choice SFA flow.',
+          sageAccountNo: '',
+          contractId: '',
+          asbestosAvailable: 'NO',
+          lastServiceVisit: '',
+          nextServiceVisit: '',
+          elServiceVisit: '12 MONTHLY/3 HOUR',
+          elTotalFittings: '',
+          elTested: '',
+          elPassed: '',
+          elFailed: '',
+          elBulkhead: '',
+          elExitSigns: '',
+          elRound2d: '',
+          elFluorescentLed: '',
+          elTwinSpots: '',
+          elSpotLights: '',
+          elTestSwitches: '',
+          elCentralBattery: '',
+          elBatteries: '',
+          elOther: '',
+          elLogBookCorrect: 'YES',
+          elLuminairesFunction: 'YES',
+          elDrawingsAvailable: 'YES',
+          elLocalCircuit: 'YES',
+          elTestPointsPresent: 'YES',
+          elLampBatteriesMarked: 'YES',
+          elDiffusersClean: 'YES',
+          elSatisfactoryCondition: 'YES',
+          elNominalVoltageMarked: 'YES',
+          elCorrectLamps: 'YES',
+          elAlterationsDecor: 'NO',
+          elHazardsCovered: 'YES',
+          elPointsOfEmphasis: 'YES',
+          elDateInstallationRecorded: 'YES',
+          elBatteryDateVisible: 'YES',
+          elSuppliesNormal: 'YES',
+          elChargingRestored: 'YES',
+          elIndicationLamps: 'YES',
+          elBatteryElectrolytes: 'N/A',
+          elUserAwareAction: 'YES',
+          elCorrectiveAction: '',
+          elReason: '',
+          elQuickQuoteRef: '',
+          elCostDisplayMode: 'SEPARATE',
+          elNonCompliantHeader: 'NO',
+          elServiceCost: '0.00',
+          elMaterialCost: '0.00',
+          elLabourCost: '0.00',
+          elSubTotal: '0.00',
+          elVat: '0.00',
+          elTotal: '0.00',
+          subTotal: '0.00',
+          vat: '0.00',
+          total: '0.00',
+          customerName: '',
+          savedAt: now.toISOString()
+        };
+        return {
+          offlineId: offlineId,
+          reportType: 'SEL',
+          draftId: '',
+          draftName: draft.draftName,
+          engineer: '',
+          customer: '',
+          site: '',
+          savedAt: draft.savedAt,
+          source: 'github-shell-start-offline-sel-cloud-bridge',
+          draft: draft
+        };
+      }
+
+      window.autoNameOfflineW = function autoNameOfflineW(event) {
+        stopTap(event);
+        const draft = {
+          customer: getEditValue('editCustomer'),
+          site: getEditValue('editSite'),
+          serviceDate: getEditValue('editServiceDate')
+        };
+        setEditValue('editDraftName', buildEditorDraftName(draft));
+        setEditorDirty(true);
+        setEditorStatus('Draft name updated from customer/site.');
+      };
+
+      window.setCustomerDateToday = function setCustomerDateToday(event) {
+        stopTap(event);
+        setEditValue('editCustomerDate', new Date().toISOString().slice(0, 10));
+        setEditorDirty(true);
+        setEditorStatus('Customer date set to today.');
+      };
+
+      window.addThreeMaterialRows = function addThreeMaterialRows(event) {
+        stopTap(event);
+        addEditorMaterialRow({}); addEditorMaterialRow({}); addEditorMaterialRow({});
+        setEditorDirty(true);
+        setEditorStatus('Added 3 blank material/work rows.');
+      };
+
+      window.addCommonSfaEquipmentRows = function addCommonSfaEquipmentRows(event) {
+        stopTap(event);
+        renderSfaEquipmentList([]);
+        setEditorDirty(true);
+        setEditorStatus('Reset SFA equipment checked table to the online default rows.');
+      };
+
+      window.startEsrOfflineFirstBeta = function startEsrOfflineFirstBeta(event) {
+        stopTap(event);
+        const item = createBlankOfflineWItem();
+        item.source = 'github-shell-esr-offline-first-beta-v6_3c74u';
+        item.draftName = 'ESR Offline-First Beta - ' + new Date().toISOString().slice(0, 10);
+        if (item.draft) {
+          item.draft.draftName = item.draftName;
+          item.draft.esrOfflineFirstBeta = true;
+          item.draft.betaVersion = 'V6.3c74w';
+          item.draft.comments = item.draft.comments || 'ESR Offline-First Beta test draft.';
+        }
+        pendingOfflineEditorItem = item;
+        openEditorForItem(item);
+        const title = document.getElementById('offlineEditorTitle');
+        if (title) title.textContent = 'ESR Offline-First Beta · V6.3c74w';
+        const note = document.getElementById('offlineEditorNote');
+        if (note) note.textContent = 'Safe beta route: fast GitHub/offline ESR form. Normal live ESR remains unchanged until you choose to sync/create PDF.';
+        setEditorStatus('ESR Offline-First Beta started. Nothing is saved yet - press Complete Job - Save Offline when ready.');
+      };
+
+      window.startNewOfflineW = function startNewOfflineW(event) {
+        stopTap(event);
+        const item = createBlankOfflineWItem();
+        pendingOfflineEditorItem = item;
+        openEditorForItem(item);
+        setEditorStatus('New offline Engineer Service Report started. Nothing is saved yet - press Complete Job - Save Offline when ready.');
+      };
+
+      window.startNewOfflineSfaTrial = function startNewOfflineSfaTrial(event) {
+        stopTap(event);
+        const item = createBlankOfflineSfaTrialItem();
+        pendingOfflineEditorItem = item;
+        openEditorForItem(item);
+        setEditorStatus('New offline SFA started. Nothing is saved yet - press Complete Job - Save Offline when ready, then Sync to Cloud when signal returns.');
+      };
+
+      window.startNewOfflineSelTrial = function startNewOfflineSelTrial(event) {
+        stopTap(event);
+        const item = createBlankOfflineSelTrialItem();
+        pendingOfflineEditorItem = item;
+        openEditorForItem(item);
+        setEditorStatus('New offline SEL started. Nothing is saved yet - press Complete Job - Save Offline when ready, then Sync to Cloud when signal returns.');
+      };
+
+      function saveEditorToQueue() {
+        const offlineId = getEditValue('editOfflineId');
+        let item = getOfflineItemById(offlineId);
+        if ((!item || !item.draft) && pendingOfflineEditorItem && pendingOfflineEditorItem.offlineId === offlineId) {
+          item = pendingOfflineEditorItem;
+        }
+        if (!item || !item.draft) {
+          setEditorStatus('Could not find this offline draft on the iPad. Go back and refresh Offline Drafts.');
+          return null;
+        }
+        calculateEditorTotals();
+        const d = Object.assign({}, item.draft);
+        d.savedAt = new Date().toISOString();
+        d.engineer = getEditValue('editEngineer');
+        d.serviceDate = getEditValue('editServiceDate');
+        d.customer = getEditValue('editCustomer');
+        d.site = getEditValue('editSite');
+        const reportCodeForSave = String(d.reportTypeCode || item.reportType || '').toUpperCase();
+        const savingSfa = reportCodeForSave === 'SFA';
+        const savingSel = reportCodeForSave === 'SEL';
+        if (savingSfa) {
+          d.sageAccountNo = getEditValue('editSfaSageAccountNo');
+          d.contractId = getEditValue('editSfaContractId');
+          d.orderNo = getEditValue('editSfaOrderNo');
+          d.asbestosAvailable = getEditValue('editSfaAsbestosAvailable');
+          d.lastServiceVisit = getEditValue('editSfaLastServiceVisit');
+          d.nextServiceVisit = getEditValue('editSfaNextServiceVisit');
+          d.faServiceVisit = getEditValue('editSfaServiceVisit');
+          d.bafeCompliance = getEditValue('editSfaBafeCompliance');
+          d.faEquipmentRows = collectSfaEquipmentList();
+          d.saveFaEquipmentTotals = getEditValue('editSaveFaEquipmentTotals');
+          d.faExistingBatterySize = getEditValue('editFaExistingBatterySize');
+          d.faBatteryDate = getEditValue('editFaBatteryDate');
+          d.faFalseAlarms12Months = getEditValue('editFaFalseAlarms12Months');
+          d.faBatteryVoltageReading = getEditValue('editFaBatteryVoltageReading');
+          d.faQuiescentCurrent = getEditValue('editFaQuiescentCurrent');
+          d.faAlarmCurrent = getEditValue('editFaAlarmCurrent');
+          d.faChargerVoltage = getEditValue('editFaChargerVoltage');
+          d.faStandbyTime = getEditValue('editFaStandbyTime');
+          d.faBatteryRequired = getEditValue('editFaBatteryRequired');
+          d.faSystemOperatingVoltage = getEditValue('editFaSystemOperatingVoltage');
+          d.faFalseAlarmsPer100 = getEditValue('editFaFalseAlarmsPer100');
+          d.faMajorNonCompliance = getEditValue('editFaMajorNonCompliance');
+          d.faWorkCarriedOut = getEditValue('editFaWorkCarriedOut');
+          d.faNonCompliance = getEditValue('editFaNonCompliance');
+          d.faReason = getEditValue('editFaReason');
+          d.panelPhoto = d.panelPhoto || d.sfaPanelPhoto || '';
+          d.sfaPanelPhoto = d.panelPhoto;
+          d.faServiceCost = getEditValue('editFaServiceCost');
+          d.faMaterialCost = getEditValue('editFaMaterialCost');
+          d.faLabourCost = getEditValue('editFaLabourCost');
+          d.subTotal = getEditValue('editSfaSubTotal');
+          d.vat = getEditValue('editSfaVat');
+          d.total = getEditValue('editSfaTotal');
+          d.faQuickQuoteRequired = getEditValue('editFaQuickQuoteRequired');
+          d.faRiskAssessmentRecommended = getEditValue('editFaRiskAssessmentRecommended');
+          d.faChangesToReport = getEditValue('editFaChangesToReport');
+          d.faNonCompliantHeader = getEditValue('editFaNonCompliantHeader');
+        }
+        if (savingSel) {
+          d.sageAccountNo = getEditValue('editSelSageAccountNo');
+          d.contractId = getEditValue('editSelContractId');
+          d.asbestosAvailable = getEditValue('editSelAsbestosAvailable');
+          d.elServiceVisit = getEditValue('editSelServiceVisit');
+          d.lastServiceVisit = getEditValue('editSelLastServiceVisit');
+          d.nextServiceVisit = getEditValue('editSelNextServiceVisit');
+          d.elTotalFittings = getEditValue('editElTotalFittings');
+          d.elTested = getEditValue('editElTested');
+          d.elPassed = getEditValue('editElPassed');
+          d.elFailed = getEditValue('editElFailed');
+          d.elReason = getEditValue('editElReason');
+          d.elQuickQuoteRef = getEditValue('editElQuickQuoteRef');
+          d.elBulkhead = getEditValue('editElBulkhead');
+          d.elExitSigns = getEditValue('editElExitSigns');
+          d.elRound2d = getEditValue('editElRound2d');
+          d.elFluorescentLed = getEditValue('editElFluorescentLed');
+          d.elTwinSpots = getEditValue('editElTwinSpots');
+          d.elSpotLights = getEditValue('editElSpotLights');
+          d.elTestSwitches = getEditValue('editElTestSwitches');
+          d.elCentralBattery = getEditValue('editElCentralBattery');
+          d.elBatteries = getEditValue('editElBatteries');
+          d.elOther = getEditValue('editElOther');
+          d.elLogBookCorrect = getEditValue('editElLogBookCorrect');
+          d.elLuminairesFunction = getEditValue('editElLuminairesFunction');
+          d.elDrawingsAvailable = getEditValue('editElDrawingsAvailable');
+          d.elLocalCircuit = getEditValue('editElLocalCircuit');
+          d.elTestPointsPresent = getEditValue('editElTestPointsPresent');
+          d.elLampBatteriesMarked = getEditValue('editElLampBatteriesMarked');
+          d.elDiffusersClean = getEditValue('editElDiffusersClean');
+          d.elSatisfactoryCondition = getEditValue('editElSatisfactoryCondition');
+          d.elNominalVoltageMarked = getEditValue('editElNominalVoltageMarked');
+          d.elCorrectLamps = getEditValue('editElCorrectLamps');
+          d.elAlterationsDecor = getEditValue('editElAlterationsDecor');
+          d.elHazardsCovered = getEditValue('editElHazardsCovered');
+          d.elPointsOfEmphasis = getEditValue('editElPointsOfEmphasis');
+          d.elDateInstallationRecorded = getEditValue('editElDateInstallationRecorded');
+          d.elBatteryDateVisible = getEditValue('editElBatteryDateVisible');
+          d.elSuppliesNormal = getEditValue('editElSuppliesNormal');
+          d.elChargingRestored = getEditValue('editElChargingRestored');
+          d.elIndicationLamps = getEditValue('editElIndicationLamps');
+          d.elBatteryElectrolytes = getEditValue('editElBatteryElectrolytes');
+          d.elUserAwareAction = getEditValue('editElUserAwareAction');
+          d.elCorrectiveAction = getEditValue('editElCorrectiveAction');
+          d.elServiceCost = getEditValue('editElServiceCost');
+          d.elMaterialCost = getEditValue('editElMaterialCost');
+          d.elLabourCost = getEditValue('editElLabourCost');
+          d.elSubTotal = getEditValue('editSelSubTotal');
+          d.elVat = getEditValue('editSelVat');
+          d.elTotal = getEditValue('editSelTotal');
+          d.subTotal = d.elSubTotal;
+          d.vat = d.elVat;
+          d.total = d.elTotal;
+          d.elCostDisplayMode = getEditValue('editElCostDisplayMode');
+          d.elNonCompliantHeader = getEditValue('editElNonCompliantHeader');
+        }
+        d.contactName = getEditValue('editContactName');
+        d.sfaSystemType = getEditValue('editSfaSystemType');
+        d.sfaPanelMakeModel = getEditValue('editSfaPanelMakeModel');
+        d.sfaPanelLocation = getEditValue('editSfaPanelLocation');
+        d.sfaZones = getEditValue('editSfaZones');
+        d.sfaCallPoints = getEditValue('editSfaCallPoints');
+        d.sfaDetectors = getEditValue('editSfaDetectors');
+        d.sfaSounders = getEditValue('editSfaSounders');
+        d.sfaBatteries = getEditValue('editSfaBatteries');
+        d.sfaFaults = getEditValue('editSfaFaults');
+        d.sfaRecommendations = getEditValue('editSfaRecommendations');
+        d.sfaEquipmentList = collectSfaEquipmentList();
+        if (!savingSfa && !savingSel) {
+          d.sageAccountNo = getEditValue('editSageAccountNo');
+          d.customerOrderNo = getEditValue('editCustomerOrderNo');
+          d.ourRefNo = getEditValue('editOurRefNo');
+          d.asbestosAvailable = getEditValue('editAsbestosAvailable');
+          d.workDescription = getEditValue('editWorkDescription');
+          d.workDescriptionQty = getEditValue('editWorkDescriptionQty');
+          d.workDescriptionUnitPrice = getEditValue('editWorkDescriptionUnitPrice');
+          d.workDescriptionTotalPrice = getEditValue('editWorkDescriptionTotalPrice');
+          d.workDescriptionChargeNote = getEditValue('editWorkDescriptionChargeNote');
+          d.materials = collectEditorMaterials();
+          d.comments = getEditValue('editComments');
+          d.travelTime = getEditValue('editTravelTime');
+          d.arrivalTime = getEditValue('editArrivalTime');
+          d.timeOnSite = getEditValue('editTimeOnSite');
+          d.carriage = getEditValue('editCarriage');
+          d.manualSubtotalOverride = getEditValue('editManualSubtotalOverride');
+          d.manualSubtotal = getEditValue('editManualSubtotal');
+        }
+        if (savingSfa) {
+          // V6.3c72: keep SFA totals from the SFA cost fields. Do not overwrite them with the hidden Engineer Service Report/W total fields.
+          d.subTotal = getEditValue('editSfaSubTotal');
+          d.vat = getEditValue('editSfaVat');
+          d.total = getEditValue('editSfaTotal');
+        } else if (!savingSel) {
+          d.subTotal = getEditValue('editSubTotal');
+          d.vat = getEditValue('editVat');
+          d.total = getEditValue('editTotal');
+        }
+        d.customerName = getEditValue('editCustomerName');
+        d.customerDate = getEditValue('editCustomerDate');
+        d.engineerSignature = getOfflineSignatureData('editEngineerSignature');
+        d.customerSignature = getOfflineSignatureData('editCustomerSignature');
+        const draftName = getEditValue('editDraftName') || item.draftName || buildEditorDraftName(d);
+        const updated = Object.assign({}, item, {
+          draft: d,
+          draftName: draftName,
+          engineer: d.engineer || '',
+          customer: d.customer || '',
+          site: d.site || '',
+          savedAt: d.savedAt
+        });
+        upsertOfflineItem(updated);
+        pendingOfflineEditorItem = null;
+        renderOfflineDrafts();
+        setEditorDirty(false);
+        setEditorStatus('Draft saved offline on this device at ' + new Date().toLocaleTimeString() + '.');
+        try { alert('Draft saved offline on this device.'); } catch (e) {}
+        return updated;
+      }
+
+      function buildSfaCloudPayload(item) {
+        item = item || {};
+        const d = item.draft || {};
+        const equipmentRows = normalizeSfaEquipmentRows(d.faEquipmentRows || d.sfaEquipmentList || []);
+        const draftName = item.draftName || d.draftName || buildEditorDraftName(d);
+        const selSubtotal = (parseMoney(d.elServiceCost) + parseMoney(d.elMaterialCost) + parseMoney(d.elLabourCost)).toFixed(2);
+        const selVat = (Number(selSubtotal) * 0.20).toFixed(2);
+        const selTotal = (Number(selSubtotal) + Number(selVat)).toFixed(2);
+        return {
+          payloadVersion: 'V6.3c72-sfa-cloud-draft-pdf-test',
+          source: 'fsd-certs-github-shell',
+          shellVersion: SHELL_VER,
+          action: 'SFA_CLOUD_DRAFT_READY',
+          syncEnabled: true,
+          pdfEnabled: true,
+          offlineId: item.offlineId || d.offlineId || '',
+          reportTypeCode: 'SFA',
+          reportType: 'Fire Alarm Service Report',
+          draftName: draftName,
+          savedAt: d.savedAt || item.savedAt || '',
+          preparedAt: new Date().toISOString(),
+          draft: {
+            offlineCreated: true,
+            offlineId: item.offlineId || d.offlineId || '',
+            reportTypeCode: 'SFA',
+            reportType: 'Fire Alarm Service Report',
+            draftName: draftName,
+            engineer: d.engineer || '',
+            serviceDate: d.serviceDate || '',
+            customer: d.customer || '',
+            site: d.site || '',
+            customerName: d.customerName || '',
+            customerDate: d.customerDate || '',
+            contactName: d.contactName || '',
+            sageAccountNo: d.sageAccountNo || '',
+            contractId: d.contractId || '',
+            orderNo: d.orderNo || '',
+            asbestosAvailable: d.asbestosAvailable || 'NO',
+            lastServiceVisit: d.lastServiceVisit || '',
+            nextServiceVisit: d.nextServiceVisit || '',
+            faServiceVisit: d.faServiceVisit || '',
+            bafeCompliance: d.bafeCompliance || 'NO',
+            faEquipmentRows: equipmentRows,
+            saveFaEquipmentTotals: d.saveFaEquipmentTotals || 'NO',
+            faExistingBatterySize: d.faExistingBatterySize || '',
+            faBatteryDate: d.faBatteryDate || '',
+            faFalseAlarms12Months: d.faFalseAlarms12Months || '',
+            faBatteryVoltageReading: d.faBatteryVoltageReading || '',
+            faQuiescentCurrent: d.faQuiescentCurrent || '',
+            faAlarmCurrent: d.faAlarmCurrent || '',
+            faChargerVoltage: d.faChargerVoltage || '',
+            faStandbyTime: d.faStandbyTime || '',
+            faBatteryRequired: d.faBatteryRequired || '',
+            faSystemOperatingVoltage: d.faSystemOperatingVoltage || '',
+            faFalseAlarmsPer100: d.faFalseAlarmsPer100 || '',
+            faMajorNonCompliance: d.faMajorNonCompliance || 'NO',
+            faWorkCarriedOut: d.faWorkCarriedOut || '',
+            faNonCompliance: d.faNonCompliance || '',
+            faReason: d.faReason || '',
+            faServiceCost: d.faServiceCost || '0.00',
+            faMaterialCost: d.faMaterialCost || '0.00',
+            faLabourCost: d.faLabourCost || '0.00',
+            subTotal: d.subTotal || '',
+            vat: d.vat || '',
+            total: d.total || '',
+            faQuickQuoteRequired: d.faQuickQuoteRequired || '',
+            faRiskAssessmentRecommended: d.faRiskAssessmentRecommended || 'NO',
+            faChangesToReport: d.faChangesToReport || 'NO',
+            faNonCompliantHeader: d.faNonCompliantHeader || 'NO',
+            engineerSignature: d.engineerSignature || '',
+            customerSignature: d.customerSignature || ''
+          },
+          backendBridge: {
+            proposedMessageType: 'FSD_OFFLINE_SFA_SYNC',
+            proposedPage: 'fael',
+            status: 'cloud-draft-sync-enabled-online-pdf-test'
+          }
+        };
+      }
+
+
+      function buildSelCloudPayload(item) {
+        item = item || {};
+        const d = item.draft || {};
+        const draftName = item.draftName || d.draftName || buildEditorDraftName(d);
+        const selSubtotal = (parseMoney(d.elServiceCost) + parseMoney(d.elMaterialCost) + parseMoney(d.elLabourCost)).toFixed(2);
+        const selVat = (Number(selSubtotal) * 0.20).toFixed(2);
+        const selTotal = (Number(selSubtotal) + Number(selVat)).toFixed(2);
+        return {
+          payloadVersion: 'V6.3c73d-sfa-tick-choices',
+          source: 'fsd-certs-github-shell',
+          shellVersion: SHELL_VER,
+          action: 'SEL_CLOUD_DRAFT_READY',
+          syncEnabled: true,
+          pdfEnabled: true,
+          offlineId: item.offlineId || d.offlineId || '',
+          reportTypeCode: 'SEL',
+          reportType: 'Emergency Lighting Report',
+          draftName: draftName,
+          savedAt: d.savedAt || item.savedAt || '',
+          preparedAt: new Date().toISOString(),
+          draft: Object.assign({}, d, {
+            offlineCreated: true,
+            offlineId: item.offlineId || d.offlineId || '',
+            reportTypeCode: 'SEL',
+            reportType: 'Emergency Lighting Report',
+            draftName: draftName,
+            elSubTotal: d.elSubTotal || selSubtotal,
+            elVat: d.elVat || selVat,
+            elTotal: d.elTotal || selTotal,
+            subTotal: d.elSubTotal || selSubtotal,
+            vat: d.elVat || selVat,
+            total: d.elTotal || selTotal
+          }),
+          backendBridge: {
+            proposedMessageType: 'FSD_OFFLINE_SEL_SYNC',
+            proposedPage: 'sel',
+            status: 'cloud-draft-sync-enabled-online-pdf-test'
+          }
+        };
+      }
+
+      function runSfaPayloadPreview(event) {
+        stopTap(event);
+        try {
+          const updated = saveEditorToQueue();
+          if (!updated) {
+            setEditorStatus('Could not build the SFA payload because the local draft was not found. Go back to Offline Certs & Reports, reopen the SFA draft and try again.');
+            return;
+          }
+          const report = getOfflineReportConfig(updated);
+          if (report.code !== 'SFA') {
+            setEditorStatus('Payload preview is only for SFA. Engineer Service Report sync remains unchanged.');
+            return;
+          }
+          const payload = buildSfaCloudPayload(updated);
+          const box = document.getElementById('sfaCloudPayloadPreview');
+          const out = document.getElementById('sfaCloudPayloadJson');
+          if (out) out.value = JSON.stringify(payload, null, 2);
+          if (box) {
+            box.classList.remove('hidden-report-fields');
+            box.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          }
+          setEditorStatus('SFA cloud payload preview generated locally. Nothing has been synced or sent to Apps Script.');
+        } catch (err) {
+          console.error('SFA payload preview failed', err);
+          const message = err && err.message ? err.message : String(err || 'Unknown preview error');
+          setEditorStatus('SFA payload preview failed locally: ' + message);
+          alert('SFA payload preview failed locally. Save still works. Error: ' + message);
+        }
+      }
+
+      window.previewSfaCloudPayload = runSfaPayloadPreview;
+
+      window.editOfflineItemById = function editOfflineItemById(offlineId) {
+        const item = getOfflineItemById(offlineId);
+        if (!item) return renderOfflineDrafts();
+        const report = getOfflineReportConfig(item);
+        if (!report.editableOffline) {
+          setOfflineStatus(report.code + ' is registered for the offline hub, but full offline editing is not enabled yet. W remains untouched.');
+          return;
+        }
+        openEditorForItem(item);
+      };
+
+      window.editOfflineWById = window.editOfflineItemById;
+
+      window.closeOfflineEditor = function closeOfflineEditor(event) {
+        stopTap(event);
+        offlineEditor.classList.remove('active');
+        offlineDrafts.classList.add('active');
+        renderOfflineDrafts();
+      };
+
+      window.saveOfflineEditor = function saveOfflineEditor(event) {
+        stopTap(event);
+        saveEditorToQueue();
+      };
+
+      window.saveOfflineEditorAndSync = function saveOfflineEditorAndSync(event) {
+        stopTap(event);
+        const updated = saveEditorToQueue();
+        if (!updated) return;
+        const report = getOfflineReportConfig(updated);
+        if (!report.syncableOffline) {
+          setEditorStatus('Saved locally. ' + report.code + ' cannot sync yet in this version.');
+          return;
+        }
+        if (!navigator.onLine) {
+          setEditorStatus('Saved offline. Still no internet, so it cannot sync yet.');
+          return;
+        }
+        offlineEditor.classList.remove('active');
+        setOfflineStatus('Saved offline changes. Syncing to Cloud Drafts...');
+        loadOfflineBridgeForShellAction('sync', updated);
+      };
+
+      function loadOfflineBridgeForShellAction(action, item) {
+        home.classList.add('hidden');
+        offlineDrafts.classList.remove('active');
+        fallback.classList.add('hidden');
+        loader.classList.remove('hidden');
+        loaded = false;
+        hasStarted = true;
+        pendingShellAction = { action: action, item: item, attempts: 0, createdAt: Date.now() }; // V6.3c74t stale-bridge guard
+        const report = getOfflineReportConfig(item);
+        const shellPayload = {
+          type: action === 'sync' ? 'FSD_OFFLINE_' + report.code + '_SYNC' : 'FSD_OFFLINE_' + report.code + '_RESTORE',
+          source: 'fsd-certs-shell',
+          item: item,
+          ts: Date.now()
+        };
+        // V6.3c45: keep the iframe URL tiny. The c44 URL-hash payload could be too
+        // large for iPad/Safari/Google wrappers and leave the shell stuck on the
+        // loading/fallback screen. The full draft is carried in frame.name and
+        // repeated by postMessage after load; the URL only carries the action/id.
+        try {
+          frame.name = OFFLINE_W_WINDOW_NAME_PREFIX + JSON.stringify(shellPayload);
+        } catch (err) {}
+        const offlineIdParam = item && item.offlineId ? '&offlineId=' + encodeURIComponent(item.offlineId) : '';
+        frame.src = APP_URL + '?page=' + encodeURIComponent(report.page || 'esr') + '&offlineBridge=1&shell=ipad&offlineAction=' + encodeURIComponent(action) + offlineIdParam + '&v=' + encodeURIComponent(SHELL_VER) + '&ts=' + Date.now();
+        startFallbackTimer();
+      }
+
+      function sendPendingShellAction() {
+        if (!pendingShellAction || !frame || !frame.contentWindow) return;
+        pendingShellAction.attempts += 1;
+        const report = getOfflineReportConfig(pendingShellAction.item);
+        const type = pendingShellAction.action === 'sync' ? 'FSD_OFFLINE_' + report.code + '_SYNC' : 'FSD_OFFLINE_' + report.code + '_RESTORE';
+        try {
+          frame.contentWindow.postMessage({
+            type: type,
+            source: 'fsd-certs-shell',
+            item: pendingShellAction.item,
+            ts: Date.now()
+          }, '*');
+        } catch (err) {}
+        if (pendingShellAction && pendingShellAction.attempts < 8) {
+          clearTimeout(shellActionTimer);
+          shellActionTimer = setTimeout(sendPendingShellAction, 900);
+        }
+      }
+
+      window.openOfflineDrafts = function openOfflineDrafts(event) {
+        stopTap(event);
+        loader.classList.add('hidden');
+        fallback.classList.add('hidden');
+        home.classList.add('hidden');
+        offlineDrafts.classList.add('active');
+        renderOfflineDrafts();
+      };
+
+      window.closeOfflineDrafts = function closeOfflineDrafts(event) {
+        stopTap(event);
+        offlineDrafts.classList.remove('active');
+        if (offlineEditor) offlineEditor.classList.remove('active');
+        home.classList.remove('hidden');
+      };
+
+      window.refreshOfflineDrafts = function refreshOfflineDrafts(event) {
+        stopTap(event);
+        renderOfflineDrafts();
+      };
+
+      if (offlineList) {
+        offlineList.addEventListener('click', function(event) {
+          const btn = event.target && event.target.closest ? event.target.closest('[data-offline-action]') : null;
+          if (!btn) return;
+          stopTap(event);
+          const offlineId = btn.getAttribute('data-offline-id') || '';
+          const action = btn.getAttribute('data-offline-action') || '';
+          if (action === 'edit') return window.editOfflineItemById(offlineId);
+          if (action === 'sync') return window.syncOfflineItemById(offlineId);
+          if (action === 'delete') return window.deleteOfflineItemById(offlineId);
+        });
+      }
+
+      window.syncOfflineItemById = function syncOfflineItemById(offlineId) {
+        const item = getOfflineItemById(offlineId);
+        if (!item) return renderOfflineDrafts();
+        const report = getOfflineReportConfig(item);
+        if (!report.syncableOffline) {
+          setOfflineStatus(report.code + ' drafts are not syncable in this version.');
+          return;
+        }
+        if (!navigator.onLine) {
+          setOfflineStatus('Still offline. You can press Edit Offline and carry on working, or connect the iPad and press Sync again.');
+          return;
+        }
+        setOfflineStatus('Syncing offline ' + report.code + ' draft to Cloud Drafts. Keep this screen open...');
+        loadOfflineBridgeForShellAction('sync', item);
+      };
+
+      window.syncOfflineWById = window.syncOfflineItemById;
+
+      window.deleteOfflineItemById = function deleteOfflineItemById(offlineId) {
+        const item = getOfflineItemById(offlineId);
+        if (!item) return renderOfflineDrafts();
+        const report = getOfflineReportConfig(item);
+        if (!confirm('Delete this offline ' + report.code + ' draft from this iPad?')) return;
+        removeOfflineItem(item.offlineId);
+        renderOfflineDrafts();
+      };
+
+      window.deleteOfflineWById = window.deleteOfflineItemById;
+
+      window.resumeOfflineW = function resumeOfflineW(index) {
+        const item = readOfflineQueue()[index];
+        if (item) openEditorForItem(item);
+      };
+
+      window.syncOfflineW = function syncOfflineW(index) {
+        const item = readOfflineQueue()[index];
+        if (item) window.syncOfflineWById(item.offlineId);
+      };
+
+      window.deleteOfflineW = function deleteOfflineW(index) {
+        const item = readOfflineQueue()[index];
+        if (item) window.deleteOfflineWById(item.offlineId);
+      };
+
+      function openAppUrlInShell(url) {
+        var targetUrl = String(url || APP_URL);
+        if (targetUrl.indexOf(APP_URL) !== 0) return;
+        // Make sure resumed cloud drafts load inside the iPad app iframe, not Safari/top window.
+        if (targetUrl.indexOf('shell=') === -1) {
+          targetUrl += (targetUrl.indexOf('?') === -1 ? '?' : '&') + 'shell=ipad';
+        }
+        targetUrl += (targetUrl.indexOf('?') === -1 ? '?' : '&') + 'appShell=1&v=' + encodeURIComponent(SHELL_VER) + '&ts=' + Date.now();
+        pendingShellAction = null;
+        clearTimeout(shellActionTimer);
+        home.classList.add('hidden');
+        offlineDrafts.classList.remove('active');
+        if (offlineEditor) offlineEditor.classList.remove('active');
+        fallback.classList.add('hidden');
+        loader.classList.remove('hidden');
+        loaded = false;
+        try { frame.name = ''; } catch (err) {}
+        frame.src = targetUrl;
+        hasStarted = true;
+        startFallbackTimer();
+      }
+
+
+      window.openCloudDrafts = function openCloudDrafts(event) {
+        stopTap(event);
+        openAppUrlInShell(APP_URL + '?page=drafts');
+      };
+
+      window.openCerts = function openCerts(event) {
+        stopTap(event);
+        // V6.3c48: always load a fresh portal when the home button is pressed.
+        // After an offline sync, the iframe can still be sitting on the tiny
+        // sync bridge page, so reusing the old frame makes the shell hit the
+        // fallback screen until Reload is pressed. Fresh URL = no stale bridge.
+        pendingShellAction = null;
+        clearTimeout(shellActionTimer);
+        home.classList.add('hidden');
+        offlineDrafts.classList.remove('active');
+        if (offlineEditor) offlineEditor.classList.remove('active');
+        fallback.classList.add('hidden');
+        loader.classList.remove('hidden');
+        loaded = false;
+        try { frame.name = ''; } catch (err) {}
+        frame.src = APP_URL + '?shell=ipad&v=' + encodeURIComponent(SHELL_VER) + '&ts=' + Date.now();
+        hasStarted = true;
+        startFallbackTimer();
+      };
+
+
+
+      window.openSchedule = function openSchedule(event) {
+        stopTap(event);
+        goDirect(SCHEDULE_URL);
+      };
+
+      window.openCallouts = function openCallouts(event) {
+        stopTap(event);
+        openAppUrlInShell(CALLOUTS_PAGE);
+      };
+
+      window.showHome = function showHome() {
+        pendingShellAction = null;
+        clearTimeout(shellActionTimer);
+        loader.classList.add('hidden');
+        fallback.classList.add('hidden');
+        offlineDrafts.classList.remove('active');
+        if (offlineEditor) offlineEditor.classList.remove('active');
+        home.classList.remove('hidden');
+      };
+
+      window.reloadApp = function reloadApp() {
+        home.classList.add('hidden');
+        fallback.classList.add('hidden');
+        loader.classList.remove('hidden');
+        loaded = false;
+        try { frame.name = ''; } catch (err) {}
+        frame.src = APP_URL + '?shell=ipad&v=' + encodeURIComponent(SHELL_VER) + '&reload=' + Date.now();
+        startFallbackTimer();
+      };
+
+      frame.addEventListener('load', function () {
+        if (!hasStarted) return;
+        if (pendingShellAction && pendingShellAction.action === 'sync') {
+          // V6.3c39: keep the blank W sync bridge covered.
+          // The screen returns to Offline Drafts when sync confirms or fails.
+          loader.classList.remove('hidden');
+        } else {
+          setTimeout(hideLoader, 250);
+        }
+        if (pendingShellAction) {
+          clearTimeout(shellActionTimer);
+          shellActionTimer = setTimeout(sendPendingShellAction, 900);
+        }
+      });
+
+      window.addEventListener('message', function(event) {
+        const msg = event && event.data ? event.data : null;
+        if (!msg || typeof msg !== 'object') return;
+
+        if (msg.type === 'FSD_OPEN_IN_SHELL' && msg.url) {
+          openAppUrlInShell(msg.url);
+          return;
+        }
+
+        if (msg.type === 'FSD_CERTS_HOME') {
+          window.showHome();
+          return;
+        }
+
+        if (msg.type === 'FSD_SAVE_OFFLINE_DRAFT' && msg.source === 'fsd-certs-draft-client' && msg.item) {
+          // V6.3c74t: this is the only real GitHub/PWA offline draft queue.
+          // Do not tell the report iframe "saved" until we can read the item back.
+          let ok = false;
+          let error = '';
+          try {
+            if (!msg.item.offlineId) throw new Error('Missing offlineId');
+            if (!msg.item.draft) throw new Error('Missing draft payload');
+            upsertOfflineItem(msg.item);
+            const saved = readOfflineQueue().find(function(row) { return row && row.offlineId === msg.item.offlineId; });
+            ok = !!(saved && saved.draft);
+            if (!ok) throw new Error('Draft was not found after saving');
+            renderOfflineDrafts();
+            setOfflineStatus('Offline draft saved: ' + (msg.item.draftName || msg.item.offlineId));
+          } catch (saveErr) {
+            ok = false;
+            error = saveErr && saveErr.message ? saveErr.message : String(saveErr || 'Unknown offline save error');
+            setOfflineStatus('Offline draft save failed: ' + error);
+          }
+          try {
+            event.source.postMessage({
+              type: 'FSD_SAVE_OFFLINE_DRAFT_RESULT',
+              source: 'fsd-certs-shell',
+              ok: ok,
+              offlineId: msg.item.offlineId || '',
+              draftName: msg.item.draftName || 'Draft',
+              error: error
+            }, '*');
+          } catch (ackErr) {}
+          return;
+        }
+
+        if (msg.source !== 'fsd-certs-esr' && msg.source !== 'fsd-certs-sfa' && msg.source !== 'fsd-certs-sel') return;
+
+        if ((msg.type === 'FSD_OFFLINE_W_REQUEST' || msg.type === 'FSD_OFFLINE_SFA_REQUEST' || msg.type === 'FSD_OFFLINE_SEL_REQUEST') && pendingShellAction) {
+          // V6.3c74t: do not let an old/stale bridge request fire a cloud draft save when a report is opened normally.
+          if (pendingShellAction.createdAt && (Date.now() - pendingShellAction.createdAt > 120000)) {
+            pendingShellAction = null;
+            clearTimeout(shellActionTimer);
+            setOfflineStatus('Ignored stale offline bridge request. No cloud draft was saved.');
+            return;
+          }
+          // V6.3c37y: Apps Script may put the real W page inside a Google
+          // wrapper frame. Sending to frame.contentWindow can hit the wrapper
+          // instead of the report. Reply directly to the requesting window so
+          // Resume/Sync receives the actual saved draft payload.
+          const report = getOfflineReportConfig(pendingShellAction.item);
+        const type = pendingShellAction.action === 'sync' ? 'FSD_OFFLINE_' + report.code + '_SYNC' : 'FSD_OFFLINE_' + report.code + '_RESTORE';
+          try {
+            event.source.postMessage({
+              type: type,
+              source: 'fsd-certs-shell',
+              item: pendingShellAction.item,
+              ts: Date.now()
+            }, '*');
+            setOfflineStatus('Sending offline ' + getOfflineReportConfig(pendingShellAction.item).code + ' draft to report...');
+          } catch (err) {}
+          return;
+        }
+
+        if (msg.type === 'FSD_OFFLINE_W_SAVE' && msg.item) {
+          upsertOfflineItem(msg.item);
+          return;
+        }
+
+        if (msg.type === 'FSD_OFFLINE_W_DELETE' && msg.item && msg.item.offlineId) {
+          removeOfflineItem(msg.item.offlineId);
+          return;
+        }
+
+        if (msg.type === 'FSD_OFFLINE_W_QUEUE' && msg.item && Array.isArray(msg.item.rows)) {
+          msg.item.rows.forEach(upsertOfflineItem);
+          return;
+        }
+
+        if (msg.type === 'FSD_OFFLINE_W_SYNC_RESULT' || msg.type === 'FSD_OFFLINE_SFA_SYNC_RESULT' || msg.type === 'FSD_OFFLINE_SEL_SYNC_RESULT') {
+          clearTimeout(shellActionTimer);
+          const result = msg.item || {};
+          const resultCode = msg.type === 'FSD_OFFLINE_SFA_SYNC_RESULT' ? 'SFA' : (msg.type === 'FSD_OFFLINE_SEL_SYNC_RESULT' ? 'SEL' : 'W');
+          if (result.ok && result.offlineId) {
+            removeOfflineItem(result.offlineId);
+            pendingShellAction = null;
+            // Keep the hidden sync bridge clean so the next Open Portal starts fresh.
+            hasStarted = false;
+            try { frame.name = ''; frame.src = 'about:blank'; } catch (err) {}
+            loader.classList.add('hidden');
+            fallback.classList.add('hidden');
+            home.classList.add('hidden');
+            offlineDrafts.classList.add('active');
+            renderOfflineDrafts();
+            setOfflineStatus('Synced ' + resultCode + ' to cloud drafts: ' + (result.draftName || result.draftId || resultCode + ' draft') + '. Open Draft Manager to resume it.');
+          } else {
+            pendingShellAction = null;
+            // Keep the hidden sync bridge clean so the next Open Portal starts fresh.
+            hasStarted = false;
+            try { frame.name = ''; frame.src = 'about:blank'; } catch (err) {}
+            loader.classList.add('hidden');
+            fallback.classList.add('hidden');
+            home.classList.add('hidden');
+            offlineDrafts.classList.add('active');
+            renderOfflineDrafts();
+            setOfflineStatus(resultCode + ' sync failed, so the iPad copy has been kept: ' + (result.error || 'Cloud save did not confirm.'));
+          }
+        }
+      });
+
+      try {
+        const sfaPhotoInput = document.getElementById('editSfaPanelPhoto');
+        if (sfaPhotoInput) sfaPhotoInput.addEventListener('change', handleOfflineSfaPanelPhotoChange);
+      } catch(e) {}
+
+      window.addEventListener('online', updateEditorNetworkBadge);
+      window.addEventListener('offline', updateEditorNetworkBadge);
+      updateEditorNetworkBadge();
+
+      document.addEventListener('gesturestart', function (event) {
+        event.preventDefault();
+      });
+
+      // V6.3c71d: Android/Pixel PWA install hardening. This makes Chrome see
+      // the GitHub shell as a proper standalone app again, not just a bookmark.
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function () {
+          navigator.serviceWorker.register('./sw.js?v=71d', { scope: './' }).catch(function () {
+            // Silent by design: the app must still work even if Chrome blocks SW registration.
+          });
+        });
+      }
+
+    }());
+  </script>
+  <div class="fixed-version-badge">App Shell V6.3c74u · ESR offline-first beta route</div>
+</body>
+</html>
