@@ -229,9 +229,9 @@
     .lookup-mini-row .editor-field { min-width:240px; flex:1; }
     .lookup-mini-row .editor-mini-btn { width:auto; min-width:160px; }
 
-    .lookup-result-panel { display:none; position:relative; width:100%; margin-top:6px; border:1px solid #cbd5e1; background:#ffffff; border-radius:12px; box-shadow:0 10px 24px rgba(15,23,42,0.15); max-height:260px; overflow:auto; z-index:50; }
+    .lookup-result-panel { display:none; position:relative; width:100%; margin-top:6px; border:1px solid #cbd5e1; background:#ffffff; border-radius:12px; box-shadow:0 10px 24px rgba(15,23,42,0.15); max-height:320px; overflow:auto; z-index:9999; -webkit-overflow-scrolling:touch; touch-action:pan-y; }
     .lookup-result-panel.active { display:block; }
-    .lookup-result-item { width:100%; display:block; text-align:left; border:0; border-bottom:1px solid #e5e7eb; background:#fff; padding:10px 12px; font-size:14px; line-height:1.3; color:#0f172a; cursor:pointer; }
+    .lookup-result-item { width:100%; display:block; text-align:left; border:0; border-bottom:1px solid #e5e7eb; background:#fff; padding:13px 12px; font-size:15px; line-height:1.35; color:#0f172a; cursor:pointer; min-height:48px; }
     .lookup-result-item:last-child { border-bottom:0; }
     .lookup-result-item:active, .lookup-result-item:hover { background:#eef2ff; }
     .lookup-result-title { display:block; font-weight:800; color:#111827; }
@@ -239,6 +239,8 @@
     .editor-material-row { position:relative; }
     .editor-material-row .lookup-result-panel { grid-column:1 / -1; }
     .lookup-hint { grid-column:1 / -1; color:#6b7280; font-size:13px; font-weight:700; }
+    .lookup-empty { color:#991b1b; font-weight:800; background:#fff1f2; }
+    .editor-field.desc .lookup-result-panel { min-width:100%; }
 
     .nested-editor-grid { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
     .sfa-table-wrap { grid-column: 1 / -1; overflow-x: auto; border: 1px solid #e2e8f0; border-radius: 14px; background: #fff; }
@@ -719,7 +721,7 @@
 </head>
 <body>
   <!--
-    Fire Safety Direct - FSD Certs V6.3c74y ESR Offline-First Beta Custom Picker Confirmed
+    Fire Safety Direct - FSD Certs V6.3c74z ESR Offline-First Beta iPad Picker Fix
     Colourful iPad app-icon shell with new black/gold FSD logo.
     App shell mark: Jared720 Labs
   -->
@@ -788,7 +790,7 @@
 
     <footer class="ipad-footer">
       <span>Jared720 Labs</span>
-      <span>App Shell V6.3c74y · custom picker active</span>
+      <span>App Shell V6.3c74z · iPad picker fix</span>
     </footer>
   </section>
 
@@ -796,8 +798,8 @@
     <main class="offline-card">
       <h2 class="offline-title">Offline Certs &amp; Reports</h2>
       <p class="offline-help">Certificate/report drafts saved without signal live on this iPad until they are synced to the FSD cloud Draft Manager.</p>
-      <p class="offline-help"><strong>ESR Offline-First Beta V6.3c74y:</strong> This is a safe test route only. It uses the fast GitHub/offline editor for ESR/W so we can test signatures, materials, totals and sync without replacing the normal live ESR report.</p>
-          <p class="offline-help" style="border-color:#dc2626;background:#fff1f2;color:#991b1b;"><strong>V6.3c74y custom picker active:</strong> customer/site/material results should appear as tappable rows below the search boxes. Materials only apply when you tap a result.</p>
+      <p class="offline-help"><strong>ESR Offline-First Beta V6.3c74z:</strong> This is a safe test route only. It uses the fast GitHub/offline editor for ESR/W so we can test signatures, materials, totals and sync without replacing the normal live ESR report.</p>
+          <p class="offline-help" style="border-color:#dc2626;background:#fff1f2;color:#991b1b;"><strong>V6.3c74z iPad picker fix active:</strong> customer/site/material results should appear as tappable rows below the search boxes. Materials only apply when you tap a result.</p>
       <div id="offlineList" class="offline-list"></div>
       <div class="actions">
         <button class="button" type="button" onclick="startEsrOfflineFirstBeta(event)"><span class="tile-icon">🧪</span><span>Start ESR Offline-First Beta</span></button>
@@ -840,9 +842,9 @@
             <button id="editorLookupSyncBtn" class="editor-mini-btn" type="button" onclick="syncOfflineLookups(event)">Sync customer/material pickers</button>
           </div>
           <div class="lookup-mini-row">
-            <div class="editor-field"><label>Customer picker</label><input id="editCustomerLookup" autocomplete="off" oninput="showCustomerLookupResults(this.value)" onfocus="showCustomerLookupResults(this.value)" placeholder="Start typing customer / invoice address"><div id="fsdCustomerResults" class="lookup-result-panel"></div></div>
+            <div class="editor-field"><label>Customer picker</label><input id="editCustomerLookup" autocomplete="off" oninput="showCustomerLookupResults(this.value)" onkeyup="showCustomerLookupResults(this.value)" onclick="showCustomerLookupResults(this.value)" onfocus="showCustomerLookupResults(this.value)" placeholder="Start typing customer / invoice address"><div id="fsdCustomerResults" class="lookup-result-panel"></div></div>
             <button class="editor-mini-btn" type="button" onclick="applyCustomerLookup(event)">Use Customer</button>
-            <div class="editor-field"><label>Site picker</label><input id="editSiteLookup" autocomplete="off" oninput="showSiteLookupResults(this.value)" onfocus="showSiteLookupResults(this.value)" placeholder="Start typing site address / postcode"></div>
+            <div class="editor-field"><label>Site picker</label><input id="editSiteLookup" autocomplete="off" oninput="showSiteLookupResults(this.value)" onkeyup="showSiteLookupResults(this.value)" onclick="showSiteLookupResults(this.value)" onfocus="showSiteLookupResults(this.value)" placeholder="Start typing site address / postcode"></div>
             <button class="editor-mini-btn" type="button" onclick="applySiteLookup(event)">Use Site</button>
             <div id="fsdSiteResults" class="lookup-result-panel"></div>
             <div class="lookup-hint" id="lookupCacheStatus">Lookup pickers use the last synced customer/site/material data on this device.</div>
@@ -1084,7 +1086,7 @@
     (function () {
       'use strict';
 
-      const SHELL_VER = 'V6.3c74y';
+      const SHELL_VER = 'V6.3c74z';
       const APP_URL = 'https://script.google.com/macros/s/AKfycbzq9FTETNZwUJWHMGnMHECbu3sJ3jy3FFvGYyeaRXtkoK1GHBtqOu-GLBle_WGfoFtI/exec';
       const SCHEDULE_URL = 'https://docs.google.com/spreadsheets/d/1SZK6igtKPVHcBRdkA49A6AKSobkWXI_pk-De7taZP6c/edit';
       const CALLOUTS_PAGE = APP_URL + '?page=callouts&shell=ipad';
@@ -1620,13 +1622,13 @@
       function populateOfflineLookupPickers() {
         const data = getOfflineLookupCache();
         populateDatalist('fsdCustomerList', data.customers, function(row) {
-          // V6.3c74y: use the full invoice/customer address as the value so mobile datalist search can find every address line.
+          // V6.3c74z: use the full invoice/customer address as the value so mobile datalist search can find every address line.
           return row.customerAddress || row.lookupName || '';
         }, function(row) {
           return row.lookupName || row.customerAddress || '';
         });
         populateDatalist('fsdSiteList', data.sites, function(row) {
-          // V6.3c74y: use the full site address as the value so sites are findable by postcode/road/town, not just the short lookup name.
+          // V6.3c74z: use the full site address as the value so sites are findable by postcode/road/town, not just the short lookup name.
           return row.siteAddress || row.lookupName || row.customerName || '';
         }, function(row) {
           return row.lookupName || row.customerName || row.siteAddress || '';
@@ -1655,7 +1657,7 @@
           };
           localStorage.setItem(FSD_LOOKUP_CACHE_KEY, JSON.stringify(cache));
           populateOfflineLookupPickers();
-          setEditorStatus('V6.3c74y lookup data synced: ' + cache.customers.length + ' customers, ' + cache.sites.length + ' sites, ' + cache.materials.length + ' materials.');
+          setEditorStatus('V6.3c74z lookup data synced: ' + cache.customers.length + ' customers, ' + cache.sites.length + ' sites, ' + cache.materials.length + ' materials.');
         } catch (err) {
           setEditorStatus('Lookup sync received but could not save on this device: ' + (err && err.message ? err.message : err));
         }
@@ -1690,13 +1692,17 @@
       }
 
       function lookupTerms(value) {
-        return normaliseLookupText(value).split(' ').filter(function(term) { return term.length >= 2; });
+        const stopWords = { the:1, a:1, an:1, and:1, amp:1, for:1, to:1, of:1, at:1, in:1, on:1, ltd:1, limited:1, co:1, company:1, plc:1 };
+        return normaliseLookupText(value).split(' ').filter(function(term) {
+          return term.length >= 2 && !stopWords[term];
+        });
       }
 
       function scoreLookupRow(row, value, preferredKeys) {
         const needle = normaliseLookupText(value);
         const terms = lookupTerms(value);
         if (!needle) return 9999;
+        if (!terms.length && needle.length >= 2) return 9999;
         const fields = (preferredKeys || []).map(function(key) {
           return normaliseLookupText(row && row[key]);
         }).filter(Boolean);
@@ -1731,6 +1737,22 @@
         return String(value || '').replace(/\n/g, ' | ').replace(/\s+/g, ' ').trim();
       }
 
+      function pickFirstField(row, keys) {
+        row = row || {};
+        for (let i = 0; i < keys.length; i += 1) {
+          const value = row[keys[i]];
+          if (value !== undefined && value !== null && String(value).trim()) return value;
+        }
+        return '';
+      }
+
+      function customerTitle(row) { return pickFirstField(row, ['lookupName','customerName','name','company','customer','customerAddress']); }
+      function customerMeta(row) { return [pickFirstField(row, ['customerAddress','invoiceAddress','address']), pickFirstField(row, ['sageAccountNo','accountNo','account','ref']), pickFirstField(row, ['defaultEmail','email'])].filter(Boolean).join(' | '); }
+      function siteTitle(row) { return pickFirstField(row, ['lookupName','siteName','name','site','customerName','siteAddress']); }
+      function siteMeta(row) { return [pickFirstField(row, ['siteAddress','address','siteFullAddress']), pickFirstField(row, ['customerName','customer','lookupCustomer']), pickFirstField(row, ['customerAddress','invoiceAddress']), pickFirstField(row, ['sageAccountNo','accountNo','account'])].filter(Boolean).join(' | '); }
+      function materialTitle(row) { return pickFirstField(row, ['material','description','lookupName','name','item','product','productName','code']); }
+      function materialPrice(row) { return pickFirstField(row, ['unitPrice','price','sellPrice','salePrice','cost','rate']); }
+
       function hideLookupPanel(panel) {
         if (!panel) return;
         panel.classList.remove('active');
@@ -1743,7 +1765,12 @@
         panel.innerHTML = '';
         panel.__rows = matches || [];
         if (!matches || !matches.length) {
-          hideLookupPanel(panel);
+          const empty = document.createElement('div');
+          empty.className = 'lookup-result-item lookup-empty';
+          empty.innerHTML = '<span class="lookup-result-title">' + escapeHtml(panel.__emptyTitle || 'No matches found') + '</span>' +
+            '<span class="lookup-result-meta">' + escapeHtml(panel.__emptyMessage || 'Try fewer words, or press Sync customer/material pickers while online on this device.') + '</span>';
+          panel.appendChild(empty);
+          panel.classList.add('active');
           return;
         }
         matches.forEach(function(item, idx) {
@@ -1775,10 +1802,10 @@
 
       function applyCustomerRow(row) {
         if (!row) return;
-        setEditValue('editCustomerLookup', row.customerAddress || row.lookupName || '');
-        setEditValue('editCustomer', row.customerAddress || row.lookupName || '');
-        if (row.siteAddress && !getEditValue('editSite')) setEditValue('editSite', row.siteAddress);
-        if (row.sageAccountNo) setEditValue('editSageAccountNo', row.sageAccountNo);
+        setEditValue('editCustomerLookup', pickFirstField(row, ['customerAddress','invoiceAddress','address','lookupName','customerName','name']));
+        setEditValue('editCustomer', pickFirstField(row, ['customerAddress','invoiceAddress','address','lookupName','customerName','name']));
+        if (pickFirstField(row, ['siteAddress','siteFullAddress','address']) && !getEditValue('editSite')) setEditValue('editSite', pickFirstField(row, ['siteAddress','siteFullAddress','address']));
+        if (pickFirstField(row, ['sageAccountNo','accountNo','account'])) setEditValue('editSageAccountNo', pickFirstField(row, ['sageAccountNo','accountNo','account']));
         if (row.defaultCustomerOrderNo) setEditValue('editCustomerOrderNo', row.defaultCustomerOrderNo);
         if (row.defaultOurRefNo) setEditValue('editOurRefNo', row.defaultOurRefNo);
         setEditorDirty(true);
@@ -1788,10 +1815,10 @@
 
       function applySiteRow(row) {
         if (!row) return;
-        setEditValue('editSiteLookup', row.siteAddress || row.lookupName || row.customerName || '');
-        setEditValue('editSite', row.siteAddress || row.lookupName || '');
-        if (row.customerAddress && !getEditValue('editCustomer')) setEditValue('editCustomer', row.customerAddress);
-        if (row.sageAccountNo && !getEditValue('editSageAccountNo')) setEditValue('editSageAccountNo', row.sageAccountNo);
+        setEditValue('editSiteLookup', pickFirstField(row, ['siteAddress','siteFullAddress','address','lookupName','siteName','name','customerName']));
+        setEditValue('editSite', pickFirstField(row, ['siteAddress','siteFullAddress','address','lookupName','siteName','name']));
+        if (pickFirstField(row, ['customerAddress','invoiceAddress']) && !getEditValue('editCustomer')) setEditValue('editCustomer', pickFirstField(row, ['customerAddress','invoiceAddress']));
+        if (pickFirstField(row, ['sageAccountNo','accountNo','account']) && !getEditValue('editSageAccountNo')) setEditValue('editSageAccountNo', pickFirstField(row, ['sageAccountNo','accountNo','account']));
         setEditorDirty(true);
         autoNameOfflineW();
         setEditorStatus('Site applied from offline picker.');
@@ -1800,23 +1827,23 @@
       window.showCustomerLookupResults = function showCustomerLookupResults(value) {
         const cache = getOfflineLookupCache();
         const panel = document.getElementById('fsdCustomerResults');
-        const matches = searchLookupRows(cache.customers, value, ['lookupName', 'customerAddress', 'sageAccountNo', 'defaultEmail'], 80);
-        renderLookupPanel(panel, matches, function(row) {
-          return row.lookupName || firstLine(row.customerAddress) || row.customerAddress;
-        }, function(row) {
-          return [row.customerAddress, row.sageAccountNo].filter(Boolean).join(' | ');
-        }, applyCustomerRow);
+        if (panel) {
+          panel.__emptyTitle = !cache.customers.length ? 'No customer lookup data on this device' : 'No customer matches';
+          panel.__emptyMessage = !cache.customers.length ? 'Press Sync customer/material pickers while online on this iPad.' : 'Try one word from the customer name, address, postcode, or account number.';
+        }
+        const matches = searchLookupRows(cache.customers, value, ['lookupName', 'customerName', 'name', 'customerAddress', 'invoiceAddress', 'address', 'sageAccountNo', 'accountNo', 'defaultEmail', 'email'], 120);
+        renderLookupPanel(panel, matches, customerTitle, customerMeta, applyCustomerRow);
       };
 
       window.showSiteLookupResults = function showSiteLookupResults(value) {
         const cache = getOfflineLookupCache();
         const panel = document.getElementById('fsdSiteResults');
-        const matches = searchLookupRows(cache.sites, value, ['lookupName', 'siteAddress', 'customerAddress', 'customerName', 'sageAccountNo'], 150);
-        renderLookupPanel(panel, matches, function(row) {
-          return row.lookupName || firstLine(row.siteAddress) || row.siteAddress;
-        }, function(row) {
-          return [row.siteAddress, row.customerName, row.customerAddress, row.sageAccountNo].filter(Boolean).join(' | ');
-        }, applySiteRow);
+        if (panel) {
+          panel.__emptyTitle = !cache.sites.length ? 'No site lookup data on this device' : 'No site matches';
+          panel.__emptyMessage = !cache.sites.length ? 'Press Sync customer/material pickers while online on this iPad.' : 'Try fewer words. Example: type Wallich, Swansea, postcode, or one road name.';
+        }
+        const matches = searchLookupRows(cache.sites, value, ['lookupName', 'siteName', 'name', 'site', 'siteAddress', 'address', 'siteFullAddress', 'customerAddress', 'invoiceAddress', 'customerName', 'customer', 'sageAccountNo', 'accountNo'], 250);
+        renderLookupPanel(panel, matches, siteTitle, siteMeta, applySiteRow);
       };
 
       function applyMaterialRowToElement(rowEl, row, input) {
@@ -1825,8 +1852,8 @@
         const unit = rowEl.querySelector('.emUnitPrice');
         const total = rowEl.querySelector('.emTotalPrice');
         const qty = rowEl.querySelector('.emQty');
-        const materialText = row.material || row.description || (input && input.value) || '';
-        const priceText = row.unitPrice || row.price || '';
+        const materialText = materialTitle(row) || (input && input.value) || '';
+        const priceText = materialPrice(row);
         if (desc) desc.value = materialText;
         if (unit) unit.value = priceText;
         if (qty && !qty.value) qty.value = '1';
@@ -1844,12 +1871,14 @@
         if (!rowEl) return;
         const panel = rowEl.querySelector('.fsd-material-results');
         const cache = getOfflineLookupCache();
-        const matches = searchLookupRows(cache.materials, input.value, ['material', 'description', 'supplier'], 100);
-        renderLookupPanel(panel, matches, function(row) {
-          return row.material || row.description;
-        }, function(row) {
-          const price = row.unitPrice || row.price || '';
-          return [price ? ('£' + price) : '', row.supplier].filter(Boolean).join(' | ');
+        if (panel) {
+          panel.__emptyTitle = !cache.materials.length ? 'No material lookup data on this device' : 'No material matches';
+          panel.__emptyMessage = !cache.materials.length ? 'Press Sync customer/material pickers while online on this iPad.' : 'Try one word like detector, call point, battery, sounder, panel, or cable.';
+        }
+        const matches = searchLookupRows(cache.materials, input.value, ['material', 'description', 'lookupName', 'name', 'item', 'product', 'productName', 'code', 'supplier'], 180);
+        renderLookupPanel(panel, matches, materialTitle, function(row) {
+          const price = materialPrice(row);
+          return [price ? ('£' + price) : '', pickFirstField(row, ['supplier','code','category'])].filter(Boolean).join(' | ');
         }, function(row) {
           applyMaterialRowToElement(rowEl, row, input);
         });
@@ -1931,7 +1960,7 @@
         row.className = 'editor-material-row';
         row.innerHTML =
           '<div class="editor-field"><label>Qty</label><input class="emQty" value="' + escapeHtml(item.qty || '') + '"></div>' +
-          '<div class="editor-field desc"><label>Description</label><input class="emDescription" autocomplete="off" placeholder="Type then tap a material result" oninput="showMaterialLookupResults(this)" onfocus="showMaterialLookupResults(this)" value="' + escapeHtml(item.description || item.searchText || '') + '"><div class="fsd-material-results lookup-result-panel"></div></div>' +
+          '<div class="editor-field desc"><label>Description</label><input class="emDescription" autocomplete="off" placeholder="Type then tap a material result" oninput="showMaterialLookupResults(this)" onkeyup="showMaterialLookupResults(this)" onclick="showMaterialLookupResults(this)" onfocus="showMaterialLookupResults(this)" value="' + escapeHtml(item.description || item.searchText || '') + '"><div class="fsd-material-results lookup-result-panel"></div></div>' +
           '<div class="editor-field"><label>Unit</label><input class="emUnitPrice" type="number" step="0.01" value="' + escapeHtml(item.unitPrice || '') + '"></div>' +
           '<div class="editor-field"><label>Total</label><input class="emTotalPrice" type="number" step="0.01" value="' + escapeHtml(item.totalPrice || '') + '"></div>' +
           '<button class="button third" style="min-height:42px;font-size:18px;padding:6px;" type="button" onclick="this.closest(\'.editor-material-row\').remove()">×</button>';
@@ -2051,7 +2080,7 @@
         const noteEl = document.getElementById('offlineEditorNote');
         const syncBtn = document.getElementById('offlineEditorSyncBtn');
         const isEsrBeta = !!(item && item.draft && item.draft.esrOfflineFirstBeta);
-        if (titleEl) titleEl.textContent = isEsrBeta ? 'ESR Offline-First Beta · V6.3c74y' : ('Edit Offline ' + report.code + ' Draft');
+        if (titleEl) titleEl.textContent = isEsrBeta ? 'ESR Offline-First Beta · V6.3c74z' : ('Edit Offline ' + report.code + ' Draft');
         if (noteEl) {
           noteEl.textContent = isEsrBeta
             ? 'Safe beta route: fast GitHub/offline ESR form. Normal live ESR remains unchanged until you choose to sync/create PDF.'
@@ -2488,13 +2517,13 @@
         if (item.draft) {
           item.draft.draftName = item.draftName;
           item.draft.esrOfflineFirstBeta = true;
-          item.draft.betaVersion = 'V6.3c74y';
+          item.draft.betaVersion = 'V6.3c74z';
           item.draft.comments = item.draft.comments || 'ESR Offline-First Beta test draft.';
         }
         pendingOfflineEditorItem = item;
         openEditorForItem(item);
         const title = document.getElementById('offlineEditorTitle');
-        if (title) title.textContent = 'ESR Offline-First Beta · V6.3c74y';
+        if (title) title.textContent = 'ESR Offline-First Beta · V6.3c74z';
         const note = document.getElementById('offlineEditorNote');
         if (note) note.textContent = 'Safe beta route: fast GitHub/offline ESR form. Normal live ESR remains unchanged until you choose to sync/create PDF.';
         setEditorStatus('ESR Offline-First Beta started. Nothing is saved yet - press Complete Job - Save Offline when ready.');
@@ -3263,6 +3292,6 @@
 
     }());
   </script>
-  <div class="fixed-version-badge">App Shell V6.3c74y · custom picker active</div>
+  <div class="fixed-version-badge">App Shell V6.3c74z · iPad picker fix</div>
 </body>
 </html>
