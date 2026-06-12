@@ -739,7 +739,7 @@
 </head>
 <body>
   <!--
-    Fire Safety Direct - FSD Certs V6.3c77 ESR Offline-First Beta Custom Picker Confirmed
+    Fire Safety Direct - FSD Certs V6.3c78 ESR Offline-First Beta Custom Picker Confirmed
     Colourful iPad app-icon shell with new black/gold FSD logo.
     App shell mark: Jared720 Labs
   -->
@@ -808,7 +808,7 @@
 
     <footer class="ipad-footer">
       <span>Jared720 Labs</span>
-      <span>App Shell V6.3c77 · custom picker active</span>
+      <span>App Shell V6.3c78 · custom picker active</span>
     </footer>
   </section>
 
@@ -816,8 +816,8 @@
     <main class="offline-card">
       <h2 class="offline-title">Offline Certs &amp; Reports</h2>
       <p class="offline-help">Certificate/report drafts saved without signal live on this iPad until they are synced to the FSD cloud Draft Manager.</p>
-      <p class="offline-help"><strong>ESR Offline-First Beta V6.3c77:</strong> This is a safe test route only. It uses the fast GitHub/offline editor for ESR/W so we can test signatures, materials, totals and sync without replacing the normal live ESR report.</p>
-          <p class="offline-help" style="border-color:#dc2626;background:#fff1f2;color:#991b1b;"><strong>V6.3c77 custom picker active:</strong> customer/site/material results should appear as tappable rows below the search boxes. Materials only apply when you tap a result.</p>
+      <p class="offline-help"><strong>ESR Offline-First Beta V6.3c78:</strong> This is a safe test route only. It uses the fast GitHub/offline editor for ESR/W so we can test signatures, materials, totals and sync without replacing the normal live ESR report.</p>
+          <p class="offline-help" style="border-color:#dc2626;background:#fff1f2;color:#991b1b;"><strong>V6.3c78 custom picker active:</strong> customer/site/material results should appear as tappable rows below the search boxes. Materials only apply when you tap a result.</p>
       <div id="offlineList" class="offline-list"></div>
       <div class="actions">
         <button class="button" type="button" onclick="startEsrOfflineFirstBeta(event)"><span class="tile-icon">🧪</span><span>Start ESR Offline-First Beta</span></button>
@@ -1104,7 +1104,7 @@
     (function () {
       'use strict';
 
-      const SHELL_VER = 'V6.3c77';
+      const SHELL_VER = 'V6.3c78';
       const APP_URL = 'https://script.google.com/macros/s/AKfycbzq9FTETNZwUJWHMGnMHECbu3sJ3jy3FFvGYyeaRXtkoK1GHBtqOu-GLBle_WGfoFtI/exec';
       const SCHEDULE_URL = 'https://docs.google.com/spreadsheets/d/1SZK6igtKPVHcBRdkA49A6AKSobkWXI_pk-De7taZP6c/edit';
       const CALLOUTS_PAGE = APP_URL + '?page=callouts&shell=ipad';
@@ -1600,7 +1600,7 @@
       }
 
 
-      const FSD_LOOKUP_CACHE_KEY = 'fsd_offline_lookup_cache_v6_3c77';
+      const FSD_LOOKUP_CACHE_KEY = 'fsd_offline_lookup_cache_v6_3c78';
 
       function normaliseLookupText(value) {
         return String(value || '').toLowerCase().replace(/\s+/g, ' ').trim();
@@ -1640,13 +1640,13 @@
       function populateOfflineLookupPickers() {
         const data = getOfflineLookupCache();
         populateDatalist('fsdCustomerList', data.customers, function(row) {
-          // V6.3c77: use the full invoice/customer address as the value so mobile datalist search can find every address line.
+          // V6.3c78: use the full invoice/customer address as the value so mobile datalist search can find every address line.
           return row.customerAddress || row.lookupName || '';
         }, function(row) {
           return row.lookupName || row.customerAddress || '';
         });
         populateDatalist('fsdSiteList', data.sites, function(row) {
-          // V6.3c77: use the full site address as the value so sites are findable by postcode/road/town, not just the short lookup name.
+          // V6.3c78: use the full site address as the value so sites are findable by postcode/road/town, not just the short lookup name.
           return row.siteAddress || row.lookupName || row.customerName || '';
         }, function(row) {
           return row.lookupName || row.customerName || row.siteAddress || '';
@@ -1678,17 +1678,27 @@
             syncedAt: new Date().toISOString()
           };
           localStorage.setItem(FSD_LOOKUP_CACHE_KEY, JSON.stringify(cache));
+          fsdLookupSyncStartedAt = 0;
           populateOfflineLookupPickers();
           const btn = document.getElementById('editorLookupSyncBtn');
           if (btn) {
             btn.disabled = false;
             btn.textContent = 'SYNC LOOKUPS FIRST';
           }
-          setEditorStatus('V6.3c77 lookup data synced: ' + cache.customers.length + ' customers, ' + cache.sites.length + ' sites, ' + cache.materials.length + ' materials.');
+          setEditorStatus('V6.3c78 lookup data synced: ' + cache.customers.length + ' customers, ' + cache.sites.length + ' sites, ' + cache.materials.length + ' materials.');
         } catch (err) {
           setEditorStatus('Lookup sync received but could not save on this device: ' + (err && err.message ? err.message : err));
         }
       };
+
+      let fsdLookupSyncStartedAt = 0;
+      function finishLookupSyncButton(text) {
+        const btn = document.getElementById('editorLookupSyncBtn');
+        if (btn) {
+          btn.disabled = false;
+          btn.textContent = text || 'SYNC LOOKUPS FIRST';
+        }
+      }
 
       window.syncOfflineLookups = function syncOfflineLookups(event) {
         stopTap(event);
@@ -1702,28 +1712,34 @@
           btn.disabled = true;
           btn.textContent = 'Syncing lookups...';
         }
-        setEditorStatus('Syncing customer/site/material pickers...');
+        const status = document.getElementById('lookupCacheStatus');
+        if (status) status.textContent = 'SYNCING LOOKUPS NOW... waiting for Apps Script reply.';
+        setEditorStatus('V6.3c78 syncing customer/site/material pickers...');
+        fsdLookupSyncStartedAt = Date.now();
         const old = document.getElementById('fsdLookupJsonpScript');
         if (old && old.parentNode) old.parentNode.removeChild(old);
         const script = document.createElement('script');
         script.id = 'fsdLookupJsonpScript';
         script.src = APP_URL + '?page=offlineLookupJsonp&callback=fsdReceiveOfflineLookupData&v=' + Date.now();
         script.onerror = function() {
-          if (btn) {
-            btn.disabled = false;
-            btn.textContent = 'SYNC LOOKUPS FIRST';
-          }
-          setEditorStatus('Lookup sync failed. Check the Apps Script Offline_Lookup_API.gs is installed and the web app has been redeployed.');
-          const status = document.getElementById('lookupCacheStatus');
-          if (status) status.textContent = 'SYNC FAILED - TAP HERE TO TRY AGAIN. Check Apps Script deploy if it keeps failing.';
+          finishLookupSyncButton('SYNC LOOKUPS FIRST');
+          setEditorStatus('Lookup sync failed to load Apps Script. Check Offline_Lookup_API.gs is installed and the web app has been redeployed.');
+          const st = document.getElementById('lookupCacheStatus');
+          if (st) st.textContent = 'SYNC FAILED - Apps Script did not load. TAP HERE TO TRY AGAIN.';
         };
         document.body.appendChild(script);
         setTimeout(function() {
-          if (btn) {
-            btn.disabled = false;
-            btn.textContent = 'SYNC LOOKUPS FIRST';
+          const data = getOfflineLookupCache();
+          const totalRows = (data.customers||[]).length + (data.sites||[]).length + (data.materials||[]).length;
+          if (fsdLookupSyncStartedAt && totalRows === 0 && Date.now() - fsdLookupSyncStartedAt >= 18000) {
+            finishLookupSyncButton('SYNC LOOKUPS FIRST');
+            const st = document.getElementById('lookupCacheStatus');
+            if (st) st.textContent = 'SYNC TIMEOUT - Apps Script did not reply. Replace Offline_Lookup_API.gs and redeploy, then tap again.';
+            setEditorStatus('V6.3c78 lookup sync timed out. This normally means Apps Script route/page=offlineLookupJsonp is not replying or the web app has not been redeployed.');
+          } else {
+            finishLookupSyncButton('SYNC LOOKUPS FIRST');
           }
-        }, 12000);
+        }, 20000);
       };
 
       function maybeAutoSyncLookupsOnBetaOpen() {
@@ -1857,10 +1873,74 @@
         setEditorStatus('Site applied from offline picker.');
       }
 
+      const fsdLookupSearchTimers = {};
+      function mergeRowsByKey(existing, incoming, keyFn) {
+        const out = Array.isArray(existing) ? existing.slice() : [];
+        const seen = new Set(out.map(function(row){ return keyFn(row); }).filter(Boolean));
+        (incoming || []).forEach(function(row){
+          const key = keyFn(row);
+          if (!key || seen.has(key)) return;
+          seen.add(key);
+          out.push(row);
+        });
+        return out;
+      }
+      function mergeLookupRowsIntoCache(type, rows) {
+        const cache = getOfflineLookupCache();
+        if (type === 'customer') cache.customers = mergeRowsByKey(cache.customers, rows, function(r){ return normaliseLookupText((r.lookupName||'') + '|' + (r.customerAddress||'') + '|' + (r.sageAccountNo||'')); });
+        if (type === 'site') cache.sites = mergeRowsByKey(cache.sites, rows, function(r){ return normaliseLookupText((r.lookupName||'') + '|' + (r.siteAddress||'') + '|' + (r.customerName||'')); });
+        if (type === 'material') cache.materials = mergeRowsByKey(cache.materials, rows, function(r){ return normaliseLookupText((r.material||'') + '|' + (r.description||'') + '|' + (r.code||'')); });
+        cache.syncedAt = cache.syncedAt || new Date().toISOString();
+        try { localStorage.setItem(FSD_LOOKUP_CACHE_KEY, JSON.stringify(cache)); } catch(e) {}
+        populateOfflineLookupPickers();
+      }
+      window.fsdReceiveOfflineLookupSearchData = function(payload) {
+        payload = payload || {};
+        if (!payload.ok) {
+          setEditorStatus('Lookup cloud search failed: ' + (payload.error || 'unknown error'));
+          return;
+        }
+        const type = payload.type || '';
+        const rows = Array.isArray(payload.rows) ? payload.rows : [];
+        mergeLookupRowsIntoCache(type, rows);
+        if (type === 'customer') showCustomerLookupResults(payload.query || '');
+        if (type === 'site') showSiteLookupResults(payload.query || '');
+        if (type === 'material') {
+          const active = document.activeElement;
+          if (active && active.classList && active.classList.contains('emDescription')) showMaterialLookupResults(active);
+        }
+        setEditorStatus('Cloud lookup search returned ' + rows.length + ' ' + type + ' matches.');
+      };
+      function requestCloudLookupSearch(type, query) {
+        query = String(query || '').trim();
+        if (!navigator.onLine || query.length < 3) return;
+        clearTimeout(fsdLookupSearchTimers[type]);
+        fsdLookupSearchTimers[type] = setTimeout(function(){
+          const id = 'fsdLookupSearch_' + type;
+          const old = document.getElementById(id);
+          if (old && old.parentNode) old.parentNode.removeChild(old);
+          const script = document.createElement('script');
+          script.id = id;
+          script.src = APP_URL + '?page=offlineLookupJsonp&mode=search&type=' + encodeURIComponent(type) + '&q=' + encodeURIComponent(query) + '&callback=fsdReceiveOfflineLookupSearchData&v=' + Date.now();
+          script.onerror = function(){ setEditorStatus('Cloud lookup search could not load.'); };
+          document.body.appendChild(script);
+        }, 450);
+      }
+      function renderLookupInfo(panel, message) {
+        if (!panel) return;
+        panel.innerHTML = '<button type="button" class="lookup-result-item"><span class="lookup-result-title">' + escapeHtml(message) + '</span></button>';
+        panel.classList.add('active');
+      }
+
       window.showCustomerLookupResults = function showCustomerLookupResults(value) {
         const cache = getOfflineLookupCache();
         const panel = document.getElementById('fsdCustomerResults');
         const matches = searchLookupRows(cache.customers, value, ['lookupName', 'customerAddress', 'sageAccountNo', 'defaultEmail'], 80);
+        if (!matches.length && normaliseLookupText(value).length >= 3 && navigator.onLine) {
+          renderLookupInfo(panel, 'Searching cloud customer list...');
+          requestCloudLookupSearch('customer', value);
+          return;
+        }
         renderLookupPanel(panel, matches, function(row) {
           return row.lookupName || firstLine(row.customerAddress) || row.customerAddress;
         }, function(row) {
@@ -1872,6 +1952,11 @@
         const cache = getOfflineLookupCache();
         const panel = document.getElementById('fsdSiteResults');
         const matches = searchLookupRows(cache.sites, value, ['lookupName', 'siteAddress', 'customerAddress', 'customerName', 'sageAccountNo'], 150);
+        if (!matches.length && normaliseLookupText(value).length >= 3 && navigator.onLine) {
+          renderLookupInfo(panel, 'Searching cloud site list...');
+          requestCloudLookupSearch('site', value);
+          return;
+        }
         renderLookupPanel(panel, matches, function(row) {
           return row.lookupName || firstLine(row.siteAddress) || row.siteAddress;
         }, function(row) {
@@ -1904,12 +1989,17 @@
         if (!rowEl) return;
         const panel = rowEl.querySelector('.fsd-material-results');
         const cache = getOfflineLookupCache();
-        const matches = searchLookupRows(cache.materials, input.value, ['material', 'description', 'supplier'], 100);
+        const matches = searchLookupRows(cache.materials, input.value, ['material', 'description', 'code', 'supplier'], 100);
+        if (!matches.length && normaliseLookupText(input.value).length >= 3 && navigator.onLine) {
+          renderLookupInfo(panel, 'Searching cloud material list...');
+          requestCloudLookupSearch('material', input.value);
+          return;
+        }
         renderLookupPanel(panel, matches, function(row) {
           return row.material || row.description;
         }, function(row) {
           const price = row.unitPrice || row.price || '';
-          return [price ? ('£' + price) : '', row.supplier].filter(Boolean).join(' | ');
+          return [price ? ('£' + price) : '', row.code, row.supplier].filter(Boolean).join(' | ');
         }, function(row) {
           applyMaterialRowToElement(rowEl, row, input);
         });
@@ -2111,7 +2201,7 @@
         const noteEl = document.getElementById('offlineEditorNote');
         const syncBtn = document.getElementById('offlineEditorSyncBtn');
         const isEsrBeta = !!(item && item.draft && item.draft.esrOfflineFirstBeta);
-        if (titleEl) titleEl.textContent = isEsrBeta ? 'ESR Offline-First Beta · V6.3c77' : ('Edit Offline ' + report.code + ' Draft');
+        if (titleEl) titleEl.textContent = isEsrBeta ? 'ESR Offline-First Beta · V6.3c78' : ('Edit Offline ' + report.code + ' Draft');
         if (noteEl) {
           noteEl.textContent = isEsrBeta
             ? 'Safe beta route: fast GitHub/offline ESR form. Normal live ESR remains unchanged until you choose to sync/create PDF.'
@@ -2548,16 +2638,16 @@
         if (item.draft) {
           item.draft.draftName = item.draftName;
           item.draft.esrOfflineFirstBeta = true;
-          item.draft.betaVersion = 'V6.3c77';
+          item.draft.betaVersion = 'V6.3c78';
           item.draft.comments = item.draft.comments || 'ESR Offline-First Beta test draft.';
         }
         pendingOfflineEditorItem = item;
         openEditorForItem(item);
         const title = document.getElementById('offlineEditorTitle');
-        if (title) title.textContent = 'ESR Offline-First Beta · V6.3c77';
+        if (title) title.textContent = 'ESR Offline-First Beta · V6.3c78';
         const note = document.getElementById('offlineEditorNote');
         if (note) note.textContent = 'Safe beta route: fast GitHub/offline ESR form. Normal live ESR remains unchanged until you choose to sync/create PDF.';
-        setEditorStatus('ESR Offline-First Beta V6.3c77 started. If lookups are empty, use the red LOOKUP box or SYNC LOOKUPS FIRST.');
+        setEditorStatus('ESR Offline-First Beta V6.3c78 started. If lookups are empty, use the red LOOKUP box or SYNC LOOKUPS FIRST.');
       };
 
       window.startNewOfflineW = function startNewOfflineW(event) {
@@ -3323,6 +3413,6 @@
 
     }());
   </script>
-  <div class="fixed-version-badge">App Shell V6.3c77 · custom picker active</div>
+  <div class="fixed-version-badge">App Shell V6.3c78 · custom picker active</div>
 </body>
 </html>
