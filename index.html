@@ -704,7 +704,7 @@
 </head>
 <body>
   <!--
-    Fire Safety Direct - FSD Certs V6.3c74r Tap Sign Modal R
+    Fire Safety Direct - FSD Certs V6.3c74u ESR Offline-First Beta
     Colourful iPad app-icon shell with new black/gold FSD logo.
     App shell mark: Jared720 Labs
   -->
@@ -738,6 +738,11 @@
           <strong>Offline Certs<br>& Reports</strong>
         </button>
 
+        <button class="app-icon certs" type="button" onclick="startEsrOfflineFirstBeta(event)" aria-label="Start ESR Offline First Beta">
+          <span class="icon-square"><span>🧪</span></span>
+          <strong>ESR Offline<br>Beta</strong>
+        </button>
+
         <button class="app-icon schedule" type="button" onclick="openSchedule(event)" aria-label="Open FSD Schedule">
           <span class="icon-square"><span>📅</span></span>
           <strong>FSD<br>Schedule</strong>
@@ -768,7 +773,7 @@
 
     <footer class="ipad-footer">
       <span>Jared720 Labs</span>
-      <span>App Shell V6.3c74s · shell-hosted signatures</span>
+      <span>App Shell V6.3c74u · ESR offline-first beta route</span>
     </footer>
   </section>
 
@@ -776,10 +781,11 @@
     <main class="offline-card">
       <h2 class="offline-title">Offline Certs &amp; Reports</h2>
       <p class="offline-help">Certificate/report drafts saved without signal live on this iPad until they are synced to the FSD cloud Draft Manager.</p>
-      <p class="offline-help"><strong>Offline editor trial:</strong> Engineer Service Reports can be started, edited and synced. SFA now mirrors the online Fire Alarm Service Report shape more closely: equipment checked table plus FA service/remedial costs. SFA cloud draft sync is now bridged safely. V6.3c74 keeps SFA/SEL cloud draft flow, adds offline signature boxes and renames complete buttons. SEL/SFA still open from Cloud Drafts for the normal online PDF creation.</p>
+      <p class="offline-help"><strong>ESR Offline-First Beta V6.3c74u:</strong> This is a safe test route only. It uses the fast GitHub/offline editor for ESR/W so we can test signatures, materials, totals and sync without replacing the normal live ESR report.</p>
       <div id="offlineList" class="offline-list"></div>
       <div class="actions">
-        <button class="button" type="button" onclick="startNewOfflineW(event)"><span class="tile-icon">📝</span><span>Start Offline Engineer Service Report</span></button>
+        <button class="button" type="button" onclick="startEsrOfflineFirstBeta(event)"><span class="tile-icon">🧪</span><span>Start ESR Offline-First Beta</span></button>
+        <button class="button secondary" type="button" onclick="startNewOfflineW(event)"><span class="tile-icon">📝</span><span>Start Offline Engineer Service Report</span></button>
         <button class="button secondary" type="button" onclick="startNewOfflineSfaTrial(event)"><span class="tile-icon">🔥</span><span>Start Offline SFA</span></button>
         <button class="button secondary" type="button" onclick="startNewOfflineSelTrial(event)"><span class="tile-icon">💡</span><span>Start Offline SEL</span></button>
         <button class="button secondary" type="button" onclick="refreshOfflineDrafts(event)"><span class="tile-icon">🔄</span><span>Refresh Offline Reports</span></button>
@@ -1050,7 +1056,7 @@
     (function () {
       'use strict';
 
-      const SHELL_VER = 'V6.3c74s';
+      const SHELL_VER = 'V6.3c74u';
       const APP_URL = 'https://script.google.com/macros/s/AKfycbzq9FTETNZwUJWHMGnMHECbu3sJ3jy3FFvGYyeaRXtkoK1GHBtqOu-GLBle_WGfoFtI/exec';
       const SCHEDULE_URL = 'https://docs.google.com/spreadsheets/d/1SZK6igtKPVHcBRdkA49A6AKSobkWXI_pk-De7taZP6c/edit';
       const CALLOUTS_PAGE = APP_URL + '?page=callouts&shell=ipad';
@@ -1702,13 +1708,16 @@
         const titleEl = document.getElementById('offlineEditorTitle');
         const noteEl = document.getElementById('offlineEditorNote');
         const syncBtn = document.getElementById('offlineEditorSyncBtn');
-        if (titleEl) titleEl.textContent = 'Edit Offline ' + report.code + ' Draft';
+        const isEsrBeta = !!(item && item.draft && item.draft.esrOfflineFirstBeta);
+        if (titleEl) titleEl.textContent = isEsrBeta ? 'ESR Offline-First Beta · V6.3c74u' : ('Edit Offline ' + report.code + ' Draft');
         if (noteEl) {
-          noteEl.textContent = report.code === 'W'
-            ? 'This is the local iPad editor. Engineer Service Reports can save offline and sync to Cloud Drafts when signal returns.'
-            : (report.code === 'SEL'
-              ? 'This is the local SEL cloud-draft bridge editor. Save locally, then Sync to Cloud. Open from Cloud Drafts to use the normal online Complete Job button.'
-              : 'This is the local SFA cloud-draft bridge editor. Save locally, then Sync to Cloud. Open from Cloud Drafts to use the normal online Complete Job button.');
+          noteEl.textContent = isEsrBeta
+            ? 'Safe beta route: fast GitHub/offline ESR form. Normal live ESR remains unchanged until you choose to sync/create PDF.'
+            : (report.code === 'W'
+              ? 'This is the local iPad editor. Engineer Service Reports can save offline and sync to Cloud Drafts when signal returns.'
+              : (report.code === 'SEL'
+                ? 'This is the local SEL cloud-draft bridge editor. Save locally, then Sync to Cloud. Open from Cloud Drafts to use the normal online Complete Job button.'
+                : 'This is the local SFA cloud-draft bridge editor. Save locally, then Sync to Cloud. Open from Cloud Drafts to use the normal online Complete Job button.'));
         }
         if (syncBtn) {
           syncBtn.disabled = !report.syncableOffline;
@@ -2128,6 +2137,26 @@
         setEditorStatus('Reset SFA equipment checked table to the online default rows.');
       };
 
+      window.startEsrOfflineFirstBeta = function startEsrOfflineFirstBeta(event) {
+        stopTap(event);
+        const item = createBlankOfflineWItem();
+        item.source = 'github-shell-esr-offline-first-beta-v6_3c74u';
+        item.draftName = 'ESR Offline-First Beta - ' + new Date().toISOString().slice(0, 10);
+        if (item.draft) {
+          item.draft.draftName = item.draftName;
+          item.draft.esrOfflineFirstBeta = true;
+          item.draft.betaVersion = 'V6.3c74u';
+          item.draft.comments = item.draft.comments || 'ESR Offline-First Beta test draft.';
+        }
+        pendingOfflineEditorItem = item;
+        openEditorForItem(item);
+        const title = document.getElementById('offlineEditorTitle');
+        if (title) title.textContent = 'ESR Offline-First Beta · V6.3c74u';
+        const note = document.getElementById('offlineEditorNote');
+        if (note) note.textContent = 'Safe beta route: fast GitHub/offline ESR form. Normal live ESR remains unchanged until you choose to sync/create PDF.';
+        setEditorStatus('ESR Offline-First Beta started. Nothing is saved yet - press Complete Job - Save Offline when ready.');
+      };
+
       window.startNewOfflineW = function startNewOfflineW(event) {
         stopTap(event);
         const item = createBlankOfflineWItem();
@@ -2534,7 +2563,7 @@
         loader.classList.remove('hidden');
         loaded = false;
         hasStarted = true;
-        pendingShellAction = { action: action, item: item, attempts: 0, createdAt: Date.now() }; // V6.3c74r stale-bridge guard
+        pendingShellAction = { action: action, item: item, attempts: 0, createdAt: Date.now() }; // V6.3c74t stale-bridge guard
         const report = getOfflineReportConfig(item);
         const shellPayload = {
           type: action === 'sync' ? 'FSD_OFFLINE_' + report.code + '_SYNC' : 'FSD_OFFLINE_' + report.code + '_RESTORE',
@@ -2748,10 +2777,6 @@
 
       window.addEventListener('message', function(event) {
         const msg = event && event.data ? event.data : null;
-        if (msg && msg.source === 'fsd-report-frame' && msg.type === 'FSD_OPEN_SIGNATURE_PAD') {
-          openShellSignaturePadFromReport(msg, event.source);
-          return;
-        }
         if (!msg || typeof msg !== 'object') return;
 
         if (msg.type === 'FSD_OPEN_IN_SHELL' && msg.url) {
@@ -2765,7 +2790,7 @@
         }
 
         if (msg.type === 'FSD_SAVE_OFFLINE_DRAFT' && msg.source === 'fsd-certs-draft-client' && msg.item) {
-          // V6.3c74r: this is the only real GitHub/PWA offline draft queue.
+          // V6.3c74t: this is the only real GitHub/PWA offline draft queue.
           // Do not tell the report iframe "saved" until we can read the item back.
           let ok = false;
           let error = '';
@@ -2799,7 +2824,7 @@
         if (msg.source !== 'fsd-certs-esr' && msg.source !== 'fsd-certs-sfa' && msg.source !== 'fsd-certs-sel') return;
 
         if ((msg.type === 'FSD_OFFLINE_W_REQUEST' || msg.type === 'FSD_OFFLINE_SFA_REQUEST' || msg.type === 'FSD_OFFLINE_SEL_REQUEST') && pendingShellAction) {
-          // V6.3c74r: do not let an old/stale bridge request fire a cloud draft save when a report is opened normally.
+          // V6.3c74t: do not let an old/stale bridge request fire a cloud draft save when a report is opened normally.
           if (pendingShellAction.createdAt && (Date.now() - pendingShellAction.createdAt > 120000)) {
             pendingShellAction = null;
             clearTimeout(shellActionTimer);
@@ -2879,164 +2904,6 @@
       window.addEventListener('offline', updateEditorNetworkBadge);
       updateEditorNetworkBadge();
 
-
-      // V6.3c74s: fast signature pad hosted in GitHub shell, not inside Apps Script iframe.
-      let shellSignatureTargetWindow = null;
-      let shellSignatureRequestId = '';
-      let shellSignatureTargetId = '';
-      let shellSignatureCanvas = null;
-      let shellSignatureCtx = null;
-      let shellSignatureDrawing = false;
-      let shellSignatureLast = null;
-
-      function ensureShellSignaturePad() {
-        let modal = document.getElementById('fsdShellSignatureModal74s');
-        if (modal) return modal;
-        modal = document.createElement('div');
-        modal.id = 'fsdShellSignatureModal74s';
-        modal.style.cssText = 'display:none;position:fixed;z-index:999999;left:0;right:0;top:0;bottom:0;background:rgba(15,23,42,.94);padding:14px;box-sizing:border-box;';
-        modal.innerHTML = '<div style="height:100%;display:flex;flex-direction:column;gap:10px;max-width:980px;margin:0 auto;">'
-          + '<div style="display:flex;align-items:center;justify-content:space-between;gap:10px;color:#fff;font-family:Arial,sans-serif;">'
-          + '<div><strong id="fsdShellSigTitle74s">Signature</strong><div style="font-size:12px;opacity:.85">Fast signature pad running in the GitHub app shell · V6.3c74s</div></div>'
-          + '<button type="button" id="fsdShellSigCancel74s" style="background:#334155;color:#fff;border:0;border-radius:10px;padding:10px 14px;font-weight:800;">Cancel</button>'
-          + '</div>'
-          + '<canvas id="fsdShellSigCanvas74s" style="flex:1;width:100%;min-height:300px;background:#fff;border-radius:16px;border:3px solid #e5e7eb;touch-action:none;-webkit-user-select:none;user-select:none;display:block;"></canvas>'
-          + '<div style="display:flex;gap:10px;">'
-          + '<button type="button" id="fsdShellSigClear74s" style="flex:1;background:#f59e0b;color:#111827;border:0;border-radius:12px;padding:14px;font-weight:900;">Clear</button>'
-          + '<button type="button" id="fsdShellSigDone74s" style="flex:2;background:#dc2626;color:#fff;border:0;border-radius:12px;padding:14px;font-weight:900;">Done - Use Signature</button>'
-          + '</div></div>';
-        document.body.appendChild(modal);
-        shellSignatureCanvas = document.getElementById('fsdShellSigCanvas74s');
-        shellSignatureCtx = shellSignatureCanvas.getContext('2d');
-
-        function resizeShellSignatureCanvas(existingData) {
-          const rect = shellSignatureCanvas.getBoundingClientRect();
-          const ratio = window.devicePixelRatio || 1;
-          shellSignatureCanvas.width = Math.max(1, Math.round(rect.width * ratio));
-          shellSignatureCanvas.height = Math.max(1, Math.round(rect.height * ratio));
-          shellSignatureCtx = shellSignatureCanvas.getContext('2d');
-          shellSignatureCtx.setTransform(ratio, 0, 0, ratio, 0, 0);
-          shellSignatureCtx.lineWidth = 2.4;
-          shellSignatureCtx.lineCap = 'round';
-          shellSignatureCtx.lineJoin = 'round';
-          shellSignatureCtx.strokeStyle = '#111827';
-          shellSignatureCtx.fillStyle = '#111827';
-          if (existingData) drawShellSignatureData(existingData);
-        }
-        function point(evt) {
-          const e = evt.touches && evt.touches[0] ? evt.touches[0] : evt;
-          const rect = shellSignatureCanvas.getBoundingClientRect();
-          return { x: e.clientX - rect.left, y: e.clientY - rect.top };
-        }
-        function stop(evt) {
-          if (evt && evt.cancelable !== false && evt.preventDefault) evt.preventDefault();
-          if (evt && evt.stopPropagation) evt.stopPropagation();
-        }
-        function start(evt) {
-          stop(evt);
-          shellSignatureDrawing = true;
-          shellSignatureLast = point(evt);
-          shellSignatureCtx.beginPath();
-          shellSignatureCtx.arc(shellSignatureLast.x, shellSignatureLast.y, 1.15, 0, Math.PI * 2);
-          shellSignatureCtx.fill();
-          return false;
-        }
-        function move(evt) {
-          if (!shellSignatureDrawing) return;
-          stop(evt);
-          const now = point(evt);
-          shellSignatureCtx.beginPath();
-          shellSignatureCtx.moveTo(shellSignatureLast.x, shellSignatureLast.y);
-          shellSignatureCtx.lineTo(now.x, now.y);
-          shellSignatureCtx.stroke();
-          shellSignatureLast = now;
-          return false;
-        }
-        function end(evt) {
-          if (!shellSignatureDrawing) return;
-          stop(evt);
-          shellSignatureDrawing = false;
-          return false;
-        }
-        shellSignatureCanvas.addEventListener('mousedown', start, false);
-        shellSignatureCanvas.addEventListener('mousemove', move, false);
-        window.addEventListener('mouseup', end, false);
-        shellSignatureCanvas.addEventListener('touchstart', start, { passive:false });
-        shellSignatureCanvas.addEventListener('touchmove', move, { passive:false });
-        shellSignatureCanvas.addEventListener('touchend', end, { passive:false });
-        shellSignatureCanvas.addEventListener('touchcancel', end, { passive:false });
-        shellSignatureCanvas.addEventListener('contextmenu', function(e){ e.preventDefault(); return false; });
-        document.getElementById('fsdShellSigCancel74s').onclick = function(){ closeShellSignaturePad(); return false; };
-        document.getElementById('fsdShellSigClear74s').onclick = function(){ clearShellSignatureCanvas(); return false; };
-        document.getElementById('fsdShellSigDone74s').onclick = function(){ completeShellSignaturePad(); return false; };
-        window.addEventListener('resize', function(){ if (modal.style.display !== 'none') setTimeout(function(){ resizeShellSignatureCanvas(shellSignatureCanvas.dataset.existingData || ''); }, 100); });
-        modal.__resizeShellSignatureCanvas = resizeShellSignatureCanvas;
-        return modal;
-      }
-
-      function clearShellSignatureCanvas() {
-        if (!shellSignatureCanvas || !shellSignatureCtx) return;
-        const rect = shellSignatureCanvas.getBoundingClientRect();
-        shellSignatureCtx.clearRect(0, 0, rect.width, rect.height);
-        shellSignatureCanvas.dataset.existingData = '';
-      }
-
-      function drawShellSignatureData(dataUrl) {
-        if (!shellSignatureCanvas || !shellSignatureCtx || !dataUrl) return;
-        const img = new Image();
-        img.onload = function() {
-          try {
-            const rect = shellSignatureCanvas.getBoundingClientRect();
-            shellSignatureCtx.clearRect(0, 0, rect.width, rect.height);
-            shellSignatureCtx.drawImage(img, 0, 0, rect.width, rect.height);
-          } catch(e) {}
-        };
-        img.src = dataUrl;
-      }
-
-      function closeShellSignaturePad() {
-        const modal = document.getElementById('fsdShellSignatureModal74s');
-        if (modal) modal.style.display = 'none';
-        shellSignatureTargetWindow = null;
-        shellSignatureRequestId = '';
-        shellSignatureTargetId = '';
-      }
-
-      function completeShellSignaturePad() {
-        let dataUrl = '';
-        try { dataUrl = shellSignatureCanvas.toDataURL('image/png'); } catch(e) {}
-        try {
-          if (shellSignatureTargetWindow) {
-            shellSignatureTargetWindow.postMessage({
-              source: 'fsd-certs-shell',
-              type: 'FSD_SIGNATURE_PAD_RESULT',
-              requestId: shellSignatureRequestId,
-              targetId: shellSignatureTargetId,
-              dataUrl: dataUrl,
-              ts: Date.now()
-            }, '*');
-          }
-        } catch(e) {}
-        closeShellSignaturePad();
-      }
-
-      function openShellSignaturePadFromReport(msg, sourceWindow) {
-        const modal = ensureShellSignaturePad();
-        shellSignatureTargetWindow = sourceWindow;
-        shellSignatureRequestId = msg.requestId || '';
-        shellSignatureTargetId = msg.targetId || '';
-        const label = msg.label || 'Signature';
-        const existing = msg.existingData || '';
-        const title = document.getElementById('fsdShellSigTitle74s');
-        if (title) title.textContent = label;
-        modal.style.display = 'block';
-        setTimeout(function(){
-          shellSignatureCanvas.dataset.existingData = existing;
-          modal.__resizeShellSignatureCanvas(existing);
-          if (!existing) clearShellSignatureCanvas();
-        }, 40);
-      }
-
       document.addEventListener('gesturestart', function (event) {
         event.preventDefault();
       });
@@ -3053,6 +2920,6 @@
 
     }());
   </script>
-  <div class="fixed-version-badge">App Shell V6.3c74s · shell-hosted signatures</div>
+  <div class="fixed-version-badge">App Shell V6.3c74u · ESR offline-first beta route</div>
 </body>
 </html>
