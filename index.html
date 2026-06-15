@@ -508,7 +508,7 @@
       .dock-app { min-height: 58px; }
     }
 
-    /* V6.3c74: lightweight signature-only overlay for older iPads. */
+    /* V6.3c74a: lightweight signature-only overlay for older iPads, transparent cropped output. */
     .sig-helper {
       position: fixed; inset: 0; z-index: 12000; display: none;
       align-items: center; justify-content: center;
@@ -549,7 +549,7 @@
 </head>
 <body>
   <!--
-    Fire Safety Direct - FSD Certs V6.3c74 Fast Signature Pad POC
+    Fire Safety Direct - FSD Certs V6.3c74a Fast Signature Pad Position Fix
     Colourful iPad app-icon shell with new black/gold FSD logo.
     App shell mark: Jared720 Labs
   -->
@@ -613,7 +613,7 @@
 
     <footer class="ipad-footer">
       <span>Jared720 Labs</span>
-      <span>App Shell V6.3c74 · Fast signature pad POC</span>
+      <span>App Shell V6.3c74a · Fast signature position fix</span>
     </footer>
   </section>
 
@@ -917,10 +917,9 @@
         const oldData = keepExisting !== false && sigHelperCtx && sigHelperCanvas.width && sigHelperCanvas.height ? sigHelperCanvas.toDataURL('image/png') : '';
         sigHelperCanvas.width = Math.max(1, Math.floor(rect.width * dpr));
         sigHelperCanvas.height = Math.max(1, Math.floor(rect.height * dpr));
-        sigHelperCtx = sigHelperCanvas.getContext('2d', { alpha: false });
+        sigHelperCtx = sigHelperCanvas.getContext('2d', { alpha: true });
         sigHelperCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
-        sigHelperCtx.fillStyle = '#ffffff';
-        sigHelperCtx.fillRect(0, 0, rect.width, rect.height);
+        sigHelperCtx.clearRect(0, 0, rect.width, rect.height);
         sigHelperCtx.lineWidth = 2.4;
         sigHelperCtx.lineCap = 'round';
         sigHelperCtx.lineJoin = 'round';
@@ -973,6 +972,47 @@
         return false;
       }
 
+      function getCroppedSignatureHelperDataUrl() {
+        if (!sigHelperCanvas || !sigHelperCtx) return '';
+        const w = sigHelperCanvas.width;
+        const h = sigHelperCanvas.height;
+        let minX = w, minY = h, maxX = -1, maxY = -1;
+        try {
+          const imgData = sigHelperCtx.getImageData(0, 0, w, h);
+          const data = imgData.data;
+          for (let y = 0; y < h; y++) {
+            for (let x = 0; x < w; x++) {
+              const i = (y * w + x) * 4;
+              if (data[i + 3] > 10 && (data[i] < 245 || data[i + 1] < 245 || data[i + 2] < 245)) {
+                if (x < minX) minX = x;
+                if (y < minY) minY = y;
+                if (x > maxX) maxX = x;
+                if (y > maxY) maxY = y;
+              }
+            }
+          }
+          if (maxX < minX || maxY < minY) return sigHelperCanvas.toDataURL('image/png');
+
+          const pad = Math.max(12, Math.round(Math.max(w, h) * 0.025));
+          minX = Math.max(0, minX - pad);
+          minY = Math.max(0, minY - pad);
+          maxX = Math.min(w - 1, maxX + pad);
+          maxY = Math.min(h - 1, maxY + pad);
+
+          const cropW = Math.max(1, maxX - minX + 1);
+          const cropH = Math.max(1, maxY - minY + 1);
+          const out = document.createElement('canvas');
+          out.width = cropW;
+          out.height = cropH;
+          const outCtx = out.getContext('2d', { alpha: true });
+          outCtx.clearRect(0, 0, cropW, cropH);
+          outCtx.drawImage(sigHelperCanvas, minX, minY, cropW, cropH, 0, 0, cropW, cropH);
+          return out.toDataURL('image/png');
+        } catch (err) {
+          return sigHelperCanvas.toDataURL('image/png');
+        }
+      }
+
       function setupSignatureHelperCanvas() {
         if (!sigHelperCanvas) return;
         resizeSignatureHelperCanvas();
@@ -1020,12 +1060,13 @@
           alert('Please sign in the box first.');
           return;
         }
-        const dataUrl = sigHelperCanvas.toDataURL('image/png');
+        const dataUrl = getCroppedSignatureHelperDataUrl();
         const payload = {
           type: 'FSD_SIGNATURE_PAD_RESULT',
           source: 'fsd-certs-shell',
           canvasId: sigHelperTargetCanvasId,
           dataUrl: dataUrl,
+          cropped: true,
           ts: Date.now()
         };
         try {
@@ -2645,6 +2686,6 @@
 
     }());
   </script>
-  <div class="fixed-version-badge">App Shell V6.3c74 · Fast signature pad POC</div>
+  <div class="fixed-version-badge">App Shell V6.3c74a · Fast signature position fix</div>
 </body>
 </html>
