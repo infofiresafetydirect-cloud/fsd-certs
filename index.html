@@ -680,11 +680,15 @@
       .profile-actions { grid-template-columns: 1fr; }
     }
 
+
+    #shellEngineerStatus { display:flex; flex-direction:column; align-items:flex-end; line-height:1.08; }
+    #shellEngineerStatus small { font-size:10px; font-weight:900; opacity:.82; max-width:145px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+
   </style>
 </head>
 <body>
   <!--
-    Fire Safety Direct - FSD Certs V6.3c76e iPad Engineer Profile
+    Fire Safety Direct - FSD Certs V6.3c76g iPad Engineer Profile
     Colourful iPad app-icon shell with new black/gold FSD logo.
     App shell mark: Jared720 Labs
   -->
@@ -694,7 +698,7 @@
     <header class="ipad-statusbar">
       <div class="status-left">FSD Certs</div>
       <div class="status-centre">Fire Safety Direct</div>
-      <div class="status-right">● Ready</div>
+      <div class="status-right" id="shellEngineerStatus"><div>● Ready</div><small id="shellEngineerName">No engineer</small></div>
     </header>
 
     <main class="ipad-home-grid" aria-label="FSD Certs apps">
@@ -754,7 +758,7 @@
 
     <footer class="ipad-footer">
       <span>Jared720 Labs</span>
-      <span>App Shell V6.3c76e · Live engineer profile</span>
+      <span>App Shell V6.3c76g · Engineer profile status</span>
     </footer>
   </section>
 
@@ -1280,6 +1284,8 @@
         if (note) note.textContent = engineer
           ? ('This iPad defaults to: ' + engineer + '. Report engineer dropdowns remain editable.')
           : 'Set once per iPad. Reports still keep their engineer dropdown editable.';
+        const statusName = document.getElementById('shellEngineerName');
+        if (statusName) statusName.textContent = engineer ? ('Logged in: ' + engineer) : 'No engineer';
       }
 
       window.saveDefaultEngineerProfile = function saveDefaultEngineerProfile(event) {
@@ -2958,6 +2964,6 @@
 
     }());
   </script>
-  <div class="fixed-version-badge">App Shell V6.3c76e · Live engineer profile</div>
+  <div class="fixed-version-badge">App Shell V6.3c76g · Engineer profile status</div>
 </body>
 </html>
