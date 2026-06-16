@@ -545,6 +545,59 @@
       .ipad-title-block { gap: 14px; }
     }
 
+
+    .engineer-profile-card {
+      width:min(520px, 92vw);
+      margin: 8px auto 18px;
+      padding: 12px;
+      border: 1px solid rgba(255,255,255,.24);
+      border-radius: 18px;
+      background: rgba(15,23,42,.68);
+      box-shadow: 0 12px 30px rgba(0,0,0,.18);
+      color: #fff;
+      text-align: left;
+    }
+    .engineer-profile-card label {
+      display:block;
+      font-size: 13px;
+      font-weight: 900;
+      opacity:.92;
+      margin-bottom: 6px;
+    }
+    .engineer-profile-row {
+      display:grid;
+      grid-template-columns: 1fr auto;
+      gap: 8px;
+      align-items:center;
+    }
+    .engineer-profile-card input {
+      width:100%;
+      box-sizing:border-box;
+      padding: 11px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,.30);
+      background: rgba(255,255,255,.96);
+      color: #111827;
+      font-size: 15px;
+      font-weight: 800;
+    }
+    .engineer-profile-card button {
+      min-height: 42px;
+      padding: 10px 13px;
+      border: 0;
+      border-radius: 12px;
+      background: linear-gradient(135deg,#16a34a,#166534);
+      color: #fff;
+      font-weight: 900;
+      cursor: pointer;
+    }
+    .engineer-profile-card .engineer-profile-note {
+      font-size: 12px;
+      opacity: .82;
+      margin-top: 6px;
+      line-height: 1.35;
+    }
+
   </style>
 </head>
 <body>
@@ -1085,6 +1138,53 @@
       const editorStatus = document.getElementById('editorStatus');
       const editorNetBadge = document.getElementById('editorNetBadge');
       const editorDirtyBadge = document.getElementById('editorDirtyBadge');
+
+      const FSD_DEFAULT_ENGINEER_KEY = 'fsd_certs_default_engineer_v6_3c76a';
+
+      function getDefaultEngineerProfile() {
+        try { return String(localStorage.getItem(FSD_DEFAULT_ENGINEER_KEY) || '').trim(); }
+        catch (err) { return ''; }
+      }
+
+      function setDefaultEngineerProfile(name) {
+        try { localStorage.setItem(FSD_DEFAULT_ENGINEER_KEY, String(name || '').trim()); } catch (err) {}
+      }
+
+      function engineerProfileParam() {
+        const engineer = getDefaultEngineerProfile();
+        return engineer ? '&engineer=' + encodeURIComponent(engineer) : '';
+      }
+
+      function addEngineerProfileToUrl(url) {
+        let out = String(url || '');
+        const engineer = getDefaultEngineerProfile();
+        if (!engineer) return out;
+        if (/[?&]engineer=/.test(out)) return out;
+        out += (out.indexOf('?') === -1 ? '?' : '&') + 'engineer=' + encodeURIComponent(engineer);
+        return out;
+      }
+
+      function refreshDefaultEngineerProfileUi() {
+        const input = document.getElementById('defaultEngineerInput');
+        const note = document.getElementById('defaultEngineerNote');
+        const engineer = getDefaultEngineerProfile();
+        if (input) input.value = engineer;
+        if (note) note.textContent = engineer
+          ? ('This iPad defaults to: ' + engineer + '. Report engineer dropdowns remain editable.')
+          : 'Set once per iPad. Reports still keep their engineer dropdown editable.';
+      }
+
+      window.saveDefaultEngineerProfile = function saveDefaultEngineerProfile(event) {
+        stopTap(event);
+        const input = document.getElementById('defaultEngineerInput');
+        const engineer = input ? String(input.value || '').trim() : '';
+        setDefaultEngineerProfile(engineer);
+        refreshDefaultEngineerProfileUi();
+        alert(engineer ? ('Default engineer saved for this iPad: ' + engineer) : 'Default engineer cleared for this iPad.');
+        return false;
+      };
+
+
       const OFFLINE_W_QUEUE_KEY = 'fsd_esr_offline_w_queue_v6_3c37u';
       const OFFLINE_W_OLD_QUEUE_KEY = 'fsd_esr_offline_w_queue_v6_3c37s';
       const OFFLINE_W_WINDOW_NAME_PREFIX = 'FSD_OFFLINE_W_PAYLOAD::';
@@ -2484,7 +2584,7 @@
       };
 
       function openAppUrlInShell(url) {
-        var targetUrl = String(url || APP_URL);
+        var targetUrl = addEngineerProfileToUrl(String(url || APP_URL));
         if (targetUrl.indexOf(APP_URL) !== 0) return;
         // Make sure resumed cloud drafts load inside the iPad app iframe, not Safari/top window.
         if (targetUrl.indexOf('shell=') === -1) {
@@ -2526,7 +2626,7 @@
         loader.classList.remove('hidden');
         loaded = false;
         try { frame.name = ''; } catch (err) {}
-        frame.src = APP_URL + '?shell=ipad&v=' + encodeURIComponent(SHELL_VER) + '&ts=' + Date.now();
+        frame.src = addEngineerProfileToUrl(APP_URL + '?shell=ipad&v=' + encodeURIComponent(SHELL_VER) + '&ts=' + Date.now());
         hasStarted = true;
         startFallbackTimer();
       };
@@ -2559,7 +2659,7 @@
         loader.classList.remove('hidden');
         loaded = false;
         try { frame.name = ''; } catch (err) {}
-        frame.src = APP_URL + '?shell=ipad&v=' + encodeURIComponent(SHELL_VER) + '&reload=' + Date.now();
+        frame.src = addEngineerProfileToUrl(APP_URL + '?shell=ipad&v=' + encodeURIComponent(SHELL_VER) + '&reload=' + Date.now());
         startFallbackTimer();
       };
 
