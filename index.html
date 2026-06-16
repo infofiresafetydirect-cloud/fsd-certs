@@ -598,11 +598,93 @@
       line-height: 1.35;
     }
 
+
+    .app-icon.profile .icon-square { background: linear-gradient(145deg, #991b1b, #dc2626); }
+    .profile-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 9998;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 22px;
+      background: rgba(15,23,42,.55);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+    .profile-modal.active { display: flex; }
+    .profile-card {
+      width: min(620px, 94vw);
+      background: rgba(255,255,255,.96);
+      border-radius: 24px;
+      padding: 20px;
+      box-shadow: 0 30px 80px rgba(0,0,0,.35);
+      color: #111827;
+      border: 1px solid rgba(148,163,184,.7);
+    }
+    .profile-card h2 {
+      margin: 0 0 8px;
+      color: #991b1b;
+      font-size: 28px;
+    }
+    .profile-card p {
+      margin: 0 0 14px;
+      color: #475569;
+      font-weight: 700;
+      line-height: 1.4;
+    }
+    .profile-card label {
+      display:block;
+      font-weight: 950;
+      color:#111827;
+      margin: 12px 0 6px;
+    }
+    .profile-card input {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 14px;
+      border-radius: 14px;
+      border: 1px solid #cbd5e1;
+      font-size: 18px;
+      font-weight: 850;
+    }
+    .profile-actions {
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 14px;
+    }
+    .profile-actions button {
+      min-height: 52px;
+      border:0;
+      border-radius: 16px;
+      color: #fff;
+      font-weight: 950;
+      font-size: 15px;
+      cursor:pointer;
+      background: linear-gradient(135deg,#16a34a,#166534);
+    }
+    .profile-actions button.secondary {
+      background: linear-gradient(135deg,#475569,#1e293b);
+    }
+    .profile-note {
+      margin-top: 12px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      background: #fff7ed;
+      border: 1px solid #fb923c;
+      color: #7c2d12;
+      font-weight: 850;
+    }
+    @media (max-width:720px) {
+      .profile-actions { grid-template-columns: 1fr; }
+    }
+
   </style>
 </head>
 <body>
   <!--
-    Fire Safety Direct - FSD Certs V6.3c76b iPad Engineer Profile
+    Fire Safety Direct - FSD Certs V6.3c76c iPad Engineer Profile
     Colourful iPad app-icon shell with new black/gold FSD logo.
     App shell mark: Jared720 Labs
   -->
@@ -629,6 +711,12 @@
         <button class="app-icon certs" type="button" onclick="openCerts(event)" aria-label="Open Certificate Portal">
           <span class="icon-square"><img class="app-logo-img" src="fsd-certs-logo.png" alt="" width="86" height="86" decoding="async"></span>
           <strong>Certificate<br>Portal</strong>
+        </button>
+
+
+        <button class="app-icon profile" type="button" onclick="openEngineerProfile(event)" aria-label="Open Engineer Profile">
+          <span class="icon-square"><span>👷</span></span>
+          <strong>Engineer<br>Profile</strong>
         </button>
 
         <button class="app-icon drafts" type="button" onclick="openOfflineDrafts(event)" aria-label="Open Offline Certs and Reports">
@@ -666,7 +754,7 @@
 
     <footer class="ipad-footer">
       <span>Jared720 Labs</span>
-      <span>App Shell V6.3c76b · iPad engineer profile</span>
+      <span>App Shell V6.3c76c · Engineer profile button</span>
     </footer>
   </section>
 
@@ -883,6 +971,41 @@
         <div id="editorStatus" class="editor-status"></div>
       </form>
     </main>
+  </section>
+
+
+  <section id="engineerProfileModal" class="profile-modal" aria-label="Engineer Profile" aria-hidden="true">
+    <div class="profile-card">
+      <h2>Engineer Profile</h2>
+      <p>Set the default engineer for this iPad. Reports and Cloud Drafts will default to this engineer, but each report still keeps the engineer dropdown editable.</p>
+
+      <label for="defaultEngineerInput">Default engineer for this iPad</label>
+      <input id="defaultEngineerInput" list="defaultEngineerList" autocomplete="off" placeholder="Type/select engineer name">
+
+      <datalist id="defaultEngineerList">
+        <option value="Ashley Jenkins"></option>
+        <option value="Brent Reed"></option>
+        <option value="David King"></option>
+        <option value="Mark Tucker"></option>
+        <option value="Mark Reynish"></option>
+        <option value="Mark Thomas"></option>
+        <option value="Martin Collom"></option>
+        <option value="Ronald John"></option>
+        <option value="Kyle Barclay"></option>
+        <option value="Christopher Williams"></option>
+        <option value="Craig Gibbs"></option>
+        <option value="Philip Havard"></option>
+        <option value="Samuel Scanlan"></option>
+        <option value="Ian Grimshaw"></option>
+      </datalist>
+
+      <div id="defaultEngineerNote" class="profile-note">No default engineer set for this iPad yet.</div>
+
+      <div class="profile-actions">
+        <button type="button" onclick="saveDefaultEngineerProfile(event)">Save Engineer</button>
+        <button class="secondary" type="button" onclick="closeEngineerProfile(event)">Close</button>
+      </div>
+    </div>
   </section>
 
   <section class="screen app-shell" aria-label="FSD Certs App Shell">
@@ -1181,6 +1304,33 @@
         setDefaultEngineerProfile(engineer);
         refreshDefaultEngineerProfileUi();
         alert(engineer ? ('Default engineer saved for this iPad: ' + engineer) : 'Default engineer cleared for this iPad.');
+        return false;
+      };
+
+
+
+      window.openEngineerProfile = function openEngineerProfile(event) {
+        stopTap(event);
+        refreshDefaultEngineerProfileUi();
+        const modal = document.getElementById('engineerProfileModal');
+        if (modal) {
+          modal.classList.add('active');
+          modal.setAttribute('aria-hidden', 'false');
+        }
+        setTimeout(function(){
+          const input = document.getElementById('defaultEngineerInput');
+          if (input) input.focus();
+        }, 80);
+        return false;
+      };
+
+      window.closeEngineerProfile = function closeEngineerProfile(event) {
+        stopTap(event);
+        const modal = document.getElementById('engineerProfileModal');
+        if (modal) {
+          modal.classList.remove('active');
+          modal.setAttribute('aria-hidden', 'true');
+        }
         return false;
       };
 
@@ -2786,6 +2936,6 @@
 
     }());
   </script>
-  <div class="fixed-version-badge">App Shell V6.3c76b · iPad engineer profile</div>
+  <div class="fixed-version-badge">App Shell V6.3c76c · Engineer profile button</div>
 </body>
 </html>
