@@ -684,11 +684,12 @@
     #shellEngineerStatus { display:flex; flex-direction:column; align-items:flex-end; line-height:1.08; }
     #shellEngineerStatus small { font-size:10px; font-weight:900; opacity:.82; max-width:145px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 
+    .app-icon.quote .icon-square { background: linear-gradient(145deg, #0f766e, #14b8a6); }
   </style>
 </head>
 <body>
   <!--
-    Fire Safety Direct - FSD Certs V6.3c76g iPad Engineer Profile
+    Fire Safety Direct - FSD Certs V6.3c77a iPad Engineer Profile
     Colourful iPad app-icon shell with new black/gold FSD logo.
     App shell mark: Jared720 Labs
   -->
@@ -721,6 +722,12 @@
         <button class="app-icon profile" type="button" onclick="openEngineerProfile(event)" aria-label="Open Engineer Profile">
           <span class="icon-square"><span>👷</span></span>
           <strong>Engineer<br>Profile</strong>
+        </button>
+
+
+        <button class="app-icon quote" type="button" onclick="openQuickQuote(event)" aria-label="Open Quick Quote">
+          <span class="icon-square"><span>£</span></span>
+          <strong>Quick<br>Quote</strong>
         </button>
 
         <button class="app-icon drafts" type="button" onclick="openOfflineDrafts(event)" aria-label="Open Offline Certs and Reports">
@@ -758,7 +765,7 @@
 
     <footer class="ipad-footer">
       <span>Jared720 Labs</span>
-      <span>App Shell V6.3c76g · Engineer profile status</span>
+      <span>App Shell V6.3c77a · Quick Quote starter</span>
     </footer>
   </section>
 
@@ -2789,6 +2796,11 @@
         openAppUrlInShell(APP_URL + '?page=drafts');
       };
 
+      window.openQuickQuote = function openQuickQuote(event) {
+        stopTap(event);
+        openAppUrlInShell(APP_URL + '?page=qq');
+      };
+
       window.openCerts = function openCerts(event) {
         stopTap(event);
         // V6.3c48: always load a fresh portal when the home button is pressed.
@@ -2964,6 +2976,6 @@
 
     }());
   </script>
-  <div class="fixed-version-badge">App Shell V6.3c76g · Engineer profile status</div>
+  <div class="fixed-version-badge">App Shell V6.3c77a · Quick Quote starter</div>
 </body>
 </html>
