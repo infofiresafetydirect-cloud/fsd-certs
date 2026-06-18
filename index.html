@@ -508,7 +508,7 @@
       .dock-app { min-height: 58px; }
     }
 
-    /* V6.3c78cv: iPad/touch canvas blocking fix, PC direct signing allowed. */
+    /* V6.3c78dv: iPad/touch canvas blocking fix, PC direct signing allowed. */
     .sig-helper {
       position: fixed; inset: 0; z-index: 12000; display: none;
       align-items: center; justify-content: center;
@@ -686,10 +686,17 @@
 
     .app-icon.quote .icon-square { background: linear-gradient(145deg, #0f766e, #14b8a6); }
   </style>
+
+<script id="fsd-callout-config-v6-3c78d">
+window.FSD_CALLOUT_SHEET_ID = "1-lKMU6LIhW7oiWHskTZcbYFhjQCN6nZoSydLxq5A-Fc";
+window.FSD_CALLOUT_GID = "720000000";
+window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LIhW7oiWHskTZcbYFhjQCN6nZoSydLxq5A-Fc/edit?gid=720000000#gid=720000000";
+</script>
+
 </head>
 <body>
   <!--
-    Fire Safety Direct - FSD Certs V6.3c78cd iPad Engineer Profile
+    Fire Safety Direct - FSD Certs V6.3c78dd iPad Engineer Profile
     Colourful iPad app-icon shell with new black/gold FSD logo.
     App shell mark: Jared720 Labs
   -->
@@ -765,7 +772,7 @@
 
     <footer class="ipad-footer">
       <span>Jared720 Labs</span>
-      <span>App Shell V6.3c78cd · QQ picker pack</span>
+      <span>App Shell V6.3c78dd · QQ picker pack</span>
     </footer>
   </section>
 
@@ -1065,9 +1072,9 @@
     (function () {
       'use strict';
 
-      const SHELL_VER = 'V6.3c78c';
+      const SHELL_VER = 'V6.3c78d';
       const APP_URL = 'https://script.google.com/macros/s/AKfycbzq9FTETNZwUJWHMGnMHECbu3sJ3jy3FFvGYyeaRXtkoK1GHBtqOu-GLBle_WGfoFtI/exec';
-      const SCHEDULE_URL = 'https://docs.google.com/spreadsheets/d/1SZK6igtKPVHcBRdkA49A6AKSobkWXI_pk-De7taZP6c/edit';
+      const SCHEDULE_URL = 'https://docs.google.com/spreadsheets/d/1-lKMU6LIhW7oiWHskTZcbYFhjQCN6nZoSydLxq5A-Fc/edit?gid=720000000#gid=720000000';
       const CALLOUTS_PAGE = APP_URL + '?page=callouts&shell=ipad';
       const home = document.getElementById('home');
       const frame = document.getElementById('fsdFrame');
@@ -2976,61 +2983,6 @@
 
     }());
   </script>
-  <div class="fixed-version-badge">App Shell V6.3c78cd · QQ picker pack</div>
-
-
-
-<script id="fsd-callout-shell-link-patch-v6-3c78c">
-(function(){
-  var FSD_CALLOUT_SHEET_ID = "1-lKMU6LIhW7oiWHskTZcbYFhjQCN6nZoSydLxq5A-Fc";
-  var FSD_CALLOUT_GID = "720000000";
-
-  function currentShellBase() {
-    return window.location.origin + window.location.pathname;
-  }
-
-  function buildCalloutShellUrl() {
-    return currentShellBase() + '?app=callouts&calloutSheetId=' + encodeURIComponent(FSD_CALLOUT_SHEET_ID) + '&calloutGid=' + encodeURIComponent(FSD_CALLOUT_GID);
-  }
-
-  function isCalloutText(el) {
-    var t = ((el && (el.innerText || el.textContent || el.getAttribute('aria-label') || el.title)) || '').toLowerCase();
-    return t.indexOf('callout') !== -1;
-  }
-
-  function openCalloutInShell(e) {
-    if (e) {
-      e.preventDefault();
-      e.stopPropagation();
-    }
-    window.location.href = buildCalloutShellUrl();
-    return false;
-  }
-
-  function patchCalloutButtons() {
-    var nodes = Array.prototype.slice.call(document.querySelectorAll('a,button,[role="button"],.app,.app-card,.tile,.dock-item'));
-    nodes.forEach(function(el) {
-      if (!isCalloutText(el)) return;
-      el.setAttribute('data-fsd-callout-sheet-id', FSD_CALLOUT_SHEET_ID);
-      el.setAttribute('data-fsd-callout-gid', FSD_CALLOUT_GID);
-      if (el.tagName && el.tagName.toLowerCase() === 'a') {
-        el.setAttribute('href', buildCalloutShellUrl());
-      }
-      el.onclick = openCalloutInShell;
-    });
-  }
-
-  window.FSD_CALLOUT_SHEET_ID = FSD_CALLOUT_SHEET_ID;
-  window.FSD_CALLOUT_GID = FSD_CALLOUT_GID;
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', patchCalloutButtons);
-  } else {
-    patchCalloutButtons();
-  }
-  setTimeout(patchCalloutButtons, 500);
-})();
-</script>
-
+  <div class="fixed-version-badge">App Shell V6.3c78dd · QQ picker pack</div>
 </body>
 </html>
