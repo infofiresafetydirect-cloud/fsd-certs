@@ -508,7 +508,7 @@
       .dock-app { min-height: 58px; }
     }
 
-    /* V6.3c78dv: iPad/touch canvas blocking fix, PC direct signing allowed. */
+    /* V6.3c78pv: iPad/touch canvas blocking fix, PC direct signing allowed. */
     .sig-helper {
       position: fixed; inset: 0; z-index: 12000; display: none;
       align-items: center; justify-content: center;
@@ -693,10 +693,159 @@ window.FSD_CALLOUT_GID = "720000000";
 window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LIhW7oiWHskTZcbYFhjQCN6nZoSydLxq5A-Fc/edit?gid=720000000#gid=720000000";
 </script>
 
+
+<style id="fsd-glass-shell-redesign-v6-3c78p">
+:root{
+  --fsd-glass: rgba(255,255,255,.16);
+  --fsd-border: rgba(255,255,255,.34);
+  --fsd-text: rgba(255,255,255,.96);
+  --fsd-muted: rgba(255,255,255,.74);
+}
+html,body{min-height:100%;}
+body{
+  background:
+    radial-gradient(circle at 18% 18%, rgba(255,255,255,.22), transparent 26%),
+    radial-gradient(circle at 82% 72%, rgba(255,255,255,.18), transparent 24%),
+    linear-gradient(135deg, rgba(34,34,34,.92), rgba(114,104,92,.78), rgba(25,25,25,.95)) !important;
+  color:var(--fsd-text) !important;
+  overflow-x:hidden;
+}
+body:before{
+  content:"";
+  position:fixed;
+  inset:0;
+  background:
+    linear-gradient(120deg, rgba(255,255,255,.10), transparent 28%, rgba(0,0,0,.16) 60%, transparent 80%),
+    repeating-linear-gradient(90deg, rgba(255,255,255,.035) 0 1px, transparent 1px 160px);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  pointer-events:none;
+  z-index:-2;
+}
+body:after{
+  content:"";
+  position:fixed;
+  width:76vmin;
+  height:76vmin;
+  right:-18vmin;
+  bottom:-22vmin;
+  background: radial-gradient(circle, rgba(255,255,255,.16), transparent 68%);
+  filter: blur(20px);
+  pointer-events:none;
+  z-index:-1;
+}
+.fsd-shell-polish{position:fixed;inset:0;pointer-events:none;z-index:0;}
+.fsd-shell-polish:before{
+  content:"FSD Certs";
+  position:fixed;
+  left:18px;
+  top:14px;
+  font-size:15px;
+  font-weight:800;
+  letter-spacing:.02em;
+  color:rgba(255,255,255,.74);
+}
+.fsd-shell-polish:after{
+  content:"• Ready";
+  position:fixed;
+  right:20px;
+  top:14px;
+  font-size:14px;
+  font-weight:800;
+  color:#52d273;
+}
+.wrap,.container,.app,.shell,.main,.page,#app{position:relative;z-index:1;}
+.wrap,.container,.shell,.main,#app{max-width:1040px !important;margin-left:auto !important;margin-right:auto !important;}
+h1,.hero-title{
+  font-size:clamp(54px,8vw,96px) !important;
+  line-height:.92 !important;
+  letter-spacing:-.055em !important;
+  color:#fff !important;
+  text-shadow:0 8px 32px rgba(0,0,0,.35) !important;
+}
+h1:before{
+  content:"FIRE SAFETY DIRECT";
+  display:block;
+  font-size:13px;
+  letter-spacing:.28em;
+  font-weight:800;
+  margin-bottom:8px;
+  color:rgba(255,255,255,.88);
+}
+h1 + p,.subtitle,.lead{
+  color:var(--fsd-muted) !important;
+  font-weight:700 !important;
+  font-size:clamp(18px,2vw,24px) !important;
+}
+button,.button,.tile,.card,.app-card,a.card,a.tile{
+  transition: transform .18s ease, background .18s ease, border-color .18s ease, box-shadow .18s ease !important;
+}
+.tile,.card,.app-card,a.card,a.tile,button.app,button.tile,button.card,.launch-card,.menu-card{
+  background:linear-gradient(145deg, rgba(255,255,255,.22), rgba(255,255,255,.09)) !important;
+  border:1px solid var(--fsd-border) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.28), 0 18px 50px rgba(0,0,0,.22) !important;
+  backdrop-filter: blur(24px) saturate(145%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(145%) !important;
+  color:#fff !important;
+  border-radius:24px !important;
+}
+.tile:hover,.card:hover,.app-card:hover,a.card:hover,a.tile:hover,button.app:hover,button.tile:hover,button.card:hover,.launch-card:hover,.menu-card:hover{
+  transform: translateY(-3px) scale(1.01) !important;
+  background:linear-gradient(145deg, rgba(255,255,255,.30), rgba(255,255,255,.13)) !important;
+  border-color:rgba(255,255,255,.52) !important;
+}
+.grid,.apps,.cards,.launcher-grid,.app-grid{
+  display:grid !important;
+  grid-template-columns: repeat(3, minmax(180px, 1fr)) !important;
+  gap:22px !important;
+}
+.tile,.card,.app-card,a.card,a.tile,button.app,button.tile,button.card,.launch-card,.menu-card{
+  min-height:132px !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  text-align:center !important;
+  font-weight:850 !important;
+  font-size:18px !important;
+}
+.fsd-glass-dock{
+  position:fixed;
+  left:50%;
+  bottom:22px;
+  transform:translateX(-50%);
+  display:flex;
+  gap:12px;
+  padding:10px;
+  border-radius:28px;
+  background:rgba(255,255,255,.16);
+  border:1px solid rgba(255,255,255,.35);
+  box-shadow:0 18px 60px rgba(0,0,0,.34), inset 0 1px 0 rgba(255,255,255,.28);
+  backdrop-filter:blur(24px) saturate(155%);
+  -webkit-backdrop-filter:blur(24px) saturate(155%);
+  z-index:9999;
+}
+.fsd-glass-dock button{
+  min-width:120px;
+  min-height:58px;
+  border-radius:20px;
+  border:1px solid rgba(255,255,255,.28);
+  background:rgba(255,255,255,.14);
+  color:#fff;
+  font-weight:850;
+  cursor:pointer;
+}
+.fsd-glass-dock button:hover{background:rgba(255,255,255,.24);transform:translateY(-2px);}
+@media (max-width: 780px){
+  .grid,.apps,.cards,.launcher-grid,.app-grid{grid-template-columns: repeat(2, minmax(150px, 1fr)) !important;}
+  .fsd-glass-dock{display:none;}
+  h1,.hero-title{font-size:52px !important;}
+}
+</style>
+
 </head>
 <body>
   <!--
-    Fire Safety Direct - FSD Certs V6.3c78dd iPad Engineer Profile
+    Fire Safety Direct - FSD Certs V6.3c78pd iPad Engineer Profile
     Colourful iPad app-icon shell with new black/gold FSD logo.
     App shell mark: Jared720 Labs
   -->
@@ -772,7 +921,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
 
     <footer class="ipad-footer">
       <span>Jared720 Labs</span>
-      <span>App Shell V6.3c78dd · QQ picker pack</span>
+      <span>App Shell V6.3c78pd · QQ picker pack</span>
     </footer>
   </section>
 
@@ -1072,7 +1221,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
     (function () {
       'use strict';
 
-      const SHELL_VER = 'V6.3c78d';
+      const SHELL_VER = 'V6.3c78p';
       const APP_URL = 'https://script.google.com/macros/s/AKfycbzq9FTETNZwUJWHMGnMHECbu3sJ3jy3FFvGYyeaRXtkoK1GHBtqOu-GLBle_WGfoFtI/exec';
       const SCHEDULE_URL = 'https://docs.google.com/spreadsheets/d/1-lKMU6LIhW7oiWHskTZcbYFhjQCN6nZoSydLxq5A-Fc/edit?gid=720000000#gid=720000000';
       const CALLOUTS_PAGE = APP_URL + '?page=callouts&shell=ipad';
@@ -2983,6 +3132,44 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
 
     }());
   </script>
-  <div class="fixed-version-badge">App Shell V6.3c78dd · QQ picker pack</div>
+  <div class="fixed-version-badge">App Shell V6.3c78pd · QQ picker pack</div>
+
+<script id="fsd-glass-shell-redesign-js-v6-3c78p">
+(function(){
+  function textOf(el){ return ((el && (el.innerText || el.textContent || el.getAttribute('aria-label') || el.title)) || '').trim(); }
+  function findLauncher(label){
+    var nodes = Array.prototype.slice.call(document.querySelectorAll('a,button,[role="button"],.tile,.card,.app-card,.launch-card,.menu-card'));
+    label = label.toLowerCase();
+    return nodes.find(function(el){ return textOf(el).toLowerCase().indexOf(label) !== -1; });
+  }
+  function clickLauncher(label){
+    var el = findLauncher(label);
+    if (el) el.click();
+  }
+  function addPolish(){
+    if (!document.querySelector('.fsd-shell-polish')){
+      var polish = document.createElement('div');
+      polish.className = 'fsd-shell-polish';
+      document.body.appendChild(polish);
+    }
+    if (!document.getElementById('fsdGlassDock')){
+      var dock = document.createElement('div');
+      dock.id = 'fsdGlassDock';
+      dock.className = 'fsd-glass-dock';
+      dock.innerHTML =
+        '<button type="button" data-fsd-dock="portal">☁️&nbsp; Portal</button>' +
+        '<button type="button" data-fsd-dock="offline">▣&nbsp; Offline</button>' +
+        '<button type="button" data-fsd-dock="schedule">🗓️&nbsp; Schedule</button>';
+      document.body.appendChild(dock);
+      dock.querySelector('[data-fsd-dock="portal"]').onclick = function(){ clickLauncher('certificate'); };
+      dock.querySelector('[data-fsd-dock="offline"]').onclick = function(){ clickLauncher('offline'); };
+      dock.querySelector('[data-fsd-dock="schedule"]').onclick = function(){ clickLauncher('schedule'); };
+    }
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', addPolish);
+  else addPolish();
+})();
+</script>
+
 </body>
 </html>
