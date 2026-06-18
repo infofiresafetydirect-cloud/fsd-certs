@@ -20,12 +20,12 @@
   <link rel="dns-prefetch" href="https://script.google.com">
   <link rel="dns-prefetch" href="https://docs.google.com">
 
-  <link rel="manifest" href="manifest.webmanifest?v=78p">
-  <link rel="apple-touch-icon" href="apple-touch-icon.png?v=78p">
-  <link rel="icon" href="favicon.png?v=78p">
-  <link rel="icon" type="image/png" sizes="192x192" href="fsd-certs-logo.png?v=78p">
-  <link rel="icon" type="image/png" sizes="512x512" href="fsd-certs-logo.png?v=78p">
-  <link rel="preload" as="image" href="fsd-certs-logo.png?v=78p" fetchpriority="high">
+  <link rel="manifest" href="manifest.webmanifest?v=71d">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png?v=71d">
+  <link rel="icon" href="favicon.png?v=71d">
+  <link rel="icon" type="image/png" sizes="192x192" href="fsd-certs-logo.png?v=71d">
+  <link rel="icon" type="image/png" sizes="512x512" href="fsd-certs-logo.png?v=71d">
+  <link rel="preload" as="image" href="fsd-certs-logo.png?v=71d" fetchpriority="high">
 
   <style>
     :root {
@@ -304,208 +304,494 @@
       .button .tile-icon { font-size: 36px; }
       .maker-mark { margin-top: 22px; }
     }
-
-    /* V6.3c62 - colourful real app-icon home screen */
+    /* V6.3c78w - large-card premium iPad command centre */
     .ipad-home {
       display: block;
+      position: relative;
       z-index: 30;
       color: #ffffff;
-      background: #111827;
-      padding: calc(18px + var(--safe-top)) calc(18px + var(--safe-right)) calc(22px + var(--safe-bottom)) calc(18px + var(--safe-left));
+      background: #07101b;
+      padding: calc(14px + var(--safe-top)) calc(18px + var(--safe-right)) calc(18px + var(--safe-bottom)) calc(18px + var(--safe-left));
       transition: opacity .18s ease, transform .18s ease, visibility .18s ease;
+      overflow-x: hidden;
+      overflow-y: auto;
+      min-height: 100dvh;
+      box-sizing: border-box;
     }
+
     .ipad-wallpaper {
       position: absolute;
       inset: 0;
       background:
-        radial-gradient(circle at 16% 18%, rgba(255,255,255,.34), transparent 18%),
-        radial-gradient(circle at 88% 12%, rgba(96,165,250,.32), transparent 24%),
-        radial-gradient(circle at 78% 78%, rgba(251,191,36,.24), transparent 26%),
-        linear-gradient(135deg, #ecf5ff 0%, #d9e8f8 34%, #c9d9eb 60%, #eef2f7 100%);
+        radial-gradient(circle at 16% 16%, rgba(182, 28, 45, .24), transparent 24%),
+        radial-gradient(circle at 84% 14%, rgba(44, 111, 214, .20), transparent 26%),
+        radial-gradient(circle at 72% 84%, rgba(233, 180, 68, .10), transparent 22%),
+        linear-gradient(135deg, #08111c 0%, #0c1828 42%, #0c1d33 100%);
+      overflow: hidden;
+    }
+    .ipad-wallpaper::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,.028) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.028) 1px, transparent 1px);
+      background-size: 28px 28px;
+      mask-image: linear-gradient(180deg, black 0%, black 88%, transparent 100%);
+      opacity: .55;
+      pointer-events: none;
     }
     .ipad-wallpaper::after {
       content: "";
       position: absolute;
       inset: 0;
-      background: linear-gradient(180deg, rgba(15,23,42,.08), rgba(15,23,42,.16));
-      backdrop-filter: blur(0px);
+      background:
+        radial-gradient(circle at 50% -10%, rgba(255,255,255,.14), transparent 40%),
+        linear-gradient(180deg, rgba(5,10,18,.08), rgba(5,10,18,.42));
+      pointer-events: none;
     }
+
     .ipad-statusbar {
       position: relative;
-      z-index: 2;
-      height: 34px;
+      z-index: 4;
+      height: 26px;
       display: grid;
       grid-template-columns: 1fr auto 1fr;
       align-items: center;
-      color: rgba(15,23,42,.78);
-      font-size: 13px;
-      font-weight: 900;
+      color: rgba(255,255,255,.78);
+      font-size: 12px;
+      font-weight: 850;
       letter-spacing: .02em;
-      text-shadow: 0 1px 0 rgba(255,255,255,.30);
+      margin-bottom: 8px;
     }
-    .status-centre { color: rgba(15,23,42,.92); }
-    .status-right { justify-self: end; color: #166534; }
+    .status-left { justify-self: start; }
+    .status-centre { justify-self: center; color: rgba(255,255,255,.92); }
+    .status-right { justify-self: end; color: #7cf3a2; }
+    #shellEngineerStatus { display:flex; flex-direction:row; align-items:center; gap:10px; }
+    #shellEngineerStatus small { font-size:11px; font-weight:850; opacity:.92; white-space:nowrap; }
+
     .ipad-home-grid {
       position: relative;
       z-index: 2;
-      width: min(900px, 100%);
-      margin: 12px auto 0;
+      width: min(1120px, 100%);
+      margin: 0 auto;
+      min-height: calc(100dvh - 54px - var(--safe-top) - var(--safe-bottom));
       display: grid;
-      gap: 26px;
+      grid-template-rows: auto auto 1fr auto;
+      gap: 14px;
+      align-content: start;
     }
-    .ipad-title-block {
+
+    .hero-panel {
+      position: relative;
+      padding: 18px 18px 10px;
+    }
+    .hero-kicker {
+      color: rgba(255,255,255,.62);
+      font-size: 14px;
+      font-weight: 950;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .hero-panel h1 {
+      margin: 0;
+      font-size: clamp(46px, 7vw, 76px);
+      line-height: .94;
+      letter-spacing: -.075em;
+      font-weight: 950;
+      text-shadow: 0 10px 30px rgba(0,0,0,.18);
+    }
+    .hero-panel p {
+      margin: 8px 0 0;
+      max-width: 880px;
+      color: rgba(255,255,255,.74);
+      font-size: clamp(15px, 2.1vw, 19px);
+      line-height: 1.35;
+      font-weight: 600;
+    }
+
+    .ops-strip {
+      display: grid;
+      grid-template-columns: 132px 1fr auto;
+      gap: 12px;
+      min-height: 98px;
+      padding: 12px;
+      border-radius: 28px;
+      background: linear-gradient(180deg, rgba(86,127,192,.36), rgba(69,99,155,.28));
+      border: 1px solid rgba(255,255,255,.14);
+      box-shadow: 0 18px 40px rgba(0,0,0,.20), inset 0 1px 0 rgba(255,255,255,.16);
+      backdrop-filter: blur(18px) saturate(145%);
+      -webkit-backdrop-filter: blur(18px) saturate(145%);
+      align-items: center;
+    }
+    .ops-mini-brand {
+      height: 100%;
+      border-radius: 22px;
+      background: linear-gradient(180deg, rgba(48,86,145,.58), rgba(44,71,118,.42));
+      border: 1px solid rgba(255,255,255,.12);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.14);
       display: flex;
       align-items: center;
-      gap: 18px;
-      padding: 10px 8px 4px;
-      color: #111827;
+      justify-content: center;
+      gap: 10px;
+      padding: 12px;
     }
-    .ipad-brand-logo {
-      width: 76px;
-      height: 76px;
+    .ops-mini-brand img {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
       object-fit: cover;
-      border-radius: 22px;
-      box-shadow: 0 20px 40px rgba(15,23,42,.18), 0 0 0 1px rgba(255,255,255,.65);
+      flex: 0 0 auto;
     }
-    .ipad-brand-kicker {
-      margin-bottom: 2px;
-      color: rgba(15,23,42,.66);
+    .ops-mini-brand span {
+      font-size: 13px;
+      line-height: 1.05;
+      font-weight: 850;
+      color: rgba(255,255,255,.95);
+    }
+    .ops-ready-card {
+      height: 100%;
+      border-radius: 22px;
+      background: linear-gradient(180deg, rgba(34,43,67,.34), rgba(22,29,44,.26));
+      border: 1px solid rgba(255,255,255,.10);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.10);
+      padding: 16px 18px;
+      display: grid;
+      align-content: center;
+      gap: 6px;
+    }
+    .ops-ready-card span {
+      color: rgba(255,255,255,.56);
       font-size: 12px;
       font-weight: 950;
       letter-spacing: .16em;
       text-transform: uppercase;
     }
-    .ipad-title-block h1 {
-      margin: 0;
-      color: #111827;
-      font-size: clamp(42px, 7vw, 72px);
-      line-height: .92;
-      letter-spacing: -0.06em;
-      font-weight: 950;
-      text-shadow: 0 1px 0 rgba(255,255,255,.35);
-    }
-    .ipad-title-block p {
-      margin: 8px 0 0;
-      color: rgba(15,23,42,.72);
-      font-size: 17px;
-      font-weight: 750;
-    }
-    .app-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 22px 26px;
-      padding: 4px 8px 110px;
-    }
-    .app-icon {
-      border: 0;
-      background: transparent;
-      color: #111827;
-      font: inherit;
-      display: grid;
-      place-items: center;
-      gap: 10px;
-      min-height: 128px;
-      padding: 8px 4px;
-      cursor: pointer;
-      touch-action: manipulation;
-      will-change: transform;
-    }
-    .app-icon:active { transform: scale(.94); }
-    .icon-square {
-      width: 82px;
-      height: 82px;
-      border-radius: 23px;
-      display: grid;
-      place-items: center;
-      font-size: 38px;
+    .ops-ready-card strong {
       color: #fff;
-      box-shadow: 0 16px 28px rgba(15,23,42,.20), inset 0 1px 0 rgba(255,255,255,.35);
-      overflow: hidden;
-      position: relative;
+      font-size: clamp(24px, 3vw, 34px);
+      line-height: 1;
+      font-weight: 950;
+      letter-spacing: -.04em;
     }
-    .icon-square::after {
+    .ops-engineer {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      align-items: center;
+      min-width: 240px;
+      padding: 8px 4px 8px 8px;
+    }
+    .ops-engineer-copy {
+      text-align: right;
+      display: grid;
+      gap: 4px;
+    }
+    .ops-engineer-copy strong {
+      font-size: clamp(22px, 2.8vw, 32px);
+      line-height: .98;
+      letter-spacing: -.04em;
+      font-weight: 950;
+      color: #fff;
+    }
+    .ops-engineer-copy small {
+      font-size: 12px;
+      line-height: 1.05;
+      color: #7bf3a3;
+      font-weight: 850;
+    }
+    .ops-engineer-copy em {
+      font-style: normal;
+      font-size: 13px;
+      line-height: 1.05;
+      color: rgba(255,255,255,.86);
+      font-weight: 800;
+    }
+    .ops-avatar {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 28%, #ffffff, #e7edf8 48%, #a4b1c6 100%);
+      color: #0c1830;
+      display: grid;
+      place-items: center;
+      font-size: 24px;
+      font-weight: 950;
+      box-shadow: 0 10px 24px rgba(0,0,0,.18), 0 0 0 4px rgba(255,255,255,.16);
+      overflow: hidden;
+    }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      min-height: 0;
+      align-content: start;
+    }
+    .launch-card {
+      position: relative;
+      min-height: 178px;
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 26px;
+      overflow: hidden;
+      display: grid;
+      grid-template-rows: 1fr auto;
+      padding: 14px 16px 14px;
+      color: #fff;
+      text-align: left;
+      font: inherit;
+      cursor: pointer;
+      background: rgba(255,255,255,.04);
+      box-shadow: 0 18px 38px rgba(0,0,0,.20), inset 0 1px 0 rgba(255,255,255,.10);
+      backdrop-filter: blur(14px) saturate(140%);
+      -webkit-backdrop-filter: blur(14px) saturate(140%);
+      transition: transform .15s ease, box-shadow .15s ease;
+    }
+    .launch-card:hover { transform: translateY(-2px); box-shadow: 0 22px 42px rgba(0,0,0,.22), inset 0 1px 0 rgba(255,255,255,.10); }
+    .launch-card:active { transform: scale(.988); }
+    .launch-card::before {
       content: "";
       position: absolute;
       inset: 0;
-      background: linear-gradient(180deg, rgba(255,255,255,.34), transparent 42%, rgba(0,0,0,.08));
+      background: linear-gradient(135deg, rgba(255,255,255,.12), transparent 30%, rgba(255,255,255,.05) 70%, transparent 100%);
       pointer-events: none;
     }
-    .icon-square span { position: relative; z-index: 1; filter: drop-shadow(0 3px 5px rgba(0,0,0,.20)); }
-    .app-icon strong {
-      color: #111827;
-      font-size: 14px;
-      line-height: 1.12;
-      font-weight: 900;
-      text-align: center;
-      text-shadow: 0 1px 0 rgba(255,255,255,.35);
-    }
-    .app-icon.certs .icon-square { background: linear-gradient(145deg, #111827, #334155); }
-    .app-icon.drafts .icon-square { background: linear-gradient(145deg, #0f766e, #14b8a6); }
-    .app-icon.schedule .icon-square { background: linear-gradient(145deg, #2563eb, #60a5fa); }
-    .app-icon.callouts .icon-square { background: linear-gradient(145deg, #f59e0b, #fb7185); }
-    .app-icon.cloud .icon-square { background: linear-gradient(145deg, #6366f1, #a78bfa); }
-    .app-icon.admin .icon-square { background: linear-gradient(145deg, #475569, #94a3b8); }
-    .ipad-dock {
+    .launch-card::after {
+      content: "";
       position: absolute;
-      z-index: 3;
-      left: 50%;
-      bottom: calc(26px + var(--safe-bottom));
-      transform: translateX(-50%);
-      width: min(520px, calc(100% - 36px - var(--safe-left) - var(--safe-right)));
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
-      padding: 12px;
-      border-radius: 32px;
-      background: rgba(255,255,255,.42);
-      border: 1px solid rgba(255,255,255,.62);
-      box-shadow: 0 18px 46px rgba(15,23,42,.18);
-      backdrop-filter: blur(20px) saturate(150%);
-      -webkit-backdrop-filter: blur(20px) saturate(150%);
+      inset: auto 14px 0 14px;
+      height: 2px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.22);
+      pointer-events: none;
     }
-    .dock-app {
-      border: 0;
-      border-radius: 22px;
-      min-height: 72px;
-      background: rgba(255,255,255,.72);
+    .card-chip {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      font-size: 22px;
+      font-weight: 900;
+      color: #fff;
+      background: rgba(255,255,255,.18);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.16), 0 8px 18px rgba(0,0,0,.14);
+      z-index: 1;
+    }
+    .card-note {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      z-index: 1;
+      font-size: 11px;
+      font-weight: 900;
+      line-height: 1;
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.16);
+      color: rgba(255,255,255,.92);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.14);
+    }
+    .card-art {
+      position: relative;
+      display: grid;
+      place-items: center;
+      min-height: 96px;
+      padding-top: 8px;
+    }
+    .card-art::before {
+      content: "";
+      position: absolute;
+      width: 120px;
+      height: 120px;
+      border-radius: 32px;
+      background: rgba(255,255,255,.08);
+      filter: blur(.2px);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.10);
+    }
+    .card-art span {
+      position: relative;
+      z-index: 1;
+      font-size: clamp(56px, 6vw, 78px);
+      line-height: 1;
+      filter: drop-shadow(0 10px 16px rgba(0,0,0,.20));
+    }
+    .card-copy {
+      position: relative;
+      z-index: 1;
+    }
+    .card-copy strong {
+      display: block;
+      font-size: clamp(22px, 2.8vw, 28px);
+      line-height: .96;
+      letter-spacing: -.05em;
+      font-weight: 950;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    .card-copy small {
+      display: block;
+      font-size: clamp(14px, 1.9vw, 16px);
+      line-height: 1.18;
+      color: rgba(255,255,255,.82);
+      font-weight: 550;
+    }
+
+    .launch-card.certs { background: linear-gradient(135deg, rgba(38,80,152,.88), rgba(42,119,235,.80)); }
+    .launch-card.offline { background: linear-gradient(135deg, rgba(57,126,74,.90), rgba(92,173,98,.82)); }
+    .launch-card.callouts { background: linear-gradient(135deg, rgba(160,59,52,.92), rgba(214,69,73,.82)); }
+    .launch-card.quote { background: linear-gradient(135deg, rgba(184,76,44,.92), rgba(241,112,64,.84)); }
+    .launch-card.cloud { background: linear-gradient(135deg, rgba(110,61,173,.90), rgba(149,91,238,.84)); }
+    .launch-card.profile { background: linear-gradient(135deg, rgba(27,122,128,.92), rgba(49,173,173,.84)); }
+    .launch-card.schedule { background: linear-gradient(135deg, rgba(171,107,27,.92), rgba(234,152,48,.86)); }
+    .launch-card.submitted { background: linear-gradient(135deg, rgba(157,100,35,.92), rgba(224,150,57,.84)); }
+
+    .home-meta {
       display: flex;
       align-items: center;
-      justify-content: center;
-      gap: 8px;
-      color: #111827;
-      font: inherit;
-      font-weight: 950;
-      box-shadow: inset 0 1px 0 rgba(255,255,255,.55);
-      cursor: pointer;
-      touch-action: manipulation;
-    }
-    .dock-app span { font-size: 26px; }
-    .dock-app strong { font-size: 13px; }
-    .dock-app:active { transform: scale(.96); }
-    .ipad-footer {
-      position: absolute;
-      z-index: 3;
-      left: calc(18px + var(--safe-left));
-      right: calc(18px + var(--safe-right));
-      bottom: calc(6px + var(--safe-bottom));
-      display: flex;
       justify-content: space-between;
-      gap: 10px;
-      color: rgba(15,23,42,.56);
+      gap: 12px;
+      min-height: 28px;
+      padding: 0 4px;
+    }
+    .home-credit {
+      color: rgba(255,255,255,.55);
       font-size: 10px;
       font-weight: 900;
-      letter-spacing: .08em;
+      letter-spacing: .10em;
       text-transform: uppercase;
-      pointer-events: none;
     }
-    @media (max-height: 740px) {
-      .ipad-title-block { padding-top: 0; }
-      .ipad-brand-logo { width: 60px; height: 60px; border-radius: 18px; }
-      .ipad-title-block h1 { font-size: clamp(34px, 6vw, 52px); }
-      .app-grid { gap: 12px 18px; padding-bottom: 92px; }
-      .icon-square { width: 68px; height: 68px; border-radius: 20px; font-size: 31px; }
-      .app-icon { min-height: 104px; gap: 8px; }
-      .dock-app { min-height: 58px; }
+    .home-version {
+      color: #f7f9fb;
+      font-size: 10px;
+      font-weight: 900;
+      letter-spacing: .03em;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(10,17,29,.84);
+      border: 1px solid rgba(255,255,255,.10);
+      box-shadow: 0 10px 24px rgba(0,0,0,.18), inset 0 1px 0 rgba(255,255,255,.08);
+      white-space: nowrap;
+    }
+
+    .ipad-dock,
+    .dock-app,
+    .ipad-footer { display: none !important; }
+
+    @media (max-width: 900px) {
+      .ops-strip {
+        grid-template-columns: 118px 1fr;
+      }
+      .ops-engineer {
+        grid-column: 1 / -1;
+        min-width: 0;
+        padding-top: 4px;
+      }
+      .ops-engineer-copy { text-align: left; }
+    }
+
+    @media (max-width: 720px) {
+      .ipad-home {
+        padding-left: calc(12px + var(--safe-left));
+        padding-right: calc(12px + var(--safe-right));
+      }
+      .ipad-statusbar {
+        grid-template-columns: 1fr 1fr;
+      }
+      .status-centre { display: none; }
+      .hero-panel { padding: 12px 8px 6px; }
+      .hero-panel h1 { font-size: clamp(38px, 12vw, 56px); }
+      .hero-panel p { font-size: 15px; }
+      .ops-strip {
+        grid-template-columns: 1fr;
+        padding: 12px;
+      }
+      .ops-mini-brand { min-height: 78px; justify-content: flex-start; }
+      .ops-ready-card { min-height: 86px; }
+      .ops-engineer { padding: 2px 2px 0; }
+      .ops-engineer-copy { text-align: left; }
+      .card-grid { grid-template-columns: 1fr; }
+      .launch-card { min-height: 164px; }
+      .home-meta {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+      .home-version { white-space: normal; }
+    }
+
+    @media (max-height: 760px) and (orientation: landscape) {
+      .ipad-home { padding-top: calc(10px + var(--safe-top)); padding-bottom: calc(10px + var(--safe-bottom)); }
+      .hero-panel { padding-top: 10px; padding-bottom: 4px; }
+      .hero-kicker { margin-bottom: 6px; }
+      .hero-panel h1 { font-size: clamp(38px, 5.8vw, 62px); }
+      .hero-panel p { margin-top: 6px; font-size: 15px; }
+      .ops-strip { min-height: 88px; }
+      .ops-mini-brand { border-radius: 20px; }
+      .ops-ready-card { padding: 14px 16px; }
+      .ops-ready-card strong { font-size: 28px; }
+      .ops-avatar { width: 64px; height: 64px; font-size: 22px; }
+      .launch-card { min-height: 160px; }
+      .card-art { min-height: 82px; }
+      .card-art::before { width: 104px; height: 104px; border-radius: 28px; }
+      .card-art span { font-size: 62px; }
+      .card-copy strong { font-size: 24px; }
+      .card-copy small { font-size: 14px; }
+    }
+
+
+    @media (min-width: 901px) {
+      .hero-panel { padding: 12px 14px 6px; }
+      .hero-kicker { font-size: 13px; margin-bottom: 6px; }
+      .hero-panel h1 { font-size: clamp(40px, 4.8vw, 68px); }
+      .hero-panel p { font-size: 16px; margin-top: 6px; }
+      .ops-strip { min-height: 84px; padding: 10px; }
+      .ops-mini-brand { border-radius: 20px; }
+      .ops-ready-card { padding: 12px 16px; }
+      .ops-ready-card strong { font-size: clamp(22px, 2.6vw, 30px); }
+      .ops-engineer { min-width: 220px; }
+      .ops-engineer-copy strong { font-size: clamp(20px, 2.3vw, 28px); }
+      .ops-avatar { width: 64px; height: 64px; font-size: 22px; }
+      .launch-card { min-height: 152px; padding: 12px 14px 12px; }
+      .card-chip { width: 38px; height: 38px; border-radius: 13px; font-size: 20px; }
+      .card-note { top: 12px; right: 12px; font-size: 10px; padding: 6px 9px; }
+      .card-art { min-height: 78px; }
+      .card-art::before { width: 98px; height: 98px; border-radius: 26px; }
+      .card-art span { font-size: clamp(50px, 4.5vw, 64px); }
+      .card-copy strong { font-size: clamp(20px, 2.2vw, 25px); }
+      .card-copy small { font-size: 14px; }
+      .home-meta { padding-bottom: 8px; }
+    }
+
+    @media (min-width: 901px) and (max-height: 820px) {
+      .ipad-home { padding-top: calc(10px + var(--safe-top)); padding-bottom: calc(12px + var(--safe-bottom)); }
+      .ipad-statusbar { height: 22px; margin-bottom: 6px; }
+      .ipad-home-grid { gap: 10px; min-height: calc(100dvh - 42px - var(--safe-top) - var(--safe-bottom)); }
+      .hero-panel { padding: 8px 10px 2px; }
+      .hero-kicker { font-size: 12px; }
+      .hero-panel h1 { font-size: clamp(34px, 4.1vw, 56px); }
+      .hero-panel p { font-size: 14px; margin-top: 4px; }
+      .ops-strip { min-height: 72px; border-radius: 24px; }
+      .ops-mini-brand img { width: 34px; height: 34px; }
+      .ops-mini-brand span { font-size: 12px; }
+      .ops-ready-card { padding: 10px 14px; }
+      .ops-ready-card span { font-size: 11px; }
+      .ops-ready-card strong { font-size: clamp(20px, 2.3vw, 26px); }
+      .ops-engineer-copy strong { font-size: clamp(18px, 2vw, 24px); }
+      .ops-engineer-copy small, .ops-engineer-copy em { font-size: 11px; }
+      .ops-avatar { width: 56px; height: 56px; font-size: 20px; }
+      .card-grid { gap: 10px; }
+      .launch-card { min-height: 132px; border-radius: 22px; }
+      .card-art { min-height: 58px; }
+      .card-art::before { width: 78px; height: 78px; border-radius: 22px; }
+      .card-art span { font-size: clamp(40px, 3.8vw, 52px); }
+      .card-copy strong { font-size: clamp(18px, 1.9vw, 22px); margin-bottom: 2px; }
+      .card-copy small { font-size: 13px; line-height: 1.12; }
+      .home-meta { min-height: 24px; }
+      .home-version { padding: 7px 11px; }
     }
 
     /* V6.3c78dv: iPad/touch canvas blocking fix, PC direct signing allowed. */
@@ -599,7 +885,6 @@
     }
 
 
-    .app-icon.profile .icon-square { background: linear-gradient(145deg, #991b1b, #dc2626); }
     .profile-modal {
       position: fixed;
       inset: 0;
@@ -684,525 +969,6 @@
     #shellEngineerStatus { display:flex; flex-direction:column; align-items:flex-end; line-height:1.08; }
     #shellEngineerStatus small { font-size:10px; font-weight:900; opacity:.82; max-width:145px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 
-    .app-icon.quote .icon-square { background: linear-gradient(145deg, #0f766e, #14b8a6); }
-
-
-    /* V6.3c78p - visual-only GitHub shell refresh.
-       Keeps all existing button functions; only changes the home-screen look. */
-    .ipad-home {
-      display: block;
-      z-index: 30;
-      color: #ffffff;
-      padding: calc(14px + var(--safe-top)) calc(18px + var(--safe-right)) calc(16px + var(--safe-bottom)) calc(18px + var(--safe-left));
-      background: #171513;
-      overflow: hidden;
-      isolation: isolate;
-    }
-
-    .ipad-home::before,
-    .ipad-home::after {
-      content: "";
-      position: absolute;
-      pointer-events: none;
-      z-index: 1;
-    }
-
-    .ipad-home::before {
-      inset: -6%;
-      background:
-        radial-gradient(circle at 18% 12%, rgba(255,255,255,.34), transparent 18%),
-        radial-gradient(circle at 90% 10%, rgba(255,255,255,.18), transparent 20%),
-        radial-gradient(circle at 48% 92%, rgba(196,139,82,.32), transparent 28%),
-        linear-gradient(135deg, rgba(255,255,255,.12), rgba(0,0,0,.16));
-      filter: blur(16px);
-      transform: scale(1.04);
-      opacity: .92;
-    }
-
-    .ipad-home::after {
-      right: calc(72px + var(--safe-right));
-      bottom: calc(112px + var(--safe-bottom));
-      width: 44px;
-      height: 44px;
-      background: rgba(255,255,255,.42);
-      clip-path: polygon(50% 0, 63% 36%, 100% 50%, 63% 64%, 50% 100%, 37% 64%, 0 50%, 37% 36%);
-      filter: blur(.2px) drop-shadow(0 22px 38px rgba(255,255,255,.18));
-      opacity: .7;
-    }
-
-    .ipad-wallpaper {
-      position: absolute;
-      inset: 0;
-      z-index: 0;
-      background:
-        linear-gradient(90deg, rgba(255,255,255,.10), rgba(255,255,255,0) 18%, rgba(0,0,0,.24) 48%, rgba(255,255,255,0) 78%, rgba(255,255,255,.12)),
-        radial-gradient(circle at 12% 25%, rgba(219,226,234,.66), transparent 21%),
-        radial-gradient(circle at 82% 16%, rgba(191,186,176,.42), transparent 24%),
-        radial-gradient(circle at 55% 80%, rgba(123,91,68,.44), transparent 28%),
-        linear-gradient(135deg, #9b9993 0%, #57514b 42%, #8b7a6a 100%);
-      filter: blur(10px) saturate(105%);
-      transform: scale(1.06);
-    }
-
-    .ipad-wallpaper::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background:
-        linear-gradient(90deg, rgba(0,0,0,.18), transparent 20%, transparent 80%, rgba(0,0,0,.22)),
-        radial-gradient(circle at 50% 50%, transparent 0 48%, rgba(0,0,0,.34) 100%);
-      backdrop-filter: blur(2px);
-      -webkit-backdrop-filter: blur(2px);
-    }
-
-    .ipad-statusbar {
-      position: absolute;
-      z-index: 9;
-      top: calc(10px + var(--safe-top));
-      left: calc(18px + var(--safe-left));
-      right: calc(18px + var(--safe-right));
-      height: 32px;
-      display: grid;
-      grid-template-columns: 1fr auto 1fr;
-      align-items: center;
-      color: rgba(255,255,255,.86);
-      font-size: 13px;
-      font-weight: 950;
-      letter-spacing: .01em;
-      text-shadow: 0 2px 14px rgba(0,0,0,.52);
-    }
-
-    .status-centre {
-      color: rgba(255,255,255,.56);
-      font-size: 13px;
-      letter-spacing: .02em;
-    }
-
-    .status-right {
-      justify-self: end;
-      color: #4ade80;
-    }
-
-    #shellEngineerStatus small {
-      color: rgba(255,255,255,.62);
-      text-align: right;
-      text-shadow: 0 2px 12px rgba(0,0,0,.48);
-    }
-
-    .ipad-home-grid {
-      position: absolute;
-      z-index: 4;
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%, -50%);
-      width: min(980px, calc(100vw - 188px - var(--safe-left) - var(--safe-right)));
-      height: min(700px, calc(100dvh - 74px - var(--safe-top) - var(--safe-bottom)));
-      min-height: 560px;
-      margin: 0;
-      display: grid;
-      grid-template-rows: auto 1fr;
-      gap: 28px;
-      padding: 58px 62px 122px;
-      border-radius: 38px;
-      border: 1px solid rgba(255,255,255,.18);
-      background:
-        linear-gradient(112deg, rgba(255,255,255,.20), rgba(255,255,255,.075) 44%, rgba(0,0,0,.12) 45%, rgba(255,255,255,.12)),
-        rgba(221, 216, 207, .30);
-      box-shadow:
-        0 0 0 18px #080b10,
-        0 0 0 22px rgba(183,193,209,.45),
-        0 30px 90px rgba(0,0,0,.54),
-        inset 0 1px 0 rgba(255,255,255,.36),
-        inset 0 -1px 0 rgba(0,0,0,.24);
-      backdrop-filter: blur(22px) saturate(120%);
-      -webkit-backdrop-filter: blur(22px) saturate(120%);
-    }
-
-    .ipad-home-grid::before,
-    .ipad-home-grid::after {
-      content: "";
-      position: absolute;
-      pointer-events: none;
-    }
-
-    .ipad-home-grid::before {
-      left: -27px;
-      top: 50%;
-      width: 9px;
-      height: 9px;
-      border-radius: 999px;
-      background: #05070a;
-      box-shadow:
-        0 0 0 2px rgba(255,255,255,.025),
-        0 -92px 0 -1px #151922,
-        0 92px 0 -1px #151922;
-      transform: translateY(-50%);
-      opacity: .82;
-    }
-
-    .ipad-home-grid::after {
-      inset: 0;
-      border-radius: inherit;
-      background:
-        linear-gradient(112deg, transparent 0 54%, rgba(255,255,255,.14) 54.2%, transparent 73%),
-        radial-gradient(circle at 58% 38%, rgba(255,255,255,.20), transparent 46%);
-      mix-blend-mode: screen;
-      opacity: .72;
-    }
-
-    .ipad-title-block,
-    .app-grid {
-      position: relative;
-      z-index: 2;
-    }
-
-    .ipad-title-block {
-      display: grid;
-      grid-template-columns: auto 1fr;
-      align-items: center;
-      gap: 18px;
-      padding: 0;
-      color: #ffffff;
-    }
-
-    .ipad-brand-logo {
-      width: 76px;
-      height: 76px;
-      object-fit: cover;
-      border-radius: 19px;
-      box-shadow:
-        0 18px 36px rgba(0,0,0,.30),
-        inset 0 1px 0 rgba(255,255,255,.56),
-        0 0 0 1px rgba(255,255,255,.30);
-    }
-
-    .ipad-brand-kicker {
-      margin: 0 0 2px;
-      color: rgba(255,255,255,.92);
-      font-size: 13px;
-      line-height: 1;
-      font-weight: 950;
-      letter-spacing: .18em;
-      text-transform: uppercase;
-      text-shadow: 0 4px 18px rgba(0,0,0,.40);
-    }
-
-    .ipad-title-block h1 {
-      margin: 0;
-      color: #ffffff;
-      font-size: clamp(56px, 6.6vw, 78px);
-      line-height: .92;
-      letter-spacing: -.065em;
-      font-weight: 950;
-      text-shadow: 0 5px 28px rgba(0,0,0,.42), 0 1px 0 rgba(255,255,255,.20);
-    }
-
-    .ipad-title-block p {
-      margin: 8px 0 0;
-      color: rgba(255,255,255,.92);
-      font-size: 18px;
-      line-height: 1.25;
-      font-weight: 820;
-      text-shadow: 0 3px 16px rgba(0,0,0,.38);
-    }
-
-    .app-grid {
-      width: 100%;
-      align-self: start;
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 18px 26px;
-      padding: 0 8px;
-    }
-
-    .app-icon {
-      position: relative;
-      min-height: 124px;
-      padding: 12px 12px 10px;
-      border: 1px solid rgba(255,255,255,.42);
-      border-radius: 19px;
-      background:
-        linear-gradient(180deg, rgba(255,255,255,.26), rgba(255,255,255,.11)),
-        rgba(255,255,255,.12);
-      color: #ffffff;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 9px;
-      box-shadow:
-        0 18px 42px rgba(0,0,0,.18),
-        inset 0 1px 0 rgba(255,255,255,.36),
-        inset 0 -1px 0 rgba(255,255,255,.06);
-      backdrop-filter: blur(18px) saturate(126%);
-      -webkit-backdrop-filter: blur(18px) saturate(126%);
-      overflow: hidden;
-    }
-
-    .app-icon::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(circle at 50% 0%, rgba(255,255,255,.22), transparent 55%);
-      opacity: .84;
-      pointer-events: none;
-    }
-
-    .app-icon:active {
-      transform: scale(.975);
-      box-shadow: 0 10px 26px rgba(0,0,0,.16), inset 0 1px 0 rgba(255,255,255,.34);
-    }
-
-    .icon-square {
-      position: relative;
-      z-index: 1;
-      width: 70px;
-      height: 70px;
-      border-radius: 19px;
-      display: grid;
-      place-items: center;
-      font-size: 34px;
-      color: #ffffff;
-      box-shadow:
-        0 14px 28px rgba(0,0,0,.22),
-        inset 0 1px 0 rgba(255,255,255,.42),
-        0 0 0 1px rgba(255,255,255,.22);
-      overflow: hidden;
-    }
-
-    .icon-square img,
-    .app-logo-img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-    }
-
-    .icon-square::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(180deg, rgba(255,255,255,.28), transparent 48%, rgba(0,0,0,.08));
-      pointer-events: none;
-    }
-
-    .icon-square span {
-      position: relative;
-      z-index: 1;
-      filter: drop-shadow(0 4px 8px rgba(0,0,0,.25));
-    }
-
-    .app-icon strong {
-      position: relative;
-      z-index: 1;
-      color: #ffffff;
-      font-size: 14px;
-      line-height: 1.08;
-      font-weight: 950;
-      text-align: center;
-      text-shadow: 0 2px 12px rgba(0,0,0,.50);
-      letter-spacing: -.01em;
-    }
-
-    .app-icon.certs .icon-square { background: linear-gradient(145deg, rgba(250,204,21,.60), rgba(120,90,42,.92)); }
-    .app-icon.drafts .icon-square { background: linear-gradient(145deg, #b8d5cc, #70958a); }
-    .app-icon.schedule .icon-square { background: linear-gradient(145deg, #96b7f5, #b7b5e9); }
-    .app-icon.callouts .icon-square { background: linear-gradient(145deg, #f7c25f, #d98a8d); }
-    .app-icon.cloud .icon-square { background: linear-gradient(145deg, #c9c3ec, #777098); }
-    .app-icon.admin .icon-square { background: linear-gradient(145deg, #ffd279, #d58c38); }
-
-    .app-icon.profile,
-    .app-icon.quote {
-      position: absolute;
-      top: 12px;
-      right: 8px;
-      min-height: 42px;
-      width: 42px;
-      height: 42px;
-      padding: 0;
-      border-radius: 999px;
-      display: grid;
-      place-items: center;
-      z-index: 5;
-      opacity: .88;
-    }
-
-    .app-icon.profile { right: 58px; }
-    .app-icon.profile strong,
-    .app-icon.quote strong { display: none; }
-    .app-icon.profile .icon-square,
-    .app-icon.quote .icon-square {
-      width: 32px;
-      height: 32px;
-      border-radius: 999px;
-      font-size: 17px;
-      box-shadow: none;
-    }
-    .app-icon.quote .icon-square { background: linear-gradient(145deg, #065f46, #14b8a6); }
-    .app-icon.profile .icon-square { background: linear-gradient(145deg, #7f1d1d, #dc2626); }
-
-    .ipad-dock {
-      position: absolute;
-      z-index: 8;
-      left: 50%;
-      bottom: calc(30px + var(--safe-bottom));
-      transform: translateX(-50%);
-      width: min(540px, calc(100% - 140px));
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
-      padding: 12px;
-      border-radius: 30px;
-      background: rgba(255,255,255,.20);
-      border: 1px solid rgba(255,255,255,.35);
-      box-shadow:
-        0 18px 44px rgba(0,0,0,.24),
-        inset 0 1px 0 rgba(255,255,255,.28);
-      backdrop-filter: blur(22px) saturate(135%);
-      -webkit-backdrop-filter: blur(22px) saturate(135%);
-    }
-
-    .dock-app {
-      min-height: 66px;
-      border: 1px solid rgba(255,255,255,.34);
-      border-radius: 22px;
-      background: rgba(255,255,255,.20);
-      color: #ffffff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      font: inherit;
-      font-weight: 950;
-      text-shadow: 0 2px 12px rgba(0,0,0,.45);
-      box-shadow: inset 0 1px 0 rgba(255,255,255,.22), 0 10px 24px rgba(0,0,0,.12);
-    }
-
-    .dock-app span {
-      display: grid;
-      place-items: center;
-      width: 38px;
-      height: 38px;
-      font-size: 24px;
-    }
-
-    .dock-app img {
-      width: 38px;
-      height: 38px;
-      border-radius: 11px;
-      object-fit: cover;
-    }
-
-    .dock-app strong {
-      font-size: 14px;
-      letter-spacing: -.01em;
-    }
-
-    .dock-app:active { transform: scale(.965); }
-
-    .ipad-footer {
-      position: absolute;
-      z-index: 6;
-      left: calc(18px + var(--safe-left));
-      right: calc(18px + var(--safe-right));
-      bottom: calc(8px + var(--safe-bottom));
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-end;
-      gap: 10px;
-      color: rgba(255,255,255,.50);
-      font-size: 10px;
-      font-weight: 950;
-      letter-spacing: .08em;
-      text-transform: uppercase;
-      text-shadow: 0 2px 10px rgba(0,0,0,.45);
-      pointer-events: none;
-    }
-
-    .fixed-version-badge {
-      background: rgba(15, 23, 42, .34);
-      border: 1px solid rgba(255,255,255,.14);
-      color: rgba(255,255,255,.72);
-    }
-
-    @media (max-width: 940px), (max-height: 680px) {
-      .ipad-home-grid {
-        width: min(900px, calc(100vw - 74px - var(--safe-left) - var(--safe-right)));
-        height: min(670px, calc(100dvh - 76px - var(--safe-top) - var(--safe-bottom)));
-        min-height: 500px;
-        padding: 44px 42px 106px;
-        border-radius: 34px;
-        box-shadow:
-          0 0 0 14px #080b10,
-          0 0 0 18px rgba(183,193,209,.42),
-          0 26px 78px rgba(0,0,0,.52),
-          inset 0 1px 0 rgba(255,255,255,.32);
-      }
-      .ipad-title-block h1 { font-size: clamp(42px, 7vw, 62px); }
-      .ipad-brand-logo { width: 64px; height: 64px; border-radius: 17px; }
-      .app-grid { gap: 14px 18px; }
-      .app-icon { min-height: 108px; }
-      .icon-square { width: 60px; height: 60px; border-radius: 17px; font-size: 29px; }
-      .ipad-dock { bottom: calc(24px + var(--safe-bottom)); width: min(510px, calc(100% - 92px)); }
-    }
-
-    @media (max-width: 680px) {
-      .ipad-home { overflow-y: auto; -webkit-overflow-scrolling: touch; }
-      .ipad-home-grid {
-        position: relative;
-        left: auto;
-        top: auto;
-        transform: none;
-        width: calc(100% - 18px);
-        height: auto;
-        min-height: auto;
-        margin: 52px auto 92px;
-        padding: 26px 18px 28px;
-        border-radius: 28px;
-        box-shadow:
-          0 0 0 10px #080b10,
-          0 0 0 13px rgba(183,193,209,.38),
-          0 22px 64px rgba(0,0,0,.46),
-          inset 0 1px 0 rgba(255,255,255,.30);
-      }
-      .ipad-home-grid::before { display: none; }
-      .ipad-title-block { grid-template-columns: auto 1fr; gap: 13px; }
-      .ipad-brand-logo { width: 54px; height: 54px; border-radius: 15px; }
-      .ipad-title-block h1 { font-size: 42px; }
-      .ipad-title-block p { font-size: 15px; }
-      .app-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); padding: 0; gap: 12px; }
-      .app-icon { min-height: 108px; border-radius: 18px; }
-      .app-icon.profile,
-      .app-icon.quote { top: 10px; right: 10px; }
-      .app-icon.profile { right: 58px; }
-      .ipad-dock {
-        width: calc(100% - 44px - var(--safe-left) - var(--safe-right));
-        bottom: calc(18px + var(--safe-bottom));
-        padding: 9px;
-        border-radius: 24px;
-      }
-      .dock-app { min-height: 58px; border-radius: 18px; gap: 6px; }
-      .dock-app span { width: 30px; height: 30px; font-size: 20px; }
-      .dock-app img { width: 30px; height: 30px; border-radius: 9px; }
-      .dock-app strong { font-size: 12px; }
-      .ipad-footer { display: none; }
-    }
-
-    @media (max-height: 560px) and (orientation: landscape) {
-      .ipad-home-grid {
-        width: calc(100vw - 86px - var(--safe-left) - var(--safe-right));
-        height: calc(100dvh - 70px - var(--safe-top) - var(--safe-bottom));
-        min-height: 420px;
-        padding: 28px 42px 90px;
-        gap: 14px;
-      }
-      .ipad-title-block h1 { font-size: 42px; }
-      .ipad-title-block p { display: none; }
-      .app-icon { min-height: 86px; }
-      .icon-square { width: 46px; height: 46px; border-radius: 14px; font-size: 23px; }
-      .dock-app { min-height: 48px; }
-    }
-
   </style>
 
 <script id="fsd-callout-config-v6-3c78d">
@@ -1214,84 +980,109 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
 </head>
 <body>
   <!--
-    Fire Safety Direct - FSD Certs V6.3c78p visual shell refresh
-    Glass iPad launcher shell using the existing FSD Certs functions.
+    Fire Safety Direct - FSD Certs V6.3c78x Large-card Premium iPad Command Centre
+    Large-card premium iPad command centre with glossy cards and engineer status strip.
     App shell mark: Jared720 Labs
   -->
 
   <section id="home" class="screen home ipad-home" aria-label="FSD Certs Home Screen">
     <div class="ipad-wallpaper" aria-hidden="true"></div>
+
     <header class="ipad-statusbar">
-      <div class="status-left">FSD Certs</div>
+      <div class="status-left">← FSD Certs</div>
       <div class="status-centre">Fire Safety Direct</div>
-      <div class="status-right" id="shellEngineerStatus"><div>● Ready</div><small id="shellEngineerName">No engineer</small></div>
+      <div class="status-right" id="shellEngineerStatus"><div>●</div><small id="shellEngineerName">Ready</small></div>
     </header>
 
     <main class="ipad-home-grid" aria-label="FSD Certs apps">
-      <section class="ipad-title-block">
-        <img class="ipad-brand-logo" src="fsd-certs-logo.png" alt="FSD Certs cloud logo" width="76" height="76" decoding="async" fetchpriority="high">
-        <div>
-          <div class="ipad-brand-kicker">Fire Safety Direct</div>
-          <h1>FSD Certs</h1>
-          <p>Choose an app to start work.</p>
+      <section class="hero-panel">
+        <div class="hero-kicker">Fire Safety Direct</div>
+        <h1>FSD Certs</h1>
+        <p>Certificates, engineer reports, quotes and scheduling — built for site work on iPad.</p>
+      </section>
+
+      <section class="ops-strip" aria-label="Command centre status strip">
+        <div class="ops-mini-brand">
+          <img src="fsd-certs-logo.png" alt="FSD Certs logo" width="42" height="42" decoding="async">
+          <span>FSD<br>Certs</span>
+        </div>
+        <div class="ops-ready-card">
+          <span>Command centre</span>
+          <strong>Ready for work</strong>
+        </div>
+        <div class="ops-engineer">
+          <div class="ops-engineer-copy">
+            <strong id="commandEngineerName">No engineer</strong>
+            <small id="commandEngineerState">● Online</small>
+            <em id="commandEngineerLevel">★ Ready on this iPad</em>
+          </div>
+          <div class="ops-avatar" id="commandEngineerAvatar">FS</div>
         </div>
       </section>
 
-      <section class="app-grid" aria-label="Main apps">
-        <button class="app-icon certs" type="button" onclick="openCerts(event)" aria-label="Open Certificate Portal">
-          <span class="icon-square"><img class="app-logo-img" src="fsd-certs-logo.png" alt="" width="86" height="86" decoding="async"></span>
-          <strong>Certificate<br>Portal</strong>
+      <section class="card-grid" aria-label="Main apps">
+        <button class="launch-card certs" type="button" onclick="openCerts(event)" aria-label="Open Certificate Portal">
+          <span class="card-chip">📄</span>
+          <span class="card-note">Portal</span>
+          <div class="card-art"><span>📘</span></div>
+          <div class="card-copy"><strong>Certificate Portal</strong><small>Safety &amp; compliance certificates, reports and forms.</small></div>
         </button>
 
-
-        <button class="app-icon profile" type="button" onclick="openEngineerProfile(event)" aria-label="Open Engineer Profile">
-          <span class="icon-square"><span>👷</span></span>
-          <strong>Engineer<br>Profile</strong>
+        <button class="launch-card offline" type="button" onclick="openOfflineDrafts(event)" aria-label="Open Offline Certs and Reports">
+          <span class="card-chip">▣</span>
+          <span class="card-note">Offline</span>
+          <div class="card-art"><span>🗂️</span></div>
+          <div class="card-copy"><strong>Offline Certs</strong><small>Create and access certificates &amp; reports without signal.</small></div>
         </button>
 
-
-        <button class="app-icon quote" type="button" onclick="openQuickQuote(event)" aria-label="Open Quick Quote">
-          <span class="icon-square"><span>£</span></span>
-          <strong>Quick<br>Quote</strong>
+        <button class="launch-card callouts" type="button" onclick="openCallouts(event)" aria-label="Open Callouts">
+          <span class="card-chip">⚡</span>
+          <span class="card-note">Live jobs</span>
+          <div class="card-art"><span>🚨</span></div>
+          <div class="card-copy"><strong>Callouts</strong><small>Active emergency jobs and urgent response work.</small></div>
         </button>
 
-        <button class="app-icon drafts" type="button" onclick="openOfflineDrafts(event)" aria-label="Open Offline Certs and Reports">
-          <span class="icon-square"><span>▣</span></span>
-          <strong>Offline Certs<br>& Reports</strong>
+        <button class="launch-card quote" type="button" onclick="openQuickQuote(event)" aria-label="Open Quick Quote">
+          <span class="card-chip">£</span>
+          <span class="card-note">QQ</span>
+          <div class="card-art"><span>💷</span></div>
+          <div class="card-copy"><strong>Quick Quote</strong><small>Fast quotes and pricing while you are on site.</small></div>
         </button>
 
-        <button class="app-icon schedule" type="button" onclick="openSchedule(event)" aria-label="Open FSD Schedule">
-          <span class="icon-square"><span>📅</span></span>
-          <strong>FSD<br>Schedule</strong>
+        <button class="launch-card cloud" type="button" onclick="openCloudDrafts(event)" aria-label="Open Cloud Drafts">
+          <span class="card-chip">☁</span>
+          <span class="card-note">Sync</span>
+          <div class="card-art"><span>☁️</span></div>
+          <div class="card-copy"><strong>Cloud Drafts</strong><small>Save and sync work-in-progress across the FSD cloud.</small></div>
         </button>
 
-        <button class="app-icon callouts" type="button" onclick="openCallouts(event)" aria-label="Open Callouts">
-          <span class="icon-square"><span>⚡</span></span>
-          <strong>Callouts</strong>
+        <button class="launch-card profile" type="button" onclick="openEngineerProfile(event)" aria-label="Open Engineer Profile">
+          <span class="card-chip">👤</span>
+          <span class="card-note">Engineer</span>
+          <div class="card-art"><span>👷</span></div>
+          <div class="card-copy"><strong>Engineer Profile</strong><small>Set the default engineer profile for this iPad.</small></div>
         </button>
 
-        <button class="app-icon cloud" type="button" onclick="openCloudDrafts(event)" aria-label="Open Cloud Drafts">
-          <span class="icon-square"><span>☁</span></span>
-          <strong>Cloud<br>Drafts</strong>
+        <button class="launch-card schedule" type="button" onclick="openSchedule(event)" aria-label="Open FSD Schedule">
+          <span class="card-chip">📅</span>
+          <span class="card-note">Today</span>
+          <div class="card-art"><span>🗓️</span></div>
+          <div class="card-copy"><strong>Schedule</strong><small>Daily jobs, appointments and engineer planning.</small></div>
         </button>
 
-        <button class="app-icon admin" type="button" onclick="openCerts(event)" aria-label="Open Submitted Reports via Certificate Portal">
-          <span class="icon-square"><span>📂</span></span>
-          <strong>Submitted<br>Reports</strong>
+        <button class="launch-card submitted" type="button" onclick="openCerts(event)" aria-label="Open Submitted Reports via Certificate Portal">
+          <span class="card-chip">📂</span>
+          <span class="card-note">History</span>
+          <div class="card-art"><span>🗃️</span></div>
+          <div class="card-copy"><strong>Submitted Reports</strong><small>Open completed paperwork and previously submitted work.</small></div>
         </button>
       </section>
+
+      <div class="home-meta">
+        <span class="home-credit">JARED720 LABS</span>
+        <span class="home-version">App Shell V6.3c78x · Large-card premium iPad command centre · PC fit</span>
+      </div>
     </main>
-
-    <nav class="ipad-dock" aria-label="Dock">
-      <button class="dock-app certs" type="button" onclick="openCerts(event)"><span><img src="fsd-certs-logo.png" alt="" width="42" height="42" decoding="async"></span><strong>Portal</strong></button>
-      <button class="dock-app drafts" type="button" onclick="openOfflineDrafts(event)"><span>▣</span><strong>Offline</strong></button>
-      <button class="dock-app schedule" type="button" onclick="openSchedule(event)"><span>📅</span><strong>Schedule</strong></button>
-    </nav>
-
-    <footer class="ipad-footer">
-      <span>Jared720 Labs</span>
-      <span>App Shell V6.3c78p · Visual shell refresh</span>
-    </footer>
   </section>
 
   <section id="offlineDrafts" class="screen offline-screen" aria-label="Offline Drafts">
@@ -1590,7 +1381,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
     (function () {
       'use strict';
 
-      const SHELL_VER = 'V6.3c78p';
+      const SHELL_VER = 'V6.3c78x';
       const APP_URL = 'https://script.google.com/macros/s/AKfycbzq9FTETNZwUJWHMGnMHECbu3sJ3jy3FFvGYyeaRXtkoK1GHBtqOu-GLBle_WGfoFtI/exec';
       const SCHEDULE_URL = 'https://docs.google.com/spreadsheets/d/1-lKMU6LIhW7oiWHskTZcbYFhjQCN6nZoSydLxq5A-Fc/edit?gid=720000000#gid=720000000';
       const CALLOUTS_PAGE = APP_URL + '?page=callouts&shell=ipad';
@@ -1817,7 +1608,23 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
           ? ('This iPad defaults to: ' + engineer + '. Report engineer dropdowns remain editable.')
           : 'Set once per iPad. Reports still keep their engineer dropdown editable.';
         const statusName = document.getElementById('shellEngineerName');
-        if (statusName) statusName.textContent = engineer ? ('Logged in: ' + engineer) : 'No engineer';
+        if (statusName) statusName.textContent = engineer ? ('Logged in: ' + engineer) : 'Ready';
+
+        const commandName = document.getElementById('commandEngineerName');
+        const commandState = document.getElementById('commandEngineerState');
+        const commandLevel = document.getElementById('commandEngineerLevel');
+        const commandAvatar = document.getElementById('commandEngineerAvatar');
+        const displayName = engineer || 'No engineer';
+        const initials = displayName
+          .split(/\s+/)
+          .filter(Boolean)
+          .slice(0, 2)
+          .map(function(part){ return part.charAt(0).toUpperCase(); })
+          .join('') || 'FS';
+        if (commandName) commandName.textContent = displayName;
+        if (commandState) commandState.textContent = engineer ? '● Online' : '● Set engineer';
+        if (commandLevel) commandLevel.textContent = engineer ? '★ Default profile active' : '★ Choose engineer profile';
+        if (commandAvatar) commandAvatar.textContent = initials;
       }
 
       window.saveDefaultEngineerProfile = function saveDefaultEngineerProfile(event) {
@@ -3501,6 +3308,6 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
 
     }());
   </script>
-  <div class="fixed-version-badge">App Shell V6.3c78p · Visual shell refresh</div>
+  <div class="fixed-version-badge">App Shell V6.3c78x · Large-card premium iPad command centre · PC fit</div>
 </body>
 </html>
