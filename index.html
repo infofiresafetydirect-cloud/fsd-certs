@@ -508,7 +508,7 @@
       .dock-app { min-height: 58px; }
     }
 
-    /* V6.3c74v: iPad/touch canvas blocking fix, PC direct signing allowed. */
+    /* V6.3c78bv: iPad/touch canvas blocking fix, PC direct signing allowed. */
     .sig-helper {
       position: fixed; inset: 0; z-index: 12000; display: none;
       align-items: center; justify-content: center;
@@ -689,7 +689,7 @@
 </head>
 <body>
   <!--
-    Fire Safety Direct - FSD Certs V6.3c77d iPad Engineer Profile
+    Fire Safety Direct - FSD Certs V6.3c78bd iPad Engineer Profile
     Colourful iPad app-icon shell with new black/gold FSD logo.
     App shell mark: Jared720 Labs
   -->
@@ -765,7 +765,7 @@
 
     <footer class="ipad-footer">
       <span>Jared720 Labs</span>
-      <span>App Shell V6.3c77d · QQ picker pack</span>
+      <span>App Shell V6.3c78bd · QQ picker pack</span>
     </footer>
   </section>
 
@@ -1065,7 +1065,7 @@
     (function () {
       'use strict';
 
-      const SHELL_VER = 'V6.3c74';
+      const SHELL_VER = 'V6.3c78b';
       const APP_URL = 'https://script.google.com/macros/s/AKfycbzq9FTETNZwUJWHMGnMHECbu3sJ3jy3FFvGYyeaRXtkoK1GHBtqOu-GLBle_WGfoFtI/exec';
       const SCHEDULE_URL = 'https://docs.google.com/spreadsheets/d/1SZK6igtKPVHcBRdkA49A6AKSobkWXI_pk-De7taZP6c/edit';
       const CALLOUTS_PAGE = APP_URL + '?page=callouts&shell=ipad';
@@ -2976,6 +2976,40 @@
 
     }());
   </script>
-  <div class="fixed-version-badge">App Shell V6.3c77d · QQ picker pack</div>
+  <div class="fixed-version-badge">App Shell V6.3c78bd · QQ picker pack</div>
+
+<script id="fsd-callout-sheet-link-patch-v6-3c78b">
+(function(){
+  var FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LIhW7oiWHskTZcbYFhjQCN6nZoSydLxq5A-Fc/edit?gid=720000000#gid=720000000";
+  function isCalloutText(el) {
+    var t = ((el && (el.innerText || el.textContent || el.getAttribute('aria-label') || el.title)) || '').toLowerCase();
+    return t.indexOf('callout') !== -1;
+  }
+  function openCalloutSheet(e) {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    window.open(FSD_CALLOUT_SHEET_URL, '_blank');
+    return false;
+  }
+  function patchCalloutButtons() {
+    var nodes = Array.prototype.slice.call(document.querySelectorAll('a,button,[role="button"],.app,.app-card,.tile,.dock-item'));
+    nodes.forEach(function(el) {
+      if (!isCalloutText(el)) return;
+      el.setAttribute('data-fsd-callout-url', FSD_CALLOUT_SHEET_URL);
+      if (el.tagName && el.tagName.toLowerCase() === 'a') el.setAttribute('href', FSD_CALLOUT_SHEET_URL);
+      el.onclick = openCalloutSheet;
+    });
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', patchCalloutButtons);
+  } else {
+    patchCalloutButtons();
+  }
+  setTimeout(patchCalloutButtons, 500);
+})();
+</script>
+
 </body>
 </html>
