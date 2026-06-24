@@ -980,7 +980,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
 </head>
 <body>
   <!--
-    Fire Safety Direct - FSD Certs V6.3c78y Large-card Premium iPad Command Centre
+    Fire Safety Direct - FSD Certs V6.3c78z Large-card Premium iPad Command Centre - Engineer profile hard-link
     Large-card premium iPad command centre with glossy cards and engineer status strip.
     App shell mark: Jared720 Labs
   -->
@@ -1080,7 +1080,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
 
       <div class="home-meta">
         <span class="home-credit">JARED720 LABS</span>
-        <span class="home-version">App Shell V6.3c78y · Large-card premium iPad command centre · PC fit</span>
+        <span class="home-version">App Shell V6.3c78z · Engineer profile hard-link</span>
       </div>
     </main>
   </section>
@@ -1312,9 +1312,12 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
       <datalist id="defaultEngineerList"></datalist>
 
       <div id="defaultEngineerNote" class="profile-note">Loading live engineer list...</div>
+      <label for="engineerProfileLink">Engineer iPad shortcut link</label>
+      <input id="engineerProfileLink" readonly onclick="this.select()" placeholder="Save an engineer first to create the profile link">
 
       <div class="profile-actions">
         <button type="button" onclick="saveDefaultEngineerProfile(event)">Save Engineer</button>
+        <button class="secondary" type="button" onclick="copyEngineerProfileLink(event)">Copy Profile Link</button>
         <button class="secondary" type="button" onclick="closeEngineerProfile(event)">Close</button>
       </div>
     </div>
@@ -1381,7 +1384,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
     (function () {
       'use strict';
 
-      const SHELL_VER = 'V6.3c78y';
+      const SHELL_VER = 'V6.3c78z';
       const APP_URL = 'https://script.google.com/macros/s/AKfycbzq9FTETNZwUJWHMGnMHECbu3sJ3jy3FFvGYyeaRXtkoK1GHBtqOu-GLBle_WGfoFtI/exec';
       const SCHEDULE_URL = 'https://docs.google.com/spreadsheets/d/1-lKMU6LIhW7oiWHskTZcbYFhjQCN6nZoSydLxq5A-Fc/edit?gid=720000000#gid=720000000';
       const CALLOUTS_PAGE = APP_URL + '?page=callouts&shell=ipad';
@@ -1574,15 +1577,118 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
       const editorNetBadge = document.getElementById('editorNetBadge');
       const editorDirtyBadge = document.getElementById('editorDirtyBadge');
 
-      const FSD_DEFAULT_ENGINEER_KEY = 'fsd_certs_default_engineer_v6_3c76a';
+      const FSD_DEFAULT_ENGINEER_KEY = 'fsd_certs_default_engineer_v6_3c78z';
+      const FSD_OLD_DEFAULT_ENGINEER_KEYS = [
+        'fsd_certs_default_engineer_v6_3c76a'
+      ];
+      const FSD_ENGINEER_COOKIE = 'fsdEngineerProfile';
 
-      function getDefaultEngineerProfile() {
-        try { return String(localStorage.getItem(FSD_DEFAULT_ENGINEER_KEY) || '').trim(); }
-        catch (err) { return ''; }
+      function safeStorageGet(store, key) {
+        try { return String(store.getItem(key) || '').trim(); } catch (err) { return ''; }
       }
 
-      function setDefaultEngineerProfile(name) {
-        try { localStorage.setItem(FSD_DEFAULT_ENGINEER_KEY, String(name || '').trim()); } catch (err) {}
+      function safeStorageSet(store, key, value) {
+        try {
+          value = String(value || '').trim();
+          if (value) store.setItem(key, value);
+          else store.removeItem(key);
+        } catch (err) {}
+      }
+
+      function getCookieValue(name) {
+        try {
+          const target = String(name || '') + '=';
+          const parts = String(document.cookie || '').split(';');
+          for (let i = 0; i < parts.length; i++) {
+            const part = parts[i].trim();
+            if (part.indexOf(target) === 0) return decodeURIComponent(part.substring(target.length));
+          }
+        } catch (err) {}
+        return '';
+      }
+
+      function setCookieValue(name, value) {
+        try {
+          value = String(value || '').trim();
+          if (!value) {
+            document.cookie = encodeURIComponent(name) + '=; Max-Age=0; path=/; SameSite=Lax';
+            return;
+          }
+          document.cookie = encodeURIComponent(name) + '=' + encodeURIComponent(value) + '; Max-Age=' + (60 * 60 * 24 * 365 * 2) + '; path=/; SameSite=Lax';
+        } catch (err) {}
+      }
+
+      function getEngineerProfileFromUrl() {
+        try {
+          const params = new URLSearchParams(window.location.search || '');
+          return String(
+            params.get('engineer') ||
+            params.get('fsdEngineer') ||
+            params.get('profileEngineer') ||
+            params.get('eng') ||
+            ''
+          ).trim();
+        } catch (err) {
+          return '';
+        }
+      }
+
+      function currentShellProfileUrl(engineer) {
+        engineer = String(engineer || getDefaultEngineerProfile() || '').trim();
+        const url = new URL(window.location.href);
+        url.search = '';
+        url.hash = '';
+        if (engineer) url.searchParams.set('engineer', engineer);
+        return url.toString();
+      }
+
+      function getDefaultEngineerProfile() {
+        const fromUrl = getEngineerProfileFromUrl();
+        if (fromUrl) {
+          setDefaultEngineerProfile(fromUrl, true);
+          return fromUrl;
+        }
+
+        let engineer = safeStorageGet(localStorage, FSD_DEFAULT_ENGINEER_KEY);
+        if (engineer) return engineer;
+
+        for (let i = 0; i < FSD_OLD_DEFAULT_ENGINEER_KEYS.length; i++) {
+          engineer = safeStorageGet(localStorage, FSD_OLD_DEFAULT_ENGINEER_KEYS[i]);
+          if (engineer) {
+            setDefaultEngineerProfile(engineer, true);
+            return engineer;
+          }
+        }
+
+        engineer = safeStorageGet(sessionStorage, FSD_DEFAULT_ENGINEER_KEY);
+        if (engineer) return engineer;
+
+        engineer = String(getCookieValue(FSD_ENGINEER_COOKIE) || '').trim();
+        if (engineer) {
+          setDefaultEngineerProfile(engineer, true);
+          return engineer;
+        }
+
+        return '';
+      }
+
+      function setDefaultEngineerProfile(name, skipUrlUpdate) {
+        const engineer = String(name || '').trim();
+
+        safeStorageSet(localStorage, FSD_DEFAULT_ENGINEER_KEY, engineer);
+        safeStorageSet(sessionStorage, FSD_DEFAULT_ENGINEER_KEY, engineer);
+        setCookieValue(FSD_ENGINEER_COOKIE, engineer);
+
+        FSD_OLD_DEFAULT_ENGINEER_KEYS.forEach(function(key) {
+          safeStorageSet(localStorage, key, engineer);
+        });
+
+        if (!skipUrlUpdate) {
+          try {
+            const nextUrl = currentShellProfileUrl(engineer);
+            window.history.replaceState({}, document.title, nextUrl);
+          } catch (err) {}
+        }
       }
 
       function engineerProfileParam() {
@@ -1602,11 +1708,13 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
       function refreshDefaultEngineerProfileUi() {
         const input = document.getElementById('defaultEngineerInput');
         const note = document.getElementById('defaultEngineerNote');
+        const link = document.getElementById('engineerProfileLink');
         const engineer = getDefaultEngineerProfile();
         if (input) input.value = engineer;
+        if (link) link.value = engineer ? currentShellProfileUrl(engineer) : '';
         if (note) note.textContent = engineer
-          ? ('This iPad defaults to: ' + engineer + '. Report engineer dropdowns remain editable.')
-          : 'Set once per iPad. Reports still keep their engineer dropdown editable.';
+          ? ('This iPad defaults to: ' + engineer + '. Save the profile link to the iPad home screen so it cannot forget.')
+          : 'Set once per iPad. For best reliability, use the generated engineer shortcut link.';
         const statusName = document.getElementById('shellEngineerName');
         if (statusName) statusName.textContent = engineer ? ('Logged in: ' + engineer) : 'Ready';
 
@@ -1633,8 +1741,37 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
         const engineer = input ? String(input.value || '').trim() : '';
         setDefaultEngineerProfile(engineer);
         refreshDefaultEngineerProfileUi();
-      loadLiveEngineerProfileList();
-        alert(engineer ? ('Default engineer saved for this iPad: ' + engineer) : 'Default engineer cleared for this iPad.');
+        loadLiveEngineerProfileList();
+        alert(engineer ? ('Default engineer saved for this iPad: ' + engineer + '\n\nUse the profile link shown to add this engineer shortcut to the iPad home screen.') : 'Default engineer cleared for this iPad.');
+        return false;
+      };
+
+      window.copyEngineerProfileLink = function copyEngineerProfileLink(event) {
+        stopTap(event);
+        const engineer = getDefaultEngineerProfile();
+        const link = currentShellProfileUrl(engineer);
+        const input = document.getElementById('engineerProfileLink');
+        if (input) {
+          input.value = engineer ? link : '';
+          input.select();
+        }
+        if (!engineer) {
+          alert('Pick and save an engineer first.');
+          return false;
+        }
+        try {
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(link).then(function() {
+              alert('Profile link copied for ' + engineer + '.');
+            }).catch(function() {
+              alert('Profile link ready. Copy it from the box.');
+            });
+          } else {
+            alert('Profile link ready. Copy it from the box.');
+          }
+        } catch (err) {
+          alert('Profile link ready. Copy it from the box.');
+        }
         return false;
       };
 
@@ -3299,7 +3436,8 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
           if (!target || target.indexOf(APP_URL) !== 0) return;
 
           try {
-            window.history.replaceState({}, document.title, window.location.pathname);
+            const engineer = getDefaultEngineerProfile();
+            window.history.replaceState({}, document.title, currentShellProfileUrl(engineer));
           } catch (histErr) {}
 
           setTimeout(function() {
@@ -3308,6 +3446,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
         } catch (err) {}
       }
 
+      refreshDefaultEngineerProfileUi();
       handleExternalOpenParam();
 
 
@@ -3333,6 +3472,6 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
 
     }());
   </script>
-  <div class="fixed-version-badge">App Shell V6.3c78y · Large-card premium iPad command centre · PC fit</div>
+  <div class="fixed-version-badge">App Shell V6.3c78z · Engineer profile hard-link</div>
 </body>
 </html>
