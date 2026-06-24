@@ -980,7 +980,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
 </head>
 <body>
   <!--
-    Fire Safety Direct - FSD Certs V6.3c78x Large-card Premium iPad Command Centre
+    Fire Safety Direct - FSD Certs V6.3c78y Large-card Premium iPad Command Centre
     Large-card premium iPad command centre with glossy cards and engineer status strip.
     App shell mark: Jared720 Labs
   -->
@@ -1080,7 +1080,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
 
       <div class="home-meta">
         <span class="home-credit">JARED720 LABS</span>
-        <span class="home-version">App Shell V6.3c78x · Large-card premium iPad command centre · PC fit</span>
+        <span class="home-version">App Shell V6.3c78y · Large-card premium iPad command centre · PC fit</span>
       </div>
     </main>
   </section>
@@ -1381,7 +1381,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
     (function () {
       'use strict';
 
-      const SHELL_VER = 'V6.3c78x';
+      const SHELL_VER = 'V6.3c78y';
       const APP_URL = 'https://script.google.com/macros/s/AKfycbzq9FTETNZwUJWHMGnMHECbu3sJ3jy3FFvGYyeaRXtkoK1GHBtqOu-GLBle_WGfoFtI/exec';
       const SCHEDULE_URL = 'https://docs.google.com/spreadsheets/d/1-lKMU6LIhW7oiWHskTZcbYFhjQCN6nZoSydLxq5A-Fc/edit?gid=720000000#gid=720000000';
       const CALLOUTS_PAGE = APP_URL + '?page=callouts&shell=ipad';
@@ -3286,6 +3286,31 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
         }
       });
 
+
+      function handleExternalOpenParam() {
+        try {
+          var params = new URLSearchParams(window.location.search || '');
+          var target = params.get('open');
+
+          if (!target) return;
+
+          target = decodeURIComponent(String(target || ''));
+
+          if (!target || target.indexOf(APP_URL) !== 0) return;
+
+          try {
+            window.history.replaceState({}, document.title, window.location.pathname);
+          } catch (histErr) {}
+
+          setTimeout(function() {
+            openAppUrlInShell(target);
+          }, 80);
+        } catch (err) {}
+      }
+
+      handleExternalOpenParam();
+
+
       window.addEventListener('online', updateEditorNetworkBadge);
       window.addEventListener('offline', updateEditorNetworkBadge);
       updateEditorNetworkBadge();
@@ -3308,6 +3333,6 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
 
     }());
   </script>
-  <div class="fixed-version-badge">App Shell V6.3c78x · Large-card premium iPad command centre · PC fit</div>
+  <div class="fixed-version-badge">App Shell V6.3c78y · Large-card premium iPad command centre · PC fit</div>
 </body>
 </html>
