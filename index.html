@@ -642,6 +642,7 @@
     }
 
     .launch-card.certs { background: linear-gradient(135deg, rgba(38,80,152,.88), rgba(42,119,235,.80)); }
+    .launch-card.pack { background: linear-gradient(135deg, rgba(88,38,152,.88), rgba(129,42,235,.80)); }
     .launch-card.offline { background: linear-gradient(135deg, rgba(57,126,74,.90), rgba(92,173,98,.82)); }
     .launch-card.callouts { background: linear-gradient(135deg, rgba(160,59,52,.92), rgba(214,69,73,.82)); }
     .launch-card.quote { background: linear-gradient(135deg, rgba(184,76,44,.92), rgba(241,112,64,.84)); }
@@ -980,7 +981,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
 </head>
 <body>
   <!--
-    Fire Safety Direct - FSD Certs V6.3c78z Large-card Premium iPad Command Centre - Engineer profile hard-link
+    Fire Safety Direct - FSD Certs V6.3c78aa Large-card Premium iPad Command Centre - Engineer profile hard-link + universal pack launcher
     Large-card premium iPad command centre with glossy cards and engineer status strip.
     App shell mark: Jared720 Labs
   -->
@@ -1026,6 +1027,13 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
           <span class="card-note">Portal</span>
           <div class="card-art"><span>📘</span></div>
           <div class="card-copy"><strong>Certificate Portal</strong><small>Safety &amp; compliance certificates, reports and forms.</small></div>
+        </button>
+
+        <button class="launch-card pack" type="button" onclick="openUniversalPack(event)" aria-label="Open Universal Report Pack Builder">
+          <span class="card-chip">PACK</span>
+          <span class="card-note">Combined</span>
+          <div class="card-art"><span>📦</span></div>
+          <div class="card-copy"><strong>Report Pack</strong><small>Build one combined pack from multiple live forms.</small></div>
         </button>
 
         <button class="launch-card offline" type="button" onclick="openOfflineDrafts(event)" aria-label="Open Offline Certs and Reports">
@@ -1080,7 +1088,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
 
       <div class="home-meta">
         <span class="home-credit">JARED720 LABS</span>
-        <span class="home-version">App Shell V6.3c78z · Engineer profile hard-link</span>
+        <span class="home-version">App Shell V6.3c78aa · Engineer profile hard-link + universal pack launcher</span>
       </div>
     </main>
   </section>
@@ -1384,7 +1392,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
     (function () {
       'use strict';
 
-      const SHELL_VER = 'V6.3c78z';
+      const SHELL_VER = 'V6.3c78aa';
       const APP_URL = 'https://script.google.com/macros/s/AKfycbzq9FTETNZwUJWHMGnMHECbu3sJ3jy3FFvGYyeaRXtkoK1GHBtqOu-GLBle_WGfoFtI/exec';
       const SCHEDULE_URL = 'https://docs.google.com/spreadsheets/d/1-lKMU6LIhW7oiWHskTZcbYFhjQCN6nZoSydLxq5A-Fc/edit?gid=720000000#gid=720000000';
       const CALLOUTS_PAGE = APP_URL + '?page=callouts&shell=ipad';
@@ -3270,6 +3278,11 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
         openAppUrlInShell(APP_URL + '?page=qq');
       };
 
+      window.openUniversalPack = function openUniversalPack(event) {
+        stopTap(event);
+        openAppUrlInShell(APP_URL + '?page=pack');
+      };
+
       window.openCerts = function openCerts(event) {
         stopTap(event);
         // V6.3c48: always load a fresh portal when the home button is pressed.
@@ -3472,6 +3485,6 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
 
     }());
   </script>
-  <div class="fixed-version-badge">App Shell V6.3c78z · Engineer profile hard-link</div>
+  <div class="fixed-version-badge">App Shell V6.3c78aa · Engineer profile hard-link + universal pack launcher</div>
 </body>
 </html>
