@@ -970,509 +970,195 @@
     #shellEngineerStatus small { font-size:10px; font-weight:900; opacity:.82; max-width:145px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 
 
-    /* V6.3c78ae - Bright Pro iPad Launcher */
-    :root {
-      --fsd-red: #e30613;
-      --fsd-red-2: #ff385c;
-      --fsd-red-dark: #9f1239;
-      --fsd-blue: #2563eb;
-      --fsd-sky: #0ea5e9;
-      --fsd-ink: #111827;
-      --fsd-muted: #64748b;
-      --fsd-panel: rgba(255,255,255,.82);
-      --fsd-card: rgba(255,255,255,.76);
-      --fsd-line: rgba(148,163,184,.30);
+    /* V6.3c78al - FINAL single-file 3D Inner Bevel iPad portrait home */
+    html, body {
+      background: #e8f2fb !important;
     }
 
     .ipad-home {
-      color: var(--fsd-ink);
+      display: flex;
+      align-items: stretch;
+      justify-content: center;
+      padding: calc(16px + var(--safe-top)) calc(18px + var(--safe-right)) calc(18px + var(--safe-bottom)) calc(18px + var(--safe-left));
       background:
-        radial-gradient(circle at 12% 6%, rgba(255,56,92,.24), transparent 26%),
-        radial-gradient(circle at 91% 12%, rgba(14,165,233,.22), transparent 28%),
-        radial-gradient(circle at 44% 102%, rgba(255,56,92,.12), transparent 28%),
-        linear-gradient(135deg, #fff 0%, #f7fbff 42%, #fff4f5 100%);
-      padding-top: calc(12px + var(--safe-top));
+        radial-gradient(circle at 8% 9%, rgba(43,152,255,.28), transparent 24%),
+        radial-gradient(circle at 94% 8%, rgba(50,205,92,.20), transparent 23%),
+        radial-gradient(circle at 86% 90%, rgba(255,190,40,.20), transparent 24%),
+        radial-gradient(circle at 18% 92%, rgba(255,70,110,.13), transparent 26%),
+        linear-gradient(180deg, #f8fbff 0%, #eaf4ff 42%, #dceaf7 100%) !important;
+      color: #182434;
     }
 
     .ipad-wallpaper {
       background:
-        linear-gradient(120deg, rgba(255,255,255,.82), rgba(255,255,255,.36)),
-        radial-gradient(circle at 10% 10%, rgba(227,6,19,.20), transparent 26%),
-        radial-gradient(circle at 88% 4%, rgba(37,99,235,.18), transparent 30%),
-        radial-gradient(circle at 78% 94%, rgba(14,165,233,.13), transparent 32%),
-        linear-gradient(145deg, #ffffff 0%, #f1f7ff 52%, #fff2f4 100%);
+        linear-gradient(135deg, rgba(255,255,255,.62), rgba(255,255,255,.10)),
+        radial-gradient(circle at 17% 18%, rgba(255,255,255,.88), transparent 20%),
+        radial-gradient(circle at 74% 9%, rgba(255,255,255,.62), transparent 18%),
+        radial-gradient(circle at 52% 96%, rgba(255,255,255,.40), transparent 18%);
     }
 
     .ipad-wallpaper::before {
-      background-image:
-        linear-gradient(rgba(15,23,42,.035) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(15,23,42,.028) 1px, transparent 1px);
-      background-size: 52px 52px;
-      opacity: .40;
-      mask-image: radial-gradient(circle at 50% 46%, black 0%, transparent 80%);
-    }
-
-    .ipad-wallpaper::after {
-      background:
-        radial-gradient(ellipse at top, rgba(255,255,255,.96), transparent 42%),
-        linear-gradient(180deg, rgba(255,255,255,.18) 0%, rgba(248,250,252,.18) 52%, rgba(226,232,240,.30) 100%);
+      opacity: .12 !important;
     }
 
     .ipad-statusbar {
-      height: 36px;
-      max-width: min(1220px, 100%);
-      margin: 0 auto 14px;
-      padding: 0 15px;
-      border-radius: 999px;
-      background: rgba(255,255,255,.78);
-      border: 1px solid rgba(148,163,184,.28);
-      color: #334155;
-      box-shadow: 0 14px 34px rgba(15,23,42,.08), inset 0 1px 0 rgba(255,255,255,.95);
-      backdrop-filter: blur(22px) saturate(180%);
-      -webkit-backdrop-filter: blur(22px) saturate(180%);
+      height: 34px;
+      margin-bottom: 12px;
+      color: #0f172a;
+      background: transparent !important;
+      border: 0 !important;
+      box-shadow: none !important;
     }
 
     .status-left,
     .status-centre,
     .status-right {
-      color: #334155;
-      text-shadow: none;
+      color: #111827 !important;
+      text-shadow: none !important;
+      font-weight: 850;
     }
 
     .status-centre {
-      padding: 7px 18px;
-      border-radius: 999px;
-      background: rgba(248,250,252,.88);
-      border: 1px solid rgba(148,163,184,.22);
-      color: #0f172a;
-      font-weight: 900;
-      box-shadow: inset 0 1px 0 rgba(255,255,255,.95);
+      background: transparent !important;
+      border: 0 !important;
+      box-shadow: none !important;
     }
 
     .ipad-home-grid {
-      width: min(1220px, 100%);
-      gap: 16px;
-      min-height: calc(100dvh - 64px - var(--safe-top) - var(--safe-bottom));
+      width: min(1040px, 100%);
+      height: 100%;
+      display: grid;
+      grid-template-rows: auto auto minmax(0, 1fr) auto;
+      gap: 12px;
     }
 
     .hero-panel {
-      padding: 20px 22px 16px;
-      border-radius: 38px;
-      background:
-        linear-gradient(135deg, rgba(255,255,255,.94), rgba(255,255,255,.68));
-      border: 1px solid rgba(148,163,184,.24);
-      box-shadow: 0 24px 70px rgba(15,23,42,.11), inset 0 1px 0 rgba(255,255,255,.98);
-      backdrop-filter: blur(28px) saturate(180%);
-      -webkit-backdrop-filter: blur(28px) saturate(180%);
-      overflow: hidden;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      align-items: center;
+      gap: 18px;
+      padding: 12px 18px;
+      border: 0 !important;
+      border-radius: 0 !important;
+      background: transparent !important;
+      box-shadow: none !important;
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+      overflow: visible;
     }
 
     .hero-panel::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background:
-        linear-gradient(112deg, rgba(255,255,255,.90) 0%, transparent 34%),
-        radial-gradient(circle at 88% 10%, rgba(227,6,19,.20), transparent 28%),
-        radial-gradient(circle at 12% 96%, rgba(37,99,235,.13), transparent 30%);
-      pointer-events: none;
+      display: none !important;
     }
 
     .hero-kicker {
+      grid-row: span 2;
+      width: 92px;
+      height: 92px;
+      padding: 0 !important;
+      border-radius: 24px !important;
+      color: transparent !important;
+      font-size: 0 !important;
+      background:
+        radial-gradient(circle at 28% 20%, rgba(255,255,255,.88), transparent 28%),
+        linear-gradient(145deg, #ffffff, #eef3f8) !important;
+      border: 1px solid rgba(255,255,255,.90) !important;
+      box-shadow:
+        0 18px 32px rgba(80,98,120,.20),
+        inset 0 1px 0 rgba(255,255,255,.96),
+        inset 0 -12px 22px rgba(20,40,65,.08) !important;
       position: relative;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 8px 13px;
-      border-radius: 999px;
-      background: linear-gradient(135deg, rgba(255,255,255,.94), rgba(248,250,252,.78));
-      border: 1px solid rgba(148,163,184,.22);
-      color: #475569;
-      box-shadow: 0 10px 20px rgba(15,23,42,.06), inset 0 1px 0 rgba(255,255,255,.95);
     }
 
     .hero-kicker::before {
-      content: "●";
-      color: #22c55e;
-      text-shadow: 0 0 16px rgba(34,197,94,.80);
+      content: "🔥";
+      color: #e30613;
+      font-size: 50px;
+      line-height: 1;
+      text-shadow: 0 8px 18px rgba(227,6,19,.22);
     }
 
     .hero-panel h1 {
-      position: relative;
-      margin-top: 10px;
-      letter-spacing: -.080em;
-      line-height: .92;
-      color: #0f172a;
-      text-shadow: 0 2px 0 rgba(255,255,255,.78);
+      margin: 0;
+      font-size: clamp(42px, 6.2vw, 70px);
+      line-height: .88;
+      letter-spacing: -.055em;
+      color: #253241 !important;
+      text-shadow: 0 2px 0 rgba(255,255,255,.84), 0 10px 22px rgba(31,41,55,.10);
     }
 
-    .hero-panel h1::after {
-      content: "";
-      display: block;
-      width: 170px;
-      height: 8px;
-      margin-top: 12px;
-      border-radius: 999px;
-      background: linear-gradient(90deg, var(--fsd-red), var(--fsd-red-2), var(--fsd-blue));
-      box-shadow: 0 12px 24px rgba(227,6,19,.18);
+    .hero-panel h1::first-line {
+      color: #253241;
     }
 
     .hero-panel p {
-      position: relative;
-      max-width: 940px;
-      color: #475569;
+      margin: 0;
+      color: #667789;
+      font-size: clamp(14px, 1.7vw, 18px);
       font-weight: 760;
-      font-size: clamp(15px, 1.55vw, 19px);
+      letter-spacing: .16em;
+      text-transform: uppercase;
     }
 
     .ops-strip {
-      border-radius: 36px;
-      background:
-        linear-gradient(135deg, rgba(255,255,255,.90), rgba(255,255,255,.62));
-      border: 1px solid rgba(148,163,184,.24);
-      box-shadow: 0 24px 62px rgba(15,23,42,.10), inset 0 1px 0 rgba(255,255,255,.98);
-      backdrop-filter: blur(28px) saturate(180%);
-      -webkit-backdrop-filter: blur(28px) saturate(180%);
-      color: #0f172a;
+      min-height: 58px;
+      padding: 10px 14px;
+      border-radius: 24px !important;
+      background: rgba(255,255,255,.50) !important;
+      border: 1px solid rgba(255,255,255,.70) !important;
+      box-shadow:
+        0 18px 34px rgba(90,110,135,.12),
+        inset 0 1px 0 rgba(255,255,255,.88) !important;
+      backdrop-filter: blur(18px) saturate(1.05);
+      -webkit-backdrop-filter: blur(18px) saturate(1.05);
     }
 
     .ops-mini-brand,
     .ops-ready-card,
     .ops-engineer {
-      background: linear-gradient(135deg, rgba(255,255,255,.86), rgba(248,250,252,.64));
-      border: 1px solid rgba(148,163,184,.22);
-      box-shadow: 0 12px 30px rgba(15,23,42,.07), inset 0 1px 0 rgba(255,255,255,.98);
-      color: #0f172a;
-    }
-
-    .ops-mini-brand img {
-      background: white;
-      box-shadow: 0 10px 22px rgba(15,23,42,.10);
-    }
-
-    .ops-ready-card strong {
-      color: #0f172a;
-    }
-
-    .ops-ready-card small,
-    .ops-engineer-copy span {
-      color: #64748b;
-    }
-
-    .ops-engineer-copy small {
-      color: #16a34a;
-      font-weight: 950;
-      letter-spacing: .06em;
-      text-shadow: 0 0 12px rgba(34,197,94,.20);
-    }
-
-    .ops-avatar {
-      background:
-        radial-gradient(circle at 30% 24%, #ffffff, #e0f2fe 44%, #3b82f6 100%);
-      color: #0f172a;
-      box-shadow: 0 12px 26px rgba(15,23,42,.14), 0 0 0 5px rgba(255,255,255,.70), inset 0 1px 0 rgba(255,255,255,.95);
+      background: rgba(255,255,255,.50) !important;
+      border: 1px solid rgba(255,255,255,.64) !important;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.82) !important;
+      color: #253241 !important;
     }
 
     .card-grid {
+      display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: 16px;
-      padding: 3px;
+      padding: 4px 0;
+      align-content: center;
     }
 
     .launch-card {
-      min-height: 184px;
-      border-radius: 38px;
-      border: 1px solid rgba(148,163,184,.23);
-      padding: 17px;
-      background: linear-gradient(145deg, rgba(255,255,255,.92), rgba(255,255,255,.62));
-      box-shadow: 0 24px 56px rgba(15,23,42,.12), inset 0 1px 0 rgba(255,255,255,.98);
-      backdrop-filter: blur(30px) saturate(185%);
-      -webkit-backdrop-filter: blur(30px) saturate(185%);
-      color: #0f172a;
-      isolation: isolate;
-    }
-
-    .launch-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 32px 72px rgba(15,23,42,.16), inset 0 1px 0 rgba(255,255,255,1);
-    }
-
-    .launch-card:active {
-      transform: scale(.975);
-    }
-
-    .launch-card::before {
-      background:
-        linear-gradient(130deg, rgba(255,255,255,.98) 0%, rgba(255,255,255,.42) 30%, transparent 54%),
-        radial-gradient(circle at 82% 16%, rgba(255,255,255,.76), transparent 32%);
-      opacity: .96;
-      z-index: -1;
-    }
-
-    .launch-card::after {
-      inset: 12px 14px auto 14px;
-      height: 1px;
-      background: rgba(255,255,255,.95);
-    }
-
-    .card-chip {
-      width: 48px;
-      height: 48px;
-      border-radius: 17px;
-      background: rgba(255,255,255,.72);
-      border: 1px solid rgba(148,163,184,.18);
-      box-shadow: inset 0 1px 0 rgba(255,255,255,1), 0 12px 22px rgba(15,23,42,.09);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      color: #0f172a;
-    }
-
-    .card-note {
-      background: rgba(255,255,255,.70);
-      border: 1px solid rgba(148,163,184,.20);
-      color: #334155;
-      box-shadow: inset 0 1px 0 rgba(255,255,255,.92);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-    }
-
-    .card-art {
-      min-height: 90px;
-      padding-top: 14px;
-    }
-
-    .card-art::before {
-      width: 102px;
-      height: 102px;
-      border-radius: 32px;
-      background:
-        linear-gradient(145deg, rgba(255,255,255,.94), rgba(241,245,249,.62));
-      border: 1px solid rgba(148,163,184,.16);
-      box-shadow: inset 0 1px 0 rgba(255,255,255,1), 0 20px 38px rgba(15,23,42,.09);
-    }
-
-    .card-art span {
-      font-size: clamp(46px, 4.6vw, 66px);
-      filter: drop-shadow(0 13px 16px rgba(15,23,42,.12));
-    }
-
-    .card-copy strong {
-      font-size: clamp(18px, 2.1vw, 24px);
-      letter-spacing: -.045em;
-      color: #0f172a;
-      text-shadow: 0 1px 0 rgba(255,255,255,.86);
-    }
-
-    .card-copy small {
-      color: #475569;
-      font-weight: 720;
-    }
-
-    /* Bright pro tiles - white cards with coloured edge glow */
-    .launch-card.certs {
-      background:
-        linear-gradient(145deg, rgba(255,255,255,.94), rgba(239,246,255,.70));
-      border-color: rgba(37,99,235,.22);
-      box-shadow: 0 24px 56px rgba(37,99,235,.11), inset 0 1px 0 rgba(255,255,255,1);
-    }
-    .launch-card.offline {
-      background:
-        linear-gradient(145deg, rgba(255,255,255,.94), rgba(240,253,244,.74));
-      border-color: rgba(34,197,94,.24);
-      box-shadow: 0 24px 56px rgba(34,197,94,.10), inset 0 1px 0 rgba(255,255,255,1);
-    }
-    .launch-card.callouts {
-      background:
-        linear-gradient(145deg, rgba(255,255,255,.94), rgba(255,241,242,.76));
-      border-color: rgba(227,6,19,.24);
-      box-shadow: 0 24px 56px rgba(227,6,19,.12), inset 0 1px 0 rgba(255,255,255,1);
-    }
-    .launch-card.quote {
-      background:
-        linear-gradient(145deg, rgba(255,255,255,.94), rgba(255,247,237,.78));
-      border-color: rgba(249,115,22,.24);
-      box-shadow: 0 24px 56px rgba(249,115,22,.11), inset 0 1px 0 rgba(255,255,255,1);
-    }
-    .launch-card.cloud {
-      background:
-        linear-gradient(145deg, rgba(255,255,255,.94), rgba(245,243,255,.76));
-      border-color: rgba(139,92,246,.24);
-      box-shadow: 0 24px 56px rgba(139,92,246,.11), inset 0 1px 0 rgba(255,255,255,1);
-    }
-    .launch-card.profile {
-      background:
-        linear-gradient(145deg, rgba(255,255,255,.94), rgba(236,254,255,.76));
-      border-color: rgba(8,145,178,.24);
-      box-shadow: 0 24px 56px rgba(8,145,178,.10), inset 0 1px 0 rgba(255,255,255,1);
-    }
-    .launch-card.schedule {
-      background:
-        linear-gradient(145deg, rgba(255,255,255,.94), rgba(255,251,235,.78));
-      border-color: rgba(217,119,6,.24);
-      box-shadow: 0 24px 56px rgba(217,119,6,.10), inset 0 1px 0 rgba(255,255,255,1);
-    }
-    .launch-card.submitted {
-      background:
-        linear-gradient(145deg, rgba(255,255,255,.96), rgba(248,250,252,.78));
-      border-color: rgba(100,116,139,.22);
-      box-shadow: 0 24px 56px rgba(100,116,139,.09), inset 0 1px 0 rgba(255,255,255,1);
-    }
-
-    .home-meta {
-      padding: 4px 2px calc(2px + var(--safe-bottom));
-    }
-
-    .home-credit {
-      color: #64748b;
-      text-shadow: none;
-      font-weight: 800;
-    }
-
-    .home-version,
-    .fixed-version-badge {
-      background: rgba(255,255,255,.78);
-      border: 1px solid rgba(148,163,184,.24);
-      color: #475569;
-      box-shadow: 0 12px 28px rgba(15,23,42,.08), inset 0 1px 0 rgba(255,255,255,.98);
-      backdrop-filter: blur(18px) saturate(170%);
-      -webkit-backdrop-filter: blur(18px) saturate(170%);
-    }
-
-    .mini-home {
-      background: rgba(255,255,255,.84);
-      border: 1px solid rgba(148,163,184,.24);
-      color: #0f172a;
-      box-shadow: 0 12px 28px rgba(15,23,42,.09), inset 0 1px 0 rgba(255,255,255,.98);
-      backdrop-filter: blur(18px) saturate(170%);
-      -webkit-backdrop-filter: blur(18px) saturate(170%);
-    }
-
-    @media (max-width: 1050px) {
-      .card-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-      .launch-card { min-height: 172px; }
-    }
-
-    @media (max-width: 720px) {
-      .ipad-statusbar {
-        grid-template-columns: 1fr auto;
-      }
-      .status-centre { display: none; }
-      .hero-panel { border-radius: 30px; padding: 16px; }
-      .ops-strip { border-radius: 30px; }
-      .card-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
-      .launch-card { min-height: 150px; border-radius: 30px; padding: 14px; }
-      .card-art { min-height: 72px; }
-      .card-art::before { width: 82px; height: 82px; border-radius: 26px; }
-      .card-copy strong { font-size: 17px; }
-      .card-copy small { font-size: 12px; }
-    }
-
-    @media (max-width: 430px) {
-      .card-grid { grid-template-columns: 1fr; }
-      .launch-card { min-height: 136px; }
-    }
-
-    @media (max-height: 760px) and (orientation: landscape) {
-      .card-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
-      .launch-card { min-height: 142px; border-radius: 30px; padding: 12px; }
-      .card-art { min-height: 62px; padding-top: 8px; }
-      .card-art::before { width: 76px; height: 76px; border-radius: 24px; }
-      .card-art span { font-size: 48px; }
-      .card-copy strong { font-size: 18px; }
-      .card-copy small { font-size: 12px; }
-      .hero-panel { padding: 12px 16px 10px; }
-      .ops-strip { min-height: 78px; }
-    }
-
-
-    /* V6.3c78af - iPad-style icon refresh */
-    .card-chip {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-      padding: 0;
-    }
-    .card-chip .icon-svg {
-      width: 22px;
-      height: 22px;
-      stroke: currentColor;
-      fill: none;
-      stroke-width: 2.15;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-    }
-    .card-art {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .card-art .icon-svg {
-      width: 56px;
-      height: 56px;
-      stroke: currentColor;
-      fill: none;
-      stroke-width: 1.95;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-      filter: drop-shadow(0 10px 14px rgba(15,23,42,.10));
-    }
-    .launch-card.certs .card-chip, .launch-card.certs .card-art { color: #2563eb; }
-    .launch-card.offline .card-chip, .launch-card.offline .card-art { color: #16a34a; }
-    .launch-card.callouts .card-chip, .launch-card.callouts .card-art { color: #dc2626; }
-    .launch-card.quote .card-chip, .launch-card.quote .card-art { color: #ea580c; }
-    .launch-card.cloud .card-chip, .launch-card.cloud .card-art { color: #7c3aed; }
-    .launch-card.profile .card-chip, .launch-card.profile .card-art { color: #0891b2; }
-    .launch-card.schedule .card-chip, .launch-card.schedule .card-art { color: #d97706; }
-    .launch-card.submitted .card-chip, .launch-card.submitted .card-art { color: #475569; }
-    .launch-card .card-art::before {
-      background: linear-gradient(145deg, rgba(255,255,255,.98), rgba(245,247,250,.74));
-    }
-    @media (max-width: 720px) {
-      .card-chip .icon-svg { width: 20px; height: 20px; }
-      .card-art .icon-svg { width: 48px; height: 48px; }
-    }
-    @media (max-height: 760px) and (orientation: landscape) {
-      .card-art .icon-svg { width: 44px; height: 44px; }
-    }
-
-
-    /* V6.3c78ag - true iPad app-icon home screen */
-    .card-grid {
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 22px 18px;
-      padding: 8px 4px 2px;
-      align-items: start;
-    }
-
-    .launch-card {
-      min-height: 178px;
-      border: 0;
-      border-radius: 30px;
-      padding: 10px 8px 12px;
+      min-height: 0 !important;
+      height: auto;
+      border: 0 !important;
+      border-radius: 24px !important;
+      padding: 0 0 8px !important;
       background: transparent !important;
       box-shadow: none !important;
-      backdrop-filter: none;
-      -webkit-backdrop-filter: none;
-      display: flex;
-      align-items: center;
-      justify-content: flex-start;
-      gap: 8px;
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+      display: grid !important;
+      grid-template-rows: auto auto;
+      align-items: start !important;
+      justify-content: center !important;
+      gap: 8px !important;
       text-align: center;
-      color: #0f172a;
+      color: #152033;
+      transform-origin: center;
     }
 
     .launch-card:hover {
-      transform: translateY(-4px);
-      background: rgba(255,255,255,.38) !important;
-      box-shadow: 0 18px 34px rgba(15,23,42,.08) !important;
-      backdrop-filter: blur(18px) saturate(150%);
-      -webkit-backdrop-filter: blur(18px) saturate(150%);
+      background: transparent !important;
+      box-shadow: none !important;
+      transform: translateY(-4px) scale(1.018);
     }
 
     .launch-card:active {
-      transform: scale(.96);
-      background: rgba(255,255,255,.54) !important;
+      transform: scale(.955);
+      background: transparent !important;
     }
 
     .launch-card::before,
@@ -1483,745 +1169,369 @@
     }
 
     .card-art {
-      width: 104px;
-      height: 104px;
-      min-height: 104px;
-      padding: 0;
-      margin: 0 auto 2px;
-      border-radius: 27px;
-      display: flex;
+      width: clamp(122px, 17.8vw, 168px);
+      height: clamp(122px, 17.8vw, 168px);
+      min-height: 0 !important;
+      margin: 0 auto !important;
+      padding: 0 !important;
+      border-radius: clamp(28px, 4.2vw, 42px);
+      position: relative;
+      display: flex !important;
       align-items: center;
       justify-content: center;
-      position: relative;
-      overflow: hidden;
-      border: 1px solid rgba(255,255,255,.74);
+      overflow: visible;
+      border: 2px solid rgba(255,255,255,.96);
       box-shadow:
-        0 22px 38px rgba(15,23,42,.16),
-        inset 0 1px 0 rgba(255,255,255,.82),
-        inset 0 -16px 28px rgba(15,23,42,.10);
+        0 18px 38px rgba(90,110,135,.20),
+        0 0 0 7px rgba(255,255,255,.46),
+        inset 0 1px 0 rgba(255,255,255,.95),
+        inset 0 -22px 34px rgba(20,40,65,.16),
+        inset 12px 14px 26px rgba(255,255,255,.17),
+        inset -12px -14px 26px rgba(16,40,70,.15) !important;
+      isolation: isolate;
     }
 
     .card-art::before {
       content: "";
       position: absolute;
       inset: 0;
-      width: auto;
-      height: auto;
-      border: 0;
       border-radius: inherit;
       background:
-        linear-gradient(145deg, rgba(255,255,255,.64) 0%, rgba(255,255,255,.18) 36%, transparent 58%),
-        radial-gradient(circle at 74% 18%, rgba(255,255,255,.45), transparent 28%);
-      box-shadow: none;
+        linear-gradient(145deg, rgba(255,255,255,.76) 0%, rgba(255,255,255,.20) 28%, rgba(255,255,255,0) 52%),
+        linear-gradient(315deg, rgba(0,0,0,.18) 0%, rgba(0,0,0,0) 42%),
+        radial-gradient(circle at 26% 18%, rgba(255,255,255,.78) 0%, rgba(255,255,255,0) 29%),
+        radial-gradient(circle at 52% 54%, rgba(255,255,255,.16), transparent 62%);
       pointer-events: none;
       z-index: 1;
+      box-shadow: none !important;
     }
 
     .card-art::after {
       content: "";
       position: absolute;
-      inset: auto 10px 8px 10px;
-      height: 1px;
-      background: rgba(255,255,255,.38);
-      z-index: 1;
+      inset: 9px;
+      border-radius: calc(clamp(28px, 4.2vw, 42px) - 6px);
+      border-top: 2px solid rgba(255,255,255,.54);
+      border-left: 2px solid rgba(255,255,255,.30);
+      border-right: 2px solid rgba(0,0,0,.07);
+      border-bottom: 2px solid rgba(0,0,0,.14);
+      z-index: 2;
+      pointer-events: none;
     }
 
+    .card-art .emboss-icon,
     .card-art .icon-svg {
-      width: 58px;
-      height: 58px;
-      stroke: white;
-      stroke-width: 2.25;
+      width: clamp(75px, 10vw, 104px);
+      height: clamp(75px, 10vw, 104px);
+      position: relative;
+      z-index: 3;
       fill: none;
-      filter: drop-shadow(0 8px 12px rgba(0,0,0,.24));
-      z-index: 2;
+      stroke: #fafdff;
+      stroke-width: 5.6;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      filter: url(#fsdIconEmboss);
+      transform: translateY(-1px);
     }
 
     .card-copy {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+      display: grid !important;
       gap: 3px;
-      padding: 0 2px;
+      justify-items: center;
+      padding: 0 !important;
     }
 
     .card-copy strong {
-      font-size: 15px;
-      line-height: 1.05;
-      letter-spacing: -.025em;
-      color: #0f172a;
-      text-shadow: 0 1px 0 rgba(255,255,255,.72);
-      max-width: 145px;
+      font-size: clamp(17px, 2.25vw, 24px);
+      line-height: 1.02;
+      max-width: 180px;
+      color: #152033 !important;
+      font-weight: 900;
+      letter-spacing: -.035em;
+      text-shadow: 0 1px 0 rgba(255,255,255,.85);
     }
 
     .card-copy small {
-      font-size: 11.5px;
-      line-height: 1.16;
-      color: #64748b;
-      font-weight: 720;
-      max-width: 150px;
+      display: block !important;
+      font-size: clamp(12px, 1.35vw, 15px);
+      line-height: 1.1;
+      color: #667789 !important;
+      font-weight: 820;
+      letter-spacing: .01em;
+      max-width: 160px;
     }
 
     .launch-card.certs .card-art {
       background:
-        radial-gradient(circle at 28% 20%, #93c5fd 0%, transparent 28%),
-        linear-gradient(145deg, #2563eb 0%, #1d4ed8 52%, #0f3aa9 100%);
-    }
-
-    .launch-card.offline .card-art {
-      background:
-        radial-gradient(circle at 28% 20%, #86efac 0%, transparent 28%),
-        linear-gradient(145deg, #22c55e 0%, #16a34a 52%, #15803d 100%);
-    }
-
-    .launch-card.callouts .card-art {
-      background:
-        radial-gradient(circle at 28% 20%, #fda4af 0%, transparent 30%),
-        linear-gradient(145deg, #fb7185 0%, #dc2626 54%, #991b1b 100%);
-    }
-
-    .launch-card.quote .card-art {
-      background:
-        radial-gradient(circle at 28% 20%, #fed7aa 0%, transparent 30%),
-        linear-gradient(145deg, #fb923c 0%, #ea580c 54%, #9a3412 100%);
-    }
-
-    .launch-card.cloud .card-art {
-      background:
-        radial-gradient(circle at 28% 20%, #c4b5fd 0%, transparent 30%),
-        linear-gradient(145deg, #a78bfa 0%, #7c3aed 54%, #5b21b6 100%);
-    }
-
-    .launch-card.profile .card-art {
-      background:
-        radial-gradient(circle at 28% 20%, #67e8f9 0%, transparent 30%),
-        linear-gradient(145deg, #22d3ee 0%, #0891b2 54%, #155e75 100%);
-    }
-
-    .launch-card.schedule .card-art {
-      background:
-        radial-gradient(circle at 28% 20%, #fde68a 0%, transparent 30%),
-        linear-gradient(145deg, #fbbf24 0%, #d97706 54%, #92400e 100%);
-    }
-
-    .launch-card.submitted .card-art {
-      background:
-        radial-gradient(circle at 28% 20%, #cbd5e1 0%, transparent 30%),
-        linear-gradient(145deg, #94a3b8 0%, #475569 54%, #1f2937 100%);
-    }
-
-    @media (max-width: 1050px) {
-      .card-grid {
-        grid-template-columns: repeat(4, minmax(0, 1fr));
-        gap: 18px 10px;
-      }
-      .launch-card {
-        min-height: 164px;
-      }
-      .card-art {
-        width: 94px;
-        height: 94px;
-        min-height: 94px;
-        border-radius: 25px;
-      }
-      .card-art .icon-svg {
-        width: 52px;
-        height: 52px;
-      }
-      .card-copy strong {
-        font-size: 14px;
-      }
-      .card-copy small {
-        font-size: 11px;
-      }
-    }
-
-    @media (max-width: 720px) {
-      .card-grid {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 16px 8px;
-      }
-      .launch-card {
-        min-height: 150px;
-        border-radius: 24px;
-        padding: 8px 4px 10px;
-      }
-      .card-art {
-        width: 84px;
-        height: 84px;
-        min-height: 84px;
-        border-radius: 23px;
-      }
-      .card-art .icon-svg {
-        width: 46px;
-        height: 46px;
-      }
-      .card-copy strong {
-        font-size: 13.5px;
-      }
-      .card-copy small {
-        font-size: 10.5px;
-      }
-    }
-
-    @media (max-width: 430px) {
-      .card-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-    }
-
-    @media (max-height: 760px) and (orientation: landscape) {
-      .card-grid {
-        grid-template-columns: repeat(8, minmax(0, 1fr));
-        gap: 10px 6px;
-      }
-      .launch-card {
-        min-height: 126px;
-        padding: 6px 3px;
-      }
-      .card-art {
-        width: 72px;
-        height: 72px;
-        min-height: 72px;
-        border-radius: 20px;
-        margin-bottom: 0;
-      }
-      .card-art .icon-svg {
-        width: 40px;
-        height: 40px;
-      }
-      .card-copy strong {
-        font-size: 11.5px;
-      }
-      .card-copy small {
-        display: none;
-      }
-    }
-
-
-    /* V6.3c78ah - more colour / proper iPad pop */
-    .ipad-home {
-      background:
-        radial-gradient(circle at 10% 6%, rgba(255, 59, 48, .34), transparent 26%),
-        radial-gradient(circle at 88% 8%, rgba(0, 122, 255, .32), transparent 28%),
-        radial-gradient(circle at 16% 88%, rgba(52, 199, 89, .20), transparent 26%),
-        radial-gradient(circle at 78% 92%, rgba(255, 149, 0, .24), transparent 30%),
-        linear-gradient(135deg, #ffffff 0%, #edf6ff 42%, #fff1f4 100%);
-    }
-
-    .ipad-wallpaper {
-      background:
-        radial-gradient(circle at 13% 12%, rgba(255, 59, 48, .26), transparent 25%),
-        radial-gradient(circle at 87% 9%, rgba(0, 122, 255, .26), transparent 28%),
-        radial-gradient(circle at 82% 85%, rgba(175, 82, 222, .18), transparent 28%),
-        radial-gradient(circle at 25% 96%, rgba(52, 199, 89, .16), transparent 26%),
-        linear-gradient(145deg, #ffffff 0%, #eef7ff 46%, #fff0f3 100%);
-    }
-
-    .hero-panel h1::after {
-      width: 210px;
-      height: 10px;
-      background: linear-gradient(90deg, #ff3b30, #ff9500, #34c759, #007aff, #af52de);
-      box-shadow: 0 12px 28px rgba(0,122,255,.18);
-    }
-
-    .card-art {
-      border: 1px solid rgba(255,255,255,.82);
+        radial-gradient(circle at 26% 18%, rgba(150,231,255,.98) 0%, rgba(45,212,255,.58) 24%, transparent 44%),
+        radial-gradient(circle at 74% 82%, rgba(180,210,255,.36), transparent 36%),
+        linear-gradient(145deg, #21b6ff 0%, #0b8dff 44%, #0060f0 100%);
       box-shadow:
-        0 24px 42px rgba(15,23,42,.18),
-        inset 0 1px 0 rgba(255,255,255,.86),
-        inset 0 -18px 30px rgba(15,23,42,.13);
-    }
-
-    .card-art .icon-svg {
-      width: 60px;
-      height: 60px;
-      stroke: white;
-      stroke-width: 2.35;
-      filter:
-        drop-shadow(0 9px 11px rgba(0,0,0,.24))
-        drop-shadow(0 0 10px rgba(255,255,255,.18));
-    }
-
-    .launch-card.certs .card-art {
-      background:
-        radial-gradient(circle at 28% 18%, #dbeafe 0%, transparent 25%),
-        radial-gradient(circle at 72% 78%, #38bdf8 0%, transparent 34%),
-        linear-gradient(145deg, #60a5fa 0%, #2563eb 46%, #1e40af 100%);
+        0 0 34px rgba(0,150,255,.40),
+        0 18px 38px rgba(90,110,135,.20),
+        0 0 0 7px rgba(255,255,255,.46),
+        inset 0 1px 0 rgba(255,255,255,.95),
+        inset 0 -22px 34px rgba(20,40,65,.16),
+        inset 12px 14px 26px rgba(255,255,255,.17),
+        inset -12px -14px 26px rgba(16,40,70,.15) !important;
     }
 
     .launch-card.offline .card-art {
       background:
-        radial-gradient(circle at 28% 18%, #bbf7d0 0%, transparent 26%),
-        radial-gradient(circle at 76% 78%, #14b8a6 0%, transparent 34%),
-        linear-gradient(145deg, #4ade80 0%, #16a34a 48%, #166534 100%);
+        radial-gradient(circle at 26% 18%, rgba(210,255,110,.98) 0%, rgba(111,240,90,.64) 24%, transparent 44%),
+        radial-gradient(circle at 74% 82%, rgba(20,220,180,.36), transparent 36%),
+        linear-gradient(145deg, #6df735 0%, #22ce44 44%, #12a450 100%);
+      box-shadow:
+        0 0 34px rgba(52,199,89,.38),
+        0 18px 38px rgba(90,110,135,.20),
+        0 0 0 7px rgba(255,255,255,.46),
+        inset 0 1px 0 rgba(255,255,255,.95),
+        inset 0 -22px 34px rgba(20,40,65,.16),
+        inset 12px 14px 26px rgba(255,255,255,.17),
+        inset -12px -14px 26px rgba(16,40,70,.15) !important;
     }
 
     .launch-card.callouts .card-art {
       background:
-        radial-gradient(circle at 28% 18%, #fecdd3 0%, transparent 28%),
-        radial-gradient(circle at 76% 78%, #fb7185 0%, transparent 34%),
-        linear-gradient(145deg, #ff5f6d 0%, #dc2626 48%, #7f1d1d 100%);
+        radial-gradient(circle at 26% 18%, rgba(255,218,120,.98) 0%, rgba(255,107,128,.66) 25%, transparent 44%),
+        radial-gradient(circle at 74% 82%, rgba(255,90,140,.36), transparent 36%),
+        linear-gradient(145deg, #ff796f 0%, #ff3d66 44%, #e31a4c 100%);
+      box-shadow:
+        0 0 34px rgba(255,45,85,.40),
+        0 18px 38px rgba(90,110,135,.20),
+        0 0 0 7px rgba(255,255,255,.46),
+        inset 0 1px 0 rgba(255,255,255,.95),
+        inset 0 -22px 34px rgba(20,40,65,.16),
+        inset 12px 14px 26px rgba(255,255,255,.17),
+        inset -12px -14px 26px rgba(16,40,70,.15) !important;
     }
 
     .launch-card.quote .card-art {
       background:
-        radial-gradient(circle at 28% 18%, #ffedd5 0%, transparent 28%),
-        radial-gradient(circle at 75% 78%, #fbbf24 0%, transparent 34%),
-        linear-gradient(145deg, #ffb020 0%, #f97316 48%, #c2410c 100%);
+        radial-gradient(circle at 26% 18%, rgba(255,235,150,.98) 0%, rgba(255,185,58,.70) 24%, transparent 44%),
+        radial-gradient(circle at 74% 82%, rgba(255,125,40,.34), transparent 36%),
+        linear-gradient(145deg, #ffc238 0%, #ff8b1c 46%, #f06416 100%);
+      box-shadow:
+        0 0 34px rgba(255,149,0,.40),
+        0 18px 38px rgba(90,110,135,.20),
+        0 0 0 7px rgba(255,255,255,.46),
+        inset 0 1px 0 rgba(255,255,255,.95),
+        inset 0 -22px 34px rgba(20,40,65,.16),
+        inset 12px 14px 26px rgba(255,255,255,.17),
+        inset -12px -14px 26px rgba(16,40,70,.15) !important;
     }
 
     .launch-card.cloud .card-art {
       background:
-        radial-gradient(circle at 28% 18%, #ddd6fe 0%, transparent 28%),
-        radial-gradient(circle at 75% 78%, #ec4899 0%, transparent 34%),
-        linear-gradient(145deg, #c084fc 0%, #8b5cf6 46%, #5b21b6 100%);
+        radial-gradient(circle at 26% 18%, rgba(238,210,255,.98) 0%, rgba(196,130,255,.62) 24%, transparent 44%),
+        radial-gradient(circle at 74% 82%, rgba(255,80,190,.34), transparent 36%),
+        linear-gradient(145deg, #bb78ff 0%, #8d4dff 46%, #6f35df 100%);
+      box-shadow:
+        0 0 34px rgba(175,82,222,.40),
+        0 18px 38px rgba(90,110,135,.20),
+        0 0 0 7px rgba(255,255,255,.46),
+        inset 0 1px 0 rgba(255,255,255,.95),
+        inset 0 -22px 34px rgba(20,40,65,.16),
+        inset 12px 14px 26px rgba(255,255,255,.17),
+        inset -12px -14px 26px rgba(16,40,70,.15) !important;
     }
 
     .launch-card.profile .card-art {
       background:
-        radial-gradient(circle at 28% 18%, #cffafe 0%, transparent 28%),
-        radial-gradient(circle at 75% 78%, #3b82f6 0%, transparent 34%),
-        linear-gradient(145deg, #22d3ee 0%, #06b6d4 48%, #0e7490 100%);
+        radial-gradient(circle at 26% 18%, rgba(205,255,252,.98) 0%, rgba(48,225,242,.64) 24%, transparent 44%),
+        radial-gradient(circle at 74% 82%, rgba(55,120,255,.34), transparent 36%),
+        linear-gradient(145deg, #22e4ff 0%, #08bfd8 44%, #0a82be 100%);
+      box-shadow:
+        0 0 34px rgba(48,209,255,.40),
+        0 18px 38px rgba(90,110,135,.20),
+        0 0 0 7px rgba(255,255,255,.46),
+        inset 0 1px 0 rgba(255,255,255,.95),
+        inset 0 -22px 34px rgba(20,40,65,.16),
+        inset 12px 14px 26px rgba(255,255,255,.17),
+        inset -12px -14px 26px rgba(16,40,70,.15) !important;
     }
 
     .launch-card.schedule .card-art {
       background:
-        radial-gradient(circle at 28% 18%, #fef3c7 0%, transparent 28%),
-        radial-gradient(circle at 75% 78%, #fb7185 0%, transparent 34%),
-        linear-gradient(145deg, #facc15 0%, #f59e0b 48%, #b45309 100%);
+        radial-gradient(circle at 26% 18%, rgba(255,246,170,.98) 0%, rgba(255,214,65,.72) 24%, transparent 44%),
+        radial-gradient(circle at 74% 82%, rgba(255,80,120,.30), transparent 36%),
+        linear-gradient(145deg, #ffe34a 0%, #ffb51f 44%, #ff8a14 100%);
+      box-shadow:
+        0 0 34px rgba(255,204,0,.40),
+        0 18px 38px rgba(90,110,135,.20),
+        0 0 0 7px rgba(255,255,255,.46),
+        inset 0 1px 0 rgba(255,255,255,.95),
+        inset 0 -22px 34px rgba(20,40,65,.16),
+        inset 12px 14px 26px rgba(255,255,255,.17),
+        inset -12px -14px 26px rgba(16,40,70,.15) !important;
     }
 
     .launch-card.submitted .card-art {
       background:
-        radial-gradient(circle at 28% 18%, #e0f2fe 0%, transparent 28%),
-        radial-gradient(circle at 75% 78%, #a78bfa 0%, transparent 34%),
-        linear-gradient(145deg, #94a3b8 0%, #64748b 48%, #334155 100%);
+        radial-gradient(circle at 26% 18%, rgba(232,240,255,.98) 0%, rgba(190,205,225,.64) 24%, transparent 44%),
+        radial-gradient(circle at 74% 82%, rgba(160,125,255,.30), transparent 36%),
+        linear-gradient(145deg, #a7b7d4 0%, #7388aa 44%, #50647f 100%);
+      box-shadow:
+        0 0 30px rgba(100,116,139,.26),
+        0 18px 38px rgba(90,110,135,.20),
+        0 0 0 7px rgba(255,255,255,.46),
+        inset 0 1px 0 rgba(255,255,255,.95),
+        inset 0 -22px 34px rgba(20,40,65,.16),
+        inset 12px 14px 26px rgba(255,255,255,.17),
+        inset -12px -14px 26px rgba(16,40,70,.15) !important;
     }
 
-    .card-copy strong {
-      color: #111827;
-      font-weight: 950;
+    .home-meta {
+      align-self: end;
+      min-height: 58px;
+      padding: 10px 14px calc(8px + var(--safe-bottom));
+      border-radius: 22px;
+      background: rgba(255,255,255,.46);
+      border: 1px solid rgba(255,255,255,.70);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.78), 0 12px 26px rgba(90,110,135,.10);
     }
 
-    .card-copy small {
-      color: #475569;
-      font-weight: 760;
-    }
-
-    .ops-ready-card strong,
-    .hero-panel h1 {
-      color: #0b1220;
+    .home-credit {
+      color: #253241 !important;
+      font-weight: 850;
     }
 
     .home-version,
-    .fixed-version-badge,
-    .mini-home,
-    .ipad-statusbar,
-    .ops-strip,
-    .hero-panel {
-      border-color: rgba(148,163,184,.20);
+    .fixed-version-badge {
+      background: rgba(255,255,255,.55) !important;
+      color: #667789 !important;
+      border: 1px solid rgba(255,255,255,.72) !important;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.80) !important;
     }
 
-    @media (max-height: 760px) and (orientation: landscape) {
-      .card-art .icon-svg {
-        width: 42px;
-        height: 42px;
-      }
-    }
-
-
-    /* V6.3c78ai - even more colour in the app icons */
-    .card-art {
-      border: 1px solid rgba(255,255,255,.88);
-      box-shadow:
-        0 26px 46px rgba(15,23,42,.20),
-        inset 0 1px 0 rgba(255,255,255,.90),
-        inset 0 -18px 32px rgba(15,23,42,.14),
-        0 0 0 1px rgba(255,255,255,.16);
-    }
-
-    .card-art::before {
-      background:
-        linear-gradient(145deg, rgba(255,255,255,.72) 0%, rgba(255,255,255,.18) 34%, transparent 56%),
-        radial-gradient(circle at 78% 22%, rgba(255,255,255,.34), transparent 26%),
-        radial-gradient(circle at 18% 86%, rgba(255,255,255,.18), transparent 28%);
-    }
-
-    .card-art .icon-svg {
-      width: 62px;
-      height: 62px;
-      stroke: rgba(255,255,255,.98);
-      stroke-width: 2.45;
-      filter:
-        drop-shadow(0 10px 12px rgba(0,0,0,.26))
-        drop-shadow(0 0 14px rgba(255,255,255,.18));
-    }
-
-    .launch-card.certs .card-art {
-      background:
-        radial-gradient(circle at 22% 18%, #ffffff55 0%, transparent 22%),
-        radial-gradient(circle at 78% 78%, #22d3ee 0%, transparent 34%),
-        linear-gradient(145deg, #7dd3fc 0%, #3b82f6 36%, #2563eb 62%, #4f46e5 100%);
-      box-shadow:
-        0 26px 46px rgba(37,99,235,.28),
-        inset 0 1px 0 rgba(255,255,255,.90),
-        inset 0 -18px 32px rgba(15,23,42,.14);
-    }
-
-    .launch-card.offline .card-art {
-      background:
-        radial-gradient(circle at 22% 18%, #ffffff55 0%, transparent 22%),
-        radial-gradient(circle at 78% 78%, #06b6d4 0%, transparent 34%),
-        linear-gradient(145deg, #86efac 0%, #22c55e 34%, #16a34a 60%, #0f766e 100%);
-      box-shadow:
-        0 26px 46px rgba(22,163,74,.26),
-        inset 0 1px 0 rgba(255,255,255,.90),
-        inset 0 -18px 32px rgba(15,23,42,.14);
-    }
-
-    .launch-card.callouts .card-art {
-      background:
-        radial-gradient(circle at 22% 18%, #ffffff55 0%, transparent 22%),
-        radial-gradient(circle at 78% 78%, #fb7185 0%, transparent 34%),
-        linear-gradient(145deg, #ff8a80 0%, #ff5f6d 34%, #ef4444 60%, #be123c 100%);
-      box-shadow:
-        0 26px 46px rgba(220,38,38,.28),
-        inset 0 1px 0 rgba(255,255,255,.90),
-        inset 0 -18px 32px rgba(15,23,42,.14);
-    }
-
-    .launch-card.quote .card-art {
-      background:
-        radial-gradient(circle at 22% 18%, #ffffff55 0%, transparent 22%),
-        radial-gradient(circle at 78% 78%, #facc15 0%, transparent 34%),
-        linear-gradient(145deg, #fdba74 0%, #fb923c 34%, #f97316 60%, #ea580c 100%);
-      box-shadow:
-        0 26px 46px rgba(249,115,22,.28),
-        inset 0 1px 0 rgba(255,255,255,.90),
-        inset 0 -18px 32px rgba(15,23,42,.14);
-    }
-
-    .launch-card.cloud .card-art {
-      background:
-        radial-gradient(circle at 22% 18%, #ffffff55 0%, transparent 22%),
-        radial-gradient(circle at 78% 78%, #ec4899 0%, transparent 34%),
-        linear-gradient(145deg, #d8b4fe 0%, #a855f7 34%, #8b5cf6 60%, #7c3aed 100%);
-      box-shadow:
-        0 26px 46px rgba(124,58,237,.28),
-        inset 0 1px 0 rgba(255,255,255,.90),
-        inset 0 -18px 32px rgba(15,23,42,.14);
-    }
-
-    .launch-card.profile .card-art {
-      background:
-        radial-gradient(circle at 22% 18%, #ffffff55 0%, transparent 22%),
-        radial-gradient(circle at 78% 78%, #60a5fa 0%, transparent 34%),
-        linear-gradient(145deg, #67e8f9 0%, #22d3ee 34%, #06b6d4 60%, #3b82f6 100%);
-      box-shadow:
-        0 26px 46px rgba(6,182,212,.28),
-        inset 0 1px 0 rgba(255,255,255,.90),
-        inset 0 -18px 32px rgba(15,23,42,.14);
-    }
-
-    .launch-card.schedule .card-art {
-      background:
-        radial-gradient(circle at 22% 18%, #ffffff55 0%, transparent 22%),
-        radial-gradient(circle at 78% 78%, #f472b6 0%, transparent 34%),
-        linear-gradient(145deg, #fde68a 0%, #facc15 32%, #f59e0b 58%, #f97316 100%);
-      box-shadow:
-        0 26px 46px rgba(245,158,11,.28),
-        inset 0 1px 0 rgba(255,255,255,.90),
-        inset 0 -18px 32px rgba(15,23,42,.14);
-    }
-
-    .launch-card.submitted .card-art {
-      background:
-        radial-gradient(circle at 22% 18%, #ffffff55 0%, transparent 22%),
-        radial-gradient(circle at 78% 78%, #a78bfa 0%, transparent 34%),
-        linear-gradient(145deg, #cbd5e1 0%, #94a3b8 30%, #64748b 60%, #475569 100%);
-      box-shadow:
-        0 26px 46px rgba(100,116,139,.24),
-        inset 0 1px 0 rgba(255,255,255,.90),
-        inset 0 -18px 32px rgba(15,23,42,.14);
-    }
-
-    @media (max-width: 720px) {
-      .card-art .icon-svg {
-        width: 50px;
-        height: 50px;
-      }
-    }
-
-    @media (max-height: 760px) and (orientation: landscape) {
-      .card-art .icon-svg {
-        width: 44px;
-        height: 44px;
-      }
-    }
-
-
-    /* V6.3c78aj - bigger bolder icons, tuned for iPad portrait */
-    .ipad-home-grid {
-      width: min(1180px, 100%);
-      gap: 18px;
-    }
-
-    .card-grid {
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 22px 18px;
-      padding: 10px 4px 4px;
-      align-items: start;
-    }
-
-    .launch-card {
-      min-height: 196px;
-      padding: 10px 8px 14px;
-    }
-
-    .card-art {
-      width: 116px;
-      height: 116px;
-      min-height: 116px;
-      border-radius: 30px;
-      margin: 0 auto 6px;
-      border: 1px solid rgba(255,255,255,.92);
-      box-shadow:
-        0 30px 52px rgba(15,23,42,.22),
-        0 10px 22px rgba(15,23,42,.10),
-        inset 0 1px 0 rgba(255,255,255,.94),
-        inset 0 -18px 32px rgba(15,23,42,.16),
-        0 0 0 4px rgba(255,255,255,.18);
-    }
-
-    .card-art::before {
-      background:
-        linear-gradient(145deg, rgba(255,255,255,.78) 0%, rgba(255,255,255,.18) 34%, transparent 56%),
-        radial-gradient(circle at 78% 22%, rgba(255,255,255,.38), transparent 26%),
-        radial-gradient(circle at 20% 84%, rgba(255,255,255,.20), transparent 28%);
-    }
-
-    .card-art .icon-svg {
-      width: 68px;
-      height: 68px;
-      stroke: rgba(255,255,255,.99);
-      stroke-width: 2.55;
-      filter:
-        drop-shadow(0 12px 14px rgba(0,0,0,.28))
-        drop-shadow(0 0 16px rgba(255,255,255,.18));
-    }
-
-    .card-copy strong {
-      font-size: 16.5px;
-      line-height: 1.02;
-      font-weight: 950;
-      max-width: 160px;
-    }
-
-    .card-copy small {
-      font-size: 12px;
-      line-height: 1.18;
-      font-weight: 780;
-      max-width: 160px;
-    }
-
-    .launch-card.certs .card-art {
-      background:
-        radial-gradient(circle at 20% 16%, #ffffff60 0%, transparent 18%),
-        radial-gradient(circle at 84% 80%, #22d3ee 0%, transparent 34%),
-        linear-gradient(145deg, #93c5fd 0%, #3b82f6 32%, #2563eb 58%, #4f46e5 100%);
-      box-shadow:
-        0 30px 52px rgba(37,99,235,.30),
-        0 10px 22px rgba(15,23,42,.10),
-        inset 0 1px 0 rgba(255,255,255,.94),
-        inset 0 -18px 32px rgba(15,23,42,.16);
-    }
-
-    .launch-card.offline .card-art {
-      background:
-        radial-gradient(circle at 20% 16%, #ffffff60 0%, transparent 18%),
-        radial-gradient(circle at 84% 80%, #2dd4bf 0%, transparent 34%),
-        linear-gradient(145deg, #86efac 0%, #4ade80 30%, #16a34a 58%, #0f766e 100%);
-      box-shadow:
-        0 30px 52px rgba(22,163,74,.28),
-        0 10px 22px rgba(15,23,42,.10),
-        inset 0 1px 0 rgba(255,255,255,.94),
-        inset 0 -18px 32px rgba(15,23,42,.16);
-    }
-
-    .launch-card.callouts .card-art {
-      background:
-        radial-gradient(circle at 20% 16%, #ffffff60 0%, transparent 18%),
-        radial-gradient(circle at 84% 80%, #fb7185 0%, transparent 34%),
-        linear-gradient(145deg, #fda4af 0%, #ff5f6d 30%, #ef4444 58%, #be123c 100%);
-      box-shadow:
-        0 30px 52px rgba(220,38,38,.30),
-        0 10px 22px rgba(15,23,42,.10),
-        inset 0 1px 0 rgba(255,255,255,.94),
-        inset 0 -18px 32px rgba(15,23,42,.16);
-    }
-
-    .launch-card.quote .card-art {
-      background:
-        radial-gradient(circle at 20% 16%, #ffffff60 0%, transparent 18%),
-        radial-gradient(circle at 84% 80%, #fde047 0%, transparent 34%),
-        linear-gradient(145deg, #fdba74 0%, #fb923c 30%, #f97316 58%, #ea580c 100%);
-      box-shadow:
-        0 30px 52px rgba(249,115,22,.30),
-        0 10px 22px rgba(15,23,42,.10),
-        inset 0 1px 0 rgba(255,255,255,.94),
-        inset 0 -18px 32px rgba(15,23,42,.16);
-    }
-
-    .launch-card.cloud .card-art {
-      background:
-        radial-gradient(circle at 20% 16%, #ffffff60 0%, transparent 18%),
-        radial-gradient(circle at 84% 80%, #ec4899 0%, transparent 34%),
-        linear-gradient(145deg, #d8b4fe 0%, #c084fc 28%, #8b5cf6 56%, #7c3aed 100%);
-      box-shadow:
-        0 30px 52px rgba(124,58,237,.30),
-        0 10px 22px rgba(15,23,42,.10),
-        inset 0 1px 0 rgba(255,255,255,.94),
-        inset 0 -18px 32px rgba(15,23,42,.16);
-    }
-
-    .launch-card.profile .card-art {
-      background:
-        radial-gradient(circle at 20% 16%, #ffffff60 0%, transparent 18%),
-        radial-gradient(circle at 84% 80%, #60a5fa 0%, transparent 34%),
-        linear-gradient(145deg, #67e8f9 0%, #22d3ee 28%, #06b6d4 56%, #3b82f6 100%);
-      box-shadow:
-        0 30px 52px rgba(6,182,212,.30),
-        0 10px 22px rgba(15,23,42,.10),
-        inset 0 1px 0 rgba(255,255,255,.94),
-        inset 0 -18px 32px rgba(15,23,42,.16);
-    }
-
-    .launch-card.schedule .card-art {
-      background:
-        radial-gradient(circle at 20% 16%, #ffffff60 0%, transparent 18%),
-        radial-gradient(circle at 84% 80%, #fb7185 0%, transparent 34%),
-        linear-gradient(145deg, #fde68a 0%, #facc15 28%, #f59e0b 56%, #f97316 100%);
-      box-shadow:
-        0 30px 52px rgba(245,158,11,.30),
-        0 10px 22px rgba(15,23,42,.10),
-        inset 0 1px 0 rgba(255,255,255,.94),
-        inset 0 -18px 32px rgba(15,23,42,.16);
-    }
-
-    .launch-card.submitted .card-art {
-      background:
-        radial-gradient(circle at 20% 16%, #ffffff60 0%, transparent 18%),
-        radial-gradient(circle at 84% 80%, #a78bfa 0%, transparent 34%),
-        linear-gradient(145deg, #cbd5e1 0%, #94a3b8 28%, #64748b 56%, #334155 100%);
-      box-shadow:
-        0 30px 52px rgba(100,116,139,.26),
-        0 10px 22px rgba(15,23,42,.10),
-        inset 0 1px 0 rgba(255,255,255,.94),
-        inset 0 -18px 32px rgba(15,23,42,.16);
-    }
-
-    /* iPad portrait first: bigger icons, 2 columns, stacked layout */
-    @media (max-width: 980px) and (orientation: portrait) {
+    @media (orientation: portrait) and (max-width: 1100px) {
       .ipad-home-grid {
-        gap: 16px;
+        width: min(860px, 100%);
+        grid-template-rows: auto auto 1fr auto;
       }
+
       .hero-panel {
-        border-radius: 30px;
-        padding: 18px 18px 14px;
+        grid-template-columns: auto 1fr;
+        padding: 8px 10px;
       }
+
+      .hero-kicker {
+        width: 82px;
+        height: 82px;
+        border-radius: 22px !important;
+      }
+
+      .hero-kicker::before {
+        font-size: 44px;
+      }
+
+      .hero-panel h1 {
+        font-size: clamp(44px, 8vw, 76px);
+      }
+
+      .hero-panel p {
+        font-size: clamp(13px, 2.2vw, 17px);
+      }
+
+      .card-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 24px 18px;
+      }
+
+      .card-art {
+        width: clamp(150px, 25vw, 190px);
+        height: clamp(150px, 25vw, 190px);
+      }
+
+      .card-art .emboss-icon,
+      .card-art .icon-svg {
+        width: clamp(94px, 15vw, 120px);
+        height: clamp(94px, 15vw, 120px);
+      }
+
+      .card-copy strong {
+        font-size: clamp(21px, 3vw, 26px);
+      }
+
+      .card-copy small {
+        font-size: clamp(13px, 1.8vw, 16px);
+      }
+    }
+
+    @media (orientation: portrait) and (max-width: 760px) {
+      .ipad-home {
+        padding: calc(12px + var(--safe-top)) calc(12px + var(--safe-right)) calc(12px + var(--safe-bottom)) calc(12px + var(--safe-left));
+      }
+
       .ops-strip {
-        border-radius: 28px;
+        display: none !important;
       }
+
+      .ipad-home-grid {
+        grid-template-rows: auto 1fr auto;
+      }
+
       .card-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 22px 18px;
-        padding: 6px 2px 6px;
+        gap: 18px 12px;
       }
+
       .launch-card {
-        min-height: 228px;
-        padding: 12px 4px 14px;
+        padding-bottom: 6px !important;
       }
+
       .card-art {
-        width: 138px;
-        height: 138px;
-        min-height: 138px;
-        border-radius: 34px;
-        margin-bottom: 8px;
+        width: clamp(112px, 38vw, 150px);
+        height: clamp(112px, 38vw, 150px);
       }
+
+      .card-art .emboss-icon,
       .card-art .icon-svg {
-        width: 80px;
-        height: 80px;
-        stroke-width: 2.7;
+        width: clamp(70px, 23vw, 92px);
+        height: clamp(70px, 23vw, 92px);
       }
+
       .card-copy strong {
-        font-size: 19px;
-        max-width: 220px;
+        font-size: clamp(16px, 4.5vw, 21px);
       }
+
       .card-copy small {
-        font-size: 13px;
-        max-width: 220px;
+        font-size: clamp(11px, 3vw, 13px);
       }
     }
 
-    /* Smaller phones still stay usable */
-    @media (max-width: 720px) {
-      .card-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 16px 10px;
+    @media (orientation: landscape) and (max-height: 820px) {
+      .ipad-home-grid {
+        grid-template-rows: auto auto 1fr auto;
+        gap: 8px;
       }
-      .launch-card {
-        min-height: 170px;
-      }
-      .card-art {
-        width: 96px;
-        height: 96px;
-        min-height: 96px;
-        border-radius: 26px;
-      }
-      .card-art .icon-svg {
-        width: 54px;
-        height: 54px;
-      }
-      .card-copy strong {
-        font-size: 14px;
-      }
-      .card-copy small {
-        font-size: 11px;
-      }
-    }
 
-    /* Desktop landscape can show more */
-    @media (min-width: 1200px) {
+      .hero-panel {
+        display: none !important;
+      }
+
+      .ops-strip {
+        min-height: 50px;
+      }
+
       .card-grid {
         grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 8px 12px;
       }
-    }
 
-    @media (max-height: 760px) and (orientation: landscape) {
-      .card-grid {
-        grid-template-columns: repeat(8, minmax(0, 1fr));
-        gap: 10px 6px;
-      }
-      .launch-card {
-        min-height: 132px;
-        padding: 6px 3px;
-      }
       .card-art {
-        width: 76px;
-        height: 76px;
-        min-height: 76px;
-        border-radius: 20px;
-        margin-bottom: 1px;
+        width: clamp(82px, 12vw, 112px);
+        height: clamp(82px, 12vw, 112px);
       }
+
+      .card-art .emboss-icon,
       .card-art .icon-svg {
-        width: 44px;
-        height: 44px;
+        width: clamp(50px, 7vw, 68px);
+        height: clamp(50px, 7vw, 68px);
       }
-      .card-copy strong {
-        font-size: 11.5px;
-      }
+
       .card-copy small {
-        display: none;
+        display: none !important;
       }
     }
 
@@ -2235,9 +1545,19 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
 
 </head>
 <body>
+
+  <svg width="0" height="0" style="position:absolute;left:-9999px;top:-9999px" aria-hidden="true" focusable="false">
+    <filter id="fsdIconEmboss" x="-45%" y="-45%" width="190%" height="190%" color-interpolation-filters="sRGB">
+      <feDropShadow dx="-1.6" dy="-1.8" stdDeviation="0.45" flood-color="#ffffff" flood-opacity="0.95"/>
+      <feDropShadow dx="2.2" dy="3.0" stdDeviation="1.0" flood-color="#12304f" flood-opacity="0.35"/>
+      <feDropShadow dx="0" dy="0" stdDeviation="3.0" flood-color="#ffffff" flood-opacity="0.38"/>
+      <feDropShadow dx="0" dy="9" stdDeviation="4.0" flood-color="#000000" flood-opacity="0.20"/>
+    </filter>
+  </svg>
+
   <!--
-    Fire Safety Direct - FSD Certs V6.3c78aj Bold iPad Portrait Icons
-    Bright pro iPad home screen with bold colourful app icons tuned for iPad portrait.
+    Fire Safety Direct - FSD Certs V6.3c78al 3D Inner Bevel iPad Portrait
+    3D inner-bevel iPad portrait launcher with embossed app icons.
     App shell mark: Jared720 Labs
   -->
 
@@ -2254,7 +1574,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
       <section class="hero-panel">
         <div class="hero-kicker">Fire Safety Direct</div>
         <h1>FSD Certs</h1>
-        <p>Bright modern iPad launcher for certificates, combined report packs, quotes and engineer planning.</p>
+        <p>Certificates, engineer reports, quotes and scheduling — built for site work on iPad.</p>
       </section>
 
       <section class="ops-strip" aria-label="Command centre status strip">
@@ -2277,75 +1597,75 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
       </section>
 
       <section class="card-grid" aria-label="Main apps">
-        <button class="launch-card certs" type="button" onclick="openCerts(event)" aria-label="Open Certificate Portal">
-          <span class="card-chip"><svg class="icon-svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3.5h5.5L18.5 8v12.5H8a2 2 0 0 1-2-2V5.5a2 2 0 0 1 2-2Z"/><path d="M13.5 3.5V8h5"/><path d="M9.5 11h5"/><path d="M9.5 14h5"/><path d="M9.5 17h3.5"/></svg></span>
+        <button class="launch-card certs" type="button" onclick="openCerts(event)" aria-label="Open Portal">
+          <span class="card-chip"><svg class="emboss-icon" viewBox="0 0 96 96" aria-hidden="true"><path d="M29 15h26l19 19v47H29a8 8 0 0 1-8-8V23a8 8 0 0 1 8-8Z"/><path d="M55 15v20h19"/><path d="M33 49h30"/><path d="M33 60h28"/><path d="M33 71h20"/></svg></span>
           <span class="card-note">Portal</span>
-          <div class="card-art"><svg class="icon-svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3.5h5.5L18.5 8v12.5H8a2 2 0 0 1-2-2V5.5a2 2 0 0 1 2-2Z"/><path d="M13.5 3.5V8h5"/><path d="M9.5 11h5"/><path d="M9.5 14h5"/><path d="M9.5 17h3.5"/></svg></div>
-          <div class="card-copy"><strong>Certificate Portal</strong><small>Live certificates, service reports and combined packs.</small></div>
+          <div class="card-art"><svg class="emboss-icon" viewBox="0 0 96 96" aria-hidden="true"><path d="M29 15h26l19 19v47H29a8 8 0 0 1-8-8V23a8 8 0 0 1 8-8Z"/><path d="M55 15v20h19"/><path d="M33 49h30"/><path d="M33 60h28"/><path d="M33 71h20"/></svg></div>
+          <div class="card-copy"><strong>Portal</strong><small>Safety &amp; compliance certificates, reports and forms.</small></div>
         </button>
 
-        <button class="launch-card offline" type="button" onclick="openOfflineDrafts(event)" aria-label="Open Offline Certs and Reports">
-          <span class="card-chip"><svg class="icon-svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 8.5A2.5 2.5 0 0 1 6 6h3l1.6 1.8H18A2.5 2.5 0 0 1 20.5 10.3v6.2A2.5 2.5 0 0 1 18 19H6a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M12 10.5v5"/><path d="M9.8 13.3 12 15.5l2.2-2.2"/></svg></span>
+        <button class="launch-card offline" type="button" onclick="openOfflineDrafts(event)" aria-label="Open Offline and Reports">
+          <span class="card-chip"><svg class="emboss-icon" viewBox="0 0 96 96" aria-hidden="true"><path d="M14 33a10 10 0 0 1 10-10h16l8 9h26a10 10 0 0 1 10 10v26a10 10 0 0 1-10 10H24a10 10 0 0 1-10-10Z"/><path d="M48 42v21"/><path d="M38 55l10 10 10-10"/></svg></span>
           <span class="card-note">Offline</span>
-          <div class="card-art"><svg class="icon-svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 8.5A2.5 2.5 0 0 1 6 6h3l1.6 1.8H18A2.5 2.5 0 0 1 20.5 10.3v6.2A2.5 2.5 0 0 1 18 19H6a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M12 10.5v5"/><path d="M9.8 13.3 12 15.5l2.2-2.2"/></svg></div>
-          <div class="card-copy"><strong>Offline Certs</strong><small>Draft W, SFA and SEL when signal is poor.</small></div>
+          <div class="card-art"><svg class="emboss-icon" viewBox="0 0 96 96" aria-hidden="true"><path d="M14 33a10 10 0 0 1 10-10h16l8 9h26a10 10 0 0 1 10 10v26a10 10 0 0 1-10 10H24a10 10 0 0 1-10-10Z"/><path d="M48 42v21"/><path d="M38 55l10 10 10-10"/></svg></div>
+          <div class="card-copy"><strong>Offline</strong><small>Create and access certificates &amp; reports without signal.</small></div>
         </button>
 
         <button class="launch-card callouts" type="button" onclick="openCallouts(event)" aria-label="Open Callouts">
-          <span class="card-chip"><svg class="icon-svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M7.5 17v-3.5a4.5 4.5 0 0 1 9 0V17"/><path d="M6 17h12"/><path d="M9 20h6"/><path d="M12 4V2.8"/><path d="M5.8 7.2 4.7 6.1"/><path d="M18.2 7.2l1.1-1.1"/></svg></span>
+          <span class="card-chip"><svg class="emboss-icon" viewBox="0 0 96 96" aria-hidden="true"><path d="M28 72V52a20 20 0 0 1 40 0v20"/><path d="M22 72h52"/><path d="M34 82h28"/><path d="M48 15v-6"/><path d="M23 27l-8-8"/><path d="M73 27l8-8"/></svg></span>
           <span class="card-note">Live jobs</span>
-          <div class="card-art"><svg class="icon-svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M7.5 17v-3.5a4.5 4.5 0 0 1 9 0V17"/><path d="M6 17h12"/><path d="M9 20h6"/><path d="M12 4V2.8"/><path d="M5.8 7.2 4.7 6.1"/><path d="M18.2 7.2l1.1-1.1"/></svg></div>
-          <div class="card-copy"><strong>Callouts</strong><small>Active emergency jobs and urgent response work.</small></div>
+          <div class="card-art"><svg class="emboss-icon" viewBox="0 0 96 96" aria-hidden="true"><path d="M28 72V52a20 20 0 0 1 40 0v20"/><path d="M22 72h52"/><path d="M34 82h28"/><path d="M48 15v-6"/><path d="M23 27l-8-8"/><path d="M73 27l8-8"/></svg></div>
+          <div class="card-copy"><strong>Callouts</strong><small>v1.6.0</small></div>
         </button>
 
-        <button class="launch-card quote" type="button" onclick="openQuickQuote(event)" aria-label="Open Quick Quote">
-          <span class="card-chip"><svg class="icon-svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M7.5 4.5h7a2 2 0 0 1 2 2v11.2a1.8 1.8 0 0 1-3.1 1.2L12 17.5l-1.4 1.4a1.8 1.8 0 0 1-3.1-1.2Z"/><path d="M10 8.5c1.6-1.1 4 .5 2.7 1.8-.7.7-1.7.7-2.4 1.3-.5.4-.7 1-.7 1.4"/><path d="M10.2 14.7h0"/></svg></span>
+        <button class="launch-card quote" type="button" onclick="openQuickQuote(event)" aria-label="Open Quotes">
+          <span class="card-chip"><svg class="emboss-icon" viewBox="0 0 96 96" aria-hidden="true"><path d="M29 14h28l17 17v48H29a8 8 0 0 1-8-8V22a8 8 0 0 1 8-8Z"/><path d="M57 14v18h17"/><path d="M36 37c9-7 24 2 15 11-5 5-13 4-16 10"/><path d="M35 66h24"/><path d="M35 75h19"/><path d="M35 37v31"/></svg></span>
           <span class="card-note">QQ</span>
-          <div class="card-art"><svg class="icon-svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M7.5 4.5h7a2 2 0 0 1 2 2v11.2a1.8 1.8 0 0 1-3.1 1.2L12 17.5l-1.4 1.4a1.8 1.8 0 0 1-3.1-1.2Z"/><path d="M10 8.5c1.6-1.1 4 .5 2.7 1.8-.7.7-1.7.7-2.4 1.3-.5.4-.7 1-.7 1.4"/><path d="M10.2 14.7h0"/></svg></div>
-          <div class="card-copy"><strong>Quick Quote</strong><small>Site pricing, quote notes and follow-up work.</small></div>
+          <div class="card-art"><svg class="emboss-icon" viewBox="0 0 96 96" aria-hidden="true"><path d="M29 14h28l17 17v48H29a8 8 0 0 1-8-8V22a8 8 0 0 1 8-8Z"/><path d="M57 14v18h17"/><path d="M36 37c9-7 24 2 15 11-5 5-13 4-16 10"/><path d="M35 66h24"/><path d="M35 75h19"/><path d="M35 37v31"/></svg></div>
+          <div class="card-copy"><strong>Quotes</strong><small>Fast quotes and pricing while you are on site.</small></div>
         </button>
 
-        <button class="launch-card cloud" type="button" onclick="openCloudDrafts(event)" aria-label="Open Cloud Drafts">
-          <span class="card-chip"><svg class="icon-svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 18.5h8a4 4 0 0 0 .7-7.9A5.5 5.5 0 0 0 6.3 9.1 3.8 3.8 0 0 0 8 18.5Z"/><path d="M12 10v5"/><path d="M9.8 12.8 12 10.6l2.2 2.2"/></svg></span>
+        <button class="launch-card cloud" type="button" onclick="openCloudDrafts(event)" aria-label="Open Drafts">
+          <span class="card-chip"><svg class="emboss-icon" viewBox="0 0 96 96" aria-hidden="true"><path d="M30 72h36a17 17 0 0 0 2-34 23 23 0 0 0-43-7A17 17 0 0 0 30 72Z"/><path d="M48 35v24"/><path d="M37 47l11-11 11 11"/></svg></span>
           <span class="card-note">Sync</span>
-          <div class="card-art"><svg class="icon-svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 18.5h8a4 4 0 0 0 .7-7.9A5.5 5.5 0 0 0 6.3 9.1 3.8 3.8 0 0 0 8 18.5Z"/><path d="M12 10v5"/><path d="M9.8 12.8 12 10.6l2.2 2.2"/></svg></div>
-          <div class="card-copy"><strong>Cloud Drafts</strong><small>Resume, sync and finish cloud-saved paperwork.</small></div>
+          <div class="card-art"><svg class="emboss-icon" viewBox="0 0 96 96" aria-hidden="true"><path d="M30 72h36a17 17 0 0 0 2-34 23 23 0 0 0-43-7A17 17 0 0 0 30 72Z"/><path d="M48 35v24"/><path d="M37 47l11-11 11 11"/></svg></div>
+          <div class="card-copy"><strong>Drafts</strong><small>Save and sync work-in-progress across the FSD cloud.</small></div>
         </button>
 
-        <button class="launch-card profile" type="button" onclick="openEngineerProfile(event)" aria-label="Open Engineer Profile">
-          <span class="card-chip"><svg class="icon-svg" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3"/><path d="M6.5 18.5a5.5 5.5 0 0 1 11 0"/><path d="M17.5 6.5h3"/><path d="M19 5v3"/></svg></span>
+        <button class="launch-card profile" type="button" onclick="openEngineerProfile(event)" aria-label="Open Engineer">
+          <span class="card-chip"><svg class="emboss-icon" viewBox="0 0 96 96" aria-hidden="true"><path d="M48 9l29 13v22c0 20-12 34-29 43-17-9-29-23-29-43V22Z"/><circle cx="48" cy="40" r="10"/><path d="M30 67c5-12 31-12 36 0"/></svg></span>
           <span class="card-note">Engineer</span>
-          <div class="card-art"><svg class="icon-svg" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3"/><path d="M6.5 18.5a5.5 5.5 0 0 1 11 0"/><path d="M17.5 6.5h3"/><path d="M19 5v3"/></svg></div>
-          <div class="card-copy"><strong>Engineer Profile</strong><small>Lock this iPad to the correct engineer.</small></div>
+          <div class="card-art"><svg class="emboss-icon" viewBox="0 0 96 96" aria-hidden="true"><path d="M48 9l29 13v22c0 20-12 34-29 43-17-9-29-23-29-43V22Z"/><circle cx="48" cy="40" r="10"/><path d="M30 67c5-12 31-12 36 0"/></svg></div>
+          <div class="card-copy"><strong>Engineer</strong><small>Set the default engineer profile for this iPad.</small></div>
         </button>
 
-        <button class="launch-card schedule" type="button" onclick="openSchedule(event)" aria-label="Open FSD Schedule">
-          <span class="card-chip"><svg class="icon-svg" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="5.5" width="16" height="14" rx="2.5"/><path d="M8 3.5v4"/><path d="M16 3.5v4"/><path d="M4 9.5h16"/><path d="M9.2 14l1.8 1.8 3.8-3.8"/></svg></span>
+        <button class="launch-card schedule" type="button" onclick="openPlanner(event)" aria-label="Open FSD Planner">
+          <span class="card-chip"><svg class="emboss-icon" viewBox="0 0 96 96" aria-hidden="true"><rect x="17" y="22" width="62" height="58" rx="10"/><path d="M32 12v18"/><path d="M64 12v18"/><path d="M17 39h62"/><path d="M34 55h8"/><path d="M54 55h8"/><path d="M34 67h8"/><path d="M55 71l7 7 16-18"/></svg></span>
           <span class="card-note">Today</span>
-          <div class="card-art"><svg class="icon-svg" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="5.5" width="16" height="14" rx="2.5"/><path d="M8 3.5v4"/><path d="M16 3.5v4"/><path d="M4 9.5h16"/><path d="M9.2 14l1.8 1.8 3.8-3.8"/></svg></div>
-          <div class="card-copy"><strong>Schedule</strong><small>Today’s work, planner and upcoming visits.</small></div>
+          <div class="card-art"><svg class="emboss-icon" viewBox="0 0 96 96" aria-hidden="true"><rect x="17" y="22" width="62" height="58" rx="10"/><path d="M32 12v18"/><path d="M64 12v18"/><path d="M17 39h62"/><path d="M34 55h8"/><path d="M54 55h8"/><path d="M34 67h8"/><path d="M55 71l7 7 16-18"/></svg></div>
+          <div class="card-copy"><strong>Planner</strong><small>Daily jobs, appointments and engineer planning.</small></div>
         </button>
 
-        <button class="launch-card submitted" type="button" onclick="openCerts(event)" aria-label="Open Submitted Reports via Certificate Portal">
-          <span class="card-chip"><svg class="icon-svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M4.5 7.5h15"/><path d="M6.5 7.5v9a2 2 0 0 0 2 2h7a2 2 0 0 0 2-2v-9"/><path d="M5.5 4.5h13a1 1 0 0 1 1 1v2H4.5v-2a1 1 0 0 1 1-1Z"/><path d="M10 12h4"/></svg></span>
+        <button class="launch-card submitted" type="button" onclick="openCerts(event)" aria-label="Open Reports via Portal">
+          <span class="card-chip"><svg class="emboss-icon" viewBox="0 0 96 96" aria-hidden="true"><path d="M27 14h34l14 14v54H27a8 8 0 0 1-8-8V22a8 8 0 0 1 8-8Z"/><path d="M61 14v15h14"/><path d="M34 68V50"/><path d="M48 68V38"/><path d="M62 68V56"/><path d="M30 72h38"/></svg></span>
           <span class="card-note">History</span>
-          <div class="card-art"><svg class="icon-svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M4.5 7.5h15"/><path d="M6.5 7.5v9a2 2 0 0 0 2 2h7a2 2 0 0 0 2-2v-9"/><path d="M5.5 4.5h13a1 1 0 0 1 1 1v2H4.5v-2a1 1 0 0 1 1-1Z"/><path d="M10 12h4"/></svg></div>
-          <div class="card-copy"><strong>Submitted Reports</strong><small>Find completed certificates and report history.</small></div>
+          <div class="card-art"><svg class="emboss-icon" viewBox="0 0 96 96" aria-hidden="true"><path d="M27 14h34l14 14v54H27a8 8 0 0 1-8-8V22a8 8 0 0 1 8-8Z"/><path d="M61 14v15h14"/><path d="M34 68V50"/><path d="M48 68V38"/><path d="M62 68V56"/><path d="M30 72h38"/></svg></div>
+          <div class="card-copy"><strong>Reports</strong><small>Open completed paperwork and previously submitted work.</small></div>
         </button>
       </section>
 
       <div class="home-meta">
         <span class="home-credit">JARED720 LABS</span>
-        <span class="home-version">App Shell V6.3c78aj · Bold portrait icons</span>
+        <span class="home-version">App Shell V6.3c78al · 3D inner bevel iPad</span>
       </div>
     </main>
   </section>
 
   <section id="offlineDrafts" class="screen offline-screen" aria-label="Offline Drafts">
     <main class="offline-card">
-      <h2 class="offline-title">Offline Certs &amp; Reports</h2>
+      <h2 class="offline-title">Offline &amp; Reports</h2>
       <p class="offline-help">Certificate/report drafts saved without signal live on this iPad until they are synced to the FSD cloud Draft Manager.</p>
-      <p class="offline-help"><strong>Offline editor trial:</strong> Engineer Service Reports can be started, edited and synced. SFA now mirrors the online Fire Alarm Service Report shape more closely: equipment checked table plus FA service/remedial costs. SFA cloud draft sync is now bridged safely. V6.3c73d keeps the SEL loader timing and changes SFA Checked on Inspection choices to tick-style values instead of YES/NO/N/A. SEL still uses the normal online PDF button once opened from Cloud Drafts.</p>
+      <p class="offline-help"><strong>Offline editor trial:</strong> Engineer Service Reports can be started, edited and synced. SFA now mirrors the online Fire Alarm Service Report shape more closely: equipment checked table plus FA service/remedial costs. SFA cloud draft sync is now bridged safely. V6.3c73d keeps the SEL loader timing and changes SFA Checked on Inspection choices to tick-style values instead of YES/NO/N/A. SEL still uses the normal online PDF button once opened from Drafts.</p>
       <div id="offlineList" class="offline-list"></div>
       <div class="actions">
         <button class="button" type="button" onclick="startNewOfflineW(event)"><span class="tile-icon">📝</span><span>Start Offline Engineer Service Report</span></button>
@@ -2366,7 +1686,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
       <div class="editor-head">
         <div>
           <h2 id="offlineEditorTitle">Edit Offline Report Draft</h2>
-          <p id="offlineEditorNote" class="editor-note">This is the local iPad editor. Engineer Service Reports can sync to Cloud Drafts. SFA is currently local save/resume only.</p>
+          <p id="offlineEditorNote" class="editor-note">This is the local iPad editor. Engineer Service Reports can sync to Drafts. SFA is currently local save/resume only.</p>
           <div class="editor-pill-row">
             <span id="editorNetBadge" class="net-badge">Checking signal</span>
             <span id="editorDirtyBadge" class="dirty-badge saved">Saved offline</span>
@@ -2391,7 +1711,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
           <div class="editor-field editor-wide"><label>Site address</label><textarea id="editSite"></textarea></div>
           <div id="sfaOfflineFields" class="nested-editor-grid hidden-report-fields">
             <div class="editor-section-title">SFA fire alarm report details</div>
-            <div class="sfa-local-note">SFA offline follows the online Fire Alarm Service Report shape. Save locally, sync to Cloud Drafts, then open from Cloud Drafts and use the normal online Complete Certificate button.</div>
+            <div class="sfa-local-note">SFA offline follows the online Fire Alarm Service Report shape. Save locally, sync to Drafts, then open from Drafts and use the normal online Complete Certificate button.</div>
             <div class="editor-field"><label>Sage account no.</label><input id="editSfaSageAccountNo"></div>
             <div class="editor-field"><label>Contract ID No.</label><input id="editSfaContractId"></div>
             <div class="editor-field"><label>Order No.</label><input id="editSfaOrderNo"></div>
@@ -2437,20 +1757,20 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
             <div class="editor-field"><label>Sub Total</label><input id="editSfaSubTotal" type="number" step="0.01" value="0.00"></div>
             <div class="editor-field"><label>VAT @ 20%</label><input id="editSfaVat" type="number" step="0.01" value="0.00"></div>
             <div class="editor-field"><label>Total</label><input id="editSfaTotal" type="number" step="0.01" value="0.00"></div>
-            <div class="editor-field"><label>Outstanding work / Quick Quote ref</label><input id="editFaQuickQuoteRequired" placeholder="e.g. QQ000123"></div>
+            <div class="editor-field"><label>Outstanding work / Quotes ref</label><input id="editFaQuickQuoteRequired" placeholder="e.g. QQ000123"></div>
             <div class="editor-field"><label>Recommend detailed fire risk assessment</label><select id="editFaRiskAssessmentRecommended"><option value="NO">NO</option><option value="YES">YES</option></select></div>
             <div class="editor-field"><label>Changes to report</label><select id="editFaChangesToReport"><option value="NO">NO</option><option value="YES">YES</option></select></div>
             <div class="editor-field"><label>Tick Box if Non-Compliant</label><select id="editFaNonCompliantHeader"><option value="NO">NO - normal report</option><option value="YES">YES - show red Non-Compliant header</option></select></div>
             <div id="sfaCloudPayloadPreview" class="sfa-payload-preview hidden-report-fields">
               <div class="editor-section-title">SFA Cloud Payload Preview</div>
-              <p class="sfa-payload-preview-note">Preview only. This shows the data shape we will send to Apps Script later. It does not sync, create a PDF, or update Cloud Drafts.</p>
+              <p class="sfa-payload-preview-note">Preview only. This shows the data shape we will send to Apps Script later. It does not sync, create a PDF, or update Drafts.</p>
               <textarea id="sfaCloudPayloadJson" readonly spellcheck="false"></textarea>
             </div>
           </div>
 
           <div id="selOfflineFields" class="nested-editor-grid hidden-report-fields">
             <div class="editor-section-title">SEL emergency lighting report details</div>
-            <div class="sfa-local-note">SEL offline follows the online Emergency Lighting Report shape. Save locally, sync to Cloud Drafts, then open from Cloud Drafts and use the normal online SEL PDF button.</div>
+            <div class="sfa-local-note">SEL offline follows the online Emergency Lighting Report shape. Save locally, sync to Drafts, then open from Drafts and use the normal online SEL PDF button.</div>
             <div class="editor-field"><label>Sage Account No.</label><input id="editSelSageAccountNo"></div>
             <div class="editor-field"><label>Contract ID No.</label><input id="editSelContractId"></div>
             <div class="editor-field"><label>Asbestos Report Available</label><select id="editSelAsbestosAvailable"><option value="NO">NO</option><option value="YES">YES</option></select></div>
@@ -2463,7 +1783,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
             <div class="editor-field"><label>No. Fittings Passed</label><input id="editElPassed" type="number" inputmode="numeric"></div>
             <div class="editor-field"><label>No. Fittings Failed</label><input id="editElFailed" type="number" inputmode="numeric"></div>
             <div class="editor-field"><label>Reason Code</label><input id="editElReason" placeholder="NC / REC"></div>
-            <div class="editor-field"><label>Quick Quote Ref</label><input id="editElQuickQuoteRef" placeholder="e.g. QQ000123"></div>
+            <div class="editor-field"><label>Quotes Ref</label><input id="editElQuickQuoteRef" placeholder="e.g. QQ000123"></div>
             <div class="editor-section-title">Emergency Lighting Type Quantities</div>
             <div class="editor-field"><label>Bulkhead</label><input id="editElBulkhead" type="number" inputmode="numeric"></div>
             <div class="editor-field"><label>Exit Signs</label><input id="editElExitSigns" type="number" inputmode="numeric"></div>
@@ -2557,9 +1877,9 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
   </section>
 
 
-  <section id="engineerProfileModal" class="profile-modal" aria-label="Engineer Profile" aria-hidden="true">
+  <section id="engineerProfileModal" class="profile-modal" aria-label="Engineer" aria-hidden="true">
     <div class="profile-card">
-      <h2>Engineer Profile</h2>
+      <h2>Engineer</h2>
       <p>Set the default engineer for this iPad. The list is loaded live from the same engineer list used by the reports.</p>
 
       <label for="defaultEngineerInput">Default engineer for this iPad</label>
@@ -3100,7 +2420,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
       const OFFLINE_W_WINDOW_NAME_PREFIX = 'FSD_OFFLINE_W_PAYLOAD::';
 
       // V6.3c69b - Offline SFA online field-shape fix.
-      // W remains the only offline report that can sync to Cloud Drafts.
+      // W remains the only offline report that can sync to Drafts.
       // SFA now mirrors the online Fire Alarm Service Report structure more closely: equipment checked table + service/remedial costs, no W material rows.
       const OFFLINE_REPORT_TYPES = {
         W:   { code: 'W',   label: 'Engineer Service Report',             page: 'esr', editableOffline: true,  syncableOffline: true },
@@ -3134,7 +2454,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
 
       function startFallbackTimer() {
         clearTimeout(fallbackTimer);
-        // V6.3c73c/c73d: Apps Script can be slow when opening Cloud Drafts/resumed SEL
+        // V6.3c73c/c73d: Apps Script can be slow when opening Drafts/resumed SEL
         // inside the shell. Keep the friendly loader up for longer before showing
         // the scary fallback panel. Data is already working; this is timing polish.
         const delay = pendingShellAction ? 90000 : 90000;
@@ -3158,8 +2478,8 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
 
       function goDirect(url) {
         // iPad home-screen apps handle button-driven navigation more reliably
-        // than normal anchor tags. This keeps Schedule/Callouts behaving like
-        // the Certificate Portal button instead of doing nothing on some iPads.
+        // than normal anchor tags. This keeps Planner/Callouts behaving like
+        // the Portal button instead of doing nothing on some iPads.
         try {
           window.location.assign(url);
         } catch (err) {
@@ -3566,10 +2886,10 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
         if (titleEl) titleEl.textContent = 'Edit Offline ' + report.code + ' Draft';
         if (noteEl) {
           noteEl.textContent = report.code === 'W'
-            ? 'This is the local iPad editor. Engineer Service Reports can save offline and sync to Cloud Drafts when signal returns.'
+            ? 'This is the local iPad editor. Engineer Service Reports can save offline and sync to Drafts when signal returns.'
             : (report.code === 'SEL'
-              ? 'This is the local SEL cloud-draft bridge editor. Save locally, then Sync to Cloud. Open from Cloud Drafts to use the normal online SEL PDF button.'
-              : 'This is the local SFA cloud-draft bridge editor. Save locally, then Sync to Cloud. Open from Cloud Drafts to use the normal online PDF button.');
+              ? 'This is the local SEL cloud-draft bridge editor. Save locally, then Sync to Cloud. Open from Drafts to use the normal online SEL PDF button.'
+              : 'This is the local SFA cloud-draft bridge editor. Save locally, then Sync to Cloud. Open from Drafts to use the normal online PDF button.');
         }
         if (syncBtn) {
           syncBtn.disabled = !report.syncableOffline;
@@ -3803,7 +3123,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
           customer: '',
           site: '',
           stage: 'sfa-cloud-draft-bridge-route-fix',
-          note: 'V6.3c71a SFA offline can sync to Cloud Drafts via the fael backend route. PDF creation is not enabled yet.',
+          note: 'V6.3c71a SFA offline can sync to Drafts via the fael backend route. PDF creation is not enabled yet.',
           sageAccountNo: '',
           contractId: '',
           orderNo: '',
@@ -3985,7 +3305,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
         const item = createBlankOfflineWItem();
         upsertOfflineItem(item);
         openEditorForItem(item);
-        setEditorStatus('New offline Engineer Service Report draft started on this iPad. Fill it in and press Save Offline. Sync to Cloud Drafts when signal returns.');
+        setEditorStatus('New offline Engineer Service Report draft started on this iPad. Fill it in and press Save Offline. Sync to Drafts when signal returns.');
       };
 
       window.startNewOfflineSfaTrial = function startNewOfflineSfaTrial(event) {
@@ -4299,7 +3619,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
         try {
           const updated = saveEditorToQueue();
           if (!updated) {
-            setEditorStatus('Could not build the SFA payload because the local draft was not found. Go back to Offline Certs & Reports, reopen the SFA draft and try again.');
+            setEditorStatus('Could not build the SFA payload because the local draft was not found. Go back to Offline & Reports, reopen the SFA draft and try again.');
             return;
           }
           const report = getOfflineReportConfig(updated);
@@ -4365,7 +3685,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
           return;
         }
         offlineEditor.classList.remove('active');
-        setOfflineStatus('Saved offline changes. Syncing to Cloud Drafts...');
+        setOfflineStatus('Saved offline changes. Syncing to Drafts...');
         loadOfflineBridgeForShellAction('sync', updated);
       };
 
@@ -4461,7 +3781,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
           setOfflineStatus('Still offline. You can press Edit Offline and carry on working, or connect the iPad and press Sync again.');
           return;
         }
-        setOfflineStatus('Syncing offline ' + report.code + ' draft to Cloud Drafts. Keep this screen open...');
+        setOfflineStatus('Syncing offline ' + report.code + ' draft to Drafts. Keep this screen open...');
         loadOfflineBridgeForShellAction('sync', item);
       };
 
@@ -4548,7 +3868,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
 
 
 
-      window.openSchedule = function openSchedule(event) {
+      window.openPlanner = function openPlanner(event) {
         stopTap(event);
         goDirect(SCHEDULE_URL);
       };
@@ -4728,6 +4048,6 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
 
     }());
   </script>
-  <div class="fixed-version-badge">App Shell V6.3c78aj · Bold portrait icons</div>
+  <div class="fixed-version-badge">App Shell V6.3c78al · 3D inner bevel iPad</div>
 </body>
 </html>
