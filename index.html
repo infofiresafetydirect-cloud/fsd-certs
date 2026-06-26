@@ -969,590 +969,6 @@
     #shellEngineerStatus { display:flex; flex-direction:column; align-items:flex-end; line-height:1.08; }
     #shellEngineerStatus small { font-size:10px; font-weight:900; opacity:.82; max-width:145px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 
-
-    /* V6.3c78an - CLEAN reference-style 3D inner bevel iPad portrait */
-    html, body {
-      background: #e9f3fb !important;
-    }
-
-    .ipad-home {
-      display: flex !important;
-      align-items: stretch !important;
-      justify-content: center !important;
-      padding: calc(16px + var(--safe-top)) calc(18px + var(--safe-right)) calc(14px + var(--safe-bottom)) calc(18px + var(--safe-left)) !important;
-      color: #172233 !important;
-      background:
-        radial-gradient(circle at 8% 10%, rgba(0,122,255,.18), transparent 24%),
-        radial-gradient(circle at 92% 11%, rgba(52,199,89,.16), transparent 24%),
-        radial-gradient(circle at 88% 86%, rgba(255,204,0,.16), transparent 25%),
-        radial-gradient(circle at 16% 90%, rgba(255,45,85,.10), transparent 26%),
-        linear-gradient(180deg, #f9fcff 0%, #eef7ff 45%, #e0edf8 100%) !important;
-    }
-
-    .ipad-wallpaper {
-      background:
-        radial-gradient(circle at 18% 16%, rgba(255,255,255,.92), transparent 18%),
-        radial-gradient(circle at 72% 10%, rgba(255,255,255,.68), transparent 18%),
-        radial-gradient(circle at 48% 98%, rgba(255,255,255,.40), transparent 22%) !important;
-    }
-
-    .ipad-wallpaper::before,
-    .ipad-wallpaper::after {
-      opacity: .10 !important;
-    }
-
-    .ipad-statusbar {
-      position: relative !important;
-      z-index: 2 !important;
-      height: 30px !important;
-      width: min(980px, 100%) !important;
-      margin: 0 auto 10px !important;
-      padding: 0 4px !important;
-      border: 0 !important;
-      background: transparent !important;
-      box-shadow: none !important;
-      color: #0f172a !important;
-    }
-
-    .status-left,
-    .status-centre,
-    .status-right {
-      color: #0f172a !important;
-      font-size: 14px !important;
-      font-weight: 850 !important;
-      text-shadow: none !important;
-      background: transparent !important;
-      border: 0 !important;
-      box-shadow: none !important;
-    }
-
-    .ipad-home-grid {
-      position: relative !important;
-      z-index: 2 !important;
-      width: min(980px, 100%) !important;
-      height: 100% !important;
-      display: grid !important;
-      grid-template-rows: auto auto 1fr auto !important;
-      gap: 12px !important;
-      align-content: start !important;
-    }
-
-    .fsd-brand-head {
-      display: grid !important;
-      grid-template-columns: 96px auto !important;
-      justify-content: center !important;
-      align-items: center !important;
-      gap: 22px !important;
-      padding: 8px 0 6px !important;
-    }
-
-    .fsd-logo-mark {
-      width: 96px !important;
-      height: 96px !important;
-      border-radius: 26px !important;
-      display: flex !important;
-      align-items: center !important;
-      justify-content: center !important;
-      background: linear-gradient(145deg, rgba(255,255,255,.98), rgba(235,242,248,.82)) !important;
-      border: 1px solid rgba(255,255,255,.92) !important;
-      box-shadow:
-        0 18px 30px rgba(80,98,120,.18),
-        inset 0 1px 0 rgba(255,255,255,.96),
-        inset 0 -10px 20px rgba(20,40,65,.08) !important;
-    }
-
-    .fsd-logo-mark img {
-      width: 76px !important;
-      height: 76px !important;
-      object-fit: contain !important;
-      filter: drop-shadow(0 8px 12px rgba(227,6,19,.16));
-    }
-
-    .fsd-brand-copy {
-      text-align: left !important;
-      line-height: .94 !important;
-    }
-
-    .fsd-title-line {
-      font-size: clamp(38px, 5.4vw, 62px) !important;
-      font-weight: 950 !important;
-      letter-spacing: -.045em !important;
-      color: #2b3644 !important;
-      text-shadow: 0 2px 0 rgba(255,255,255,.72);
-    }
-
-    .fsd-title-red {
-      font-size: clamp(36px, 5vw, 58px) !important;
-      font-weight: 950 !important;
-      letter-spacing: -.045em !important;
-      color: #ee2d16 !important;
-      text-shadow: 0 2px 0 rgba(255,255,255,.64);
-      margin-top: 2px !important;
-    }
-
-    .fsd-title-small {
-      margin-top: 13px !important;
-      font-size: clamp(14px, 1.9vw, 20px) !important;
-      font-weight: 760 !important;
-      letter-spacing: .22em !important;
-      color: #637588 !important;
-    }
-
-    .engineer-status-clean {
-      width: min(760px, 100%) !important;
-      justify-self: center !important;
-      display: flex !important;
-      align-items: center !important;
-      justify-content: space-between !important;
-      gap: 12px !important;
-      min-height: 54px !important;
-      padding: 8px 12px !important;
-      border-radius: 24px !important;
-      background: rgba(255,255,255,.46) !important;
-      border: 1px solid rgba(255,255,255,.72) !important;
-      box-shadow:
-        0 12px 24px rgba(88,108,132,.10),
-        inset 0 1px 0 rgba(255,255,255,.82) !important;
-      backdrop-filter: blur(18px) saturate(1.05) !important;
-      -webkit-backdrop-filter: blur(18px) saturate(1.05) !important;
-    }
-
-    .status-pill {
-      display: flex !important;
-      align-items: center !important;
-      gap: 10px !important;
-      flex-wrap: wrap !important;
-      color: #263446 !important;
-    }
-
-    .status-pill strong {
-      font-size: 16px !important;
-      font-weight: 900 !important;
-    }
-
-    .status-pill span {
-      color: #16a34a !important;
-      font-size: 13px !important;
-      font-weight: 900 !important;
-    }
-
-    .status-pill em {
-      color: #64748b !important;
-      font-size: 13px !important;
-      font-style: normal !important;
-      font-weight: 780 !important;
-    }
-
-    .ops-avatar {
-      width: 42px !important;
-      height: 42px !important;
-      border-radius: 16px !important;
-      display: flex !important;
-      align-items: center !important;
-      justify-content: center !important;
-      background:
-        radial-gradient(circle at 30% 24%, #fff, #e0f2fe 44%, #3b82f6 100%) !important;
-      box-shadow: 0 8px 16px rgba(15,23,42,.12), inset 0 1px 0 rgba(255,255,255,.95) !important;
-      color: #0f172a !important;
-      font-weight: 950 !important;
-    }
-
-    .card-grid {
-      width: 100% !important;
-      max-width: 980px !important;
-      justify-self: center !important;
-      align-self: center !important;
-      display: grid !important;
-      grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
-      gap: 14px !important;
-      padding: 4px 0 8px !important;
-      align-content: center !important;
-    }
-
-    .launch-card {
-      min-height: 222px !important;
-      padding: 12px 8px 10px !important;
-      border-radius: 30px !important;
-      border: 1px solid rgba(255,255,255,.76) !important;
-      background:
-        linear-gradient(180deg, rgba(255,255,255,.62), rgba(255,255,255,.36)) !important;
-      display: grid !important;
-      grid-template-rows: auto auto !important;
-      align-content: start !important;
-      justify-items: center !important;
-      gap: 10px !important;
-      text-align: center !important;
-      box-shadow:
-        0 14px 26px rgba(88,108,132,.12),
-        inset 0 1px 0 rgba(255,255,255,.88) !important;
-      backdrop-filter: blur(18px) saturate(1.08) !important;
-      -webkit-backdrop-filter: blur(18px) saturate(1.08) !important;
-    }
-
-    .launch-card:hover {
-      transform: translateY(-3px) scale(1.012) !important;
-      box-shadow:
-        0 18px 34px rgba(88,108,132,.16),
-        inset 0 1px 0 rgba(255,255,255,.92) !important;
-    }
-
-    .launch-card:active {
-      transform: scale(.97) !important;
-    }
-
-    .launch-card::before,
-    .launch-card::after,
-    .card-chip,
-    .card-note {
-      display: none !important;
-    }
-
-    .card-art {
-      width: clamp(118px, 13.4vw, 150px) !important;
-      height: clamp(118px, 13.4vw, 150px) !important;
-      margin: 0 auto 2px !important;
-      padding: 0 !important;
-      border-radius: clamp(28px, 3vw, 36px) !important;
-      position: relative !important;
-      overflow: hidden !important;
-      display: flex !important;
-      align-items: center !important;
-      justify-content: center !important;
-      border: 2px solid rgba(255,255,255,.96) !important;
-      box-shadow:
-        0 16px 30px rgba(80,100,125,.20),
-        0 0 0 5px rgba(255,255,255,.40),
-        inset 0 1px 0 rgba(255,255,255,.95),
-        inset 0 -18px 28px rgba(20,40,65,.16),
-        inset 10px 12px 22px rgba(255,255,255,.16),
-        inset -10px -12px 22px rgba(16,40,70,.15) !important;
-      isolation: isolate !important;
-    }
-
-    .card-art::before {
-      content: "" !important;
-      position: absolute !important;
-      inset: 0 !important;
-      border-radius: inherit !important;
-      background:
-        linear-gradient(145deg, rgba(255,255,255,.76) 0%, rgba(255,255,255,.20) 28%, rgba(255,255,255,0) 52%),
-        linear-gradient(315deg, rgba(0,0,0,.18) 0%, rgba(0,0,0,0) 42%),
-        radial-gradient(circle at 26% 18%, rgba(255,255,255,.78) 0%, rgba(255,255,255,0) 29%),
-        radial-gradient(circle at 52% 54%, rgba(255,255,255,.16), transparent 62%) !important;
-      pointer-events: none !important;
-      z-index: 1 !important;
-      box-shadow: none !important;
-    }
-
-    .card-art::after {
-      content: "" !important;
-      position: absolute !important;
-      inset: 9px !important;
-      border-radius: calc(clamp(28px, 3vw, 36px) - 6px) !important;
-      border-top: 2px solid rgba(255,255,255,.54) !important;
-      border-left: 2px solid rgba(255,255,255,.30) !important;
-      border-right: 2px solid rgba(0,0,0,.07) !important;
-      border-bottom: 2px solid rgba(0,0,0,.14) !important;
-      z-index: 2 !important;
-      pointer-events: none !important;
-    }
-
-    .emboss-icon {
-      width: clamp(72px, 8vw, 96px) !important;
-      height: clamp(72px, 8vw, 96px) !important;
-      position: relative !important;
-      z-index: 3 !important;
-      fill: none !important;
-      stroke: #fafdff !important;
-      stroke-width: 5.5 !important;
-      stroke-linecap: round !important;
-      stroke-linejoin: round !important;
-      filter: url(#fsdInnerBevelIcon) !important;
-      transform: translateY(-1px);
-    }
-
-    .card-copy {
-      display: grid !important;
-      justify-items: center !important;
-      gap: 3px !important;
-      padding: 0 !important;
-    }
-
-    .card-copy strong {
-      font-size: clamp(18px, 2vw, 23px) !important;
-      line-height: 1 !important;
-      color: #182434 !important;
-      font-weight: 900 !important;
-      letter-spacing: -.035em !important;
-      max-width: 160px !important;
-      text-shadow: 0 1px 0 rgba(255,255,255,.85) !important;
-    }
-
-    .card-copy small {
-      display: block !important;
-      font-size: clamp(12px, 1.15vw, 14px) !important;
-      line-height: 1.1 !important;
-      color: #64748b !important;
-      font-weight: 800 !important;
-      max-width: 140px !important;
-    }
-
-    .launch-card.certs .card-art {
-      background:
-        radial-gradient(circle at 26% 18%, rgba(150,231,255,.98) 0%, rgba(45,212,255,.58) 24%, transparent 44%),
-        radial-gradient(circle at 74% 82%, rgba(180,210,255,.36), transparent 36%),
-        linear-gradient(145deg, #21b6ff 0%, #0b8dff 44%, #0060f0 100%) !important;
-      box-shadow:
-        0 0 34px rgba(0,150,255,.38),
-        0 16px 30px rgba(80,100,125,.20),
-        0 0 0 5px rgba(255,255,255,.40),
-        inset 0 1px 0 rgba(255,255,255,.95),
-        inset 0 -18px 28px rgba(20,40,65,.16),
-        inset 10px 12px 22px rgba(255,255,255,.16),
-        inset -10px -12px 22px rgba(16,40,70,.15) !important;
-    }
-
-    .launch-card.cloud .card-art {
-      background:
-        radial-gradient(circle at 26% 18%, rgba(190,255,245,.98) 0%, rgba(35,224,210,.58) 24%, transparent 44%),
-        radial-gradient(circle at 74% 82%, rgba(120,240,220,.32), transparent 36%),
-        linear-gradient(145deg, #16dccb 0%, #08bfae 44%, #088f85 100%) !important;
-      box-shadow:
-        0 0 34px rgba(20,184,166,.38),
-        0 16px 30px rgba(80,100,125,.20),
-        0 0 0 5px rgba(255,255,255,.40),
-        inset 0 1px 0 rgba(255,255,255,.95),
-        inset 0 -18px 28px rgba(20,40,65,.16),
-        inset 10px 12px 22px rgba(255,255,255,.16),
-        inset -10px -12px 22px rgba(16,40,70,.15) !important;
-    }
-
-    .launch-card.offline .card-art {
-      background:
-        radial-gradient(circle at 26% 18%, rgba(210,255,110,.98) 0%, rgba(111,240,90,.64) 24%, transparent 44%),
-        radial-gradient(circle at 74% 82%, rgba(20,220,180,.36), transparent 36%),
-        linear-gradient(145deg, #6df735 0%, #22ce44 44%, #12a450 100%) !important;
-      box-shadow:
-        0 0 34px rgba(52,199,89,.38),
-        0 16px 30px rgba(80,100,125,.20),
-        0 0 0 5px rgba(255,255,255,.40),
-        inset 0 1px 0 rgba(255,255,255,.95),
-        inset 0 -18px 28px rgba(20,40,65,.16),
-        inset 10px 12px 22px rgba(255,255,255,.16),
-        inset -10px -12px 22px rgba(16,40,70,.15) !important;
-    }
-
-    .launch-card.schedule .card-art {
-      background:
-        radial-gradient(circle at 26% 18%, rgba(255,246,170,.98) 0%, rgba(255,214,65,.72) 24%, transparent 44%),
-        radial-gradient(circle at 74% 82%, rgba(255,80,120,.30), transparent 36%),
-        linear-gradient(145deg, #ffe34a 0%, #ffb51f 44%, #ff8a14 100%) !important;
-      box-shadow:
-        0 0 34px rgba(255,204,0,.38),
-        0 16px 30px rgba(80,100,125,.20),
-        0 0 0 5px rgba(255,255,255,.40),
-        inset 0 1px 0 rgba(255,255,255,.95),
-        inset 0 -18px 28px rgba(20,40,65,.16),
-        inset 10px 12px 22px rgba(255,255,255,.16),
-        inset -10px -12px 22px rgba(16,40,70,.15) !important;
-    }
-
-    .launch-card.profile .card-art {
-      background:
-        radial-gradient(circle at 26% 18%, rgba(238,210,255,.98) 0%, rgba(196,130,255,.62) 24%, transparent 44%),
-        radial-gradient(circle at 74% 82%, rgba(255,80,190,.34), transparent 36%),
-        linear-gradient(145deg, #bb78ff 0%, #8d4dff 46%, #6f35df 100%) !important;
-      box-shadow:
-        0 0 34px rgba(175,82,222,.38),
-        0 16px 30px rgba(80,100,125,.20),
-        0 0 0 5px rgba(255,255,255,.40),
-        inset 0 1px 0 rgba(255,255,255,.95),
-        inset 0 -18px 28px rgba(20,40,65,.16),
-        inset 10px 12px 22px rgba(255,255,255,.16),
-        inset -10px -12px 22px rgba(16,40,70,.15) !important;
-    }
-
-    .launch-card.quote .card-art {
-      background:
-        radial-gradient(circle at 26% 18%, rgba(255,218,120,.98) 0%, rgba(255,107,128,.66) 25%, transparent 44%),
-        radial-gradient(circle at 74% 82%, rgba(255,90,140,.36), transparent 36%),
-        linear-gradient(145deg, #ff796f 0%, #ff3d66 44%, #e31a4c 100%) !important;
-      box-shadow:
-        0 0 34px rgba(255,45,85,.38),
-        0 16px 30px rgba(80,100,125,.20),
-        0 0 0 5px rgba(255,255,255,.40),
-        inset 0 1px 0 rgba(255,255,255,.95),
-        inset 0 -18px 28px rgba(20,40,65,.16),
-        inset 10px 12px 22px rgba(255,255,255,.16),
-        inset -10px -12px 22px rgba(16,40,70,.15) !important;
-    }
-
-    .launch-card.callouts .card-art {
-      background:
-        radial-gradient(circle at 26% 18%, rgba(205,255,252,.98) 0%, rgba(48,225,242,.64) 24%, transparent 44%),
-        radial-gradient(circle at 74% 82%, rgba(55,120,255,.34), transparent 36%),
-        linear-gradient(145deg, #22e4ff 0%, #08bfd8 44%, #0a82be 100%) !important;
-      box-shadow:
-        0 0 34px rgba(48,209,255,.38),
-        0 16px 30px rgba(80,100,125,.20),
-        0 0 0 5px rgba(255,255,255,.40),
-        inset 0 1px 0 rgba(255,255,255,.95),
-        inset 0 -18px 28px rgba(20,40,65,.16),
-        inset 10px 12px 22px rgba(255,255,255,.16),
-        inset -10px -12px 22px rgba(16,40,70,.15) !important;
-    }
-
-    .launch-card.submitted .card-art {
-      background:
-        radial-gradient(circle at 26% 18%, rgba(190,255,130,.98) 0%, rgba(150,225,10,.62) 24%, transparent 44%),
-        radial-gradient(circle at 74% 82%, rgba(255,220,20,.28), transparent 36%),
-        linear-gradient(145deg, #baff08 0%, #8edb00 44%, #6fb800 100%) !important;
-      box-shadow:
-        0 0 34px rgba(132,204,22,.38),
-        0 16px 30px rgba(80,100,125,.20),
-        0 0 0 5px rgba(255,255,255,.40),
-        inset 0 1px 0 rgba(255,255,255,.95),
-        inset 0 -18px 28px rgba(20,40,65,.16),
-        inset 10px 12px 22px rgba(255,255,255,.16),
-        inset -10px -12px 22px rgba(16,40,70,.15) !important;
-    }
-
-    .home-meta {
-      width: min(980px, 100%) !important;
-      justify-self: center !important;
-      min-height: 56px !important;
-      padding: 8px 14px calc(8px + var(--safe-bottom)) !important;
-      border-radius: 24px !important;
-      background: rgba(255,255,255,.48) !important;
-      border: 1px solid rgba(255,255,255,.72) !important;
-      display: grid !important;
-      grid-template-columns: 1fr auto auto !important;
-      align-items: center !important;
-      gap: 12px !important;
-      box-shadow:
-        0 12px 24px rgba(88,108,132,.10),
-        inset 0 1px 0 rgba(255,255,255,.82) !important;
-    }
-
-    .home-credit {
-      color: #253241 !important;
-      font-weight: 850 !important;
-      letter-spacing: 0 !important;
-      text-shadow: none !important;
-    }
-
-    .home-version {
-      background: transparent !important;
-      border: 0 !important;
-      color: #64748b !important;
-      box-shadow: none !important;
-      font-weight: 800 !important;
-      white-space: nowrap !important;
-    }
-
-    .sync-pill {
-      border: 1px solid rgba(255,255,255,.82);
-      border-radius: 999px;
-      min-height: 42px;
-      padding: 0 18px;
-      background: linear-gradient(180deg, rgba(255,255,255,.86), rgba(255,255,255,.52));
-      color: #0284c7;
-      font: inherit;
-      font-weight: 900;
-      box-shadow:
-        0 10px 20px rgba(80,100,125,.12),
-        inset 0 1px 0 rgba(255,255,255,.92);
-    }
-
-    .sync-pill:active {
-      transform: scale(.97);
-    }
-
-    .fixed-version-badge {
-      background: rgba(255,255,255,.68) !important;
-      color: #64748b !important;
-      border: 1px solid rgba(255,255,255,.72) !important;
-      box-shadow: inset 0 1px 0 rgba(255,255,255,.80) !important;
-    }
-
-    @media (orientation: portrait) and (max-width: 900px) {
-      .ipad-home-grid {
-        width: min(820px, 100%) !important;
-        gap: 10px !important;
-      }
-
-      .fsd-brand-head {
-        grid-template-columns: 82px auto !important;
-        gap: 16px !important;
-      }
-
-      .fsd-logo-mark {
-        width: 82px !important;
-        height: 82px !important;
-      }
-
-      .fsd-logo-mark img {
-        width: 66px !important;
-        height: 66px !important;
-      }
-
-      .card-grid {
-        grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
-        gap: 10px !important;
-      }
-
-      .launch-card {
-        min-height: 192px !important;
-        padding: 10px 6px 8px !important;
-        border-radius: 24px !important;
-      }
-
-      .card-art {
-        width: clamp(112px, 17.8vw, 138px) !important;
-        height: clamp(112px, 17.8vw, 138px) !important;
-      }
-
-      .emboss-icon {
-        width: clamp(68px, 10.6vw, 86px) !important;
-        height: clamp(68px, 10.6vw, 86px) !important;
-      }
-
-      .card-copy strong {
-        font-size: clamp(16px, 2.4vw, 20px) !important;
-      }
-
-      .card-copy small {
-        font-size: clamp(11px, 1.6vw, 13px) !important;
-      }
-    }
-
-    @media (orientation: portrait) and (max-width: 680px) {
-      .engineer-status-clean {
-        display: none !important;
-      }
-
-      .ipad-home-grid {
-        grid-template-rows: auto 1fr auto !important;
-      }
-
-      .card-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-        gap: 12px !important;
-      }
-
-      .launch-card {
-        min-height: 172px !important;
-      }
-
-      .home-meta {
-        grid-template-columns: 1fr auto !important;
-      }
-
-      .home-version {
-        display: none !important;
-      }
-    }
-
   </style>
 
 <script id="fsd-callout-config-v6-3c78d">
@@ -1563,103 +979,111 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
 
 </head>
 <body>
-
-  <svg width="0" height="0" style="position:absolute;left:-9999px;top:-9999px" aria-hidden="true" focusable="false">
-    <filter id="fsdInnerBevelIcon" x="-55%" y="-55%" width="210%" height="210%" color-interpolation-filters="sRGB">
-      <feDropShadow dx="-1.6" dy="-1.6" stdDeviation="0.45" flood-color="#ffffff" flood-opacity="1"/>
-      <feDropShadow dx="2.2" dy="2.8" stdDeviation="0.9" flood-color="#0f2a44" flood-opacity=".42"/>
-      <feDropShadow dx="0" dy="0" stdDeviation="2.8" flood-color="#ffffff" flood-opacity=".34"/>
-      <feDropShadow dx="0" dy="10" stdDeviation="4.2" flood-color="#000000" flood-opacity=".20"/>
-    </filter>
-  </svg>
-
   <!--
-    Fire Safety Direct - FSD Certs V6.3c78an Clean 3D Inner Bevel iPad Portrait
-    Clean reference-style 3D inner-bevel iPad portrait launcher.
+    Fire Safety Direct - FSD Certs V6.3c78ab Large-card Premium iPad Command Centre - Engineer profile hard-link, pack button removed
+    Large-card premium iPad command centre with glossy cards and engineer status strip.
     App shell mark: Jared720 Labs
   -->
-
 
   <section id="home" class="screen home ipad-home" aria-label="FSD Certs Home Screen">
     <div class="ipad-wallpaper" aria-hidden="true"></div>
 
     <header class="ipad-statusbar">
-      <div class="status-left">9:41 AM</div>
+      <div class="status-left">← FSD Certs</div>
       <div class="status-centre">Fire Safety Direct</div>
       <div class="status-right" id="shellEngineerStatus"><div>●</div><small id="shellEngineerName">Ready</small></div>
     </header>
 
     <main class="ipad-home-grid" aria-label="FSD Certs apps">
-      <section class="fsd-brand-head">
-        <div class="fsd-logo-mark">
-          <img src="fsd-certs-logo.png" alt="FSD Certs logo" width="88" height="88" decoding="async">
-        </div>
-        <div class="fsd-brand-copy">
-          <div class="fsd-title-line">FIRE SAFETY</div>
-          <div class="fsd-title-red">DIRECT</div>
-          <div class="fsd-title-small">CERTIFICATES APP</div>
-        </div>
+      <section class="hero-panel">
+        <div class="hero-kicker">Fire Safety Direct</div>
+        <h1>FSD Certs</h1>
+        <p>Certificates, engineer reports, quotes and scheduling — built for site work on iPad.</p>
       </section>
 
-      <section class="engineer-status-clean" aria-label="Engineer status">
-        <div class="status-pill">
-          <strong id="commandEngineerName">No engineer</strong>
-          <span id="commandEngineerState">● Online</span>
-          <em id="commandEngineerLevel">Ready on this iPad</em>
+      <section class="ops-strip" aria-label="Command centre status strip">
+        <div class="ops-mini-brand">
+          <img src="fsd-certs-logo.png" alt="FSD Certs logo" width="42" height="42" decoding="async">
+          <span>FSD<br>Certs</span>
         </div>
-        <div class="ops-avatar" id="commandEngineerAvatar">FS</div>
+        <div class="ops-ready-card">
+          <span>Command centre</span>
+          <strong>Ready for work</strong>
+        </div>
+        <div class="ops-engineer">
+          <div class="ops-engineer-copy">
+            <strong id="commandEngineerName">No engineer</strong>
+            <small id="commandEngineerState">● Online</small>
+            <em id="commandEngineerLevel">★ Ready on this iPad</em>
+          </div>
+          <div class="ops-avatar" id="commandEngineerAvatar">FS</div>
+        </div>
       </section>
 
       <section class="card-grid" aria-label="Main apps">
         <button class="launch-card certs" type="button" onclick="openCerts(event)" aria-label="Open Certificate Portal">
-          <div class="card-art"><svg class="emboss-icon" viewBox="0 0 96 96" aria-hidden="true"><path d="M29 15h26l19 19v47H29a8 8 0 0 1-8-8V23a8 8 0 0 1 8-8Z"/><path d="M55 15v20h19"/><path d="M33 49h30"/><path d="M33 60h28"/><path d="M33 71h20"/></svg></div>
-          <div class="card-copy"><strong>Portal</strong><small>v1.11.0</small></div>
-        </button>
-
-        <button class="launch-card cloud" type="button" onclick="openCerts(event)" aria-label="Open Certs">
-          <div class="card-art"><svg class="emboss-icon" viewBox="0 0 96 96" aria-hidden="true"><path d="M48 12l10 20 22 3-16 15 4 22-20-11-20 11 4-22-16-15 22-3Z"/><circle cx="48" cy="48" r="18"/><path d="M36 70l-8 16"/><path d="M60 70l8 16"/></svg></div>
-          <div class="card-copy"><strong>Certs</strong><small>v1.13.0</small></div>
+          <span class="card-chip">📄</span>
+          <span class="card-note">Portal</span>
+          <div class="card-art"><span>📘</span></div>
+          <div class="card-copy"><strong>Certificate Portal</strong><small>Safety &amp; compliance certificates, reports and forms.</small></div>
         </button>
 
         <button class="launch-card offline" type="button" onclick="openOfflineDrafts(event)" aria-label="Open Offline Certs and Reports">
-          <div class="card-art"><svg class="emboss-icon" viewBox="0 0 96 96" aria-hidden="true"><path d="M31 22h34a8 8 0 0 1 8 8v48a8 8 0 0 1-8 8H31a8 8 0 0 1-8-8V30a8 8 0 0 1 8-8Z"/><path d="M38 42l6 6 13-14"/><path d="M38 57l6 6 13-14"/><path d="M38 72h4"/><path d="M54 72h14"/></svg></div>
-          <div class="card-copy"><strong>Offline</strong><small>v1.10.2</small></div>
+          <span class="card-chip">▣</span>
+          <span class="card-note">Offline</span>
+          <div class="card-art"><span>🗂️</span></div>
+          <div class="card-copy"><strong>Offline Certs</strong><small>Create and access certificates &amp; reports without signal.</small></div>
         </button>
 
-        <button class="launch-card schedule" type="button" onclick="openSchedule(event)" aria-label="Open Planner">
-          <div class="card-art"><svg class="emboss-icon" viewBox="0 0 96 96" aria-hidden="true"><rect x="17" y="22" width="62" height="58" rx="10"/><path d="M32 12v18"/><path d="M64 12v18"/><path d="M17 39h62"/><path d="M34 55h8"/><path d="M54 55h8"/><path d="M34 67h8"/><path d="M56 73l8 8 17-20"/></svg></div>
-          <div class="card-copy"><strong>Planner</strong><small>v1.8.0</small></div>
+        <button class="launch-card callouts" type="button" onclick="openCallouts(event)" aria-label="Open Callouts">
+          <span class="card-chip">⚡</span>
+          <span class="card-note">Live jobs</span>
+          <div class="card-art"><span>🚨</span></div>
+          <div class="card-copy"><strong>Callouts</strong><small>Active emergency jobs and urgent response work.</small></div>
+        </button>
+
+        <button class="launch-card quote" type="button" onclick="openQuickQuote(event)" aria-label="Open Quick Quote">
+          <span class="card-chip">£</span>
+          <span class="card-note">QQ</span>
+          <div class="card-art"><span>💷</span></div>
+          <div class="card-copy"><strong>Quick Quote</strong><small>Fast quotes and pricing while you are on site.</small></div>
+        </button>
+
+        <button class="launch-card cloud" type="button" onclick="openCloudDrafts(event)" aria-label="Open Cloud Drafts">
+          <span class="card-chip">☁</span>
+          <span class="card-note">Sync</span>
+          <div class="card-art"><span>☁️</span></div>
+          <div class="card-copy"><strong>Cloud Drafts</strong><small>Save and sync work-in-progress across the FSD cloud.</small></div>
         </button>
 
         <button class="launch-card profile" type="button" onclick="openEngineerProfile(event)" aria-label="Open Engineer Profile">
-          <div class="card-art"><svg class="emboss-icon" viewBox="0 0 96 96" aria-hidden="true"><path d="M48 9l29 13v22c0 20-12 34-29 43-17-9-29-23-29-43V22Z"/><circle cx="48" cy="40" r="10"/><path d="M30 67c5-12 31-12 36 0"/></svg></div>
-          <div class="card-copy"><strong>Engineer</strong><small>v1.9.1</small></div>
+          <span class="card-chip">👤</span>
+          <span class="card-note">Engineer</span>
+          <div class="card-art"><span>👷</span></div>
+          <div class="card-copy"><strong>Engineer Profile</strong><small>Set the default engineer profile for this iPad.</small></div>
         </button>
 
-        <button class="launch-card quote" type="button" onclick="openQuickQuote(event)" aria-label="Open Quotes">
-          <div class="card-art"><svg class="emboss-icon" viewBox="0 0 96 96" aria-hidden="true"><path d="M29 14h28l17 17v48H29a8 8 0 0 1-8-8V22a8 8 0 0 1 8-8Z"/><path d="M57 14v18h17"/><path d="M36 42h24"/><path d="M36 56h24"/><path d="M36 70h17"/><path d="M39 35c9-8 25 1 15 12-5 5-12 4-16 10"/></svg></div>
-          <div class="card-copy"><strong>Quotes</strong><small>v1.12.0</small></div>
+        <button class="launch-card schedule" type="button" onclick="openSchedule(event)" aria-label="Open FSD Schedule">
+          <span class="card-chip">📅</span>
+          <span class="card-note">Today</span>
+          <div class="card-art"><span>🗓️</span></div>
+          <div class="card-copy"><strong>Schedule</strong><small>Daily jobs, appointments and engineer planning.</small></div>
         </button>
 
-        <button class="launch-card callouts" type="button" onclick="openCallouts(event)" aria-label="Open Service">
-          <div class="card-art"><svg class="emboss-icon" viewBox="0 0 96 96" aria-hidden="true"><path d="M33 17l17 17"/><path d="M24 26l19 19"/><path d="M18 39l39 39a9 9 0 0 0 13-13L31 26Z"/><path d="M68 18l10 10-21 21"/><path d="M78 18L68 28"/></svg></div>
-          <div class="card-copy"><strong>Service</strong><small>v1.14.0</small></div>
-        </button>
-
-        <button class="launch-card submitted" type="button" onclick="openCerts(event)" aria-label="Open Reports">
-          <div class="card-art"><svg class="emboss-icon" viewBox="0 0 96 96" aria-hidden="true"><path d="M27 14h34l14 14v54H27a8 8 0 0 1-8-8V22a8 8 0 0 1 8-8Z"/><path d="M61 14v15h14"/><path d="M34 68V50"/><path d="M48 68V38"/><path d="M62 68V56"/><path d="M30 72h38"/></svg></div>
-          <div class="card-copy"><strong>Reports</strong><small>v1.7.2</small></div>
+        <button class="launch-card submitted" type="button" onclick="openCerts(event)" aria-label="Open Submitted Reports via Certificate Portal">
+          <span class="card-chip">📂</span>
+          <span class="card-note">History</span>
+          <div class="card-art"><span>🗃️</span></div>
+          <div class="card-copy"><strong>Submitted Reports</strong><small>Open completed paperwork and previously submitted work.</small></div>
         </button>
       </section>
 
-      <footer class="home-meta">
-        <span class="home-credit">🛡️ Your fire safety. Our priority.</span>
-        <button class="sync-pill" type="button" onclick="openCloudDrafts(event)">☁ Sync All</button>
-        <span class="home-version">App Shell V6.3c78an · Clean 3D inner bevel</span>
-      </footer>
+      <div class="home-meta">
+        <span class="home-credit">JARED720 LABS</span>
+        <span class="home-version">App Shell V6.3c78ab · Engineer profile hard-link · pack button removed</span>
+      </div>
     </main>
   </section>
-
 
   <section id="offlineDrafts" class="screen offline-screen" aria-label="Offline Drafts">
     <main class="offline-card">
@@ -4048,6 +3472,6 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
 
     }());
   </script>
-  <div class="fixed-version-badge">App Shell V6.3c78an · Engineer profile hard-link · pack button removed</div>
+  <div class="fixed-version-badge">App Shell V6.3c78ab · Engineer profile hard-link · pack button removed</div>
 </body>
 </html>
