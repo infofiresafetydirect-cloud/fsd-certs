@@ -969,6 +969,1262 @@
     #shellEngineerStatus { display:flex; flex-direction:column; align-items:flex-end; line-height:1.08; }
     #shellEngineerStatus small { font-size:10px; font-weight:900; opacity:.82; max-width:145px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 
+
+    /* V6.3c78ae - Bright Pro iPad Launcher */
+    :root {
+      --fsd-red: #e30613;
+      --fsd-red-2: #ff385c;
+      --fsd-red-dark: #9f1239;
+      --fsd-blue: #2563eb;
+      --fsd-sky: #0ea5e9;
+      --fsd-ink: #111827;
+      --fsd-muted: #64748b;
+      --fsd-panel: rgba(255,255,255,.82);
+      --fsd-card: rgba(255,255,255,.76);
+      --fsd-line: rgba(148,163,184,.30);
+    }
+
+    .ipad-home {
+      color: var(--fsd-ink);
+      background:
+        radial-gradient(circle at 12% 6%, rgba(255,56,92,.24), transparent 26%),
+        radial-gradient(circle at 91% 12%, rgba(14,165,233,.22), transparent 28%),
+        radial-gradient(circle at 44% 102%, rgba(255,56,92,.12), transparent 28%),
+        linear-gradient(135deg, #fff 0%, #f7fbff 42%, #fff4f5 100%);
+      padding-top: calc(12px + var(--safe-top));
+    }
+
+    .ipad-wallpaper {
+      background:
+        linear-gradient(120deg, rgba(255,255,255,.82), rgba(255,255,255,.36)),
+        radial-gradient(circle at 10% 10%, rgba(227,6,19,.20), transparent 26%),
+        radial-gradient(circle at 88% 4%, rgba(37,99,235,.18), transparent 30%),
+        radial-gradient(circle at 78% 94%, rgba(14,165,233,.13), transparent 32%),
+        linear-gradient(145deg, #ffffff 0%, #f1f7ff 52%, #fff2f4 100%);
+    }
+
+    .ipad-wallpaper::before {
+      background-image:
+        linear-gradient(rgba(15,23,42,.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(15,23,42,.028) 1px, transparent 1px);
+      background-size: 52px 52px;
+      opacity: .40;
+      mask-image: radial-gradient(circle at 50% 46%, black 0%, transparent 80%);
+    }
+
+    .ipad-wallpaper::after {
+      background:
+        radial-gradient(ellipse at top, rgba(255,255,255,.96), transparent 42%),
+        linear-gradient(180deg, rgba(255,255,255,.18) 0%, rgba(248,250,252,.18) 52%, rgba(226,232,240,.30) 100%);
+    }
+
+    .ipad-statusbar {
+      height: 36px;
+      max-width: min(1220px, 100%);
+      margin: 0 auto 14px;
+      padding: 0 15px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.78);
+      border: 1px solid rgba(148,163,184,.28);
+      color: #334155;
+      box-shadow: 0 14px 34px rgba(15,23,42,.08), inset 0 1px 0 rgba(255,255,255,.95);
+      backdrop-filter: blur(22px) saturate(180%);
+      -webkit-backdrop-filter: blur(22px) saturate(180%);
+    }
+
+    .status-left,
+    .status-centre,
+    .status-right {
+      color: #334155;
+      text-shadow: none;
+    }
+
+    .status-centre {
+      padding: 7px 18px;
+      border-radius: 999px;
+      background: rgba(248,250,252,.88);
+      border: 1px solid rgba(148,163,184,.22);
+      color: #0f172a;
+      font-weight: 900;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.95);
+    }
+
+    .ipad-home-grid {
+      width: min(1220px, 100%);
+      gap: 16px;
+      min-height: calc(100dvh - 64px - var(--safe-top) - var(--safe-bottom));
+    }
+
+    .hero-panel {
+      padding: 20px 22px 16px;
+      border-radius: 38px;
+      background:
+        linear-gradient(135deg, rgba(255,255,255,.94), rgba(255,255,255,.68));
+      border: 1px solid rgba(148,163,184,.24);
+      box-shadow: 0 24px 70px rgba(15,23,42,.11), inset 0 1px 0 rgba(255,255,255,.98);
+      backdrop-filter: blur(28px) saturate(180%);
+      -webkit-backdrop-filter: blur(28px) saturate(180%);
+      overflow: hidden;
+    }
+
+    .hero-panel::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(112deg, rgba(255,255,255,.90) 0%, transparent 34%),
+        radial-gradient(circle at 88% 10%, rgba(227,6,19,.20), transparent 28%),
+        radial-gradient(circle at 12% 96%, rgba(37,99,235,.13), transparent 30%);
+      pointer-events: none;
+    }
+
+    .hero-kicker {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 13px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, rgba(255,255,255,.94), rgba(248,250,252,.78));
+      border: 1px solid rgba(148,163,184,.22);
+      color: #475569;
+      box-shadow: 0 10px 20px rgba(15,23,42,.06), inset 0 1px 0 rgba(255,255,255,.95);
+    }
+
+    .hero-kicker::before {
+      content: "●";
+      color: #22c55e;
+      text-shadow: 0 0 16px rgba(34,197,94,.80);
+    }
+
+    .hero-panel h1 {
+      position: relative;
+      margin-top: 10px;
+      letter-spacing: -.080em;
+      line-height: .92;
+      color: #0f172a;
+      text-shadow: 0 2px 0 rgba(255,255,255,.78);
+    }
+
+    .hero-panel h1::after {
+      content: "";
+      display: block;
+      width: 170px;
+      height: 8px;
+      margin-top: 12px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--fsd-red), var(--fsd-red-2), var(--fsd-blue));
+      box-shadow: 0 12px 24px rgba(227,6,19,.18);
+    }
+
+    .hero-panel p {
+      position: relative;
+      max-width: 940px;
+      color: #475569;
+      font-weight: 760;
+      font-size: clamp(15px, 1.55vw, 19px);
+    }
+
+    .ops-strip {
+      border-radius: 36px;
+      background:
+        linear-gradient(135deg, rgba(255,255,255,.90), rgba(255,255,255,.62));
+      border: 1px solid rgba(148,163,184,.24);
+      box-shadow: 0 24px 62px rgba(15,23,42,.10), inset 0 1px 0 rgba(255,255,255,.98);
+      backdrop-filter: blur(28px) saturate(180%);
+      -webkit-backdrop-filter: blur(28px) saturate(180%);
+      color: #0f172a;
+    }
+
+    .ops-mini-brand,
+    .ops-ready-card,
+    .ops-engineer {
+      background: linear-gradient(135deg, rgba(255,255,255,.86), rgba(248,250,252,.64));
+      border: 1px solid rgba(148,163,184,.22);
+      box-shadow: 0 12px 30px rgba(15,23,42,.07), inset 0 1px 0 rgba(255,255,255,.98);
+      color: #0f172a;
+    }
+
+    .ops-mini-brand img {
+      background: white;
+      box-shadow: 0 10px 22px rgba(15,23,42,.10);
+    }
+
+    .ops-ready-card strong {
+      color: #0f172a;
+    }
+
+    .ops-ready-card small,
+    .ops-engineer-copy span {
+      color: #64748b;
+    }
+
+    .ops-engineer-copy small {
+      color: #16a34a;
+      font-weight: 950;
+      letter-spacing: .06em;
+      text-shadow: 0 0 12px rgba(34,197,94,.20);
+    }
+
+    .ops-avatar {
+      background:
+        radial-gradient(circle at 30% 24%, #ffffff, #e0f2fe 44%, #3b82f6 100%);
+      color: #0f172a;
+      box-shadow: 0 12px 26px rgba(15,23,42,.14), 0 0 0 5px rgba(255,255,255,.70), inset 0 1px 0 rgba(255,255,255,.95);
+    }
+
+    .card-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 16px;
+      padding: 3px;
+    }
+
+    .launch-card {
+      min-height: 184px;
+      border-radius: 38px;
+      border: 1px solid rgba(148,163,184,.23);
+      padding: 17px;
+      background: linear-gradient(145deg, rgba(255,255,255,.92), rgba(255,255,255,.62));
+      box-shadow: 0 24px 56px rgba(15,23,42,.12), inset 0 1px 0 rgba(255,255,255,.98);
+      backdrop-filter: blur(30px) saturate(185%);
+      -webkit-backdrop-filter: blur(30px) saturate(185%);
+      color: #0f172a;
+      isolation: isolate;
+    }
+
+    .launch-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 32px 72px rgba(15,23,42,.16), inset 0 1px 0 rgba(255,255,255,1);
+    }
+
+    .launch-card:active {
+      transform: scale(.975);
+    }
+
+    .launch-card::before {
+      background:
+        linear-gradient(130deg, rgba(255,255,255,.98) 0%, rgba(255,255,255,.42) 30%, transparent 54%),
+        radial-gradient(circle at 82% 16%, rgba(255,255,255,.76), transparent 32%);
+      opacity: .96;
+      z-index: -1;
+    }
+
+    .launch-card::after {
+      inset: 12px 14px auto 14px;
+      height: 1px;
+      background: rgba(255,255,255,.95);
+    }
+
+    .card-chip {
+      width: 48px;
+      height: 48px;
+      border-radius: 17px;
+      background: rgba(255,255,255,.72);
+      border: 1px solid rgba(148,163,184,.18);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,1), 0 12px 22px rgba(15,23,42,.09);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      color: #0f172a;
+    }
+
+    .card-note {
+      background: rgba(255,255,255,.70);
+      border: 1px solid rgba(148,163,184,.20);
+      color: #334155;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.92);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+    }
+
+    .card-art {
+      min-height: 90px;
+      padding-top: 14px;
+    }
+
+    .card-art::before {
+      width: 102px;
+      height: 102px;
+      border-radius: 32px;
+      background:
+        linear-gradient(145deg, rgba(255,255,255,.94), rgba(241,245,249,.62));
+      border: 1px solid rgba(148,163,184,.16);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,1), 0 20px 38px rgba(15,23,42,.09);
+    }
+
+    .card-art span {
+      font-size: clamp(46px, 4.6vw, 66px);
+      filter: drop-shadow(0 13px 16px rgba(15,23,42,.12));
+    }
+
+    .card-copy strong {
+      font-size: clamp(18px, 2.1vw, 24px);
+      letter-spacing: -.045em;
+      color: #0f172a;
+      text-shadow: 0 1px 0 rgba(255,255,255,.86);
+    }
+
+    .card-copy small {
+      color: #475569;
+      font-weight: 720;
+    }
+
+    /* Bright pro tiles - white cards with coloured edge glow */
+    .launch-card.certs {
+      background:
+        linear-gradient(145deg, rgba(255,255,255,.94), rgba(239,246,255,.70));
+      border-color: rgba(37,99,235,.22);
+      box-shadow: 0 24px 56px rgba(37,99,235,.11), inset 0 1px 0 rgba(255,255,255,1);
+    }
+    .launch-card.offline {
+      background:
+        linear-gradient(145deg, rgba(255,255,255,.94), rgba(240,253,244,.74));
+      border-color: rgba(34,197,94,.24);
+      box-shadow: 0 24px 56px rgba(34,197,94,.10), inset 0 1px 0 rgba(255,255,255,1);
+    }
+    .launch-card.callouts {
+      background:
+        linear-gradient(145deg, rgba(255,255,255,.94), rgba(255,241,242,.76));
+      border-color: rgba(227,6,19,.24);
+      box-shadow: 0 24px 56px rgba(227,6,19,.12), inset 0 1px 0 rgba(255,255,255,1);
+    }
+    .launch-card.quote {
+      background:
+        linear-gradient(145deg, rgba(255,255,255,.94), rgba(255,247,237,.78));
+      border-color: rgba(249,115,22,.24);
+      box-shadow: 0 24px 56px rgba(249,115,22,.11), inset 0 1px 0 rgba(255,255,255,1);
+    }
+    .launch-card.cloud {
+      background:
+        linear-gradient(145deg, rgba(255,255,255,.94), rgba(245,243,255,.76));
+      border-color: rgba(139,92,246,.24);
+      box-shadow: 0 24px 56px rgba(139,92,246,.11), inset 0 1px 0 rgba(255,255,255,1);
+    }
+    .launch-card.profile {
+      background:
+        linear-gradient(145deg, rgba(255,255,255,.94), rgba(236,254,255,.76));
+      border-color: rgba(8,145,178,.24);
+      box-shadow: 0 24px 56px rgba(8,145,178,.10), inset 0 1px 0 rgba(255,255,255,1);
+    }
+    .launch-card.schedule {
+      background:
+        linear-gradient(145deg, rgba(255,255,255,.94), rgba(255,251,235,.78));
+      border-color: rgba(217,119,6,.24);
+      box-shadow: 0 24px 56px rgba(217,119,6,.10), inset 0 1px 0 rgba(255,255,255,1);
+    }
+    .launch-card.submitted {
+      background:
+        linear-gradient(145deg, rgba(255,255,255,.96), rgba(248,250,252,.78));
+      border-color: rgba(100,116,139,.22);
+      box-shadow: 0 24px 56px rgba(100,116,139,.09), inset 0 1px 0 rgba(255,255,255,1);
+    }
+
+    .home-meta {
+      padding: 4px 2px calc(2px + var(--safe-bottom));
+    }
+
+    .home-credit {
+      color: #64748b;
+      text-shadow: none;
+      font-weight: 800;
+    }
+
+    .home-version,
+    .fixed-version-badge {
+      background: rgba(255,255,255,.78);
+      border: 1px solid rgba(148,163,184,.24);
+      color: #475569;
+      box-shadow: 0 12px 28px rgba(15,23,42,.08), inset 0 1px 0 rgba(255,255,255,.98);
+      backdrop-filter: blur(18px) saturate(170%);
+      -webkit-backdrop-filter: blur(18px) saturate(170%);
+    }
+
+    .mini-home {
+      background: rgba(255,255,255,.84);
+      border: 1px solid rgba(148,163,184,.24);
+      color: #0f172a;
+      box-shadow: 0 12px 28px rgba(15,23,42,.09), inset 0 1px 0 rgba(255,255,255,.98);
+      backdrop-filter: blur(18px) saturate(170%);
+      -webkit-backdrop-filter: blur(18px) saturate(170%);
+    }
+
+    @media (max-width: 1050px) {
+      .card-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .launch-card { min-height: 172px; }
+    }
+
+    @media (max-width: 720px) {
+      .ipad-statusbar {
+        grid-template-columns: 1fr auto;
+      }
+      .status-centre { display: none; }
+      .hero-panel { border-radius: 30px; padding: 16px; }
+      .ops-strip { border-radius: 30px; }
+      .card-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+      .launch-card { min-height: 150px; border-radius: 30px; padding: 14px; }
+      .card-art { min-height: 72px; }
+      .card-art::before { width: 82px; height: 82px; border-radius: 26px; }
+      .card-copy strong { font-size: 17px; }
+      .card-copy small { font-size: 12px; }
+    }
+
+    @media (max-width: 430px) {
+      .card-grid { grid-template-columns: 1fr; }
+      .launch-card { min-height: 136px; }
+    }
+
+    @media (max-height: 760px) and (orientation: landscape) {
+      .card-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+      .launch-card { min-height: 142px; border-radius: 30px; padding: 12px; }
+      .card-art { min-height: 62px; padding-top: 8px; }
+      .card-art::before { width: 76px; height: 76px; border-radius: 24px; }
+      .card-art span { font-size: 48px; }
+      .card-copy strong { font-size: 18px; }
+      .card-copy small { font-size: 12px; }
+      .hero-panel { padding: 12px 16px 10px; }
+      .ops-strip { min-height: 78px; }
+    }
+
+
+    /* V6.3c78af - iPad-style icon refresh */
+    .card-chip {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      padding: 0;
+    }
+    .card-chip .icon-svg {
+      width: 22px;
+      height: 22px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2.15;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+    .card-art {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .card-art .icon-svg {
+      width: 56px;
+      height: 56px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 1.95;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      filter: drop-shadow(0 10px 14px rgba(15,23,42,.10));
+    }
+    .launch-card.certs .card-chip, .launch-card.certs .card-art { color: #2563eb; }
+    .launch-card.offline .card-chip, .launch-card.offline .card-art { color: #16a34a; }
+    .launch-card.callouts .card-chip, .launch-card.callouts .card-art { color: #dc2626; }
+    .launch-card.quote .card-chip, .launch-card.quote .card-art { color: #ea580c; }
+    .launch-card.cloud .card-chip, .launch-card.cloud .card-art { color: #7c3aed; }
+    .launch-card.profile .card-chip, .launch-card.profile .card-art { color: #0891b2; }
+    .launch-card.schedule .card-chip, .launch-card.schedule .card-art { color: #d97706; }
+    .launch-card.submitted .card-chip, .launch-card.submitted .card-art { color: #475569; }
+    .launch-card .card-art::before {
+      background: linear-gradient(145deg, rgba(255,255,255,.98), rgba(245,247,250,.74));
+    }
+    @media (max-width: 720px) {
+      .card-chip .icon-svg { width: 20px; height: 20px; }
+      .card-art .icon-svg { width: 48px; height: 48px; }
+    }
+    @media (max-height: 760px) and (orientation: landscape) {
+      .card-art .icon-svg { width: 44px; height: 44px; }
+    }
+
+
+    /* V6.3c78ag - true iPad app-icon home screen */
+    .card-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 22px 18px;
+      padding: 8px 4px 2px;
+      align-items: start;
+    }
+
+    .launch-card {
+      min-height: 178px;
+      border: 0;
+      border-radius: 30px;
+      padding: 10px 8px 12px;
+      background: transparent !important;
+      box-shadow: none !important;
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 8px;
+      text-align: center;
+      color: #0f172a;
+    }
+
+    .launch-card:hover {
+      transform: translateY(-4px);
+      background: rgba(255,255,255,.38) !important;
+      box-shadow: 0 18px 34px rgba(15,23,42,.08) !important;
+      backdrop-filter: blur(18px) saturate(150%);
+      -webkit-backdrop-filter: blur(18px) saturate(150%);
+    }
+
+    .launch-card:active {
+      transform: scale(.96);
+      background: rgba(255,255,255,.54) !important;
+    }
+
+    .launch-card::before,
+    .launch-card::after,
+    .card-chip,
+    .card-note {
+      display: none !important;
+    }
+
+    .card-art {
+      width: 104px;
+      height: 104px;
+      min-height: 104px;
+      padding: 0;
+      margin: 0 auto 2px;
+      border-radius: 27px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,.74);
+      box-shadow:
+        0 22px 38px rgba(15,23,42,.16),
+        inset 0 1px 0 rgba(255,255,255,.82),
+        inset 0 -16px 28px rgba(15,23,42,.10);
+    }
+
+    .card-art::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      width: auto;
+      height: auto;
+      border: 0;
+      border-radius: inherit;
+      background:
+        linear-gradient(145deg, rgba(255,255,255,.64) 0%, rgba(255,255,255,.18) 36%, transparent 58%),
+        radial-gradient(circle at 74% 18%, rgba(255,255,255,.45), transparent 28%);
+      box-shadow: none;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .card-art::after {
+      content: "";
+      position: absolute;
+      inset: auto 10px 8px 10px;
+      height: 1px;
+      background: rgba(255,255,255,.38);
+      z-index: 1;
+    }
+
+    .card-art .icon-svg {
+      width: 58px;
+      height: 58px;
+      stroke: white;
+      stroke-width: 2.25;
+      fill: none;
+      filter: drop-shadow(0 8px 12px rgba(0,0,0,.24));
+      z-index: 2;
+    }
+
+    .card-copy {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      padding: 0 2px;
+    }
+
+    .card-copy strong {
+      font-size: 15px;
+      line-height: 1.05;
+      letter-spacing: -.025em;
+      color: #0f172a;
+      text-shadow: 0 1px 0 rgba(255,255,255,.72);
+      max-width: 145px;
+    }
+
+    .card-copy small {
+      font-size: 11.5px;
+      line-height: 1.16;
+      color: #64748b;
+      font-weight: 720;
+      max-width: 150px;
+    }
+
+    .launch-card.certs .card-art {
+      background:
+        radial-gradient(circle at 28% 20%, #93c5fd 0%, transparent 28%),
+        linear-gradient(145deg, #2563eb 0%, #1d4ed8 52%, #0f3aa9 100%);
+    }
+
+    .launch-card.offline .card-art {
+      background:
+        radial-gradient(circle at 28% 20%, #86efac 0%, transparent 28%),
+        linear-gradient(145deg, #22c55e 0%, #16a34a 52%, #15803d 100%);
+    }
+
+    .launch-card.callouts .card-art {
+      background:
+        radial-gradient(circle at 28% 20%, #fda4af 0%, transparent 30%),
+        linear-gradient(145deg, #fb7185 0%, #dc2626 54%, #991b1b 100%);
+    }
+
+    .launch-card.quote .card-art {
+      background:
+        radial-gradient(circle at 28% 20%, #fed7aa 0%, transparent 30%),
+        linear-gradient(145deg, #fb923c 0%, #ea580c 54%, #9a3412 100%);
+    }
+
+    .launch-card.cloud .card-art {
+      background:
+        radial-gradient(circle at 28% 20%, #c4b5fd 0%, transparent 30%),
+        linear-gradient(145deg, #a78bfa 0%, #7c3aed 54%, #5b21b6 100%);
+    }
+
+    .launch-card.profile .card-art {
+      background:
+        radial-gradient(circle at 28% 20%, #67e8f9 0%, transparent 30%),
+        linear-gradient(145deg, #22d3ee 0%, #0891b2 54%, #155e75 100%);
+    }
+
+    .launch-card.schedule .card-art {
+      background:
+        radial-gradient(circle at 28% 20%, #fde68a 0%, transparent 30%),
+        linear-gradient(145deg, #fbbf24 0%, #d97706 54%, #92400e 100%);
+    }
+
+    .launch-card.submitted .card-art {
+      background:
+        radial-gradient(circle at 28% 20%, #cbd5e1 0%, transparent 30%),
+        linear-gradient(145deg, #94a3b8 0%, #475569 54%, #1f2937 100%);
+    }
+
+    @media (max-width: 1050px) {
+      .card-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 18px 10px;
+      }
+      .launch-card {
+        min-height: 164px;
+      }
+      .card-art {
+        width: 94px;
+        height: 94px;
+        min-height: 94px;
+        border-radius: 25px;
+      }
+      .card-art .icon-svg {
+        width: 52px;
+        height: 52px;
+      }
+      .card-copy strong {
+        font-size: 14px;
+      }
+      .card-copy small {
+        font-size: 11px;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .card-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 16px 8px;
+      }
+      .launch-card {
+        min-height: 150px;
+        border-radius: 24px;
+        padding: 8px 4px 10px;
+      }
+      .card-art {
+        width: 84px;
+        height: 84px;
+        min-height: 84px;
+        border-radius: 23px;
+      }
+      .card-art .icon-svg {
+        width: 46px;
+        height: 46px;
+      }
+      .card-copy strong {
+        font-size: 13.5px;
+      }
+      .card-copy small {
+        font-size: 10.5px;
+      }
+    }
+
+    @media (max-width: 430px) {
+      .card-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-height: 760px) and (orientation: landscape) {
+      .card-grid {
+        grid-template-columns: repeat(8, minmax(0, 1fr));
+        gap: 10px 6px;
+      }
+      .launch-card {
+        min-height: 126px;
+        padding: 6px 3px;
+      }
+      .card-art {
+        width: 72px;
+        height: 72px;
+        min-height: 72px;
+        border-radius: 20px;
+        margin-bottom: 0;
+      }
+      .card-art .icon-svg {
+        width: 40px;
+        height: 40px;
+      }
+      .card-copy strong {
+        font-size: 11.5px;
+      }
+      .card-copy small {
+        display: none;
+      }
+    }
+
+
+    /* V6.3c78ah - more colour / proper iPad pop */
+    .ipad-home {
+      background:
+        radial-gradient(circle at 10% 6%, rgba(255, 59, 48, .34), transparent 26%),
+        radial-gradient(circle at 88% 8%, rgba(0, 122, 255, .32), transparent 28%),
+        radial-gradient(circle at 16% 88%, rgba(52, 199, 89, .20), transparent 26%),
+        radial-gradient(circle at 78% 92%, rgba(255, 149, 0, .24), transparent 30%),
+        linear-gradient(135deg, #ffffff 0%, #edf6ff 42%, #fff1f4 100%);
+    }
+
+    .ipad-wallpaper {
+      background:
+        radial-gradient(circle at 13% 12%, rgba(255, 59, 48, .26), transparent 25%),
+        radial-gradient(circle at 87% 9%, rgba(0, 122, 255, .26), transparent 28%),
+        radial-gradient(circle at 82% 85%, rgba(175, 82, 222, .18), transparent 28%),
+        radial-gradient(circle at 25% 96%, rgba(52, 199, 89, .16), transparent 26%),
+        linear-gradient(145deg, #ffffff 0%, #eef7ff 46%, #fff0f3 100%);
+    }
+
+    .hero-panel h1::after {
+      width: 210px;
+      height: 10px;
+      background: linear-gradient(90deg, #ff3b30, #ff9500, #34c759, #007aff, #af52de);
+      box-shadow: 0 12px 28px rgba(0,122,255,.18);
+    }
+
+    .card-art {
+      border: 1px solid rgba(255,255,255,.82);
+      box-shadow:
+        0 24px 42px rgba(15,23,42,.18),
+        inset 0 1px 0 rgba(255,255,255,.86),
+        inset 0 -18px 30px rgba(15,23,42,.13);
+    }
+
+    .card-art .icon-svg {
+      width: 60px;
+      height: 60px;
+      stroke: white;
+      stroke-width: 2.35;
+      filter:
+        drop-shadow(0 9px 11px rgba(0,0,0,.24))
+        drop-shadow(0 0 10px rgba(255,255,255,.18));
+    }
+
+    .launch-card.certs .card-art {
+      background:
+        radial-gradient(circle at 28% 18%, #dbeafe 0%, transparent 25%),
+        radial-gradient(circle at 72% 78%, #38bdf8 0%, transparent 34%),
+        linear-gradient(145deg, #60a5fa 0%, #2563eb 46%, #1e40af 100%);
+    }
+
+    .launch-card.offline .card-art {
+      background:
+        radial-gradient(circle at 28% 18%, #bbf7d0 0%, transparent 26%),
+        radial-gradient(circle at 76% 78%, #14b8a6 0%, transparent 34%),
+        linear-gradient(145deg, #4ade80 0%, #16a34a 48%, #166534 100%);
+    }
+
+    .launch-card.callouts .card-art {
+      background:
+        radial-gradient(circle at 28% 18%, #fecdd3 0%, transparent 28%),
+        radial-gradient(circle at 76% 78%, #fb7185 0%, transparent 34%),
+        linear-gradient(145deg, #ff5f6d 0%, #dc2626 48%, #7f1d1d 100%);
+    }
+
+    .launch-card.quote .card-art {
+      background:
+        radial-gradient(circle at 28% 18%, #ffedd5 0%, transparent 28%),
+        radial-gradient(circle at 75% 78%, #fbbf24 0%, transparent 34%),
+        linear-gradient(145deg, #ffb020 0%, #f97316 48%, #c2410c 100%);
+    }
+
+    .launch-card.cloud .card-art {
+      background:
+        radial-gradient(circle at 28% 18%, #ddd6fe 0%, transparent 28%),
+        radial-gradient(circle at 75% 78%, #ec4899 0%, transparent 34%),
+        linear-gradient(145deg, #c084fc 0%, #8b5cf6 46%, #5b21b6 100%);
+    }
+
+    .launch-card.profile .card-art {
+      background:
+        radial-gradient(circle at 28% 18%, #cffafe 0%, transparent 28%),
+        radial-gradient(circle at 75% 78%, #3b82f6 0%, transparent 34%),
+        linear-gradient(145deg, #22d3ee 0%, #06b6d4 48%, #0e7490 100%);
+    }
+
+    .launch-card.schedule .card-art {
+      background:
+        radial-gradient(circle at 28% 18%, #fef3c7 0%, transparent 28%),
+        radial-gradient(circle at 75% 78%, #fb7185 0%, transparent 34%),
+        linear-gradient(145deg, #facc15 0%, #f59e0b 48%, #b45309 100%);
+    }
+
+    .launch-card.submitted .card-art {
+      background:
+        radial-gradient(circle at 28% 18%, #e0f2fe 0%, transparent 28%),
+        radial-gradient(circle at 75% 78%, #a78bfa 0%, transparent 34%),
+        linear-gradient(145deg, #94a3b8 0%, #64748b 48%, #334155 100%);
+    }
+
+    .card-copy strong {
+      color: #111827;
+      font-weight: 950;
+    }
+
+    .card-copy small {
+      color: #475569;
+      font-weight: 760;
+    }
+
+    .ops-ready-card strong,
+    .hero-panel h1 {
+      color: #0b1220;
+    }
+
+    .home-version,
+    .fixed-version-badge,
+    .mini-home,
+    .ipad-statusbar,
+    .ops-strip,
+    .hero-panel {
+      border-color: rgba(148,163,184,.20);
+    }
+
+    @media (max-height: 760px) and (orientation: landscape) {
+      .card-art .icon-svg {
+        width: 42px;
+        height: 42px;
+      }
+    }
+
+
+    /* V6.3c78ai - even more colour in the app icons */
+    .card-art {
+      border: 1px solid rgba(255,255,255,.88);
+      box-shadow:
+        0 26px 46px rgba(15,23,42,.20),
+        inset 0 1px 0 rgba(255,255,255,.90),
+        inset 0 -18px 32px rgba(15,23,42,.14),
+        0 0 0 1px rgba(255,255,255,.16);
+    }
+
+    .card-art::before {
+      background:
+        linear-gradient(145deg, rgba(255,255,255,.72) 0%, rgba(255,255,255,.18) 34%, transparent 56%),
+        radial-gradient(circle at 78% 22%, rgba(255,255,255,.34), transparent 26%),
+        radial-gradient(circle at 18% 86%, rgba(255,255,255,.18), transparent 28%);
+    }
+
+    .card-art .icon-svg {
+      width: 62px;
+      height: 62px;
+      stroke: rgba(255,255,255,.98);
+      stroke-width: 2.45;
+      filter:
+        drop-shadow(0 10px 12px rgba(0,0,0,.26))
+        drop-shadow(0 0 14px rgba(255,255,255,.18));
+    }
+
+    .launch-card.certs .card-art {
+      background:
+        radial-gradient(circle at 22% 18%, #ffffff55 0%, transparent 22%),
+        radial-gradient(circle at 78% 78%, #22d3ee 0%, transparent 34%),
+        linear-gradient(145deg, #7dd3fc 0%, #3b82f6 36%, #2563eb 62%, #4f46e5 100%);
+      box-shadow:
+        0 26px 46px rgba(37,99,235,.28),
+        inset 0 1px 0 rgba(255,255,255,.90),
+        inset 0 -18px 32px rgba(15,23,42,.14);
+    }
+
+    .launch-card.offline .card-art {
+      background:
+        radial-gradient(circle at 22% 18%, #ffffff55 0%, transparent 22%),
+        radial-gradient(circle at 78% 78%, #06b6d4 0%, transparent 34%),
+        linear-gradient(145deg, #86efac 0%, #22c55e 34%, #16a34a 60%, #0f766e 100%);
+      box-shadow:
+        0 26px 46px rgba(22,163,74,.26),
+        inset 0 1px 0 rgba(255,255,255,.90),
+        inset 0 -18px 32px rgba(15,23,42,.14);
+    }
+
+    .launch-card.callouts .card-art {
+      background:
+        radial-gradient(circle at 22% 18%, #ffffff55 0%, transparent 22%),
+        radial-gradient(circle at 78% 78%, #fb7185 0%, transparent 34%),
+        linear-gradient(145deg, #ff8a80 0%, #ff5f6d 34%, #ef4444 60%, #be123c 100%);
+      box-shadow:
+        0 26px 46px rgba(220,38,38,.28),
+        inset 0 1px 0 rgba(255,255,255,.90),
+        inset 0 -18px 32px rgba(15,23,42,.14);
+    }
+
+    .launch-card.quote .card-art {
+      background:
+        radial-gradient(circle at 22% 18%, #ffffff55 0%, transparent 22%),
+        radial-gradient(circle at 78% 78%, #facc15 0%, transparent 34%),
+        linear-gradient(145deg, #fdba74 0%, #fb923c 34%, #f97316 60%, #ea580c 100%);
+      box-shadow:
+        0 26px 46px rgba(249,115,22,.28),
+        inset 0 1px 0 rgba(255,255,255,.90),
+        inset 0 -18px 32px rgba(15,23,42,.14);
+    }
+
+    .launch-card.cloud .card-art {
+      background:
+        radial-gradient(circle at 22% 18%, #ffffff55 0%, transparent 22%),
+        radial-gradient(circle at 78% 78%, #ec4899 0%, transparent 34%),
+        linear-gradient(145deg, #d8b4fe 0%, #a855f7 34%, #8b5cf6 60%, #7c3aed 100%);
+      box-shadow:
+        0 26px 46px rgba(124,58,237,.28),
+        inset 0 1px 0 rgba(255,255,255,.90),
+        inset 0 -18px 32px rgba(15,23,42,.14);
+    }
+
+    .launch-card.profile .card-art {
+      background:
+        radial-gradient(circle at 22% 18%, #ffffff55 0%, transparent 22%),
+        radial-gradient(circle at 78% 78%, #60a5fa 0%, transparent 34%),
+        linear-gradient(145deg, #67e8f9 0%, #22d3ee 34%, #06b6d4 60%, #3b82f6 100%);
+      box-shadow:
+        0 26px 46px rgba(6,182,212,.28),
+        inset 0 1px 0 rgba(255,255,255,.90),
+        inset 0 -18px 32px rgba(15,23,42,.14);
+    }
+
+    .launch-card.schedule .card-art {
+      background:
+        radial-gradient(circle at 22% 18%, #ffffff55 0%, transparent 22%),
+        radial-gradient(circle at 78% 78%, #f472b6 0%, transparent 34%),
+        linear-gradient(145deg, #fde68a 0%, #facc15 32%, #f59e0b 58%, #f97316 100%);
+      box-shadow:
+        0 26px 46px rgba(245,158,11,.28),
+        inset 0 1px 0 rgba(255,255,255,.90),
+        inset 0 -18px 32px rgba(15,23,42,.14);
+    }
+
+    .launch-card.submitted .card-art {
+      background:
+        radial-gradient(circle at 22% 18%, #ffffff55 0%, transparent 22%),
+        radial-gradient(circle at 78% 78%, #a78bfa 0%, transparent 34%),
+        linear-gradient(145deg, #cbd5e1 0%, #94a3b8 30%, #64748b 60%, #475569 100%);
+      box-shadow:
+        0 26px 46px rgba(100,116,139,.24),
+        inset 0 1px 0 rgba(255,255,255,.90),
+        inset 0 -18px 32px rgba(15,23,42,.14);
+    }
+
+    @media (max-width: 720px) {
+      .card-art .icon-svg {
+        width: 50px;
+        height: 50px;
+      }
+    }
+
+    @media (max-height: 760px) and (orientation: landscape) {
+      .card-art .icon-svg {
+        width: 44px;
+        height: 44px;
+      }
+    }
+
+
+    /* V6.3c78aj - bigger bolder icons, tuned for iPad portrait */
+    .ipad-home-grid {
+      width: min(1180px, 100%);
+      gap: 18px;
+    }
+
+    .card-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 22px 18px;
+      padding: 10px 4px 4px;
+      align-items: start;
+    }
+
+    .launch-card {
+      min-height: 196px;
+      padding: 10px 8px 14px;
+    }
+
+    .card-art {
+      width: 116px;
+      height: 116px;
+      min-height: 116px;
+      border-radius: 30px;
+      margin: 0 auto 6px;
+      border: 1px solid rgba(255,255,255,.92);
+      box-shadow:
+        0 30px 52px rgba(15,23,42,.22),
+        0 10px 22px rgba(15,23,42,.10),
+        inset 0 1px 0 rgba(255,255,255,.94),
+        inset 0 -18px 32px rgba(15,23,42,.16),
+        0 0 0 4px rgba(255,255,255,.18);
+    }
+
+    .card-art::before {
+      background:
+        linear-gradient(145deg, rgba(255,255,255,.78) 0%, rgba(255,255,255,.18) 34%, transparent 56%),
+        radial-gradient(circle at 78% 22%, rgba(255,255,255,.38), transparent 26%),
+        radial-gradient(circle at 20% 84%, rgba(255,255,255,.20), transparent 28%);
+    }
+
+    .card-art .icon-svg {
+      width: 68px;
+      height: 68px;
+      stroke: rgba(255,255,255,.99);
+      stroke-width: 2.55;
+      filter:
+        drop-shadow(0 12px 14px rgba(0,0,0,.28))
+        drop-shadow(0 0 16px rgba(255,255,255,.18));
+    }
+
+    .card-copy strong {
+      font-size: 16.5px;
+      line-height: 1.02;
+      font-weight: 950;
+      max-width: 160px;
+    }
+
+    .card-copy small {
+      font-size: 12px;
+      line-height: 1.18;
+      font-weight: 780;
+      max-width: 160px;
+    }
+
+    .launch-card.certs .card-art {
+      background:
+        radial-gradient(circle at 20% 16%, #ffffff60 0%, transparent 18%),
+        radial-gradient(circle at 84% 80%, #22d3ee 0%, transparent 34%),
+        linear-gradient(145deg, #93c5fd 0%, #3b82f6 32%, #2563eb 58%, #4f46e5 100%);
+      box-shadow:
+        0 30px 52px rgba(37,99,235,.30),
+        0 10px 22px rgba(15,23,42,.10),
+        inset 0 1px 0 rgba(255,255,255,.94),
+        inset 0 -18px 32px rgba(15,23,42,.16);
+    }
+
+    .launch-card.offline .card-art {
+      background:
+        radial-gradient(circle at 20% 16%, #ffffff60 0%, transparent 18%),
+        radial-gradient(circle at 84% 80%, #2dd4bf 0%, transparent 34%),
+        linear-gradient(145deg, #86efac 0%, #4ade80 30%, #16a34a 58%, #0f766e 100%);
+      box-shadow:
+        0 30px 52px rgba(22,163,74,.28),
+        0 10px 22px rgba(15,23,42,.10),
+        inset 0 1px 0 rgba(255,255,255,.94),
+        inset 0 -18px 32px rgba(15,23,42,.16);
+    }
+
+    .launch-card.callouts .card-art {
+      background:
+        radial-gradient(circle at 20% 16%, #ffffff60 0%, transparent 18%),
+        radial-gradient(circle at 84% 80%, #fb7185 0%, transparent 34%),
+        linear-gradient(145deg, #fda4af 0%, #ff5f6d 30%, #ef4444 58%, #be123c 100%);
+      box-shadow:
+        0 30px 52px rgba(220,38,38,.30),
+        0 10px 22px rgba(15,23,42,.10),
+        inset 0 1px 0 rgba(255,255,255,.94),
+        inset 0 -18px 32px rgba(15,23,42,.16);
+    }
+
+    .launch-card.quote .card-art {
+      background:
+        radial-gradient(circle at 20% 16%, #ffffff60 0%, transparent 18%),
+        radial-gradient(circle at 84% 80%, #fde047 0%, transparent 34%),
+        linear-gradient(145deg, #fdba74 0%, #fb923c 30%, #f97316 58%, #ea580c 100%);
+      box-shadow:
+        0 30px 52px rgba(249,115,22,.30),
+        0 10px 22px rgba(15,23,42,.10),
+        inset 0 1px 0 rgba(255,255,255,.94),
+        inset 0 -18px 32px rgba(15,23,42,.16);
+    }
+
+    .launch-card.cloud .card-art {
+      background:
+        radial-gradient(circle at 20% 16%, #ffffff60 0%, transparent 18%),
+        radial-gradient(circle at 84% 80%, #ec4899 0%, transparent 34%),
+        linear-gradient(145deg, #d8b4fe 0%, #c084fc 28%, #8b5cf6 56%, #7c3aed 100%);
+      box-shadow:
+        0 30px 52px rgba(124,58,237,.30),
+        0 10px 22px rgba(15,23,42,.10),
+        inset 0 1px 0 rgba(255,255,255,.94),
+        inset 0 -18px 32px rgba(15,23,42,.16);
+    }
+
+    .launch-card.profile .card-art {
+      background:
+        radial-gradient(circle at 20% 16%, #ffffff60 0%, transparent 18%),
+        radial-gradient(circle at 84% 80%, #60a5fa 0%, transparent 34%),
+        linear-gradient(145deg, #67e8f9 0%, #22d3ee 28%, #06b6d4 56%, #3b82f6 100%);
+      box-shadow:
+        0 30px 52px rgba(6,182,212,.30),
+        0 10px 22px rgba(15,23,42,.10),
+        inset 0 1px 0 rgba(255,255,255,.94),
+        inset 0 -18px 32px rgba(15,23,42,.16);
+    }
+
+    .launch-card.schedule .card-art {
+      background:
+        radial-gradient(circle at 20% 16%, #ffffff60 0%, transparent 18%),
+        radial-gradient(circle at 84% 80%, #fb7185 0%, transparent 34%),
+        linear-gradient(145deg, #fde68a 0%, #facc15 28%, #f59e0b 56%, #f97316 100%);
+      box-shadow:
+        0 30px 52px rgba(245,158,11,.30),
+        0 10px 22px rgba(15,23,42,.10),
+        inset 0 1px 0 rgba(255,255,255,.94),
+        inset 0 -18px 32px rgba(15,23,42,.16);
+    }
+
+    .launch-card.submitted .card-art {
+      background:
+        radial-gradient(circle at 20% 16%, #ffffff60 0%, transparent 18%),
+        radial-gradient(circle at 84% 80%, #a78bfa 0%, transparent 34%),
+        linear-gradient(145deg, #cbd5e1 0%, #94a3b8 28%, #64748b 56%, #334155 100%);
+      box-shadow:
+        0 30px 52px rgba(100,116,139,.26),
+        0 10px 22px rgba(15,23,42,.10),
+        inset 0 1px 0 rgba(255,255,255,.94),
+        inset 0 -18px 32px rgba(15,23,42,.16);
+    }
+
+    /* iPad portrait first: bigger icons, 2 columns, stacked layout */
+    @media (max-width: 980px) and (orientation: portrait) {
+      .ipad-home-grid {
+        gap: 16px;
+      }
+      .hero-panel {
+        border-radius: 30px;
+        padding: 18px 18px 14px;
+      }
+      .ops-strip {
+        border-radius: 28px;
+      }
+      .card-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 22px 18px;
+        padding: 6px 2px 6px;
+      }
+      .launch-card {
+        min-height: 228px;
+        padding: 12px 4px 14px;
+      }
+      .card-art {
+        width: 138px;
+        height: 138px;
+        min-height: 138px;
+        border-radius: 34px;
+        margin-bottom: 8px;
+      }
+      .card-art .icon-svg {
+        width: 80px;
+        height: 80px;
+        stroke-width: 2.7;
+      }
+      .card-copy strong {
+        font-size: 19px;
+        max-width: 220px;
+      }
+      .card-copy small {
+        font-size: 13px;
+        max-width: 220px;
+      }
+    }
+
+    /* Smaller phones still stay usable */
+    @media (max-width: 720px) {
+      .card-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px 10px;
+      }
+      .launch-card {
+        min-height: 170px;
+      }
+      .card-art {
+        width: 96px;
+        height: 96px;
+        min-height: 96px;
+        border-radius: 26px;
+      }
+      .card-art .icon-svg {
+        width: 54px;
+        height: 54px;
+      }
+      .card-copy strong {
+        font-size: 14px;
+      }
+      .card-copy small {
+        font-size: 11px;
+      }
+    }
+
+    /* Desktop landscape can show more */
+    @media (min-width: 1200px) {
+      .card-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-height: 760px) and (orientation: landscape) {
+      .card-grid {
+        grid-template-columns: repeat(8, minmax(0, 1fr));
+        gap: 10px 6px;
+      }
+      .launch-card {
+        min-height: 132px;
+        padding: 6px 3px;
+      }
+      .card-art {
+        width: 76px;
+        height: 76px;
+        min-height: 76px;
+        border-radius: 20px;
+        margin-bottom: 1px;
+      }
+      .card-art .icon-svg {
+        width: 44px;
+        height: 44px;
+      }
+      .card-copy strong {
+        font-size: 11.5px;
+      }
+      .card-copy small {
+        display: none;
+      }
+    }
+
   </style>
 
 <script id="fsd-callout-config-v6-3c78d">
@@ -980,8 +2236,8 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
 </head>
 <body>
   <!--
-    Fire Safety Direct - FSD Certs V6.3c78ab Large-card Premium iPad Command Centre - Engineer profile hard-link, pack button removed
-    Large-card premium iPad command centre with glossy cards and engineer status strip.
+    Fire Safety Direct - FSD Certs V6.3c78aj Bold iPad Portrait Icons
+    Bright pro iPad home screen with bold colourful app icons tuned for iPad portrait.
     App shell mark: Jared720 Labs
   -->
 
@@ -998,7 +2254,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
       <section class="hero-panel">
         <div class="hero-kicker">Fire Safety Direct</div>
         <h1>FSD Certs</h1>
-        <p>Certificates, engineer reports, quotes and scheduling — built for site work on iPad.</p>
+        <p>Bright modern iPad launcher for certificates, combined report packs, quotes and engineer planning.</p>
       </section>
 
       <section class="ops-strip" aria-label="Command centre status strip">
@@ -1022,65 +2278,65 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
 
       <section class="card-grid" aria-label="Main apps">
         <button class="launch-card certs" type="button" onclick="openCerts(event)" aria-label="Open Certificate Portal">
-          <span class="card-chip">📄</span>
+          <span class="card-chip"><svg class="icon-svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3.5h5.5L18.5 8v12.5H8a2 2 0 0 1-2-2V5.5a2 2 0 0 1 2-2Z"/><path d="M13.5 3.5V8h5"/><path d="M9.5 11h5"/><path d="M9.5 14h5"/><path d="M9.5 17h3.5"/></svg></span>
           <span class="card-note">Portal</span>
-          <div class="card-art"><span>📘</span></div>
-          <div class="card-copy"><strong>Certificate Portal</strong><small>Safety &amp; compliance certificates, reports and forms.</small></div>
+          <div class="card-art"><svg class="icon-svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3.5h5.5L18.5 8v12.5H8a2 2 0 0 1-2-2V5.5a2 2 0 0 1 2-2Z"/><path d="M13.5 3.5V8h5"/><path d="M9.5 11h5"/><path d="M9.5 14h5"/><path d="M9.5 17h3.5"/></svg></div>
+          <div class="card-copy"><strong>Certificate Portal</strong><small>Live certificates, service reports and combined packs.</small></div>
         </button>
 
         <button class="launch-card offline" type="button" onclick="openOfflineDrafts(event)" aria-label="Open Offline Certs and Reports">
-          <span class="card-chip">▣</span>
+          <span class="card-chip"><svg class="icon-svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 8.5A2.5 2.5 0 0 1 6 6h3l1.6 1.8H18A2.5 2.5 0 0 1 20.5 10.3v6.2A2.5 2.5 0 0 1 18 19H6a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M12 10.5v5"/><path d="M9.8 13.3 12 15.5l2.2-2.2"/></svg></span>
           <span class="card-note">Offline</span>
-          <div class="card-art"><span>🗂️</span></div>
-          <div class="card-copy"><strong>Offline Certs</strong><small>Create and access certificates &amp; reports without signal.</small></div>
+          <div class="card-art"><svg class="icon-svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 8.5A2.5 2.5 0 0 1 6 6h3l1.6 1.8H18A2.5 2.5 0 0 1 20.5 10.3v6.2A2.5 2.5 0 0 1 18 19H6a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M12 10.5v5"/><path d="M9.8 13.3 12 15.5l2.2-2.2"/></svg></div>
+          <div class="card-copy"><strong>Offline Certs</strong><small>Draft W, SFA and SEL when signal is poor.</small></div>
         </button>
 
         <button class="launch-card callouts" type="button" onclick="openCallouts(event)" aria-label="Open Callouts">
-          <span class="card-chip">⚡</span>
+          <span class="card-chip"><svg class="icon-svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M7.5 17v-3.5a4.5 4.5 0 0 1 9 0V17"/><path d="M6 17h12"/><path d="M9 20h6"/><path d="M12 4V2.8"/><path d="M5.8 7.2 4.7 6.1"/><path d="M18.2 7.2l1.1-1.1"/></svg></span>
           <span class="card-note">Live jobs</span>
-          <div class="card-art"><span>🚨</span></div>
+          <div class="card-art"><svg class="icon-svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M7.5 17v-3.5a4.5 4.5 0 0 1 9 0V17"/><path d="M6 17h12"/><path d="M9 20h6"/><path d="M12 4V2.8"/><path d="M5.8 7.2 4.7 6.1"/><path d="M18.2 7.2l1.1-1.1"/></svg></div>
           <div class="card-copy"><strong>Callouts</strong><small>Active emergency jobs and urgent response work.</small></div>
         </button>
 
         <button class="launch-card quote" type="button" onclick="openQuickQuote(event)" aria-label="Open Quick Quote">
-          <span class="card-chip">£</span>
+          <span class="card-chip"><svg class="icon-svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M7.5 4.5h7a2 2 0 0 1 2 2v11.2a1.8 1.8 0 0 1-3.1 1.2L12 17.5l-1.4 1.4a1.8 1.8 0 0 1-3.1-1.2Z"/><path d="M10 8.5c1.6-1.1 4 .5 2.7 1.8-.7.7-1.7.7-2.4 1.3-.5.4-.7 1-.7 1.4"/><path d="M10.2 14.7h0"/></svg></span>
           <span class="card-note">QQ</span>
-          <div class="card-art"><span>💷</span></div>
-          <div class="card-copy"><strong>Quick Quote</strong><small>Fast quotes and pricing while you are on site.</small></div>
+          <div class="card-art"><svg class="icon-svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M7.5 4.5h7a2 2 0 0 1 2 2v11.2a1.8 1.8 0 0 1-3.1 1.2L12 17.5l-1.4 1.4a1.8 1.8 0 0 1-3.1-1.2Z"/><path d="M10 8.5c1.6-1.1 4 .5 2.7 1.8-.7.7-1.7.7-2.4 1.3-.5.4-.7 1-.7 1.4"/><path d="M10.2 14.7h0"/></svg></div>
+          <div class="card-copy"><strong>Quick Quote</strong><small>Site pricing, quote notes and follow-up work.</small></div>
         </button>
 
         <button class="launch-card cloud" type="button" onclick="openCloudDrafts(event)" aria-label="Open Cloud Drafts">
-          <span class="card-chip">☁</span>
+          <span class="card-chip"><svg class="icon-svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 18.5h8a4 4 0 0 0 .7-7.9A5.5 5.5 0 0 0 6.3 9.1 3.8 3.8 0 0 0 8 18.5Z"/><path d="M12 10v5"/><path d="M9.8 12.8 12 10.6l2.2 2.2"/></svg></span>
           <span class="card-note">Sync</span>
-          <div class="card-art"><span>☁️</span></div>
-          <div class="card-copy"><strong>Cloud Drafts</strong><small>Save and sync work-in-progress across the FSD cloud.</small></div>
+          <div class="card-art"><svg class="icon-svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 18.5h8a4 4 0 0 0 .7-7.9A5.5 5.5 0 0 0 6.3 9.1 3.8 3.8 0 0 0 8 18.5Z"/><path d="M12 10v5"/><path d="M9.8 12.8 12 10.6l2.2 2.2"/></svg></div>
+          <div class="card-copy"><strong>Cloud Drafts</strong><small>Resume, sync and finish cloud-saved paperwork.</small></div>
         </button>
 
         <button class="launch-card profile" type="button" onclick="openEngineerProfile(event)" aria-label="Open Engineer Profile">
-          <span class="card-chip">👤</span>
+          <span class="card-chip"><svg class="icon-svg" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3"/><path d="M6.5 18.5a5.5 5.5 0 0 1 11 0"/><path d="M17.5 6.5h3"/><path d="M19 5v3"/></svg></span>
           <span class="card-note">Engineer</span>
-          <div class="card-art"><span>👷</span></div>
-          <div class="card-copy"><strong>Engineer Profile</strong><small>Set the default engineer profile for this iPad.</small></div>
+          <div class="card-art"><svg class="icon-svg" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3"/><path d="M6.5 18.5a5.5 5.5 0 0 1 11 0"/><path d="M17.5 6.5h3"/><path d="M19 5v3"/></svg></div>
+          <div class="card-copy"><strong>Engineer Profile</strong><small>Lock this iPad to the correct engineer.</small></div>
         </button>
 
         <button class="launch-card schedule" type="button" onclick="openSchedule(event)" aria-label="Open FSD Schedule">
-          <span class="card-chip">📅</span>
+          <span class="card-chip"><svg class="icon-svg" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="5.5" width="16" height="14" rx="2.5"/><path d="M8 3.5v4"/><path d="M16 3.5v4"/><path d="M4 9.5h16"/><path d="M9.2 14l1.8 1.8 3.8-3.8"/></svg></span>
           <span class="card-note">Today</span>
-          <div class="card-art"><span>🗓️</span></div>
-          <div class="card-copy"><strong>Schedule</strong><small>Daily jobs, appointments and engineer planning.</small></div>
+          <div class="card-art"><svg class="icon-svg" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="5.5" width="16" height="14" rx="2.5"/><path d="M8 3.5v4"/><path d="M16 3.5v4"/><path d="M4 9.5h16"/><path d="M9.2 14l1.8 1.8 3.8-3.8"/></svg></div>
+          <div class="card-copy"><strong>Schedule</strong><small>Today’s work, planner and upcoming visits.</small></div>
         </button>
 
         <button class="launch-card submitted" type="button" onclick="openCerts(event)" aria-label="Open Submitted Reports via Certificate Portal">
-          <span class="card-chip">📂</span>
+          <span class="card-chip"><svg class="icon-svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M4.5 7.5h15"/><path d="M6.5 7.5v9a2 2 0 0 0 2 2h7a2 2 0 0 0 2-2v-9"/><path d="M5.5 4.5h13a1 1 0 0 1 1 1v2H4.5v-2a1 1 0 0 1 1-1Z"/><path d="M10 12h4"/></svg></span>
           <span class="card-note">History</span>
-          <div class="card-art"><span>🗃️</span></div>
-          <div class="card-copy"><strong>Submitted Reports</strong><small>Open completed paperwork and previously submitted work.</small></div>
+          <div class="card-art"><svg class="icon-svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M4.5 7.5h15"/><path d="M6.5 7.5v9a2 2 0 0 0 2 2h7a2 2 0 0 0 2-2v-9"/><path d="M5.5 4.5h13a1 1 0 0 1 1 1v2H4.5v-2a1 1 0 0 1 1-1Z"/><path d="M10 12h4"/></svg></div>
+          <div class="card-copy"><strong>Submitted Reports</strong><small>Find completed certificates and report history.</small></div>
         </button>
       </section>
 
       <div class="home-meta">
         <span class="home-credit">JARED720 LABS</span>
-        <span class="home-version">App Shell V6.3c78ab · Engineer profile hard-link · pack button removed</span>
+        <span class="home-version">App Shell V6.3c78aj · Bold portrait icons</span>
       </div>
     </main>
   </section>
@@ -3472,6 +4728,6 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
 
     }());
   </script>
-  <div class="fixed-version-badge">App Shell V6.3c78ab · Engineer profile hard-link · pack button removed</div>
+  <div class="fixed-version-badge">App Shell V6.3c78aj · Bold portrait icons</div>
 </body>
 </html>
