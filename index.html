@@ -642,7 +642,6 @@
     }
 
     .launch-card.certs { background: linear-gradient(135deg, rgba(38,80,152,.88), rgba(42,119,235,.80)); }
-    .launch-card.pack { background: linear-gradient(135deg, rgba(88,38,152,.88), rgba(129,42,235,.80)); }
     .launch-card.offline { background: linear-gradient(135deg, rgba(57,126,74,.90), rgba(92,173,98,.82)); }
     .launch-card.callouts { background: linear-gradient(135deg, rgba(160,59,52,.92), rgba(214,69,73,.82)); }
     .launch-card.quote { background: linear-gradient(135deg, rgba(184,76,44,.92), rgba(241,112,64,.84)); }
@@ -981,7 +980,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
 </head>
 <body>
   <!--
-    Fire Safety Direct - FSD Certs V6.3c78aa Large-card Premium iPad Command Centre - Engineer profile hard-link + universal pack launcher
+    Fire Safety Direct - FSD Certs V6.3c78ab Large-card Premium iPad Command Centre - Engineer profile hard-link, pack button removed
     Large-card premium iPad command centre with glossy cards and engineer status strip.
     App shell mark: Jared720 Labs
   -->
@@ -1027,13 +1026,6 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
           <span class="card-note">Portal</span>
           <div class="card-art"><span>📘</span></div>
           <div class="card-copy"><strong>Certificate Portal</strong><small>Safety &amp; compliance certificates, reports and forms.</small></div>
-        </button>
-
-        <button class="launch-card pack" type="button" onclick="openUniversalPack(event)" aria-label="Open Universal Report Pack Builder">
-          <span class="card-chip">PACK</span>
-          <span class="card-note">Combined</span>
-          <div class="card-art"><span>📦</span></div>
-          <div class="card-copy"><strong>Report Pack</strong><small>Build one combined pack from multiple live forms.</small></div>
         </button>
 
         <button class="launch-card offline" type="button" onclick="openOfflineDrafts(event)" aria-label="Open Offline Certs and Reports">
@@ -1088,7 +1080,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
 
       <div class="home-meta">
         <span class="home-credit">JARED720 LABS</span>
-        <span class="home-version">App Shell V6.3c78aa · Engineer profile hard-link + universal pack launcher</span>
+        <span class="home-version">App Shell V6.3c78ab · Engineer profile hard-link · pack button removed</span>
       </div>
     </main>
   </section>
@@ -1143,7 +1135,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
           <div class="editor-field editor-wide"><label>Site address</label><textarea id="editSite"></textarea></div>
           <div id="sfaOfflineFields" class="nested-editor-grid hidden-report-fields">
             <div class="editor-section-title">SFA fire alarm report details</div>
-            <div class="sfa-local-note">SFA offline follows the online Fire Alarm Service Report shape. Save locally, sync to Cloud Drafts, then open from Cloud Drafts and use the normal online Create Combined PDF Pack button for the V6.3c72 PDF test.</div>
+            <div class="sfa-local-note">SFA offline follows the online Fire Alarm Service Report shape. Save locally, sync to Cloud Drafts, then open from Cloud Drafts and use the normal online Complete Certificate button.</div>
             <div class="editor-field"><label>Sage account no.</label><input id="editSfaSageAccountNo"></div>
             <div class="editor-field"><label>Contract ID No.</label><input id="editSfaContractId"></div>
             <div class="editor-field"><label>Order No.</label><input id="editSfaOrderNo"></div>
@@ -3278,11 +3270,6 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
         openAppUrlInShell(APP_URL + '?page=qq');
       };
 
-      window.openUniversalPack = function openUniversalPack(event) {
-        stopTap(event);
-        openAppUrlInShell(APP_URL + '?page=pack');
-      };
-
       window.openCerts = function openCerts(event) {
         stopTap(event);
         // V6.3c48: always load a fresh portal when the home button is pressed.
@@ -3485,6 +3472,6 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
 
     }());
   </script>
-  <div class="fixed-version-badge">App Shell V6.3c78aa · Engineer profile hard-link + universal pack launcher</div>
+  <div class="fixed-version-badge">App Shell V6.3c78ab · Engineer profile hard-link · pack button removed</div>
 </body>
 </html>
