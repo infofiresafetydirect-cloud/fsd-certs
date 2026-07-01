@@ -1616,7 +1616,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
 
       <div class="home-meta">
         <span class="home-credit">JARED720 LABS</span>
-        <span class="home-version">App Shell C89w · lightweight customer sync</span>
+        <span class="home-version">App Shell C89x · all-customer chunk sync</span>
       </div>
     </main>
   </section>
@@ -2614,14 +2614,51 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
         if (offlineStatus) offlineStatus.textContent = message || '';
       }
 
+      function compactOfflineCustomerRows(rows) {
+        return (rows || []).map(function(row) {
+          row = row || {};
+          return [
+            String(row.lookupName || ''),
+            String(row.customerAddress || ''),
+            String(row.siteAddress || ''),
+            String(row.sageAccountNo || ''),
+            String(row.defaultCustomerOrderNo || ''),
+            String(row.defaultOurRefNo || ''),
+            String(row.defaultEmail || '')
+          ];
+        });
+      }
+
+      function expandCompactOfflineCustomerRows(rows) {
+        return (rows || []).map(function(row) {
+          if (!Array.isArray(row)) return row || {};
+          return {
+            lookupName: row[0] || '',
+            customerAddress: row[1] || '',
+            siteAddress: row[2] || '',
+            sageAccountNo: row[3] || '',
+            defaultCustomerOrderNo: row[4] || '',
+            defaultOurRefNo: row[5] || '',
+            defaultEmail: row[6] || ''
+          };
+        });
+      }
+
+      function normaliseLoadedOfflineLookupData(data) {
+        data = data && typeof data === 'object' ? data : {};
+        const customers = Array.isArray(data.compactCustomers)
+          ? expandCompactOfflineCustomerRows(data.compactCustomers)
+          : (Array.isArray(data.customers) ? expandCompactOfflineCustomerRows(data.customers) : []);
+        const sites = Array.isArray(data.sites) ? data.sites : [];
+        return Object.assign({}, data, { customers: customers, sites: sites });
+      }
+
       function loadOfflineLookupData() {
         try {
           const raw = localStorage.getItem(OFFLINE_LOOKUP_STORAGE_KEY);
           const data = raw ? JSON.parse(raw) : null;
           if (!data || typeof data !== 'object') return { customers: [], sites: [], generatedAt: '' };
-          if (!Array.isArray(data.customers)) data.customers = [];
-          if (!Array.isArray(data.sites)) data.sites = [];
-          return data;
+          return normaliseLoadedOfflineLookupData(data);
         } catch (err) {
           return { customers: [], sites: [], generatedAt: '' };
         }
@@ -2629,38 +2666,54 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
 
       function saveOfflineLookupData(data) {
         data = data || {};
-        const base = {
+        const customers = Array.isArray(data.customers) ? data.customers : [];
+        const memoryBase = {
           ok: !!data.ok,
-          version: data.version || 'C89w',
+          version: data.version || 'C89x',
           generatedAt: data.generatedAt || new Date().toISOString(),
           savedAt: new Date().toISOString(),
-          customers: Array.isArray(data.customers) ? data.customers : [],
-          // C89w: do not duplicate fallback site rows into storage.
+          customers: customers,
+          // C89x: compact storage; do not duplicate fallback site rows into storage.
           // Site picker can build them from customers on demand, keeping the iPad save small.
           sites: Array.isArray(data.sites) ? data.sites : []
         };
 
-        function trySave(obj) {
-          localStorage.setItem(OFFLINE_LOOKUP_STORAGE_KEY, JSON.stringify(obj));
-          offlineLookupData = obj;
+        function makeStorageObj(customerRows, versionSuffix) {
+          return {
+            ok: memoryBase.ok,
+            version: (memoryBase.version || 'C89x') + (versionSuffix || ''),
+            generatedAt: memoryBase.generatedAt,
+            savedAt: memoryBase.savedAt,
+            compact: true,
+            compactCustomers: compactOfflineCustomerRows(customerRows || []),
+            customers: [],
+            sites: []
+          };
+        }
+
+        function trySave(storageObj, memoryObj) {
+          localStorage.setItem(OFFLINE_LOOKUP_STORAGE_KEY, JSON.stringify(storageObj));
+          offlineLookupData = memoryObj;
           updateOfflineLookupStatus();
-          return obj;
+          return memoryObj;
         }
 
         try {
-          return trySave(base);
+          return trySave(makeStorageObj(customers, ''), memoryBase);
         } catch (err) {
-          const customers = base.customers || [];
-          const attempts = [1500, 1000, 750, 500, 300];
+          // C89x: compact storage should hold far more records than the old verbose JSON.
+          // If the device is still full, trim only as a last resort and make that obvious.
+          const attempts = [5000, 4000, 3000, 2500, 2000, 1500, 1000, 750, 500, 300];
           for (let i = 0; i < attempts.length; i++) {
             if (customers.length <= attempts[i] && i < attempts.length - 1) continue;
             try {
-              const smaller = Object.assign({}, base, {
-                version: (base.version || 'C89w') + '-trimmed-' + attempts[i],
-                customers: customers.slice(0, attempts[i]),
+              const trimmedCustomers = customers.slice(0, attempts[i]);
+              const smallerMemory = Object.assign({}, memoryBase, {
+                version: (memoryBase.version || 'C89x') + '-trimmed-' + attempts[i],
+                customers: trimmedCustomers,
                 sites: []
               });
-              const saved = trySave(smaller);
+              const saved = trySave(makeStorageObj(trimmedCustomers, '-trimmed-' + attempts[i]), smallerMemory);
               setOfflineStatus('Customer list was too large for this iPad, so a trimmed offline list was saved: ' + saved.customers.length + ' customers.');
               return saved;
             } catch (inner) {}
@@ -2753,6 +2806,9 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
       let fsdOfflineLookupDownloadTimer = null;
       let fsdOfflineLookupDownloadStage = '';
       let fsdOfflineLookupChunkData = null;
+      let fsdOfflineLookupAllCustomers = [];
+      let fsdOfflineLookupNextOffset = 0;
+      const FSD_OFFLINE_LOOKUP_CHUNK_SIZE = 500;
 
       function clearOfflineLookupDownloadWatch() {
         fsdOfflineLookupDownloadActive = false;
@@ -2822,14 +2878,21 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
         return out;
       }
 
-      function startOfflineLookupJsonpStage(stage, label, timeoutSeconds) {
+      function startOfflineLookupJsonpStage(stage, label, timeoutSeconds, offset) {
         removeOfflineLookupJsonpScript();
         fsdOfflineLookupDownloadActive = true;
         fsdOfflineLookupDownloadStage = stage;
+        const safeOffset = Math.max(0, Number(offset || 0));
         const script = document.createElement('script');
         script.id = 'fsdOfflineLookupJsonpScript';
         script.async = true;
-        script.src = APP_URL + '?page=offlineLookup&dataset=' + encodeURIComponent(stage) + '&customerLimit=1500&lite=1&callback=fsdReceiveOfflineLookupChunk&ts=' + Date.now();
+        script.src = APP_URL
+          + '?page=offlineLookup'
+          + '&dataset=' + encodeURIComponent(stage)
+          + '&offset=' + encodeURIComponent(safeOffset)
+          + '&chunkSize=' + encodeURIComponent(FSD_OFFLINE_LOOKUP_CHUNK_SIZE)
+          + '&allCustomers=1&lite=1'
+          + '&callback=fsdReceiveOfflineLookupChunk&ts=' + Date.now();
         fsdOfflineLookupDownloadTimer = setTimeout(function() {
           if (!fsdOfflineLookupDownloadActive || fsdOfflineLookupDownloadStage !== stage) return;
           offlineLookupFail(label + ' timed out after ' + timeoutSeconds + ' seconds. This usually means the Apps Script web app deployment has not been updated, or the lookup build is too heavy.');
@@ -2837,7 +2900,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
         script.onload = function() {
           setTimeout(function() {
             if (!fsdOfflineLookupDownloadActive || fsdOfflineLookupDownloadStage !== stage) return;
-            offlineLookupFail('Apps Script replied for ' + label.toLowerCase() + ', but did not return the C89r JSONP callback. Check that Routing.gs has page=offlineLookup and the web app deployment is updated.');
+            offlineLookupFail('Apps Script replied for ' + label.toLowerCase() + ', but did not return the C89x JSONP callback. Check that Routing.gs has page=offlineLookup and the web app deployment is updated.');
           }, 1500);
         };
         script.onerror = function() {
@@ -2863,17 +2926,32 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
         fsdOfflineLookupChunkData = fsdOfflineLookupChunkData || { customers: [], sites: [], generatedAt: '' };
         if (stage === 'customers') {
           const customers = Array.isArray(payload.customers) ? payload.customers : [];
-          setOfflineStatus('Customer list received: ' + customers.length + ' customers. Saving to this iPad...');
+          fsdOfflineLookupAllCustomers = (fsdOfflineLookupAllCustomers || []).concat(customers);
+          const totalText = payload.total ? (' of ' + payload.total) : '';
+
+          if (payload.hasMore && Number(payload.nextOffset || 0) > Number(payload.offset || 0)) {
+            fsdOfflineLookupNextOffset = Number(payload.nextOffset || fsdOfflineLookupAllCustomers.length || 0);
+            setOfflineStatus('Downloaded ' + fsdOfflineLookupAllCustomers.length + totalText + ' invoice customers...');
+            setOfflinePickerStatus('Downloaded ' + fsdOfflineLookupAllCustomers.length + totalText + ' invoice customers...');
+            setTimeout(function() {
+              startOfflineLookupJsonpStage('customers', 'Downloading all offline customers ' + fsdOfflineLookupAllCustomers.length + totalText, 60, fsdOfflineLookupNextOffset);
+            }, 120);
+            return;
+          }
+
+          setOfflineStatus('Customer list received: ' + fsdOfflineLookupAllCustomers.length + ' customers. Saving compact list to this iPad...');
           const saved = saveOfflineLookupData({
             ok: true,
-            version: payload.version || 'C89w-customer-lite',
+            version: payload.version || 'C89x-all-customers',
             generatedAt: payload.generatedAt || new Date().toISOString(),
-            customers: customers,
-            // C89w: keep stored data light. The site picker builds searchable fallback site rows from customers when opened.
+            customers: fsdOfflineLookupAllCustomers,
+            // C89x: keep stored data light. The site picker builds searchable fallback site rows from customers when opened.
             sites: [],
             materials: []
           });
           fsdOfflineLookupChunkData = null;
+          fsdOfflineLookupAllCustomers = [];
+          fsdOfflineLookupNextOffset = 0;
           setOfflineStatus('Offline customer/site list updated: ' + (saved.customers || []).length + ' customers saved. Site picker will search saved customer/default site addresses.');
           setOfflinePickerStatus(offlineLookupCountText());
           return;
@@ -2919,7 +2997,9 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
           clearOfflineLookupDownloadWatch();
           removeOfflineLookupJsonpScript();
           fsdOfflineLookupChunkData = { customers: [], sites: [], generatedAt: '' };
-          startOfflineLookupJsonpStage('customers', 'Downloading lightweight offline customer list', 45);
+          fsdOfflineLookupAllCustomers = [];
+          fsdOfflineLookupNextOffset = 0;
+          startOfflineLookupJsonpStage('customers', 'Downloading all offline customers', 60, 0);
         } catch (err) {
           offlineLookupFail('Offline customer list update failed: ' + (err && err.message ? err.message : err));
         }
@@ -5011,6 +5091,6 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
 
     }());
   </script>
-  <div class="fixed-version-badge">App Shell C89w · lightweight customer sync</div>
+  <div class="fixed-version-badge">App Shell C89x · all-customer chunk sync</div>
 </body>
 </html>
