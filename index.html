@@ -1603,7 +1603,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
 
       <div class="home-meta">
         <span class="home-credit">JARED720 LABS</span>
-        <span class="home-version">App Shell C89i · Offline FAC/FAM/PSC certs</span>
+        <span class="home-version">App Shell C89j · Offline Add Certs inside W/SFA/SEL</span>
       </div>
     </main>
   </section>
@@ -1612,15 +1612,12 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
     <main class="offline-card">
       <h2 class="offline-title">Offline Certs &amp; Reports</h2>
       <p class="offline-help">Certificate/report drafts saved without signal live on this iPad until they are synced to the FSD cloud Draft Manager.</p>
-      <p class="offline-help"><strong>Offline editor trial:</strong> Engineer Service Reports can be started, edited and synced. SFA now mirrors the online Fire Alarm Service Report shape more closely: equipment checked table plus FA service/remedial costs. SFA and SEL cloud draft sync are bridged safely. C89i adds offline FAC, FAM and PSC inline-cert drafts. These sync as W/ESR cloud drafts with the selected Add Cert already loaded.</p>
+      <p class="offline-help"><strong>Offline editor:</strong> W, SFA and SEL can be started offline, saved locally, reopened, then synced to Cloud Drafts. C89j adds FAC, FAM and PSC as Add Page/Add Cert options inside those offline parent drafts — not as separate offline start cards.</p>
       <div id="offlineList" class="offline-list"></div>
       <div class="actions">
         <button class="button" type="button" onclick="startNewOfflineW(event)"><span class="tile-icon">📝</span><span>Start Offline Engineer Service Report</span></button>
         <button class="button secondary" type="button" onclick="startNewOfflineSfaTrial(event)"><span class="tile-icon">🔥</span><span>Start Offline SFA</span></button>
         <button class="button secondary" type="button" onclick="startNewOfflineSelTrial(event)"><span class="tile-icon">💡</span><span>Start Offline SEL</span></button>
-        <button class="button secondary" type="button" onclick="startNewOfflineFacCert(event)"><span class="tile-icon">✅</span><span>Start Offline FAC</span></button>
-        <button class="button secondary" type="button" onclick="startNewOfflineFamCert(event)"><span class="tile-icon">🛠️</span><span>Start Offline FAM</span></button>
-        <button class="button secondary" type="button" onclick="startNewOfflinePscCert(event)"><span class="tile-icon">🔋</span><span>Start Offline PSC</span></button>
         <button class="button secondary" type="button" onclick="refreshOfflineDrafts(event)"><span class="tile-icon">🔄</span><span>Refresh Offline Reports</span></button>
         <button class="button third" type="button" onclick="closeOfflineDrafts(event)"><span class="tile-icon">↩️</span><span>Back to Menu</span></button>
       </div>
@@ -1660,22 +1657,39 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
           <div class="editor-field editor-wide"><label>Customer / Invoice address</label><textarea id="editCustomer"></textarea></div>
           <div class="editor-field editor-wide"><label>Site address</label><textarea id="editSite"></textarea></div>
 
+          <div id="offlineAddCertControls" class="nested-editor-grid">
+            <div class="editor-section-title">Add Page / Add Cert options</div>
+            <div class="sfa-local-note">These Add Certs sit inside the offline parent report you are editing now — W, SFA or SEL. They save with that offline draft and reopen from Cloud Drafts with the added pages switched on.</div>
+            <input type="hidden" id="editIncludeFireAlarmCommissioningReport" value="NO">
+            <input type="hidden" id="editIncludeFireAlarmModificationReport" value="NO">
+            <input type="hidden" id="editIncludePowerSupplyCertificate" value="NO">
+            <div class="editor-quick-row editor-wide">
+              <button class="editor-mini-btn" type="button" onclick="addOfflineInlineCert(event,'FAC')">Add FAC page</button>
+              <button class="editor-mini-btn" type="button" onclick="addOfflineInlineCert(event,'FAM')">Add FAM page</button>
+              <button class="editor-mini-btn" type="button" onclick="addOfflineInlineCert(event,'PSC')">Add PSC page</button>
+            </div>
+            <div id="offlineInlineCertSummary" class="sfa-local-note editor-wide">No extra cert pages added yet.</div>
+          </div>
+
           <div id="facOfflineFields" class="nested-editor-grid hidden-report-fields">
             <div class="editor-section-title">FAC Fire Alarm Commissioning Certificate</div>
-            <div class="sfa-local-note">Offline FAC saves as a W/ESR cloud draft with the FAC Add Cert switched on. Sync it, then open from Cloud Drafts and Complete Job as normal.</div>
+            <div class="sfa-local-note">Saved as an added FAC page inside this offline parent draft.</div>
+            <button class="editor-mini-btn" type="button" onclick="removeOfflineInlineCert(event,'FAC')">Remove FAC page</button>
             <div class="editor-field"><label>System Category</label><select id="editFacCategory"><option value="L1">L1</option><option value="L2">L2</option><option value="L3">L3</option><option value="L4">L4</option><option value="L5">L5</option><option value="P1">P1</option><option value="P2">P2</option><option value="OTHER">Other</option></select></div>
             <div class="editor-field"><label>Other Category</label><input id="editFacOtherCategory"></div>
             <div class="editor-field editor-wide"><label>Variations from the agreed specification</label><textarea id="editFacVariations" rows="3"></textarea></div>
             <div class="editor-field"><label>Soak Test Period</label><input id="editFacSoakTestPeriod" placeholder="e.g. 7 days"></div>
             <div class="editor-field"><label>Sound Level Test Cert No.</label><input id="editFacSoundLevelTestCertificateNo"></div>
             <div class="editor-field"><label>Power Supply Cert No.</label><input id="editFacPowerSupplyCertificateNo"></div>
+            <div class="editor-field editor-wide"><label>Corrective Action</label><textarea id="editFacCorrectiveAction" rows="3"></textarea></div>
+            <div class="editor-field editor-wide"><label>False Alarm Considerations</label><textarea id="editFacFalseAlarmConsiderations" rows="3"></textarea></div>
             <div class="editor-section-title">Commissioning Checks</div>
             <div class="editor-field"><label>All Audible / Visual Alarms operate correctly</label><select id="editFacCheck_audibleVisualAlarms"><option value="NA">N/A</option><option value="YES">YES</option><option value="NO">NO</option></select></div>
             <div class="editor-field"><label>All Manual Call Points operate correctly</label><select id="editFacCheck_manualCallPoints"><option value="NA">N/A</option><option value="YES">YES</option><option value="NO">NO</option></select></div>
             <div class="editor-field"><label>All Smoke / Beam Detectors operate correctly</label><select id="editFacCheck_smokeBeamDetectors"><option value="NA">N/A</option><option value="YES">YES</option><option value="NO">NO</option></select></div>
             <div class="editor-field"><label>All Heat Detectors operate correctly</label><select id="editFacCheck_heatDetectors"><option value="NA">N/A</option><option value="YES">YES</option><option value="NO">NO</option></select></div>
             <div class="editor-field"><label>Control, Indicating, Printing, Ancillaries</label><select id="editFacCheck_controlIndicating"><option value="NA">N/A</option><option value="YES">YES</option><option value="NO">NO</option></select></div>
-            <div class="editor-field"><label>Transmission of Fire / Fault Signal to Alarm Receiving Centre</label><select id="editFacCheck_fireFaultSignal"><option value="NA">N/A</option><option value="YES">YES</option><option value="NO">NO</option></select></div>
+            <div class="editor-field"><label>Transmission of Fire / Fault Signal to ARC</label><select id="editFacCheck_fireFaultSignal"><option value="NA">N/A</option><option value="YES">YES</option><option value="NO">NO</option></select></div>
             <div class="editor-field"><label>Cause and Effects in Specification operate correctly</label><select id="editFacCheck_causeEffectsSpec"><option value="NA">N/A</option><option value="YES">YES</option><option value="NO">NO</option></select></div>
             <div class="editor-field"><label>Correct Audibility levels throughout the system</label><select id="editFacCheck_audibilityLevels"><option value="NA">N/A</option><option value="YES">YES</option><option value="NO">NO</option></select></div>
             <div class="editor-field"><label>Correct labelling of all equipment as necessary</label><select id="editFacCheck_equipmentLabelling"><option value="NA">N/A</option><option value="YES">YES</option><option value="NO">NO</option></select></div>
@@ -1684,101 +1698,85 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
             <div class="editor-field"><label>Cable Resistance Records available</label><select id="editFacCheck_cableRecords"><option value="NA">N/A</option><option value="YES">YES</option><option value="NO">NO</option></select></div>
             <div class="editor-field"><label>Cable / Installation satisfactory</label><select id="editFacCheck_cableInstallSatisfactory"><option value="NA">N/A</option><option value="YES">YES</option><option value="NO">NO</option></select></div>
             <div class="editor-field"><label>Battery Labels visible in normal position</label><select id="editFacCheck_batteryLabels"><option value="NA">N/A</option><option value="YES">YES</option><option value="NO">NO</option></select></div>
-            <div class="editor-field"><label>Ancillary Equipment (Relays etc)</label><select id="editFacCheck_ancillaryEquipment"><option value="NA">N/A</option><option value="YES">YES</option><option value="NO">NO</option></select></div>
+            <div class="editor-field"><label>Ancillary Equipment / Relays etc</label><select id="editFacCheck_ancillaryEquipment"><option value="NA">N/A</option><option value="YES">YES</option><option value="NO">NO</option></select></div>
             <div class="editor-field"><label>Cause and Effects Tested</label><select id="editFacCheck_causeEffectsTested"><option value="NA">N/A</option><option value="YES">YES</option><option value="NO">NO</option></select></div>
             <div class="editor-field"><label>Power Supply / Batteries satisfactory</label><select id="editFacCheck_powerSupplyBatteries"><option value="NA">N/A</option><option value="YES">YES</option><option value="NO">NO</option></select></div>
             <div class="editor-field"><label>System Design Specification present</label><select id="editFacCheck_designSpecPresent"><option value="NA">N/A</option><option value="YES">YES</option><option value="NO">NO</option></select></div>
             <div class="editor-field"><label>Siting of Call Points / Beam / Point Detection correct</label><select id="editFacCheck_mcpSitingCorrect"><option value="NA">N/A</option><option value="YES">YES</option><option value="NO">NO</option></select></div>
             <div class="editor-field"><label>Siting of Audible / Visual Alarm Units correct</label><select id="editFacCheck_audibleSitingCorrect"><option value="NA">N/A</option><option value="YES">YES</option><option value="NO">NO</option></select></div>
-            <div class="editor-field"><label>Siting of Remote Indicator Units correct</label><select id="editFacCheck_remoteIndicatorSiting"><option value="NA">N/A</option><option value="YES">YES</option><option value="NO">NO</option></select></div>
-            <div class="editor-field"><label>Siting of Control & Indicating Equipment correct</label><select id="editFacCheck_controlSitingCorrect"><option value="NA">N/A</option><option value="YES">YES</option><option value="NO">NO</option></select></div>
+            <div class="editor-field"><label>Siting of Remote Indicators correct</label><select id="editFacCheck_remoteIndicatorSiting"><option value="NA">N/A</option><option value="YES">YES</option><option value="NO">NO</option></select></div>
+            <div class="editor-field"><label>Siting of Control / Indicating Equipment correct</label><select id="editFacCheck_controlSitingCorrect"><option value="NA">N/A</option><option value="YES">YES</option><option value="NO">NO</option></select></div>
             <div class="editor-field"><label>Inspection of Power Supply Units</label><select id="editFacCheck_powerSupplyInspection"><option value="NA">N/A</option><option value="YES">YES</option><option value="NO">NO</option></select></div>
-            <div class="editor-field"><label>Certification of Design available</label><select id="editFacCheck_designCertification"><option value="NA">N/A</option><option value="YES">YES</option><option value="NO">NO</option></select></div>
-            <div class="editor-field"><label>Certification of Installation available</label><select id="editFacCheck_installationCertification"><option value="NA">N/A</option><option value="YES">YES</option><option value="NO">NO</option></select></div>
+            <div class="editor-field"><label>Design certification issued</label><select id="editFacCheck_designCertification"><option value="NA">N/A</option><option value="YES">YES</option><option value="NO">NO</option></select></div>
+            <div class="editor-field"><label>Installation certification issued</label><select id="editFacCheck_installationCertification"><option value="NA">N/A</option><option value="YES">YES</option><option value="NO">NO</option></select></div>
             <div class="editor-field"><label>Certification of Commissioning issued</label><select id="editFacCheck_commissioningCertification"><option value="NA">N/A</option><option value="YES">YES</option><option value="NO">NO</option></select></div>
-            <div class="editor-field"><label>System Operational / Maintenance Manuals issued</label><select id="editFacCheck_manualsIssued"><option value="NA">N/A</option><option value="YES">YES</option><option value="NO">NO</option></select></div>
+            <div class="editor-field"><label>Manuals / instructions issued</label><select id="editFacCheck_manualsIssued"><option value="NA">N/A</option><option value="YES">YES</option><option value="NO">NO</option></select></div>
             <div class="editor-field"><label>Log Book available</label><select id="editFacCheck_logBookAvailable"><option value="NA">N/A</option><option value="YES">YES</option><option value="NO">NO</option></select></div>
-            <div class="editor-field"><label>Any obvious potential for unacceptable false alarms</label><select id="editFacCheck_falseAlarmPotential"><option value="NA">N/A</option><option value="YES">YES</option><option value="NO">NO</option></select></div>
-            <div class="editor-field"><label>As Fitted Drawings available & Zone plan displayed</label><select id="editFacCheck_asFittedDrawings"><option value="NA">N/A</option><option value="YES">YES</option><option value="NO">NO</option></select></div>
-            <div class="editor-field"><label>Purchaser / User instructed in operation of System</label><select id="editFacCheck_userInstructed"><option value="NA">N/A</option><option value="YES">YES</option><option value="NO">NO</option></select></div>
-            <div class="editor-section-title">Corrective Action / False Alarms</div>
-            <div class="editor-field editor-wide"><label>Corrective Action Required Prior to System Becoming Operational</label><textarea id="editFacCorrectiveAction" rows="4"></textarea></div>
-            <div class="editor-field editor-wide"><label>Potential Causes of False Alarms to Consider at Next Visit</label><textarea id="editFacFalseAlarmConsiderations" rows="4"></textarea></div>
+            <div class="editor-field"><label>False alarm potential considered</label><select id="editFacCheck_falseAlarmPotential"><option value="NA">N/A</option><option value="YES">YES</option><option value="NO">NO</option></select></div>
+            <div class="editor-field"><label>As fitted drawings available</label><select id="editFacCheck_asFittedDrawings"><option value="NA">N/A</option><option value="YES">YES</option><option value="NO">NO</option></select></div>
+            <div class="editor-field"><label>User instructed</label><select id="editFacCheck_userInstructed"><option value="NA">N/A</option><option value="YES">YES</option><option value="NO">NO</option></select></div>
           </div>
 
           <div id="famOfflineFields" class="nested-editor-grid hidden-report-fields">
             <div class="editor-section-title">FAM Fire Alarm Modification Certificate</div>
-            <div class="sfa-local-note">Offline FAM saves as a W/ESR cloud draft with the FAM Add Cert switched on. Sync it, then open from Cloud Drafts and Complete Job as normal.</div>
-            <div class="editor-field editor-wide"><label>Description of Work</label><textarea id="editFamDescriptionWork" rows="4"></textarea></div>
-            <div class="editor-field editor-wide"><label>Variations</label><textarea id="editFamVariations" rows="3"></textarea></div>
-            <div class="editor-field"><label>Third Party Name / Details</label><input id="editFamThirdPartyName"></div>
+            <div class="sfa-local-note">Saved as an added FAM page inside this offline parent draft.</div>
+            <button class="editor-mini-btn" type="button" onclick="removeOfflineInlineCert(event,'FAM')">Remove FAM page</button>
+            <div class="editor-field editor-wide"><label>Description of Works</label><textarea id="editFamDescriptionWork" rows="4"></textarea></div>
+            <div class="editor-field editor-wide"><label>Variations from the agreed specification</label><textarea id="editFamVariations" rows="3"></textarea></div>
+            <div class="editor-field"><label>Third Party Name</label><input id="editFamThirdPartyName"></div>
             <div class="editor-field"><label>Power Supply Cert No.</label><input id="editFamPowerSupplyCertNo"></div>
             <div class="editor-field"><label>Sound Level Test Cert No.</label><input id="editFamSoundLevelTestCertNo"></div>
-            <div class="editor-field"><label>Risk Assessment Recommended</label><select id="editFamRiskAssessmentRecommended"><option value="NA">N/A</option><option value="YES">YES</option><option value="NO">NO</option></select></div>
-            <div class="editor-field editor-wide"><label>Immediate Corrective Action Required / Undertaken</label><textarea id="editFamCorrectiveAction" rows="4"></textarea></div>
+            <div class="editor-field"><label>Risk Assessment Recommended</label><select id="editFamRiskAssessmentRecommended"><option value="NO">NO</option><option value="YES">YES</option></select></div>
+            <div class="editor-field editor-wide"><label>Corrective Action</label><textarea id="editFamCorrectiveAction" rows="3"></textarea></div>
             <div class="editor-section-title">Modification Checks</div>
-            <div class="editor-field"><label>All additional Manual Call Points operate correctly - Total</label><input id="editFamCheck_manualCallPointsTotal" type="number" inputmode="numeric"></div>
-            <div class="editor-field"><label>All additional Manual Call Points operate correctly - Result</label><select id="editFamCheck_manualCallPointsResult"><option value="NA">N/A</option><option value="YES">YES</option><option value="NO">NO</option></select></div>
-            <div class="editor-field"><label>All additional Smoke / Beam Detectors operate correctly - Total</label><input id="editFamCheck_smokeBeamDetectorsTotal" type="number" inputmode="numeric"></div>
-            <div class="editor-field"><label>All additional Smoke / Beam Detectors operate correctly - Result</label><select id="editFamCheck_smokeBeamDetectorsResult"><option value="NA">N/A</option><option value="YES">YES</option><option value="NO">NO</option></select></div>
-            <div class="editor-field"><label>All additional Heat Detectors operate correctly - Total</label><input id="editFamCheck_heatDetectorsTotal" type="number" inputmode="numeric"></div>
-            <div class="editor-field"><label>All additional Heat Detectors operate correctly - Result</label><select id="editFamCheck_heatDetectorsResult"><option value="NA">N/A</option><option value="YES">YES</option><option value="NO">NO</option></select></div>
-            <div class="editor-field"><label>All additional Audible / Visual Alarms operate correctly - Total</label><input id="editFamCheck_audibleVisualAlarmsTotal" type="number" inputmode="numeric"></div>
-            <div class="editor-field"><label>All additional Audible / Visual Alarms operate correctly - Result</label><select id="editFamCheck_audibleVisualAlarmsResult"><option value="NA">N/A</option><option value="YES">YES</option><option value="NO">NO</option></select></div>
-            <div class="editor-field"><label>Correct Audibility Levels in Modified Areas - Total</label><input id="editFamCheck_audibilityLevelsTotal" type="number" inputmode="numeric"></div>
-            <div class="editor-field"><label>Correct Audibility Levels in Modified Areas - Result</label><select id="editFamCheck_audibilityLevelsResult"><option value="NA">N/A</option><option value="YES">YES</option><option value="NO">NO</option></select></div>
-            <div class="editor-field"><label>Correct Zone indicated on triggering of added devices - Total</label><input id="editFamCheck_zoneIndicatedTotal" type="number" inputmode="numeric"></div>
-            <div class="editor-field"><label>Correct Zone indicated on triggering of added devices - Result</label><select id="editFamCheck_zoneIndicatedResult"><option value="NA">N/A</option><option value="YES">YES</option><option value="NO">NO</option></select></div>
-            <div class="editor-field"><label>At least one existing device on each modified circuit - Total</label><input id="editFamCheck_existingDeviceModifiedCircuitTotal" type="number" inputmode="numeric"></div>
-            <div class="editor-field"><label>At least one existing device on each modified circuit - Result</label><select id="editFamCheck_existingDeviceModifiedCircuitResult"><option value="NA">N/A</option><option value="YES">YES</option><option value="NO">NO</option></select></div>
-            <div class="editor-field"><label>Control Equipment Modifications - Total</label><input id="editFamCheck_controlEquipmentModificationsTotal" type="number" inputmode="numeric"></div>
-            <div class="editor-field"><label>Control Equipment Modifications - Result</label><select id="editFamCheck_controlEquipmentModificationsResult"><option value="NA">N/A</option><option value="YES">YES</option><option value="NO">NO</option></select></div>
-            <div class="editor-field"><label>At least one existing device of every existing circuit - Total</label><input id="editFamCheck_existingDeviceEveryCircuitTotal" type="number" inputmode="numeric"></div>
-            <div class="editor-field"><label>At least one existing device of every existing circuit - Result</label><select id="editFamCheck_existingDeviceEveryCircuitResult"><option value="NA">N/A</option><option value="YES">YES</option><option value="NO">NO</option></select></div>
-            <div class="editor-field"><label>Software Modifications Undertaken - Total</label><input id="editFamCheck_softwareModificationsTotal" type="number" inputmode="numeric"></div>
-            <div class="editor-field"><label>Software Modifications Undertaken - Result</label><select id="editFamCheck_softwareModificationsResult"><option value="NA">N/A</option><option value="YES">YES</option><option value="NO">NO</option></select></div>
-            <div class="editor-field"><label>All devices operate correctly if Software Modified - Total</label><input id="editFamCheck_softwareDevicesCorrectTotal" type="number" inputmode="numeric"></div>
-            <div class="editor-field"><label>All devices operate correctly if Software Modified - Result</label><select id="editFamCheck_softwareDevicesCorrectResult"><option value="NA">N/A</option><option value="YES">YES</option><option value="NO">NO</option></select></div>
-            <div class="editor-field"><label>Modified cabling correct - Total</label><input id="editFamCheck_modifiedCablingCorrectTotal" type="number" inputmode="numeric"></div>
-            <div class="editor-field"><label>Modified cabling correct - Result</label><select id="editFamCheck_modifiedCablingCorrectResult"><option value="NA">N/A</option><option value="YES">YES</option><option value="NO">NO</option></select></div>
-            <div class="editor-field"><label>Power Supply / Batteries remain adequate - Total</label><input id="editFamCheck_powerSupplyBatteriesAdequateTotal" type="number" inputmode="numeric"></div>
-            <div class="editor-field"><label>Power Supply / Batteries remain adequate - Result</label><select id="editFamCheck_powerSupplyBatteriesAdequateResult"><option value="NA">N/A</option><option value="YES">YES</option><option value="NO">NO</option></select></div>
-            <div class="editor-field"><label>Ancillary Equipment / Relays etc - Total</label><input id="editFamCheck_ancillaryEquipmentTotal" type="number" inputmode="numeric"></div>
-            <div class="editor-field"><label>Ancillary Equipment / Relays etc - Result</label><select id="editFamCheck_ancillaryEquipmentResult"><option value="NA">N/A</option><option value="YES">YES</option><option value="NO">NO</option></select></div>
-            <div class="editor-field"><label>Cause and Effects if altered - Total</label><input id="editFamCheck_causeEffectsAlteredTotal" type="number" inputmode="numeric"></div>
-            <div class="editor-field"><label>Cause and Effects if altered - Result</label><select id="editFamCheck_causeEffectsAlteredResult"><option value="NA">N/A</option><option value="YES">YES</option><option value="NO">NO</option></select></div>
+            <div class="editor-field"><label>All additional Manual Call Points operate correctly</label><input id="editFamCheck_manualCallPointsTotal" type="number" placeholder="Total"><select id="editFamCheck_manualCallPoints"><option value="NA">N/A</option><option value="YES">YES</option><option value="NO">NO</option></select></div>
+            <div class="editor-field"><label>All additional Smoke / Beam Detectors operate correctly</label><input id="editFamCheck_smokeBeamDetectorsTotal" type="number" placeholder="Total"><select id="editFamCheck_smokeBeamDetectors"><option value="NA">N/A</option><option value="YES">YES</option><option value="NO">NO</option></select></div>
+            <div class="editor-field"><label>All additional Heat Detectors operate correctly</label><input id="editFamCheck_heatDetectorsTotal" type="number" placeholder="Total"><select id="editFamCheck_heatDetectors"><option value="NA">N/A</option><option value="YES">YES</option><option value="NO">NO</option></select></div>
+            <div class="editor-field"><label>All additional Audible / Visual Alarms operate correctly</label><input id="editFamCheck_audibleVisualAlarmsTotal" type="number" placeholder="Total"><select id="editFamCheck_audibleVisualAlarms"><option value="NA">N/A</option><option value="YES">YES</option><option value="NO">NO</option></select></div>
+            <div class="editor-field"><label>Correct Audibility Levels in Modified Areas</label><input id="editFamCheck_audibilityLevelsTotal" type="number" placeholder="Total"><select id="editFamCheck_audibilityLevels"><option value="NA">N/A</option><option value="YES">YES</option><option value="NO">NO</option></select></div>
+            <div class="editor-field"><label>Correct Zone indicated on triggering of added devices</label><input id="editFamCheck_zoneIndicatedTotal" type="number" placeholder="Total"><select id="editFamCheck_zoneIndicated"><option value="NA">N/A</option><option value="YES">YES</option><option value="NO">NO</option></select></div>
+            <div class="editor-field"><label>At least one existing device on each modified circuit</label><input id="editFamCheck_existingDeviceModifiedCircuitTotal" type="number" placeholder="Total"><select id="editFamCheck_existingDeviceModifiedCircuit"><option value="NA">N/A</option><option value="YES">YES</option><option value="NO">NO</option></select></div>
+            <div class="editor-field"><label>Control Equipment Modifications</label><input id="editFamCheck_controlEquipmentModificationsTotal" type="number" placeholder="Total"><select id="editFamCheck_controlEquipmentModifications"><option value="NA">N/A</option><option value="YES">YES</option><option value="NO">NO</option></select></div>
+            <div class="editor-field"><label>At least one existing device of every existing circuit</label><input id="editFamCheck_existingDeviceEveryCircuitTotal" type="number" placeholder="Total"><select id="editFamCheck_existingDeviceEveryCircuit"><option value="NA">N/A</option><option value="YES">YES</option><option value="NO">NO</option></select></div>
+            <div class="editor-field"><label>Software Modifications Undertaken</label><input id="editFamCheck_softwareModificationsTotal" type="number" placeholder="Total"><select id="editFamCheck_softwareModifications"><option value="NA">N/A</option><option value="YES">YES</option><option value="NO">NO</option></select></div>
+            <div class="editor-field"><label>All devices operate correctly if Software Modified</label><input id="editFamCheck_softwareDevicesCorrectTotal" type="number" placeholder="Total"><select id="editFamCheck_softwareDevicesCorrect"><option value="NA">N/A</option><option value="YES">YES</option><option value="NO">NO</option></select></div>
+            <div class="editor-field"><label>Modified cabling to the best of my knowledge correct</label><input id="editFamCheck_modifiedCablingCorrectTotal" type="number" placeholder="Total"><select id="editFamCheck_modifiedCablingCorrect"><option value="NA">N/A</option><option value="YES">YES</option><option value="NO">NO</option></select></div>
+            <div class="editor-field"><label>Power Supply / Batteries remain adequate</label><input id="editFamCheck_powerSupplyBatteriesAdequateTotal" type="number" placeholder="Total"><select id="editFamCheck_powerSupplyBatteriesAdequate"><option value="NA">N/A</option><option value="YES">YES</option><option value="NO">NO</option></select></div>
+            <div class="editor-field"><label>Ancillary Equipment / Relays etc</label><input id="editFamCheck_ancillaryEquipmentTotal" type="number" placeholder="Total"><select id="editFamCheck_ancillaryEquipment"><option value="NA">N/A</option><option value="YES">YES</option><option value="NO">NO</option></select></div>
+            <div class="editor-field"><label>Cause and Effects if altered</label><input id="editFamCheck_causeEffectsAlteredTotal" type="number" placeholder="Total"><select id="editFamCheck_causeEffectsAltered"><option value="NA">N/A</option><option value="YES">YES</option><option value="NO">NO</option></select></div>
             <div class="editor-section-title">Documents / Compliance</div>
-            <div class="editor-field"><label>As fitted drawings updated</label><select id="editFamCheck_asFittedDrawingsUpdatedResult"><option value="NA">N/A</option><option value="YES">YES</option><option value="NO">NO</option></select></div>
-            <div class="editor-field"><label>Modification details issued</label><select id="editFamCheck_modificationDetailsIssuedResult"><option value="NA">N/A</option><option value="YES">YES</option><option value="NO">NO</option></select></div>
-            <div class="editor-field"><label>Client requirements met</label><select id="editFamCheck_clientRequirementsResult"><option value="NA">N/A</option><option value="YES">YES</option><option value="NO">NO</option></select></div>
-            <div class="editor-field"><label>Major non-compliances</label><select id="editFamCheck_majorNonCompliancesResult"><option value="NA">N/A</option><option value="YES">YES</option><option value="NO">NO</option></select></div>
+            <div class="editor-field"><label>As fitted drawings updated</label><select id="editFamCheck_asFittedDrawingsUpdated"><option value="NA">N/A</option><option value="YES">YES</option><option value="NO">NO</option></select></div>
+            <div class="editor-field"><label>Modification details issued</label><select id="editFamCheck_modificationDetailsIssued"><option value="NA">N/A</option><option value="YES">YES</option><option value="NO">NO</option></select></div>
+            <div class="editor-field"><label>Client requirements met</label><select id="editFamCheck_clientRequirements"><option value="NA">N/A</option><option value="YES">YES</option><option value="NO">NO</option></select></div>
+            <div class="editor-field"><label>Major non-compliances</label><select id="editFamCheck_majorNonCompliances"><option value="NA">N/A</option><option value="YES">YES</option><option value="NO">NO</option></select></div>
           </div>
 
           <div id="pscOfflineFields" class="nested-editor-grid hidden-report-fields">
             <div class="editor-section-title">PSC Fire Alarm Power Supply Certificate</div>
-            <div class="sfa-local-note">Offline PSC saves as a W/ESR cloud draft with the Power Supply Add Cert switched on. Sync it, then open from Cloud Drafts and Complete Job as normal.</div>
+            <div class="sfa-local-note">Saved as an added PSC page inside this offline parent draft.</div>
+            <button class="editor-mini-btn" type="button" onclick="removeOfflineInlineCert(event,'PSC')">Remove PSC page</button>
+            <input type="hidden" id="editPscReportNo">
             <div class="editor-field"><label>Panel Location</label><input id="editPscPanelLocation"></div>
             <div class="editor-field"><label>Panel Type</label><input id="editPscPanelType"></div>
-            <div class="editor-field"><label>Power Supply</label><input id="editPscPowerSupply" placeholder="e.g. 24V DC PSU"></div>
-            <div class="editor-field"><label>Batteries (A/H)</label><input id="editPscBatteriesAh" placeholder="e.g. 2 x 7Ah"></div>
-            <div class="editor-field"><label>Battery Date</label><input id="editPscBatteryDate" placeholder="MM/YYYY"></div>
+            <div class="editor-field"><label>Power Supply</label><input id="editPscPowerSupply"></div>
+            <div class="editor-field"><label>Batteries (A/H)</label><input id="editPscBatteriesAh"></div>
+            <div class="editor-field"><label>Battery Date</label><input id="editPscBatteryDate"></div>
             <div class="editor-field"><label>Meter Type</label><input id="editPscMeterType"></div>
-            <div class="editor-field"><label>Meter No.</label><input id="editPscMeterNo"></div>
+            <div class="editor-field"><label>Meter No</label><input id="editPscMeterNo"></div>
             <div class="editor-field"><label>Type of System</label><select id="editPscSystemType"><option value="Existing">Test on Existing System</option><option value="New">New</option><option value="Additions">Additions</option><option value="Modifications">Modifications</option></select></div>
             <div class="editor-field"><label>Power Supply Unit Correct</label><select id="editPscPowerSupplyUnitCorrect"><option value="YES">YES</option><option value="NO">NO</option><option value="UNKNOWN">Unknown</option></select></div>
-            <div class="editor-section-title">Battery Calculation</div>
             <div class="editor-field"><label>Standby Period T1 Hours</label><input id="editPscStandbyHours" value="24"></div>
             <div class="editor-field"><label>Alarm Time T2 Hours</label><input id="editPscAlarmTimeT2" value="0.5"></div>
             <div class="editor-field"><label>Other Alarm Time</label><input id="editPscOtherAlarmTime"></div>
             <div class="editor-field"><label>Existing PSU Size</label><input id="editPscExistingPsuSize"></div>
-            <div class="editor-field"><label>Quiescent Current L1</label><input id="editPscQuiescentCurrentL1" placeholder="e.g. 0.120"></div>
-            <div class="editor-field"><label>Alarm Current L2</label><input id="editPscAlarmCurrentL2" placeholder="e.g. 0.650"></div>
+            <div class="editor-field"><label>Quiescent Current L1</label><input id="editPscQuiescentCurrentL1"></div>
+            <div class="editor-field"><label>Alarm Current L2</label><input id="editPscAlarmCurrentL2"></div>
             <div class="editor-field"><label>Zones Used</label><input id="editPscZonesUsed"></div>
             <div class="editor-field"><label>Allow 50mA Per Zone L3</label><input id="editPscAllow50maPerZoneL3"></div>
             <div class="editor-field"><label>Ageing Factor</label><select id="editPscAgeingFactor"><option value="1.25">1.25</option></select></div>
             <div class="editor-field"><label>De-Rating Factor</label><select id="editPscDeRatingFactor"><option value="1.75">BS5839 = 1.75</option><option value="2">FIA = 2</option></select></div>
             <div class="editor-field"><label>Required Batteries</label><input id="editPscCalculatedBatteryAh" readonly></div>
-            <div class="editor-field"><label>Batteries Installed</label><input id="editPscBatteriesInstalled" placeholder="e.g. 2 x 7Ah"></div>
+            <div class="editor-field"><label>Batteries Installed</label><input id="editPscBatteriesInstalled"></div>
             <div class="editor-field"><label>Existing Battery Ah</label><input id="editPscExistingBatteryAh"></div>
             <div class="editor-field editor-wide"><label>Notes</label><textarea id="editPscNotes" rows="4"></textarea></div>
             <div class="editor-summary editor-wide"><div><span>Power Supply battery calculation</span><strong id="editPscCalcStatus">Enter readings to calculate required batteries.</strong></div></div>
@@ -2520,7 +2518,6 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
         ['Link to manned Centre', 'Design Category Cert. Available']
       ];
 
-      const FSD_INLINE_CERT_LABELS = { FAC: 'Fire Alarm Commissioning Certificate', FAM: 'Fire Alarm Modification Certificate', PSC: 'Fire Alarm Power Supply Certificate' };
       const FAC_OFFLINE_CHECK_KEYS = ["audibleVisualAlarms", "manualCallPoints", "smokeBeamDetectors", "heatDetectors", "controlIndicating", "fireFaultSignal", "causeEffectsSpec", "audibilityLevels", "equipmentLabelling", "zoneIndicated", "dedicatedMains", "cableRecords", "cableInstallSatisfactory", "batteryLabels", "ancillaryEquipment", "causeEffectsTested", "powerSupplyBatteries", "designSpecPresent", "mcpSitingCorrect", "audibleSitingCorrect", "remoteIndicatorSiting", "controlSitingCorrect", "powerSupplyInspection", "designCertification", "installationCertification", "commissioningCertification", "manualsIssued", "logBookAvailable", "falseAlarmPotential", "asFittedDrawings", "userInstructed"];
       const FAM_OFFLINE_CHECK_KEYS = ["manualCallPoints", "smokeBeamDetectors", "heatDetectors", "audibleVisualAlarms", "audibilityLevels", "zoneIndicated", "existingDeviceModifiedCircuit", "controlEquipmentModifications", "existingDeviceEveryCircuit", "softwareModifications", "softwareDevicesCorrect", "modifiedCablingCorrect", "powerSupplyBatteriesAdequate", "ancillaryEquipment", "causeEffectsAltered"];
       const FAM_OFFLINE_DOC_KEYS = ["asFittedDrawingsUpdated", "modificationDetailsIssued", "clientRequirements", "majorNonCompliances"];
@@ -2585,22 +2582,6 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
         return OFFLINE_REPORT_TYPES[getOfflineReportType(item)] || OFFLINE_REPORT_TYPES.W;
       }
 
-
-      function getOfflineInlineCertType(item) {
-        const draft = item && item.draft ? item.draft : item || {};
-        const raw = String(draft.offlineInlineCertType || draft.inlineCertType || '').toUpperCase();
-        if (raw === 'FAC' || raw === 'FAM' || raw === 'PSC') return raw;
-        if (String(draft.includeFireAlarmCommissioningReport || '').toUpperCase() === 'YES') return 'FAC';
-        if (String(draft.includeFireAlarmModificationReport || '').toUpperCase() === 'YES') return 'FAM';
-        if (String(draft.includePowerSupplyCertificate || '').toUpperCase() === 'YES') return 'PSC';
-        return '';
-      }
-
-      function getOfflineInlineCertLabel(item) {
-        const type = getOfflineInlineCertType(item);
-        return type ? (FSD_INLINE_CERT_LABELS[type] || type) : '';
-      }
-
       function readOfflineQueue() {
         let rows = [];
         try {
@@ -2663,15 +2644,18 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
         const parts = [];
         rows.forEach(function(row) {
           const report = getOfflineReportConfig(row);
-          const inlineLabel = getOfflineInlineCertLabel(row);
-          let title = row.draftName || row.customer || ('Offline ' + (inlineLabel || report.label) + ' draft');
-          if (inlineLabel) title = String(title || '').replace(/Offline\s+W\b/gi, 'Offline ' + inlineLabel).replace(/Engineer Service Report/gi, inlineLabel);
-          else if (report.code === 'W') {
+          let title = row.draftName || row.customer || ('Offline ' + report.label + ' draft');
+          if (report.code === 'W') {
             title = String(title || '').replace(/Offline\s+W\b/gi, 'Offline Engineer Service Report').replace(/\bW\s+draft\b/gi, 'Engineer Service Report draft');
           }
           const saved = row.savedAt ? new Date(row.savedAt).toLocaleString() : 'not known';
+          const addedInline = [];
+          const draftForMeta = row.draft || {};
+          if (String(draftForMeta.includeFireAlarmCommissioningReport || '').toUpperCase() === 'YES') addedInline.push('FAC');
+          if (String(draftForMeta.includeFireAlarmModificationReport || '').toUpperCase() === 'YES') addedInline.push('FAM');
+          if (String(draftForMeta.includePowerSupplyCertificate || '').toUpperCase() === 'YES') addedInline.push('PSC');
           const meta = [
-            'Type: ' + (inlineLabel || report.label),
+            'Type: ' + report.label + (addedInline.length ? ' + ' + addedInline.join('/') : ''),
             row.engineer ? 'Engineer: ' + row.engineer : '',
             row.customer ? 'Customer: ' + row.customer : '',
             row.site ? 'Site: ' + row.site : '',
@@ -2742,6 +2726,59 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
       }
 
 
+      function offlineBoolYes(value) { return String(value || '').toUpperCase() === 'YES'; }
+
+      function setOfflineInlineFlag(type, value) {
+        const yes = value ? 'YES' : 'NO';
+        if (type === 'FAC') setEditValue('editIncludeFireAlarmCommissioningReport', yes);
+        if (type === 'FAM') setEditValue('editIncludeFireAlarmModificationReport', yes);
+        if (type === 'PSC') setEditValue('editIncludePowerSupplyCertificate', yes);
+      }
+
+      function getOfflineInlineFlag(type) {
+        if (type === 'FAC') return offlineBoolYes(getEditValue('editIncludeFireAlarmCommissioningReport'));
+        if (type === 'FAM') return offlineBoolYes(getEditValue('editIncludeFireAlarmModificationReport'));
+        if (type === 'PSC') return offlineBoolYes(getEditValue('editIncludePowerSupplyCertificate'));
+        return false;
+      }
+
+      function updateOfflineInlineCertUi() {
+        const fac = getOfflineInlineFlag('FAC');
+        const fam = getOfflineInlineFlag('FAM');
+        const psc = getOfflineInlineFlag('PSC');
+        const facBox = document.getElementById('facOfflineFields');
+        const famBox = document.getElementById('famOfflineFields');
+        const pscBox = document.getElementById('pscOfflineFields');
+        const summary = document.getElementById('offlineInlineCertSummary');
+        if (facBox) facBox.classList.toggle('hidden-report-fields', !fac);
+        if (famBox) famBox.classList.toggle('hidden-report-fields', !fam);
+        if (pscBox) pscBox.classList.toggle('hidden-report-fields', !psc);
+        if (summary) {
+          const names = [];
+          if (fac) names.push('FAC Commissioning');
+          if (fam) names.push('FAM Modification');
+          if (psc) names.push('PSC Power Supply');
+          summary.textContent = names.length ? ('Added pages: ' + names.join(', ')) : 'No extra cert pages added yet.';
+        }
+        calculateOfflinePsc();
+      }
+
+      window.addOfflineInlineCert = function addOfflineInlineCert(event, type) {
+        stopTap(event);
+        setOfflineInlineFlag(type, true);
+        updateOfflineInlineCertUi();
+        setEditorDirty(true);
+        setEditorStatus((type || 'Cert') + ' page added to this offline parent draft. Press Save Offline before leaving.');
+      };
+
+      window.removeOfflineInlineCert = function removeOfflineInlineCert(event, type) {
+        stopTap(event);
+        setOfflineInlineFlag(type, false);
+        updateOfflineInlineCertUi();
+        setEditorDirty(true);
+        setEditorStatus((type || 'Cert') + ' page removed from this offline parent draft.');
+      };
+
       function offlinePscNum(id) {
         const n = Number(String(getEditValue(id) || '').replace(/[^0-9.\-]/g, ''));
         return Number.isFinite(n) ? n : 0;
@@ -2749,9 +2786,8 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
 
       function calculateOfflinePsc() {
         const zones = offlinePscNum('editPscZonesUsed');
-        const l3Current = offlinePscNum('editPscAllow50maPerZoneL3');
         const l3El = document.getElementById('editPscAllow50maPerZoneL3');
-        let l3 = l3Current;
+        let l3 = offlinePscNum('editPscAllow50maPerZoneL3');
         if (zones && l3El && (!l3El.value || document.activeElement === document.getElementById('editPscZonesUsed'))) {
           l3 = zones * 0.05;
           l3El.value = l3.toFixed(3);
@@ -2863,10 +2899,10 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
             if (event.target && String(event.target.id || '').indexOf('editPsc') === 0) calculateOfflinePsc();
           }
         });
-        form.addEventListener('change', function(event) {
+        form.addEventListener('change', function() {
           setEditorDirty(true);
           calculateEditorTotals();
-          if (event.target && String(event.target.id || '').indexOf('editPsc') === 0) calculateOfflinePsc();
+          updateOfflineInlineCertUi();
         });
         form.addEventListener('click', function(event) {
           const previewBtn = event.target && event.target.closest ? event.target.closest('#editorSfaPayloadPreviewBtn') : null;
@@ -2984,36 +3020,84 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
         }).filter(function(item) { return item.equipment || item.total || item.tested || item.passed || item.failed || item.checkedOnInspection || item.result; });
       }
 
-      function applyEditorReportLayout(report, item) {
+      function applyEditorReportLayout(report) {
         const isSfa = report && report.code === 'SFA';
         const isSel = report && report.code === 'SEL';
-        const inlineCert = getOfflineInlineCertType(item || {});
-        const isInlineFac = inlineCert === 'FAC';
-        const isInlineFam = inlineCert === 'FAM';
-        const isInlinePsc = inlineCert === 'PSC';
-        const isInlineCert = !!inlineCert;
         const sfaFields = document.getElementById('sfaOfflineFields');
         const selFields = document.getElementById('selOfflineFields');
-        const facFields = document.getElementById('facOfflineFields');
-        const famFields = document.getElementById('famOfflineFields');
-        const pscFields = document.getElementById('pscOfflineFields');
         const wAdmin = document.getElementById('wOfflineAdminFields');
         const wWork = document.getElementById('wOfflineWorkCostFields');
         const materialQuick = document.getElementById('editorMaterialQuickBtn');
         const sfaQuick = document.getElementById('editorSfaEquipmentQuickBtn');
         const sfaPayloadBtn = document.getElementById('editorSfaPayloadPreviewBtn');
         const sfaPayloadPreview = document.getElementById('sfaCloudPayloadPreview');
+        const addCertControls = document.getElementById('offlineAddCertControls');
+        if (addCertControls) addCertControls.classList.remove('hidden-report-fields');
         if (sfaFields) sfaFields.classList.toggle('hidden-report-fields', !isSfa);
         if (selFields) selFields.classList.toggle('hidden-report-fields', !isSel);
-        if (facFields) facFields.classList.toggle('hidden-report-fields', !isInlineFac);
-        if (famFields) famFields.classList.toggle('hidden-report-fields', !isInlineFam);
-        if (pscFields) pscFields.classList.toggle('hidden-report-fields', !isInlinePsc);
         if (wAdmin) wAdmin.classList.toggle('hidden-report-fields', isSfa || isSel);
-        if (wWork) wWork.classList.toggle('hidden-report-fields', isSfa || isSel || isInlineCert);
-        if (materialQuick) materialQuick.classList.toggle('hidden-report-fields', isSfa || isSel || isInlineCert);
+        if (wWork) wWork.classList.toggle('hidden-report-fields', isSfa || isSel);
+        if (materialQuick) materialQuick.classList.toggle('hidden-report-fields', isSfa || isSel);
         if (sfaQuick) sfaQuick.classList.toggle('hidden-report-fields', !isSfa);
         if (sfaPayloadBtn) sfaPayloadBtn.classList.toggle('hidden-report-fields', !isSfa);
         if (!isSfa && sfaPayloadPreview) sfaPayloadPreview.classList.add('hidden-report-fields');
+        updateOfflineInlineCertUi();
+      }
+
+
+      function readDraftValue(draft, key, fallback) {
+        if (!draft) return fallback || '';
+        return draft[key] != null ? draft[key] : (fallback || '');
+      }
+
+      function setOfflineInlineValuesFromDraft(d) {
+        d = d || {};
+        setEditValue('editIncludeFireAlarmCommissioningReport', d.includeFireAlarmCommissioningReport || 'NO');
+        setEditValue('editIncludeFireAlarmModificationReport', d.includeFireAlarmModificationReport || 'NO');
+        setEditValue('editIncludePowerSupplyCertificate', d.includePowerSupplyCertificate || 'NO');
+
+        setEditValue('editFacCategory', d.facCategory || 'L1');
+        setEditValue('editFacOtherCategory', d.facOtherCategory || '');
+        setEditValue('editFacVariations', d.facVariations || '');
+        setEditValue('editFacSoakTestPeriod', d.facSoakTestPeriod || '');
+        setEditValue('editFacSoundLevelTestCertificateNo', d.facSoundLevelTestCertificateNo || '');
+        setEditValue('editFacPowerSupplyCertificateNo', d.facPowerSupplyCertificateNo || '');
+        setEditValue('editFacCorrectiveAction', d.facCorrectiveAction || '');
+        setEditValue('editFacFalseAlarmConsiderations', d.facFalseAlarmConsiderations || '');
+        FAC_OFFLINE_CHECK_KEYS.forEach(function(key) {
+          const checks = d.facCheckResults || {};
+          setEditValue('editFacCheck_' + key, d['facCheck_' + key] || checks[key] || 'NA');
+        });
+
+        setEditValue('editFamDescriptionWork', d.famDescriptionWork || '');
+        setEditValue('editFamVariations', d.famVariations || '');
+        setEditValue('editFamThirdPartyName', d.famThirdPartyName || '');
+        setEditValue('editFamCorrectiveAction', d.famCorrectiveAction || '');
+        setEditValue('editFamPowerSupplyCertNo', d.famPowerSupplyCertNo || '');
+        setEditValue('editFamSoundLevelTestCertNo', d.famSoundLevelTestCertNo || '');
+        setEditValue('editFamRiskAssessmentRecommended', d.famRiskAssessmentRecommended || 'NO');
+        FAM_OFFLINE_CHECK_KEYS.forEach(function(key) {
+          const checks = d.famCheckResults || {};
+          setEditValue('editFamCheck_' + key + 'Total', d['famCheck_' + key + 'Total'] || checks[key + 'Total'] || '');
+          setEditValue('editFamCheck_' + key, d['famCheck_' + key] || d['famCheck_' + key + 'Result'] || checks[key] || 'NA');
+        });
+        FAM_OFFLINE_DOC_KEYS.forEach(function(key) {
+          const checks = d.famCheckResults || {};
+          setEditValue('editFamCheck_' + key, d['famCheck_' + key] || d['famCheck_' + key + 'Result'] || checks[key] || 'NA');
+        });
+
+        PSC_OFFLINE_FIELD_IDS.forEach(function(key) {
+          const editId = 'edit' + key.charAt(0).toUpperCase() + key.slice(1);
+          let fallback = '';
+          if (key === 'pscStandbyHours') fallback = '24';
+          if (key === 'pscAlarmTimeT2') fallback = '0.5';
+          if (key === 'pscSystemType') fallback = 'Existing';
+          if (key === 'pscPowerSupplyUnitCorrect') fallback = 'YES';
+          if (key === 'pscAgeingFactor') fallback = '1.25';
+          if (key === 'pscDeRatingFactor') fallback = '1.75';
+          setEditValue(editId, readDraftValue(d, key, fallback));
+        });
+        updateOfflineInlineCertUi();
       }
 
       function openEditorForItem(item) {
@@ -3022,34 +3106,31 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
         const titleEl = document.getElementById('offlineEditorTitle');
         const noteEl = document.getElementById('offlineEditorNote');
         const syncBtn = document.getElementById('offlineEditorSyncBtn');
-        const inlineCert = getOfflineInlineCertType(item);
-        const inlineLabel = getOfflineInlineCertLabel(item);
-        if (titleEl) titleEl.textContent = inlineCert ? ('Edit Offline ' + inlineCert + ' Draft') : ('Edit Offline ' + report.code + ' Draft');
+        if (titleEl) titleEl.textContent = 'Edit Offline ' + report.code + ' Draft';
         if (noteEl) {
-          noteEl.textContent = inlineCert
-            ? ('This offline ' + inlineLabel + ' will sync as an Engineer Service Report cloud draft with that Add Cert already switched on.')
-            : (report.code === 'W'
-              ? 'This is the local iPad editor. Engineer Service Reports can save offline and sync to Cloud Drafts when signal returns.'
-              : (report.code === 'SEL'
-                ? 'This is the local SEL cloud-draft bridge editor. Save locally, then Sync to Cloud. Open from Cloud Drafts to use the normal online SEL PDF button.'
-                : 'This is the local SFA cloud-draft bridge editor. Save locally, then Sync to Cloud. Open from Cloud Drafts and use the normal online PDF button.'));
+          noteEl.textContent = report.code === 'W'
+            ? 'This is the local iPad editor. Engineer Service Reports can save offline and sync to Cloud Drafts when signal returns.'
+            : (report.code === 'SEL'
+              ? 'This is the local SEL cloud-draft bridge editor. Save locally, then Sync to Cloud. Open from Cloud Drafts to use the normal online SEL PDF button.'
+              : 'This is the local SFA cloud-draft bridge editor. Save locally, then Sync to Cloud. Open from Cloud Drafts to use the normal online PDF button.');
         }
         if (syncBtn) {
           syncBtn.disabled = !report.syncableOffline;
           syncBtn.textContent = report.syncableOffline ? 'Save + Sync' : 'Save Local Only';
         }
-        document.getElementById('editOfflineId').value = item.offlineId || '';
-        applyEditorReportLayout(report, item);
+        applyEditorReportLayout(report);
         const sfaPayloadPreview = document.getElementById('sfaCloudPayloadPreview');
         const sfaPayloadJson = document.getElementById('sfaCloudPayloadJson');
         if (sfaPayloadPreview) sfaPayloadPreview.classList.add('hidden-report-fields');
         if (sfaPayloadJson) sfaPayloadJson.value = '';
         const d = item.draft || {};
+        document.getElementById('editOfflineId').value = item.offlineId || '';
         setEditValue('editDraftName', item.draftName || d.draftName || buildEditorDraftName(d));
         setEditValue('editEngineer', d.engineer || item.engineer || '');
         setEditValue('editServiceDate', d.serviceDate || '');
         setEditValue('editCustomer', d.customer || item.customer || '');
         setEditValue('editSite', d.site || item.site || '');
+        setOfflineInlineValuesFromDraft(d);
         setEditValue('editSfaSageAccountNo', d.sageAccountNo || d.sfaSageAccountNo || '');
         setEditValue('editSfaContractId', d.contractId || d.sfaContractId || '');
         setEditValue('editSfaOrderNo', d.orderNo || d.sfaOrderNo || d.customerOrderNo || '');
@@ -3147,36 +3228,6 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
         setEditValue('editSelTotal', d.elTotal || d.total || '0.00');
         setEditValue('editElCostDisplayMode', d.elCostDisplayMode || 'SEPARATE');
         setEditValue('editElNonCompliantHeader', d.elNonCompliantHeader || 'NO');
-        setEditValue('editFacCategory', d.facCategory || 'L1');
-        setEditValue('editFacOtherCategory', d.facOtherCategory || '');
-        setEditValue('editFacVariations', d.facVariations || '');
-        setEditValue('editFacSoakTestPeriod', d.facSoakTestPeriod || '');
-        setEditValue('editFacSoundLevelTestCertificateNo', d.facSoundLevelTestCertificateNo || '');
-        setEditValue('editFacPowerSupplyCertificateNo', d.facPowerSupplyCertificateNo || '');
-        setEditValue('editFacCorrectiveAction', d.facCorrectiveAction || '');
-        setEditValue('editFacFalseAlarmConsiderations', d.facFalseAlarmConsiderations || '');
-        FAC_OFFLINE_CHECK_KEYS.forEach(function(key) {
-          setEditValue('editFacCheck_' + key, (d.facCheckResults && d.facCheckResults[key]) || d['facCheck_' + key] || 'NA');
-        });
-        setEditValue('editFamDescriptionWork', d.famDescriptionWork || '');
-        setEditValue('editFamVariations', d.famVariations || '');
-        setEditValue('editFamThirdPartyName', d.famThirdPartyName || '');
-        setEditValue('editFamCorrectiveAction', d.famCorrectiveAction || '');
-        setEditValue('editFamPowerSupplyCertNo', d.famPowerSupplyCertNo || '');
-        setEditValue('editFamSoundLevelTestCertNo', d.famSoundLevelTestCertNo || '');
-        setEditValue('editFamRiskAssessmentRecommended', d.famRiskAssessmentRecommended || 'NA');
-        FAM_OFFLINE_CHECK_KEYS.forEach(function(key) {
-          setEditValue('editFamCheck_' + key + 'Total', (d.famCheckResults && d.famCheckResults[key + 'Total']) || d['famCheck_' + key + 'Total'] || '');
-          setEditValue('editFamCheck_' + key + 'Result', (d.famCheckResults && d.famCheckResults[key]) || d['famCheck_' + key + 'Result'] || 'NA');
-        });
-        FAM_OFFLINE_DOC_KEYS.forEach(function(key) {
-          setEditValue('editFamCheck_' + key + 'Result', (d.famCheckResults && d.famCheckResults[key]) || d['famCheck_' + key + 'Result'] || 'NA');
-        });
-        PSC_OFFLINE_FIELD_IDS.forEach(function(id) {
-          const editId = 'editPsc' + id.slice(3);
-          setEditValue(editId, d[id] || (id === 'pscStandbyHours' ? '24' : (id === 'pscAlarmTimeT2' ? '0.5' : (id === 'pscAgeingFactor' ? '1.25' : (id === 'pscDeRatingFactor' ? '1.75' : '')))));
-        });
-        calculateOfflinePsc();
         setEditValue('editSageAccountNo', d.sageAccountNo || '');
         setEditValue('editCustomerOrderNo', d.customerOrderNo || '');
         setEditValue('editOurRefNo', d.ourRefNo || '');
@@ -3207,8 +3258,9 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
         updateEditorNetworkBadge();
         bindEditorChangeTracking();
         calculateEditorTotals();
+        updateOfflineInlineCertUi();
         setEditorDirty(false);
-        setEditorStatus(inlineCert ? ('Editing offline ' + inlineCert + ' cert draft saved on this iPad. Save locally, then Sync to Cloud when ready.') : (report.code === 'W' ? 'Editing offline Engineer Service Report draft saved on this iPad. Press Save Offline before leaving.' : ('Editing offline ' + report.code + ' draft saved on this iPad. Save locally, then Sync to Cloud when ready.')));
+        setEditorStatus(report.code === 'W' ? 'Editing offline Engineer Service Report draft saved on this iPad. Press Save Offline before leaving.' : ('Editing offline ' + report.code + ' draft saved on this iPad. Save locally, then Sync to Cloud when ready.'));
       }
 
       function firstLine(value) {
@@ -3218,8 +3270,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
       function buildEditorDraftName(draft) {
         draft = draft || {};
         const typeCode = String(draft.reportTypeCode || '').toUpperCase();
-        const inlineType = getOfflineInlineCertType(draft);
-        const label = inlineType ? (FSD_INLINE_CERT_LABELS[inlineType] || inlineType) : ((OFFLINE_REPORT_TYPES[typeCode] && OFFLINE_REPORT_TYPES[typeCode].label) || 'Engineer Service Report');
+        const label = (OFFLINE_REPORT_TYPES[typeCode] && OFFLINE_REPORT_TYPES[typeCode].label) || 'Engineer Service Report';
         const name = firstLine(draft.customer || draft.site) || label;
         const date = draft.serviceDate || new Date().toISOString().slice(0, 10);
         return name + ' - ' + date;
@@ -3239,6 +3290,9 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
           offlineId: offlineId,
           reportType: 'Engineer Service Report',
           reportTypeCode: 'W',
+          includeFireAlarmCommissioningReport: 'NO',
+          includeFireAlarmModificationReport: 'NO',
+          includePowerSupplyCertificate: 'NO',
           draftName: 'Offline Engineer Service Report - ' + today,
           serviceDate: today,
           engineer: '',
@@ -3282,65 +3336,6 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
         };
       }
 
-
-
-      function createBlankOfflineInlineCertItem(certType) {
-        const now = new Date();
-        const today = now.toISOString().slice(0, 10);
-        certType = String(certType || '').toUpperCase();
-        const label = FSD_INLINE_CERT_LABELS[certType] || certType;
-        const offlineId = certType + '-OFFLINE-' + Date.now() + '-' + Math.random().toString(36).slice(2, 7).toUpperCase();
-        const draft = {
-          offlineCreated: true,
-          offlineId: offlineId,
-          reportType: 'Engineer Service Report',
-          reportTypeCode: 'W',
-          offlineInlineCertType: certType,
-          draftName: 'Offline ' + certType + ' - ' + today,
-          serviceDate: today,
-          engineer: '',
-          customer: '',
-          site: '',
-          sageAccountNo: '',
-          customerOrderNo: '',
-          ourRefNo: '',
-          asbestosAvailable: '',
-          includeFireAlarmReport: 'NO',
-          includeEmergencyLightingReport: 'NO',
-          includeFireAlarmCommissioningReport: certType === 'FAC' ? 'YES' : 'NO',
-          includeFireAlarmModificationReport: certType === 'FAM' ? 'YES' : 'NO',
-          includePowerSupplyCertificate: certType === 'PSC' ? 'YES' : 'NO',
-          facCategory: 'L1',
-          facCheckResults: {},
-          famRiskAssessmentRecommended: 'NA',
-          famCheckResults: {},
-          pscSystemType: 'Existing',
-          pscPowerSupplyUnitCorrect: 'YES',
-          pscStandbyHours: '24',
-          pscAlarmTimeT2: '0.5',
-          pscAgeingFactor: '1.25',
-          pscDeRatingFactor: '1.75',
-          customerName: '',
-          customerDate: '',
-          savedAt: now.toISOString()
-        };
-        FAC_OFFLINE_CHECK_KEYS.forEach(function(key) { draft.facCheckResults[key] = 'NA'; draft['facCheck_' + key] = 'NA'; });
-        FAM_OFFLINE_CHECK_KEYS.forEach(function(key) { draft.famCheckResults[key + 'Total'] = ''; draft.famCheckResults[key] = 'NA'; draft['famCheck_' + key + 'Total'] = ''; draft['famCheck_' + key + 'Result'] = 'NA'; });
-        FAM_OFFLINE_DOC_KEYS.forEach(function(key) { draft.famCheckResults[key] = 'NA'; draft['famCheck_' + key + 'Result'] = 'NA'; });
-        return {
-          offlineId: offlineId,
-          reportType: 'W',
-          draftId: '',
-          draftName: draft.draftName,
-          engineer: '',
-          customer: '',
-          site: '',
-          savedAt: draft.savedAt,
-          source: 'github-shell-start-offline-' + certType.toLowerCase() + '-inline-cert-c89i',
-          draft: draft
-        };
-      }
-
       function createBlankOfflineSfaTrialItem() {
         const now = new Date();
         const today = now.toISOString().slice(0, 10);
@@ -3350,6 +3345,9 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
           offlineId: offlineId,
           reportType: 'Fire Alarm Service Report',
           reportTypeCode: 'SFA',
+          includeFireAlarmCommissioningReport: 'NO',
+          includeFireAlarmModificationReport: 'NO',
+          includePowerSupplyCertificate: 'NO',
           draftName: 'Offline SFA - ' + today,
           serviceDate: today,
           engineer: '',
@@ -3421,6 +3419,9 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
           offlineId: offlineId,
           reportType: 'Emergency Lighting Report',
           reportTypeCode: 'SEL',
+          includeFireAlarmCommissioningReport: 'NO',
+          includeFireAlarmModificationReport: 'NO',
+          includePowerSupplyCertificate: 'NO',
           draftName: 'Offline SEL - ' + today,
           serviceDate: today,
           customerDate: today,
@@ -3560,18 +3561,58 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
       };
 
 
-      function startNewOfflineInlineCert(event, certType) {
-        stopTap(event);
-        const item = createBlankOfflineInlineCertItem(certType);
-        upsertOfflineItem(item);
-        renderOfflineDrafts();
-        openEditorForItem(item);
-        setEditorStatus('New offline ' + certType + ' draft started on this iPad. Fill the cert details, save locally, then Sync to Cloud when ready.');
-      }
+      function collectOfflineInlineCertFields(d) {
+        d = d || {};
+        d.includeFireAlarmCommissioningReport = getEditValue('editIncludeFireAlarmCommissioningReport') || 'NO';
+        d.includeFireAlarmModificationReport = getEditValue('editIncludeFireAlarmModificationReport') || 'NO';
+        d.includePowerSupplyCertificate = getEditValue('editIncludePowerSupplyCertificate') || 'NO';
 
-      window.startNewOfflineFacCert = function startNewOfflineFacCert(event) { startNewOfflineInlineCert(event, 'FAC'); };
-      window.startNewOfflineFamCert = function startNewOfflineFamCert(event) { startNewOfflineInlineCert(event, 'FAM'); };
-      window.startNewOfflinePscCert = function startNewOfflinePscCert(event) { startNewOfflineInlineCert(event, 'PSC'); };
+        d.facCategory = getEditValue('editFacCategory');
+        d.facOtherCategory = getEditValue('editFacOtherCategory');
+        d.facVariations = getEditValue('editFacVariations');
+        d.facSoakTestPeriod = getEditValue('editFacSoakTestPeriod');
+        d.facSoundLevelTestCertificateNo = getEditValue('editFacSoundLevelTestCertificateNo');
+        d.facPowerSupplyCertificateNo = getEditValue('editFacPowerSupplyCertificateNo');
+        d.facCorrectiveAction = getEditValue('editFacCorrectiveAction');
+        d.facFalseAlarmConsiderations = getEditValue('editFacFalseAlarmConsiderations');
+        d.facCheckResults = {};
+        FAC_OFFLINE_CHECK_KEYS.forEach(function(key) {
+          const value = getEditValue('editFacCheck_' + key) || 'NA';
+          d.facCheckResults[key] = value;
+          d['facCheck_' + key] = value;
+        });
+
+        d.famDescriptionWork = getEditValue('editFamDescriptionWork');
+        d.famVariations = getEditValue('editFamVariations');
+        d.famThirdPartyName = getEditValue('editFamThirdPartyName');
+        d.famCorrectiveAction = getEditValue('editFamCorrectiveAction');
+        d.famPowerSupplyCertNo = getEditValue('editFamPowerSupplyCertNo');
+        d.famSoundLevelTestCertNo = getEditValue('editFamSoundLevelTestCertNo');
+        d.famRiskAssessmentRecommended = getEditValue('editFamRiskAssessmentRecommended') || 'NO';
+        d.famCheckResults = {};
+        FAM_OFFLINE_CHECK_KEYS.forEach(function(key) {
+          const total = getEditValue('editFamCheck_' + key + 'Total');
+          const result = getEditValue('editFamCheck_' + key) || 'NA';
+          d.famCheckResults[key + 'Total'] = total;
+          d.famCheckResults[key] = result;
+          d['famCheck_' + key + 'Total'] = total;
+          d['famCheck_' + key] = result;
+          d['famCheck_' + key + 'Result'] = result;
+        });
+        FAM_OFFLINE_DOC_KEYS.forEach(function(key) {
+          const result = getEditValue('editFamCheck_' + key) || 'NA';
+          d.famCheckResults[key] = result;
+          d['famCheck_' + key] = result;
+          d['famCheck_' + key + 'Result'] = result;
+        });
+
+        calculateOfflinePsc();
+        PSC_OFFLINE_FIELD_IDS.forEach(function(key) {
+          const editId = 'edit' + key.charAt(0).toUpperCase() + key.slice(1);
+          d[key] = getEditValue(editId);
+        });
+        return d;
+      }
 
       function saveEditorToQueue() {
         const offlineId = getEditValue('editOfflineId');
@@ -3590,67 +3631,6 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
         const reportCodeForSave = String(d.reportTypeCode || item.reportType || '').toUpperCase();
         const savingSfa = reportCodeForSave === 'SFA';
         const savingSel = reportCodeForSave === 'SEL';
-        const inlineCertForSave = getOfflineInlineCertType(d);
-        const savingInlineFac = inlineCertForSave === 'FAC';
-        const savingInlineFam = inlineCertForSave === 'FAM';
-        const savingInlinePsc = inlineCertForSave === 'PSC';
-        if (inlineCertForSave) {
-          d.reportType = 'Engineer Service Report';
-          d.reportTypeCode = 'W';
-          d.offlineInlineCertType = inlineCertForSave;
-          d.includeFireAlarmReport = 'NO';
-          d.includeEmergencyLightingReport = 'NO';
-          d.includeFireAlarmCommissioningReport = savingInlineFac ? 'YES' : 'NO';
-          d.includeFireAlarmModificationReport = savingInlineFam ? 'YES' : 'NO';
-          d.includePowerSupplyCertificate = savingInlinePsc ? 'YES' : 'NO';
-        }
-
-        if (savingInlineFac) {
-          d.facCategory = getEditValue('editFacCategory');
-          d.facOtherCategory = getEditValue('editFacOtherCategory');
-          d.facVariations = getEditValue('editFacVariations');
-          d.facSoakTestPeriod = getEditValue('editFacSoakTestPeriod');
-          d.facSoundLevelTestCertificateNo = getEditValue('editFacSoundLevelTestCertificateNo');
-          d.facPowerSupplyCertificateNo = getEditValue('editFacPowerSupplyCertificateNo');
-          d.facCorrectiveAction = getEditValue('editFacCorrectiveAction');
-          d.facFalseAlarmConsiderations = getEditValue('editFacFalseAlarmConsiderations');
-          d.facCheckResults = {};
-          FAC_OFFLINE_CHECK_KEYS.forEach(function(key) {
-            const val = getEditValue('editFacCheck_' + key) || 'NA';
-            d.facCheckResults[key] = val;
-            d['facCheck_' + key] = val;
-          });
-        }
-        if (savingInlineFam) {
-          d.famDescriptionWork = getEditValue('editFamDescriptionWork');
-          d.famVariations = getEditValue('editFamVariations');
-          d.famThirdPartyName = getEditValue('editFamThirdPartyName');
-          d.famCorrectiveAction = getEditValue('editFamCorrectiveAction');
-          d.famPowerSupplyCertNo = getEditValue('editFamPowerSupplyCertNo');
-          d.famSoundLevelTestCertNo = getEditValue('editFamSoundLevelTestCertNo');
-          d.famRiskAssessmentRecommended = getEditValue('editFamRiskAssessmentRecommended') || 'NA';
-          d.famCheckResults = {};
-          FAM_OFFLINE_CHECK_KEYS.forEach(function(key) {
-            const total = getEditValue('editFamCheck_' + key + 'Total');
-            const val = getEditValue('editFamCheck_' + key + 'Result') || 'NA';
-            d.famCheckResults[key + 'Total'] = total;
-            d.famCheckResults[key] = val;
-            d['famCheck_' + key + 'Total'] = total;
-            d['famCheck_' + key + 'Result'] = val;
-          });
-          FAM_OFFLINE_DOC_KEYS.forEach(function(key) {
-            const val = getEditValue('editFamCheck_' + key + 'Result') || 'NA';
-            d.famCheckResults[key] = val;
-            d['famCheck_' + key + 'Result'] = val;
-          });
-        }
-        if (savingInlinePsc) {
-          calculateOfflinePsc();
-          PSC_OFFLINE_FIELD_IDS.forEach(function(id) {
-            const editId = 'editPsc' + id.slice(3);
-            d[id] = getEditValue(editId);
-          });
-        }
         if (savingSfa) {
           d.sageAccountNo = getEditValue('editSfaSageAccountNo');
           d.contractId = getEditValue('editSfaContractId');
@@ -3756,6 +3736,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
         d.sfaFaults = getEditValue('editSfaFaults');
         d.sfaRecommendations = getEditValue('editSfaRecommendations');
         d.sfaEquipmentList = collectSfaEquipmentList();
+        collectOfflineInlineCertFields(d);
         if (!savingSfa && !savingSel) {
           d.sageAccountNo = getEditValue('editSageAccountNo');
           d.customerOrderNo = getEditValue('editCustomerOrderNo');
@@ -3870,7 +3851,50 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
             faQuickQuoteRequired: d.faQuickQuoteRequired || '',
             faRiskAssessmentRecommended: d.faRiskAssessmentRecommended || 'NO',
             faChangesToReport: d.faChangesToReport || 'NO',
-            faNonCompliantHeader: d.faNonCompliantHeader || 'NO'
+            faNonCompliantHeader: d.faNonCompliantHeader || 'NO',
+            includeFireAlarmCommissioningReport: d.includeFireAlarmCommissioningReport || 'NO',
+            includeFireAlarmModificationReport: d.includeFireAlarmModificationReport || 'NO',
+            includePowerSupplyCertificate: d.includePowerSupplyCertificate || 'NO',
+            facCategory: d.facCategory || '',
+            facOtherCategory: d.facOtherCategory || '',
+            facVariations: d.facVariations || '',
+            facSoakTestPeriod: d.facSoakTestPeriod || '',
+            facSoundLevelTestCertificateNo: d.facSoundLevelTestCertificateNo || '',
+            facPowerSupplyCertificateNo: d.facPowerSupplyCertificateNo || '',
+            facCorrectiveAction: d.facCorrectiveAction || '',
+            facFalseAlarmConsiderations: d.facFalseAlarmConsiderations || '',
+            facCheckResults: d.facCheckResults || {},
+            famDescriptionWork: d.famDescriptionWork || '',
+            famVariations: d.famVariations || '',
+            famThirdPartyName: d.famThirdPartyName || '',
+            famCorrectiveAction: d.famCorrectiveAction || '',
+            famPowerSupplyCertNo: d.famPowerSupplyCertNo || '',
+            famSoundLevelTestCertNo: d.famSoundLevelTestCertNo || '',
+            famRiskAssessmentRecommended: d.famRiskAssessmentRecommended || 'NO',
+            famCheckResults: d.famCheckResults || {},
+            pscPanelLocation: d.pscPanelLocation || '',
+            pscPanelType: d.pscPanelType || '',
+            pscPowerSupply: d.pscPowerSupply || '',
+            pscBatteriesAh: d.pscBatteriesAh || '',
+            pscBatteryDate: d.pscBatteryDate || '',
+            pscMeterType: d.pscMeterType || '',
+            pscMeterNo: d.pscMeterNo || '',
+            pscSystemType: d.pscSystemType || 'Existing',
+            pscPowerSupplyUnitCorrect: d.pscPowerSupplyUnitCorrect || 'YES',
+            pscStandbyHours: d.pscStandbyHours || '24',
+            pscAlarmTimeT2: d.pscAlarmTimeT2 || '0.5',
+            pscOtherAlarmTime: d.pscOtherAlarmTime || '',
+            pscExistingPsuSize: d.pscExistingPsuSize || '',
+            pscQuiescentCurrentL1: d.pscQuiescentCurrentL1 || '',
+            pscAlarmCurrentL2: d.pscAlarmCurrentL2 || '',
+            pscZonesUsed: d.pscZonesUsed || '',
+            pscAllow50maPerZoneL3: d.pscAllow50maPerZoneL3 || '',
+            pscAgeingFactor: d.pscAgeingFactor || '1.25',
+            pscDeRatingFactor: d.pscDeRatingFactor || '1.75',
+            pscCalculatedBatteryAh: d.pscCalculatedBatteryAh || '',
+            pscBatteriesInstalled: d.pscBatteriesInstalled || '',
+            pscExistingBatteryAh: d.pscExistingBatteryAh || '',
+            pscNotes: d.pscNotes || ''
           },
           backendBridge: {
             proposedMessageType: 'FSD_OFFLINE_SFA_SYNC',
@@ -4356,6 +4380,6 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
 
     }());
   </script>
-  <div class="fixed-version-badge">App Shell C89i · Offline FAC/FAM/PSC certs</div>
+  <div class="fixed-version-badge">App Shell C89j · Offline Add Certs inside W/SFA/SEL</div>
 </body>
 </html>
