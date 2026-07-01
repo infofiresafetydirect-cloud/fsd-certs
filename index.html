@@ -1616,7 +1616,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
 
       <div class="home-meta">
         <span class="home-credit">JARED720 LABS</span>
-        <span class="home-version">App Shell C89r · 2-step customer/site sync</span>
+        <span class="home-version">App Shell C89s · lightweight site sync</span>
       </div>
     </main>
   </section>
@@ -2736,11 +2736,52 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
       }
 
       function offlineLookupFail(text) {
+        const failedStage = fsdOfflineLookupDownloadStage;
         clearOfflineLookupDownloadWatch();
         removeOfflineLookupJsonpScript();
         const msg = text || 'Offline customer list update failed. Check Apps Script deployment and signal.';
+
+        // C89s: if the site-address step fails or times out, do not leave the
+        // engineer stuck forever. Save the invoice customer list that already
+        // downloaded, then clearly say the site list was skipped. The picker can
+        // still use any site addresses included on customer records.
+        if (failedStage === 'sites' && fsdOfflineLookupChunkData && Array.isArray(fsdOfflineLookupChunkData.customers)) {
+          const fallbackSites = buildFallbackSitesFromCustomers(fsdOfflineLookupChunkData.customers);
+          const saved = saveOfflineLookupData({
+            ok: true,
+            version: 'C89s-sites-timeout-fallback',
+            generatedAt: fsdOfflineLookupChunkData.generatedAt || new Date().toISOString(),
+            customers: fsdOfflineLookupChunkData.customers || [],
+            sites: fallbackSites,
+            materials: []
+          });
+          fsdOfflineLookupChunkData = null;
+          setOfflineStatus('Customer list saved, but the full site list did not finish downloading. Saved ' + (saved.customers || []).length + ' customers and ' + (saved.sites || []).length + ' fallback site addresses. Try Update Customer List again when signal is stronger.');
+          setOfflinePickerStatus(offlineLookupCountText());
+          return;
+        }
+
         setOfflineStatus(msg);
         setOfflinePickerStatus(msg);
+      }
+
+      function buildFallbackSitesFromCustomers(customers) {
+        const out = [];
+        const seen = {};
+        (customers || []).forEach(function(row) {
+          const siteAddress = String(row.siteAddress || '').trim();
+          if (!siteAddress) return;
+          const key = normaliseOfflineLookupText(siteAddress);
+          if (!key || seen[key]) return;
+          seen[key] = true;
+          out.push({
+            lookupName: firstLookupLine(siteAddress),
+            siteAddress: siteAddress,
+            customerName: row.lookupName || firstLookupLine(row.customerAddress) || '',
+            sageAccountNo: row.sageAccountNo || ''
+          });
+        });
+        return out;
       }
 
       function startOfflineLookupJsonpStage(stage, label, timeoutSeconds) {
@@ -2784,7 +2825,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
         if (stage === 'customers') {
           fsdOfflineLookupChunkData.customers = Array.isArray(payload.customers) ? payload.customers : [];
           fsdOfflineLookupChunkData.generatedAt = payload.generatedAt || new Date().toISOString();
-          startOfflineLookupJsonpStage('sites', 'Step 2 of 2: downloading site address list', 45);
+          startOfflineLookupJsonpStage('sites', 'Step 2 of 2: downloading lightweight site address list', 25);
           return;
         }
 
@@ -2792,7 +2833,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
           fsdOfflineLookupChunkData.sites = Array.isArray(payload.sites) ? payload.sites : [];
           fsdOfflineLookupChunkData.generatedAt = payload.generatedAt || fsdOfflineLookupChunkData.generatedAt || new Date().toISOString();
           fsdOfflineLookupChunkData.ok = true;
-          fsdOfflineLookupChunkData.version = 'C89r';
+          fsdOfflineLookupChunkData.version = 'C89s';
           fsdOfflineLookupChunkData.materials = [];
           const saved = saveOfflineLookupData(fsdOfflineLookupChunkData);
           fsdOfflineLookupChunkData = null;
@@ -4913,6 +4954,6 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
 
     }());
   </script>
-  <div class="fixed-version-badge">App Shell C89r · 2-step customer/site sync</div>
+  <div class="fixed-version-badge">App Shell C89s · lightweight site sync</div>
 </body>
 </html>
