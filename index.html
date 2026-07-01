@@ -232,6 +232,9 @@
     .sfa-payload-preview textarea { width: 100%; min-height: 220px; border: 1px solid #93c5fd; border-radius: 12px; padding: 10px; font: 12px/1.45 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; color: #0f172a; background: #fff; }
     .sfa-payload-preview-note { margin: 0; color: #1e3a8a; font-size: 13px; font-weight: 850; line-height: 1.35; }
     .hidden-report-fields { display: none !important; }
+    /* C89k: keep FAC/FAM/PSC Add Page controls at the bottom of the offline editor, not between address and W/SFA/SEL details. */
+    #offlineAddCertControls { order: 900; }
+    #facOfflineFields, #famOfflineFields, #pscOfflineFields { order: 910; }
 
     .editor-material-row { display: grid; grid-template-columns: 74px minmax(0, 1fr) 96px 96px 44px; gap: 8px; align-items: end; padding: 10px; border-radius: 14px; background: #f8fafc; border: 1px solid #e2e8f0; }
     .editor-actions { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-top: 14px; }
@@ -1603,7 +1606,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
 
       <div class="home-meta">
         <span class="home-credit">JARED720 LABS</span>
-        <span class="home-version">App Shell C89j · Offline Add Certs inside W/SFA/SEL</span>
+        <span class="home-version">App Shell C89k · Offline Add Certs bottom + W totals fix</span>
       </div>
     </main>
   </section>
@@ -1612,7 +1615,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
     <main class="offline-card">
       <h2 class="offline-title">Offline Certs &amp; Reports</h2>
       <p class="offline-help">Certificate/report drafts saved without signal live on this iPad until they are synced to the FSD cloud Draft Manager.</p>
-      <p class="offline-help"><strong>Offline editor:</strong> W, SFA and SEL can be started offline, saved locally, reopened, then synced to Cloud Drafts. C89j adds FAC, FAM and PSC as Add Page/Add Cert options inside those offline parent drafts — not as separate offline start cards.</p>
+      <p class="offline-help"><strong>Offline editor:</strong> W, SFA and SEL can be started offline, saved locally, reopened, then synced to Cloud Drafts. C89k keeps FAC, FAM and PSC as Add Page/Add Cert options inside those offline parent drafts, pinned near the bottom of the editor — not as separate offline start cards.</p>
       <div id="offlineList" class="offline-list"></div>
       <div class="actions">
         <button class="button" type="button" onclick="startNewOfflineW(event)"><span class="tile-icon">📝</span><span>Start Offline Engineer Service Report</span></button>
@@ -1633,7 +1636,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
       <div class="editor-head">
         <div>
           <h2 id="offlineEditorTitle">Edit Offline Report Draft</h2>
-          <p id="offlineEditorNote" class="editor-note">This is the local iPad editor. Engineer Service Reports can sync to Cloud Drafts. SFA is currently local save/resume only.</p>
+          <p id="offlineEditorNote" class="editor-note">This is the local iPad editor. W, SFA and SEL can save offline and sync to Cloud Drafts when signal returns.</p>
           <div class="editor-pill-row">
             <span id="editorNetBadge" class="net-badge">Checking signal</span>
             <span id="editorDirtyBadge" class="dirty-badge saved">Saved offline</span>
@@ -2848,7 +2851,10 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
           // Work description line
           const wdQty = parseMoney(getEditValue('editWorkDescriptionQty'));
           const wdUnit = parseMoney(getEditValue('editWorkDescriptionUnitPrice'));
-          if (wdQty && wdUnit && !document.activeElement?.matches('#editWorkDescriptionTotalPrice')) {
+          const wdTotalEl = document.getElementById('editWorkDescriptionTotalPrice');
+          const wdQtyEl = document.getElementById('editWorkDescriptionQty');
+          const wdUnitEl = document.getElementById('editWorkDescriptionUnitPrice');
+          if (wdQty && wdUnit && wdTotalEl && (!wdTotalEl.value || document.activeElement === wdQtyEl || document.activeElement === wdUnitEl)) {
             setEditValue('editWorkDescriptionTotalPrice', (wdQty * wdUnit).toFixed(2));
           }
 
@@ -2859,7 +2865,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
             const totalEl = row.querySelector('.emTotalPrice');
             const qty = parseMoney(qtyEl && qtyEl.value);
             const unit = parseMoney(unitEl && unitEl.value);
-            if (qty && unit && totalEl && document.activeElement !== totalEl) {
+            if (qty && unit && totalEl && (!totalEl.value || document.activeElement === qtyEl || document.activeElement === unitEl)) {
               totalEl.value = (qty * unit).toFixed(2);
             }
           });
@@ -2929,8 +2935,8 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
         row.innerHTML =
           '<div class="editor-field"><label>Qty</label><input class="emQty" value="' + escapeHtml(item.qty || '') + '"></div>' +
           '<div class="editor-field desc"><label>Description</label><input class="emDescription" value="' + escapeHtml(item.description || item.searchText || '') + '"></div>' +
-          '<div class="editor-field"><label>Unit</label><input class="emUnitPrice" type="number" step="0.01" value="' + escapeHtml(item.unitPrice || '') + '"></div>' +
-          '<div class="editor-field"><label>Total</label><input class="emTotalPrice" type="number" step="0.01" value="' + escapeHtml(item.totalPrice || '') + '"></div>' +
+          '<div class="editor-field"><label>Unit</label><input class="emUnitPrice" type="number" step="0.01" placeholder="0.00" value="' + escapeHtml(item.unitPrice || '') + '"></div>' +
+          '<div class="editor-field"><label>Total</label><input class="emTotalPrice" type="number" step="0.01" placeholder="0.00" value="' + escapeHtml(item.totalPrice || '') + '"></div>' +
           '<button class="button third" style="min-height:42px;font-size:18px;padding:6px;" type="button" onclick="this.closest(\'.editor-material-row\').remove()">×</button>';
         wrap.appendChild(row);
       };
@@ -4380,6 +4386,6 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
 
     }());
   </script>
-  <div class="fixed-version-badge">App Shell C89j · Offline Add Certs inside W/SFA/SEL</div>
+  <div class="fixed-version-badge">App Shell C89k · Offline Add Certs bottom + W totals fix</div>
 </body>
 </html>
