@@ -1616,7 +1616,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
 
       <div class="home-meta">
         <span class="home-credit">JARED720 LABS</span>
-        <span class="home-version">App Shell C89s · lightweight site sync</span>
+        <span class="home-version">App Shell C89t · customer-first offline picker</span>
       </div>
     </main>
   </section>
@@ -1641,7 +1641,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
       </div>
       <div id="offlineStatus" class="offline-status"></div>
       <div id="offlineLookupStatus" class="offline-status"></div>
-      <div class="maker-mark">Jared720 Labs · C89r Unified Drafts</div>
+      <div class="maker-mark">Jared720 Labs · C89t Unified Drafts</div>
     </main>
   </section>
 
@@ -2645,12 +2645,15 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
 
       function offlineLookupCountText() {
         const data = offlineLookupData || loadOfflineLookupData();
-        const c = Array.isArray(data.customers) ? data.customers.length : 0;
-        const s = Array.isArray(data.sites) ? data.sites.length : 0;
+        const customers = Array.isArray(data.customers) ? data.customers : [];
+        let sites = Array.isArray(data.sites) ? data.sites : [];
+        if (!sites.length && customers.length) sites = buildFallbackSitesFromCustomers(customers);
+        const c = customers.length;
+        const s = sites.length;
         const when = data.savedAt || data.generatedAt || '';
         const dateText = when ? (' Last updated: ' + new Date(when).toLocaleString()) : '';
         return c || s
-          ? ('Offline customer list ready: ' + c + ' invoice customers, ' + s + ' site addresses.' + dateText)
+          ? ('Offline customer list ready: ' + c + ' invoice customers, ' + s + ' searchable site/customer addresses.' + dateText)
           : 'No offline customer list saved yet. Connect to the internet and press Update Offline Customer List.';
       }
 
@@ -2676,7 +2679,12 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
 
       function offlineLookupRowsForMode(mode) {
         const data = offlineLookupData || loadOfflineLookupData();
-        return mode === 'site' ? (data.sites || []) : (data.customers || []);
+        const customers = Array.isArray(data.customers) ? data.customers : [];
+        if (mode === 'site') {
+          const sites = Array.isArray(data.sites) ? data.sites : [];
+          return sites.length ? sites : buildFallbackSitesFromCustomers(customers);
+        }
+        return customers;
       }
 
       function searchOfflineLookupRows(mode, query) {
@@ -2749,7 +2757,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
           const fallbackSites = buildFallbackSitesFromCustomers(fsdOfflineLookupChunkData.customers);
           const saved = saveOfflineLookupData({
             ok: true,
-            version: 'C89s-sites-timeout-fallback',
+            version: 'C89t-customer-first-fallback',
             generatedAt: fsdOfflineLookupChunkData.generatedAt || new Date().toISOString(),
             customers: fsdOfflineLookupChunkData.customers || [],
             sites: fallbackSites,
@@ -2769,13 +2777,16 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
         const out = [];
         const seen = {};
         (customers || []).forEach(function(row) {
-          const siteAddress = String(row.siteAddress || '').trim();
+          // C89t: many Sage invoice customers do not carry a separate siteAddress.
+          // For offline use, the site picker must still be searchable, so fall back
+          // to the invoice/customer address. Engineers can still press Same as Invoice.
+          const siteAddress = String(row.siteAddress || row.customerAddress || '').trim();
           if (!siteAddress) return;
-          const key = normaliseOfflineLookupText(siteAddress);
+          const key = normaliseOfflineLookupText(siteAddress + ' ' + (row.sageAccountNo || ''));
           if (!key || seen[key]) return;
           seen[key] = true;
           out.push({
-            lookupName: firstLookupLine(siteAddress),
+            lookupName: firstLookupLine(siteAddress) || row.lookupName || 'Customer address',
             siteAddress: siteAddress,
             customerName: row.lookupName || firstLookupLine(row.customerAddress) || '',
             sageAccountNo: row.sageAccountNo || ''
@@ -2823,9 +2834,19 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
 
         fsdOfflineLookupChunkData = fsdOfflineLookupChunkData || { customers: [], sites: [], generatedAt: '' };
         if (stage === 'customers') {
-          fsdOfflineLookupChunkData.customers = Array.isArray(payload.customers) ? payload.customers : [];
-          fsdOfflineLookupChunkData.generatedAt = payload.generatedAt || new Date().toISOString();
-          startOfflineLookupJsonpStage('sites', 'Step 2 of 2: downloading lightweight site address list', 25);
+          const customers = Array.isArray(payload.customers) ? payload.customers : [];
+          const fallbackSites = buildFallbackSitesFromCustomers(customers);
+          const saved = saveOfflineLookupData({
+            ok: true,
+            version: 'C89t-customer-first',
+            generatedAt: payload.generatedAt || new Date().toISOString(),
+            customers: customers,
+            sites: fallbackSites,
+            materials: []
+          });
+          fsdOfflineLookupChunkData = null;
+          setOfflineStatus('Offline customer/site list updated: ' + (saved.customers || []).length + ' customers saved. Site picker is using saved customer/default site addresses, so it works straight away offline.');
+          setOfflinePickerStatus(offlineLookupCountText());
           return;
         }
 
@@ -2862,7 +2883,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
           clearOfflineLookupDownloadWatch();
           removeOfflineLookupJsonpScript();
           fsdOfflineLookupChunkData = { customers: [], sites: [], generatedAt: '' };
-          startOfflineLookupJsonpStage('customers', 'Step 1 of 2: downloading invoice customer list', 45);
+          startOfflineLookupJsonpStage('customers', 'Downloading offline customer/site picker list', 45);
         } catch (err) {
           offlineLookupFail('Offline customer list update failed: ' + (err && err.message ? err.message : err));
         }
@@ -4954,6 +4975,6 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
 
     }());
   </script>
-  <div class="fixed-version-badge">App Shell C89s · lightweight site sync</div>
+  <div class="fixed-version-badge">App Shell C89t · customer-first offline picker</div>
 </body>
 </html>
