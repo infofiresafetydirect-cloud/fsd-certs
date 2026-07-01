@@ -188,8 +188,11 @@
     .offline-item { padding: 14px; border-radius: 18px; background: rgba(255,255,255,.94); color: #111827; text-align: left; box-shadow: 0 12px 28px rgba(0,0,0,.18); }
     .offline-item strong { display: block; color: var(--fsd-blue-dark); font-size: 17px; margin-bottom: 4px; }
     .offline-meta { color: #4b5563; font-size: 13px; line-height: 1.35; font-weight: 650; margin-bottom: 12px; }
-    .offline-actions { display: grid; gap: 8px; grid-template-columns: repeat(3, 1fr); }
+    .offline-actions { display: grid; gap: 8px; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); }
     .offline-actions .button { min-height: 44px; padding: 10px 12px; border-radius: 14px; font-size: 14px; box-shadow: none; }
+    .offline-item .badge { display:inline-block; border-radius:999px; padding:5px 9px; background:#dcfce7; color:#14532d; font-size:12px; font-weight:900; border:1px solid #86efac; }
+    .draft-state-needs-sync .badge { background:#fef3c7; color:#78350f; border-color:#fcd34d; }
+    .draft-state-offline-only .badge { background:#fee2e2; color:#7f1d1d; border-color:#fecaca; }
     .offline-empty { padding: 18px; border-radius: 18px; background: rgba(255,255,255,.13); border: 1px dashed rgba(255,255,255,.32); color: rgba(255,255,255,.90); font-weight: 750; }
     .offline-status { min-height: 22px; margin-top: 12px; color: rgba(255,255,255,.90); font-size: 14px; font-weight: 750; }
 
@@ -964,6 +967,13 @@
       color: #7c2d12;
       font-weight: 850;
     }
+
+    .offline-lookup-card { width: min(780px, 96vw); max-height: 92vh; overflow: hidden; display: flex; flex-direction: column; }
+    .offline-lookup-results { margin-top: 12px; overflow: auto; display: grid; gap: 9px; max-height: min(48vh, 430px); padding-right: 2px; }
+    .offline-lookup-result { text-align: left; border: 1px solid #e5e7eb; background: #ffffff; color: #111827; border-radius: 16px; padding: 12px; cursor: pointer; box-shadow: 0 8px 22px rgba(15,23,42,.08); }
+    .offline-lookup-result strong { display:block; color:#991b1b; font-size: 16px; margin-bottom: 4px; }
+    .offline-lookup-result span { display:block; color:#475569; font-size: 13px; font-weight: 750; white-space: pre-line; line-height: 1.35; }
+    .offline-lookup-empty { padding: 14px; border-radius: 16px; border: 1px dashed #cbd5e1; color:#475569; font-weight: 850; background:#f8fafc; }
     @media (max-width:720px) {
       .profile-actions { grid-template-columns: 1fr; }
     }
@@ -1558,7 +1568,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
           <span class="card-chip mini-chip">OFF</span>
           <span class="card-note">Offline</span>
           <div class="card-art"><svg class="emboss-icon" viewBox="0 0 96 96" aria-hidden="true"><path d="M14 34a10 10 0 0 1 10-10h16l8 9h26a10 10 0 0 1 10 10v25a10 10 0 0 1-10 10H24a10 10 0 0 1-10-10Z"/><path d="M48 42v21"/><path d="M38 55l10 10 10-10"/></svg></div>
-          <div class="card-copy"><strong>Offline Certs</strong><small>Create and access certificates &amp; reports without signal.</small></div>
+          <div class="card-copy"><strong>Jobs / Drafts</strong><small>One list for cloud-cached and offline drafts, like GoFormz.</small></div>
         </button>
 
         <button class="launch-card callouts" type="button" onclick="openCallouts(event)" aria-label="Open Callouts">
@@ -1575,11 +1585,11 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
           <div class="card-copy"><strong>Quick Quote</strong><small>Fast quotes and pricing while you are on site.</small></div>
         </button>
 
-        <button class="launch-card cloud" type="button" onclick="openCloudDrafts(event)" aria-label="Open Cloud Drafts">
+        <button class="launch-card cloud" type="button" onclick="openOfflineDrafts(event)" aria-label="Open Jobs and Drafts">
           <span class="card-chip mini-chip">SYNC</span>
           <span class="card-note">Sync</span>
           <div class="card-art"><svg class="emboss-icon" viewBox="0 0 96 96" aria-hidden="true"><path d="M30 72h36a17 17 0 0 0 2-34 23 23 0 0 0-43-7A17 17 0 0 0 30 72Z"/><path d="M48 35v24"/><path d="M37 47l11-11 11 11"/></svg></div>
-          <div class="card-copy"><strong>Cloud Drafts</strong><small>Save and sync work-in-progress across the FSD cloud.</small></div>
+          <div class="card-copy"><strong>Jobs / Drafts</strong><small>Unified draft list: offline, synced, needs sync and cloud cached.</small></div>
         </button>
 
         <button class="launch-card profile" type="button" onclick="openEngineerProfile(event)" aria-label="Open Engineer Profile">
@@ -1606,26 +1616,32 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
 
       <div class="home-meta">
         <span class="home-credit">JARED720 LABS</span>
-        <span class="home-version">App Shell C89n · Offline Add Certs + online ESR line fix</span>
+        <span class="home-version">App Shell C89p · Unified Jobs/Drafts sync</span>
       </div>
     </main>
   </section>
 
-  <section id="offlineDrafts" class="screen offline-screen" aria-label="Offline Drafts">
+  <section id="offlineDrafts" class="screen offline-screen" aria-label="Jobs and Drafts">
     <main class="offline-card">
-      <h2 class="offline-title">Offline Certs &amp; Reports</h2>
-      <p class="offline-help">Certificate/report drafts saved without signal live on this iPad until they are synced to the FSD cloud Draft Manager.</p>
-      <p class="offline-help"><strong>Offline editor:</strong> W, SFA and SEL can be started offline, saved locally, reopened, then synced to Cloud Drafts. C89n keeps FAC, FAM and PSC as Add Page/Add Cert options inside those offline parent drafts, pinned near the bottom of the editor — not as separate offline start cards.</p>
+      <h2 class="offline-title">Jobs / Drafts</h2>
+      <p class="offline-help">One GoFormz-style list for this iPad: cloud drafts you have synced down, offline-only drafts, and drafts with local changes waiting to sync.</p>
+      <p class="offline-help"><strong>How it works:</strong> press Sync Now while online before going out. The iPad downloads Cloud Drafts and the customer/site picker. When there is no signal, you can only open what has already been synced to this iPad.</p>
+      <div class="actions">
+        <button class="button" type="button" onclick="syncUnifiedDrafts(event)"><span class="tile-icon">🔁</span><span>Sync Now - Drafts + Customers</span></button>
+        <button class="button secondary" type="button" onclick="openCloudDrafts(event)"><span class="tile-icon">☁️</span><span>Open Cloud Draft Manager</span></button>
+        <button class="button secondary" type="button" onclick="refreshOfflineDrafts(event)"><span class="tile-icon">🔄</span><span>Refresh Jobs / Drafts</span></button>
+      </div>
       <div id="offlineList" class="offline-list"></div>
       <div class="actions">
-        <button class="button" type="button" onclick="startNewOfflineW(event)"><span class="tile-icon">📝</span><span>Start Offline Engineer Service Report</span></button>
-        <button class="button secondary" type="button" onclick="startNewOfflineSfaTrial(event)"><span class="tile-icon">🔥</span><span>Start Offline SFA</span></button>
-        <button class="button secondary" type="button" onclick="startNewOfflineSelTrial(event)"><span class="tile-icon">💡</span><span>Start Offline SEL</span></button>
-        <button class="button secondary" type="button" onclick="refreshOfflineDrafts(event)"><span class="tile-icon">🔄</span><span>Refresh Offline Reports</span></button>
+        <button class="button" type="button" onclick="startNewOfflineW(event)"><span class="tile-icon">📝</span><span>New W / Engineer Service Report</span></button>
+        <button class="button secondary" type="button" onclick="startNewOfflineSfaTrial(event)"><span class="tile-icon">🔥</span><span>New SFA</span></button>
+        <button class="button secondary" type="button" onclick="startNewOfflineSelTrial(event)"><span class="tile-icon">💡</span><span>New SEL</span></button>
+        <button class="button secondary" type="button" onclick="syncOfflineCustomerPickerData(event)"><span class="tile-icon">📇</span><span>Update Customer List Only</span></button>
         <button class="button third" type="button" onclick="closeOfflineDrafts(event)"><span class="tile-icon">↩️</span><span>Back to Menu</span></button>
       </div>
       <div id="offlineStatus" class="offline-status"></div>
-      <div class="maker-mark">Jared720 Labs</div>
+      <div id="offlineLookupStatus" class="offline-status"></div>
+      <div class="maker-mark">Jared720 Labs · C89p Unified Drafts</div>
     </main>
   </section>
 
@@ -1659,6 +1675,12 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
           <div class="editor-field"><label>Service date</label><input id="editServiceDate" type="date"></div>
           <div class="editor-field editor-wide"><label>Customer / Invoice address</label><textarea id="editCustomer"></textarea></div>
           <div class="editor-field editor-wide"><label>Site address</label><textarea id="editSite"></textarea></div>
+          <div class="editor-quick-row editor-wide">
+            <button class="editor-mini-btn" type="button" onclick="openOfflineCustomerPicker(event,'invoice')">Pick Invoice Customer Offline</button>
+            <button class="editor-mini-btn" type="button" onclick="openOfflineCustomerPicker(event,'site')">Pick Site Address Offline</button>
+            <button class="editor-mini-btn" type="button" onclick="copyOfflineInvoiceToSite(event)">Same as Invoice</button>
+          </div>
+          <div id="offlineEditorLookupStatus" class="sfa-local-note editor-wide">Offline customer picker uses the last synced customer/site list saved on this device.</div>
 
           <div id="offlineAddCertControls" class="nested-editor-grid">
             <div class="editor-section-title">Add Page / Add Cert options</div>
@@ -2011,6 +2033,21 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
   </div>
 
 
+  <section id="offlineLookupModal" class="profile-modal" aria-label="Offline Customer Picker" aria-hidden="true">
+    <div class="profile-card offline-lookup-card">
+      <h2 id="offlineLookupTitle">Offline Customer Picker</h2>
+      <p id="offlineLookupHelp">Search the customer/site list saved on this iPad.</p>
+      <label for="offlineLookupSearch">Search customer, site, postcode or Sage account</label>
+      <input id="offlineLookupSearch" autocomplete="off" placeholder="Start typing..." oninput="renderOfflineLookupResults()">
+      <div id="offlineLookupResults" class="offline-lookup-results"></div>
+      <div class="profile-actions">
+        <button type="button" onclick="syncOfflineCustomerPickerData(event)">Update List Online</button>
+        <button class="secondary" type="button" onclick="closeOfflineCustomerPicker(event)">Close</button>
+      </div>
+      <div id="offlineLookupModalStatus" class="profile-note">Offline list status will show here.</div>
+    </div>
+  </section>
+
   <div id="sigHelper" class="sig-helper" aria-hidden="true">
     <div class="sig-card" role="dialog" aria-modal="true" aria-labelledby="sigHelperTitle">
       <div class="sig-head">
@@ -2035,7 +2072,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
     (function () {
       'use strict';
 
-      const SHELL_VER = 'V6.3c78aa';
+      const SHELL_VER = 'V6.3c81p';
       const APP_URL = 'https://script.google.com/macros/s/AKfycbzq9FTETNZwUJWHMGnMHECbu3sJ3jy3FFvGYyeaRXtkoK1GHBtqOu-GLBle_WGfoFtI/exec';
       const SCHEDULE_URL = 'https://docs.google.com/spreadsheets/d/1-lKMU6LIhW7oiWHskTZcbYFhjQCN6nZoSydLxq5A-Fc/edit?gid=720000000#gid=720000000';
       const CALLOUTS_PAGE = APP_URL + '?page=callouts&shell=ipad';
@@ -2493,6 +2530,11 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
       const OFFLINE_W_QUEUE_KEY = 'fsd_esr_offline_w_queue_v6_3c37u';
       const OFFLINE_W_OLD_QUEUE_KEY = 'fsd_esr_offline_w_queue_v6_3c37s';
       const OFFLINE_W_WINDOW_NAME_PREFIX = 'FSD_OFFLINE_W_PAYLOAD::';
+      const OFFLINE_LOOKUP_STORAGE_KEY = 'fsd_offline_customer_site_picker_v1';
+      const OFFLINE_LOOKUP_MAX_RESULTS = 80;
+      const OFFLINE_CLOUD_DRAFT_SYNC_KEY = 'fsd_unified_cloud_drafts_last_sync_v1';
+      let offlineLookupMode = 'invoice';
+      let offlineLookupData = loadOfflineLookupData();
 
       // V6.3c69b - Offline SFA online field-shape fix.
       // W remains the only offline report that can sync to Cloud Drafts.
@@ -2572,6 +2614,241 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
         if (offlineStatus) offlineStatus.textContent = message || '';
       }
 
+      function loadOfflineLookupData() {
+        try {
+          const raw = localStorage.getItem(OFFLINE_LOOKUP_STORAGE_KEY);
+          const data = raw ? JSON.parse(raw) : null;
+          if (!data || typeof data !== 'object') return { customers: [], sites: [], generatedAt: '' };
+          if (!Array.isArray(data.customers)) data.customers = [];
+          if (!Array.isArray(data.sites)) data.sites = [];
+          return data;
+        } catch (err) {
+          return { customers: [], sites: [], generatedAt: '' };
+        }
+      }
+
+      function saveOfflineLookupData(data) {
+        data = data || {};
+        const cleaned = {
+          ok: !!data.ok,
+          version: data.version || 'C89o',
+          generatedAt: data.generatedAt || new Date().toISOString(),
+          savedAt: new Date().toISOString(),
+          customers: Array.isArray(data.customers) ? data.customers : [],
+          sites: Array.isArray(data.sites) ? data.sites : []
+        };
+        localStorage.setItem(OFFLINE_LOOKUP_STORAGE_KEY, JSON.stringify(cleaned));
+        offlineLookupData = cleaned;
+        updateOfflineLookupStatus();
+        return cleaned;
+      }
+
+      function offlineLookupCountText() {
+        const data = offlineLookupData || loadOfflineLookupData();
+        const c = Array.isArray(data.customers) ? data.customers.length : 0;
+        const s = Array.isArray(data.sites) ? data.sites.length : 0;
+        const when = data.savedAt || data.generatedAt || '';
+        const dateText = when ? (' Last updated: ' + new Date(when).toLocaleString()) : '';
+        return c || s
+          ? ('Offline customer list ready: ' + c + ' invoice customers, ' + s + ' site addresses.' + dateText)
+          : 'No offline customer list saved yet. Connect to the internet and press Update Offline Customer List.';
+      }
+
+      function updateOfflineLookupStatus() {
+        const text = offlineLookupCountText();
+        ['offlineLookupStatus','offlineEditorLookupStatus','offlineLookupModalStatus'].forEach(function(id) {
+          const el = document.getElementById(id);
+          if (el) el.textContent = text;
+        });
+      }
+
+      function normaliseOfflineLookupText(value) {
+        return String(value || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').replace(/\s+/g, ' ').trim();
+      }
+
+      function offlineLookupSearchHay(row, mode) {
+        row = row || {};
+        if (mode === 'site') {
+          return normaliseOfflineLookupText([row.lookupName, row.siteAddress, row.customerName, row.sageAccountNo].join(' '));
+        }
+        return normaliseOfflineLookupText([row.lookupName, row.customerAddress, row.siteAddress, row.sageAccountNo, row.defaultCustomerOrderNo, row.defaultOurRefNo].join(' '));
+      }
+
+      function offlineLookupRowsForMode(mode) {
+        const data = offlineLookupData || loadOfflineLookupData();
+        return mode === 'site' ? (data.sites || []) : (data.customers || []);
+      }
+
+      function searchOfflineLookupRows(mode, query) {
+        const q = normaliseOfflineLookupText(query || '');
+        const terms = q.split(' ').filter(function(term) { return term.length >= 2; });
+        let rows = offlineLookupRowsForMode(mode);
+        if (!terms.length) return rows.slice(0, OFFLINE_LOOKUP_MAX_RESULTS);
+        return rows.map(function(row) {
+          const hay = offlineLookupSearchHay(row, mode);
+          let score = 500;
+          const ok = terms.every(function(term) {
+            const pos = hay.indexOf(term);
+            if (pos < 0) return false;
+            score -= pos === 0 ? 90 : 35;
+            return true;
+          });
+          return ok ? { row: row, score: score + Math.min(hay.length / 100, 50) } : null;
+        }).filter(Boolean).sort(function(a,b) { return a.score - b.score; }).slice(0, OFFLINE_LOOKUP_MAX_RESULTS).map(function(item) { return item.row; });
+      }
+
+      function firstLookupLine(value) {
+        return String(value || '').split(/\r?\n/).map(function(x) { return x.trim(); }).filter(Boolean)[0] || '';
+      }
+
+      function setVisibleSageAccount(value, overwrite) {
+        if (!value) return;
+        ['editSageAccountNo','editSfaSageAccountNo','editSelSageAccountNo'].forEach(function(id) {
+          const el = document.getElementById(id);
+          if (el && (overwrite || !el.value)) el.value = value;
+        });
+      }
+
+      function setOfflinePickerStatus(text) {
+        const el = document.getElementById('offlineLookupModalStatus');
+        if (el) el.textContent = text || offlineLookupCountText();
+      }
+
+      window.fsdReceiveOfflineLookupData = function fsdReceiveOfflineLookupData(payload) {
+        try {
+          const old = document.getElementById('fsdOfflineLookupJsonpScript');
+          if (old && old.parentNode) old.parentNode.removeChild(old);
+        } catch (err) {}
+        if (!payload || !payload.ok) {
+          const errText = payload && payload.error ? payload.error : 'Could not download customer/site list.';
+          setOfflineStatus('Offline customer list update failed: ' + errText);
+          setOfflinePickerStatus('Offline customer list update failed: ' + errText);
+          return;
+        }
+        const saved = saveOfflineLookupData(payload);
+        setOfflineStatus('Offline customer list updated: ' + (saved.customers || []).length + ' customers and ' + (saved.sites || []).length + ' sites saved on this iPad.');
+        setOfflinePickerStatus(offlineLookupCountText());
+      };
+
+      window.syncOfflineCustomerPickerData = function syncOfflineCustomerPickerData(event) {
+        stopTap(event);
+        if (!navigator.onLine) {
+          setOfflineStatus('Still offline. Use the saved customer list, or connect to the internet and update it.');
+          updateOfflineLookupStatus();
+          return false;
+        }
+        try {
+          const old = document.getElementById('fsdOfflineLookupJsonpScript');
+          if (old && old.parentNode) old.parentNode.removeChild(old);
+          const script = document.createElement('script');
+          script.id = 'fsdOfflineLookupJsonpScript';
+          script.src = APP_URL + '?page=offlineLookup&callback=fsdReceiveOfflineLookupData&ts=' + Date.now();
+          script.onerror = function() {
+            setOfflineStatus('Offline customer list update failed. Check Apps Script deployment and signal.');
+            setOfflinePickerStatus('Offline customer list update failed. Check Apps Script deployment and signal.');
+          };
+          document.body.appendChild(script);
+          setOfflineStatus('Downloading customer/site list for offline picker...');
+          setOfflinePickerStatus('Downloading customer/site list for offline picker...');
+        } catch (err) {
+          setOfflineStatus('Offline customer list update failed: ' + (err && err.message ? err.message : err));
+        }
+        return false;
+      };
+
+      window.openOfflineCustomerPicker = function openOfflineCustomerPicker(event, mode) {
+        stopTap(event);
+        offlineLookupMode = mode === 'site' ? 'site' : 'invoice';
+        offlineLookupData = loadOfflineLookupData();
+        const modal = document.getElementById('offlineLookupModal');
+        const title = document.getElementById('offlineLookupTitle');
+        const help = document.getElementById('offlineLookupHelp');
+        const search = document.getElementById('offlineLookupSearch');
+        if (title) title.textContent = offlineLookupMode === 'site' ? 'Pick Offline Site Address' : 'Pick Offline Invoice Customer';
+        if (help) help.textContent = offlineLookupMode === 'site'
+          ? 'Search the site addresses saved on this iPad. This works without signal after you update the list once.'
+          : 'Search invoice customers saved on this iPad. This works without signal after you update the list once.';
+        if (search) {
+          search.value = '';
+          search.placeholder = offlineLookupMode === 'site' ? 'Search site, postcode or account...' : 'Search customer, postcode or Sage account...';
+        }
+        updateOfflineLookupStatus();
+        renderOfflineLookupResults();
+        if (modal) {
+          modal.classList.add('active');
+          modal.setAttribute('aria-hidden', 'false');
+        }
+        setTimeout(function(){ if (search) search.focus(); }, 120);
+        return false;
+      };
+
+      window.closeOfflineCustomerPicker = function closeOfflineCustomerPicker(event) {
+        stopTap(event);
+        const modal = document.getElementById('offlineLookupModal');
+        if (modal) {
+          modal.classList.remove('active');
+          modal.setAttribute('aria-hidden', 'true');
+        }
+        return false;
+      };
+
+      window.renderOfflineLookupResults = function renderOfflineLookupResults() {
+        const wrap = document.getElementById('offlineLookupResults');
+        const search = document.getElementById('offlineLookupSearch');
+        if (!wrap) return;
+        const rows = searchOfflineLookupRows(offlineLookupMode, search ? search.value : '');
+        if (!rows.length) {
+          wrap.innerHTML = '<div class="offline-lookup-empty">No matches found in the saved offline list. Try a shorter search, or update the list when online.</div>';
+          return;
+        }
+        wrap.innerHTML = rows.map(function(row, idx) {
+          const title = offlineLookupMode === 'site'
+            ? (row.lookupName || firstLookupLine(row.siteAddress) || 'Site address')
+            : (row.lookupName || firstLookupLine(row.customerAddress) || 'Invoice customer');
+          const body = offlineLookupMode === 'site'
+            ? [row.siteAddress, row.customerName ? ('Customer: ' + row.customerName) : '', row.sageAccountNo ? ('A/C: ' + row.sageAccountNo) : ''].filter(Boolean).join('\n')
+            : [row.customerAddress, row.siteAddress ? ('Site: ' + firstLookupLine(row.siteAddress)) : '', row.defaultCustomerOrderNo ? ('Order: ' + row.defaultCustomerOrderNo) : '', row.sageAccountNo ? ('A/C: ' + row.sageAccountNo) : ''].filter(Boolean).join('\n');
+          return '<button class="offline-lookup-result" type="button" data-offline-lookup-index="' + idx + '"><strong>' + escapeHtml(title) + '</strong><span>' + escapeHtml(body || title) + '</span></button>';
+        }).join('');
+        Array.from(wrap.querySelectorAll('[data-offline-lookup-index]')).forEach(function(btn) {
+          btn.addEventListener('click', function(ev) {
+            stopTap(ev);
+            const idx = Number(btn.getAttribute('data-offline-lookup-index') || 0);
+            const selected = rows[idx];
+            applyOfflineLookupSelection(selected);
+          });
+        });
+      };
+
+      function applyOfflineLookupSelection(row) {
+        row = row || {};
+        if (offlineLookupMode === 'site') {
+          setEditValue('editSite', row.siteAddress || row.address || '');
+          setVisibleSageAccount(row.sageAccountNo || '', false);
+        } else {
+          setEditValue('editCustomer', row.customerAddress || row.customer || '');
+          if (row.siteAddress && !getEditValue('editSite')) setEditValue('editSite', row.siteAddress);
+          setVisibleSageAccount(row.sageAccountNo || '', true);
+          if (row.defaultCustomerOrderNo) {
+            if (document.getElementById('editCustomerOrderNo') && !getEditValue('editCustomerOrderNo')) setEditValue('editCustomerOrderNo', row.defaultCustomerOrderNo);
+            if (document.getElementById('editSfaOrderNo') && !getEditValue('editSfaOrderNo')) setEditValue('editSfaOrderNo', row.defaultCustomerOrderNo);
+          }
+          if (row.defaultOurRefNo && document.getElementById('editOurRefNo') && !getEditValue('editOurRefNo')) setEditValue('editOurRefNo', row.defaultOurRefNo);
+        }
+        markEditorDirty(true);
+        setEditorStatus((offlineLookupMode === 'site' ? 'Site address' : 'Invoice customer') + ' selected from offline picker. Press Save Offline before leaving.');
+        window.closeOfflineCustomerPicker();
+        try { autoNameOfflineW(); } catch (err) {}
+      }
+
+      window.copyOfflineInvoiceToSite = function copyOfflineInvoiceToSite(event) {
+        stopTap(event);
+        setEditValue('editSite', getEditValue('editCustomer'));
+        markEditorDirty(true);
+        setEditorStatus('Site address set to same as invoice/customer. Press Save Offline before leaving.');
+        return false;
+      };
+
       function getOfflineReportType(item) {
         const raw = item && (item.reportType || (item.draft && item.draft.reportType) || item.type || 'W');
         const normalized = String(raw || 'W').toUpperCase();
@@ -2635,12 +2912,33 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
         });
       }
 
+      function normaliseDraftSyncState(row) {
+        if (!row) return 'offline_only';
+        if (row.syncState) return String(row.syncState);
+        return row.draftId ? 'synced' : 'offline_only';
+      }
+
+      function draftStateLabel(state) {
+        state = String(state || '').toLowerCase();
+        if (state === 'synced') return 'Synced';
+        if (state === 'needs_sync') return 'Needs Sync';
+        if (state === 'cloud_cached') return 'Cloud Cached';
+        return 'Offline Only';
+      }
+
+      function draftStateClass(state) {
+        state = String(state || '').toLowerCase();
+        if (state === 'synced' || state === 'cloud_cached') return 'synced';
+        if (state === 'needs_sync') return 'needs-sync';
+        return 'offline-only';
+      }
+
       function renderOfflineDrafts() {
-        const rows = readOfflineQueue().sort(function(a, b) { return String(b.savedAt || '').localeCompare(String(a.savedAt || '')); });
+        const rows = readOfflineQueue().sort(function(a, b) { return String(b.savedAt || b.cloudLastUpdated || '').localeCompare(String(a.savedAt || a.cloudLastUpdated || '')); });
         if (!offlineList) return;
         if (!rows.length) {
-          offlineList.innerHTML = '<div class="offline-empty">No offline certificate/report drafts found on this iPad.</div>';
-          setOfflineStatus('');
+          offlineList.innerHTML = '<div class="offline-empty">No Jobs/Drafts are saved on this iPad yet. Press Sync Now while online to download Cloud Drafts, or start a new offline W, SFA or SEL.</div>';
+          setOfflineStatus('No local draft cache on this iPad yet.');
           return;
         }
 
@@ -2649,42 +2947,56 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
           const report = getOfflineReportConfig(row);
           let title = row.draftName || row.customer || ('Offline ' + report.label + ' draft');
           if (report.code === 'W') {
-            title = String(title || '').replace(/Offline\s+W\b/gi, 'Offline Engineer Service Report').replace(/\bW\s+draft\b/gi, 'Engineer Service Report draft');
+            title = String(title || '').replace(/Offline\s+W\b/gi, 'Engineer Service Report').replace(/\bW\s+draft\b/gi, 'Engineer Service Report draft');
           }
-          const saved = row.savedAt ? new Date(row.savedAt).toLocaleString() : 'not known';
+          const saved = row.savedAt ? new Date(row.savedAt).toLocaleString() : (row.cloudLastUpdated ? new Date(row.cloudLastUpdated).toLocaleString() : 'not known');
           const addedInline = [];
           const draftForMeta = row.draft || {};
           if (String(draftForMeta.includeFireAlarmCommissioningReport || '').toUpperCase() === 'YES') addedInline.push('FAC');
           if (String(draftForMeta.includeFireAlarmModificationReport || '').toUpperCase() === 'YES') addedInline.push('FAM');
           if (String(draftForMeta.includePowerSupplyCertificate || '').toUpperCase() === 'YES') addedInline.push('PSC');
+          const state = normaliseDraftSyncState(row);
+          const stateLabel = draftStateLabel(state);
           const meta = [
+            'Status: ' + stateLabel,
             'Type: ' + report.label + (addedInline.length ? ' + ' + addedInline.join('/') : ''),
             row.engineer ? 'Engineer: ' + row.engineer : '',
             row.customer ? 'Customer: ' + row.customer : '',
             row.site ? 'Site: ' + row.site : '',
+            row.draftId ? 'Cloud ID: ' + row.draftId : '',
             'Saved: ' + saved
           ].filter(Boolean).join(' · ');
           const id = escapeHtml(row.offlineId);
+          const canSync = report.syncableOffline && state !== 'synced' && state !== 'cloud_cached';
+          const syncButton = canSync
+            ? '<button class="button" type="button" data-offline-id="' + id + '" data-offline-action="sync">Sync to Cloud</button>'
+            : '<button class="button" type="button" disabled>' + (row.draftId ? 'Synced' : 'No Sync Yet') + '</button>';
+          const onlineButton = row.draftId
+            ? '<button class="button secondary" type="button" data-offline-id="' + id + '" data-offline-action="online">Open Online</button>'
+            : '';
           parts.push(
-            '<article class="offline-item">',
-              '<strong>', escapeHtml(title), '</strong>',
+            '<article class="offline-item draft-state-' + escapeHtml(draftStateClass(state)) + '">',
+              '<div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start;flex-wrap:wrap;">',
+                '<strong>', escapeHtml(title), '</strong>',
+                '<span class="badge">', escapeHtml(stateLabel), '</span>',
+              '</div>',
               '<div class="offline-meta">', escapeHtml(meta), '</div>',
               '<div class="offline-actions">',
                 report.editableOffline
-                  ? '<button class="button secondary" type="button" data-offline-id="' + id + '" data-offline-action="edit">Edit Offline</button>'
+                  ? '<button class="button secondary" type="button" data-offline-id="' + id + '" data-offline-action="edit">Edit on iPad</button>'
                   : '<button class="button secondary" type="button" disabled>Not Editable Yet</button>',
-                report.syncableOffline
-                  ? '<button class="button" type="button" data-offline-id="' + id + '" data-offline-action="sync">Sync to Cloud</button>'
-                  : '<button class="button" type="button" disabled>No Sync Yet</button>',
-                '<button class="button third" type="button" data-offline-id="', id, '" data-offline-action="delete">Delete</button>',
+                syncButton,
+                onlineButton,
+                '<button class="button third" type="button" data-offline-id="', id, '" data-offline-action="delete">Delete Local Copy</button>',
               '</div>',
             '</article>'
           );
         });
         offlineList.innerHTML = parts.join('');
-        setOfflineStatus(rows.length + ' offline certificate/report draft' + (rows.length === 1 ? '' : 's') + ' waiting on this iPad.');
+        const needs = rows.filter(function(row) { return normaliseDraftSyncState(row) === 'needs_sync' || normaliseDraftSyncState(row) === 'offline_only'; }).length;
+        const lastCloud = safeStorageGet(localStorage, OFFLINE_CLOUD_DRAFT_SYNC_KEY);
+        setOfflineStatus(rows.length + ' job/draft' + (rows.length === 1 ? '' : 's') + ' on this iPad' + (needs ? ' · ' + needs + ' waiting to sync' : '') + (lastCloud ? ' · Cloud sync: ' + lastCloud : '') + '.');
       }
-
 
 
       function getOfflineItemById(offlineId) {
@@ -3261,6 +3573,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
         loader.classList.add('hidden');
         fallback.classList.add('hidden');
         offlineEditor.classList.add('active');
+        updateOfflineLookupStatus();
         updateEditorNetworkBadge();
         bindEditorChangeTracking();
         calculateEditorTotals();
@@ -3781,7 +4094,9 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
           engineer: d.engineer || '',
           customer: d.customer || '',
           site: d.site || '',
-          savedAt: d.savedAt
+          savedAt: d.savedAt,
+          syncState: item.draftId ? 'needs_sync' : 'offline_only',
+          cloudLastUpdated: item.cloudLastUpdated || ''
         });
         upsertOfflineItem(updated);
         setEditorDirty(false);
@@ -4002,6 +4317,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
         offlineEditor.classList.remove('active');
         offlineDrafts.classList.add('active');
         renderOfflineDrafts();
+        updateOfflineLookupStatus();
       };
 
       window.saveOfflineEditor = function saveOfflineEditor(event) {
@@ -4073,6 +4389,126 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
         }
       }
 
+      function inferOfflineReportCodeFromCloud(row, draft) {
+        row = row || {};
+        draft = draft || {};
+        const raw = String(draft.reportTypeCode || draft.reportType || row.reportType || row.certificateType || '').toUpperCase();
+        if (raw === 'SFA' || raw.indexOf('FIRE ALARM SERVICE') !== -1) return 'SFA';
+        if (raw === 'SEL' || raw.indexOf('EMERGENCY LIGHTING') !== -1) return 'SEL';
+        return 'W';
+      }
+
+      function mergeCloudDraftRows(rows) {
+        const incoming = Array.isArray(rows) ? rows : [];
+        let queue = readOfflineQueue();
+        let added = 0;
+        let updated = 0;
+        let skippedLocalChanges = 0;
+        incoming.forEach(function(row) {
+          if (!row || !row.draftId) return;
+          const draft = row.draft && typeof row.draft === 'object' ? row.draft : {};
+          const code = inferOfflineReportCodeFromCloud(row, draft);
+          const existingIndex = queue.findIndex(function(item) { return item && String(item.draftId || '') === String(row.draftId); });
+          const existing = existingIndex >= 0 ? queue[existingIndex] : null;
+          const existingState = normaliseDraftSyncState(existing || {});
+          if (existing && (existingState === 'needs_sync' || existingState === 'offline_only')) {
+            skippedLocalChanges += 1;
+            return;
+          }
+          const item = {
+            offlineId: existing && existing.offlineId ? existing.offlineId : ('cloud-' + String(row.draftId)),
+            draftId: row.draftId,
+            reportType: code,
+            draftName: row.draftName || draft.draftName || (code + ' Cloud Draft'),
+            engineer: row.engineer || draft.engineer || '',
+            customer: row.customer || draft.customer || '',
+            site: row.site || draft.site || '',
+            savedAt: row.lastUpdated || draft.savedAt || new Date().toISOString(),
+            cloudLastUpdated: row.lastUpdated || new Date().toISOString(),
+            syncState: 'synced',
+            source: 'cloud-draft-cache-c89p',
+            draft: Object.assign({}, draft, {
+              draftId: row.draftId,
+              draftName: row.draftName || draft.draftName || '',
+              reportTypeCode: code,
+              reportType: row.reportType || draft.reportType || OFFLINE_REPORT_TYPES[code].label
+            })
+          };
+          if (existingIndex >= 0) { queue[existingIndex] = item; updated += 1; }
+          else { queue.push(item); added += 1; }
+        });
+        writeOfflineQueue(queue);
+        return { added: added, updated: updated, skippedLocalChanges: skippedLocalChanges, total: incoming.length };
+      }
+
+      window.fsdReceiveOfflineDraftsData = function fsdReceiveOfflineDraftsData(payload) {
+        try {
+          if (!payload || !payload.ok) {
+            setOfflineStatus('Cloud draft sync failed: ' + (payload && payload.error ? payload.error : 'No valid response.'));
+            renderOfflineDrafts();
+            return;
+          }
+          const result = mergeCloudDraftRows(payload.drafts || []);
+          const stamp = new Date().toLocaleString();
+          safeStorageSet(localStorage, OFFLINE_CLOUD_DRAFT_SYNC_KEY, stamp);
+          renderOfflineDrafts();
+          updateOfflineLookupStatus();
+          setOfflineStatus('Cloud drafts synced to this iPad: ' + result.added + ' added, ' + result.updated + ' updated' + (result.skippedLocalChanges ? ', ' + result.skippedLocalChanges + ' kept as local changes' : '') + '.');
+        } catch (err) {
+          setOfflineStatus('Cloud draft sync failed locally: ' + (err && err.message ? err.message : err));
+        }
+      };
+
+      window.syncCloudDraftCache = function syncCloudDraftCache(event) {
+        stopTap(event);
+        if (!navigator.onLine) {
+          setOfflineStatus('No signal. Showing only the jobs already synced to this iPad.');
+          renderOfflineDrafts();
+          return false;
+        }
+        try {
+          const old = document.getElementById('fsdOfflineDraftsJsonpScript');
+          if (old && old.parentNode) old.parentNode.removeChild(old);
+          const script = document.createElement('script');
+          script.id = 'fsdOfflineDraftsJsonpScript';
+          const engineer = getDefaultEngineerProfile();
+          script.src = APP_URL + '?page=offlineDraftsApi&callback=fsdReceiveOfflineDraftsData&includeJson=1&engineer=' + encodeURIComponent(engineer || '') + '&ts=' + Date.now();
+          script.onerror = function() {
+            setOfflineStatus('Cloud draft sync failed. Check signal and Apps Script deployment.');
+          };
+          document.body.appendChild(script);
+          setOfflineStatus('Downloading Cloud Drafts onto this iPad...');
+        } catch (err) {
+          setOfflineStatus('Cloud draft sync failed: ' + (err && err.message ? err.message : err));
+        }
+        return false;
+      };
+
+      window.syncUnifiedDrafts = function syncUnifiedDrafts(event) {
+        stopTap(event);
+        if (!navigator.onLine) {
+          setOfflineStatus('No signal. The Jobs/Drafts list is working from the last sync saved on this iPad.');
+          renderOfflineDrafts();
+          return false;
+        }
+        try { window.syncOfflineCustomerPickerData({ preventDefault:function(){}, stopPropagation:function(){} }); } catch (err) {}
+        return window.syncCloudDraftCache({ preventDefault:function(){}, stopPropagation:function(){} });
+      };
+
+      window.openOnlineDraftById = function openOnlineDraftById(offlineId) {
+        const item = getOfflineItemById(offlineId);
+        if (!item || !item.draftId) {
+          setOfflineStatus('This draft is not in Cloud Drafts yet. Press Sync to Cloud first.');
+          return;
+        }
+        if (!navigator.onLine) {
+          setOfflineStatus('No signal. You can edit the synced copy on the iPad, then sync it back later.');
+          return;
+        }
+        const report = getOfflineReportConfig(item);
+        openAppUrlInShell(APP_URL + '?page=' + encodeURIComponent(report.page || 'esr') + '&draftId=' + encodeURIComponent(item.draftId));
+      };
+
       window.openOfflineDrafts = function openOfflineDrafts(event) {
         stopTap(event);
         loader.classList.add('hidden');
@@ -4092,6 +4528,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
       window.refreshOfflineDrafts = function refreshOfflineDrafts(event) {
         stopTap(event);
         renderOfflineDrafts();
+        updateOfflineLookupStatus();
       };
 
       if (offlineList) {
@@ -4103,6 +4540,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
           const action = btn.getAttribute('data-offline-action') || '';
           if (action === 'edit') return window.editOfflineItemById(offlineId);
           if (action === 'sync') return window.syncOfflineItemById(offlineId);
+          if (action === 'online') return window.openOnlineDraftById(offlineId);
           if (action === 'delete') return window.deleteOfflineItemById(offlineId);
         });
       }
@@ -4311,7 +4749,24 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
           const result = msg.item || {};
           const resultCode = msg.type === 'FSD_OFFLINE_SFA_SYNC_RESULT' ? 'SFA' : (msg.type === 'FSD_OFFLINE_SEL_SYNC_RESULT' ? 'SEL' : 'W');
           if (result.ok && result.offlineId) {
-            removeOfflineItem(result.offlineId);
+            const sourceItem = (pendingShellAction && pendingShellAction.item) || getOfflineItemById(result.offlineId);
+            if (sourceItem && sourceItem.draft) {
+              const syncedItem = Object.assign({}, sourceItem, {
+                draftId: result.draftId || sourceItem.draftId || '',
+                draftName: result.draftName || sourceItem.draftName || '',
+                savedAt: new Date().toISOString(),
+                cloudLastUpdated: new Date().toISOString(),
+                syncState: 'synced',
+                source: 'cloud-synced-cache-c89p',
+                draft: Object.assign({}, sourceItem.draft, {
+                  draftId: result.draftId || sourceItem.draftId || '',
+                  draftName: result.draftName || sourceItem.draftName || sourceItem.draft.draftName || ''
+                })
+              });
+              upsertOfflineItem(syncedItem);
+            } else {
+              removeOfflineItem(result.offlineId);
+            }
             pendingShellAction = null;
             // Keep the hidden sync bridge clean so the next Open Portal starts fresh.
             hasStarted = false;
@@ -4321,7 +4776,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
             home.classList.add('hidden');
             offlineDrafts.classList.add('active');
             renderOfflineDrafts();
-            setOfflineStatus('Synced ' + resultCode + ' to cloud drafts: ' + (result.draftName || result.draftId || resultCode + ' draft') + '. Open Draft Manager to resume it.');
+            setOfflineStatus('Synced ' + resultCode + ' to Cloud Drafts and kept a synced copy on this iPad: ' + (result.draftName || result.draftId || resultCode + ' draft') + '.');
           } else {
             pendingShellAction = null;
             // Keep the hidden sync bridge clean so the next Open Portal starts fresh.
@@ -4386,6 +4841,6 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
 
     }());
   </script>
-  <div class="fixed-version-badge">App Shell C89n · Offline Add Certs + online ESR line fix</div>
+  <div class="fixed-version-badge">App Shell C89p · Unified Jobs/Drafts sync</div>
 </body>
 </html>
