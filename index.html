@@ -1616,7 +1616,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
 
       <div class="home-meta">
         <span class="home-credit">JARED720 LABS</span>
-        <span class="home-version">App Shell C89p · Unified Jobs/Drafts sync</span>
+        <span class="home-version">App Shell C89q · Sync timeout + customer list fix</span>
       </div>
     </main>
   </section>
@@ -1641,7 +1641,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
       </div>
       <div id="offlineStatus" class="offline-status"></div>
       <div id="offlineLookupStatus" class="offline-status"></div>
-      <div class="maker-mark">Jared720 Labs · C89p Unified Drafts</div>
+      <div class="maker-mark">Jared720 Labs · C89q Unified Drafts</div>
     </main>
   </section>
 
@@ -2072,7 +2072,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
     (function () {
       'use strict';
 
-      const SHELL_VER = 'V6.3c81p';
+      const SHELL_VER = 'V6.3c81q';
       const APP_URL = 'https://script.google.com/macros/s/AKfycbzq9FTETNZwUJWHMGnMHECbu3sJ3jy3FFvGYyeaRXtkoK1GHBtqOu-GLBle_WGfoFtI/exec';
       const SCHEDULE_URL = 'https://docs.google.com/spreadsheets/d/1-lKMU6LIhW7oiWHskTZcbYFhjQCN6nZoSydLxq5A-Fc/edit?gid=720000000#gid=720000000';
       const CALLOUTS_PAGE = APP_URL + '?page=callouts&shell=ipad';
@@ -2714,7 +2714,19 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
         if (el) el.textContent = text || offlineLookupCountText();
       }
 
+      let fsdOfflineLookupDownloadActive = false;
+      let fsdOfflineLookupDownloadTimer = null;
+
+      function clearOfflineLookupDownloadWatch() {
+        fsdOfflineLookupDownloadActive = false;
+        if (fsdOfflineLookupDownloadTimer) {
+          clearTimeout(fsdOfflineLookupDownloadTimer);
+          fsdOfflineLookupDownloadTimer = null;
+        }
+      }
+
       window.fsdReceiveOfflineLookupData = function fsdReceiveOfflineLookupData(payload) {
+        clearOfflineLookupDownloadWatch();
         try {
           const old = document.getElementById('fsdOfflineLookupJsonpScript');
           if (old && old.parentNode) old.parentNode.removeChild(old);
@@ -2738,12 +2750,34 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
           return false;
         }
         try {
+          clearOfflineLookupDownloadWatch();
           const old = document.getElementById('fsdOfflineLookupJsonpScript');
           if (old && old.parentNode) old.parentNode.removeChild(old);
           const script = document.createElement('script');
           script.id = 'fsdOfflineLookupJsonpScript';
+          script.async = true;
           script.src = APP_URL + '?page=offlineLookup&callback=fsdReceiveOfflineLookupData&ts=' + Date.now();
+          fsdOfflineLookupDownloadActive = true;
+          fsdOfflineLookupDownloadTimer = setTimeout(function() {
+            if (!fsdOfflineLookupDownloadActive) return;
+            fsdOfflineLookupDownloadActive = false;
+            try {
+              const old = document.getElementById('fsdOfflineLookupJsonpScript');
+              if (old && old.parentNode) old.parentNode.removeChild(old);
+            } catch (err) {}
+            setOfflineStatus('Customer/site list download timed out after 45 seconds. This normally means the new Apps Script files were saved but the web app deployment was not updated, or the lookup API is taking too long. Update the deployment, then try again.');
+            setOfflinePickerStatus('Customer/site list download timed out. Update Apps Script deployment and try again.');
+          }, 45000);
+          script.onload = function() {
+            setTimeout(function() {
+              if (!fsdOfflineLookupDownloadActive) return;
+              clearOfflineLookupDownloadWatch();
+              setOfflineStatus('Apps Script replied, but did not return the C89q customer-list callback. Replace Routing.gs + Offline_Lookup_API.gs, update the web app deployment, then try again.');
+              setOfflinePickerStatus('Customer/site list route replied without callback. Check deployment.');
+            }, 1200);
+          };
           script.onerror = function() {
+            clearOfflineLookupDownloadWatch();
             setOfflineStatus('Offline customer list update failed. Check Apps Script deployment and signal.');
             setOfflinePickerStatus('Offline customer list update failed. Check Apps Script deployment and signal.');
           };
@@ -2751,6 +2785,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
           setOfflineStatus('Downloading customer/site list for offline picker...');
           setOfflinePickerStatus('Downloading customer/site list for offline picker...');
         } catch (err) {
+          clearOfflineLookupDownloadWatch();
           setOfflineStatus('Offline customer list update failed: ' + (err && err.message ? err.message : err));
         }
         return false;
@@ -4841,6 +4876,6 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
 
     }());
   </script>
-  <div class="fixed-version-badge">App Shell C89p · Unified Jobs/Drafts sync</div>
+  <div class="fixed-version-badge">App Shell C89q · Sync timeout + customer list fix</div>
 </body>
 </html>
