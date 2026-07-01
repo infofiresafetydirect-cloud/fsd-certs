@@ -1616,7 +1616,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
 
       <div class="home-meta">
         <span class="home-credit">JARED720 LABS</span>
-        <span class="home-version">App Shell C89t · customer-first offline picker</span>
+        <span class="home-version">App Shell C89w · lightweight customer sync</span>
       </div>
     </main>
   </section>
@@ -2629,18 +2629,45 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
 
       function saveOfflineLookupData(data) {
         data = data || {};
-        const cleaned = {
+        const base = {
           ok: !!data.ok,
-          version: data.version || 'C89o',
+          version: data.version || 'C89w',
           generatedAt: data.generatedAt || new Date().toISOString(),
           savedAt: new Date().toISOString(),
           customers: Array.isArray(data.customers) ? data.customers : [],
+          // C89w: do not duplicate fallback site rows into storage.
+          // Site picker can build them from customers on demand, keeping the iPad save small.
           sites: Array.isArray(data.sites) ? data.sites : []
         };
-        localStorage.setItem(OFFLINE_LOOKUP_STORAGE_KEY, JSON.stringify(cleaned));
-        offlineLookupData = cleaned;
-        updateOfflineLookupStatus();
-        return cleaned;
+
+        function trySave(obj) {
+          localStorage.setItem(OFFLINE_LOOKUP_STORAGE_KEY, JSON.stringify(obj));
+          offlineLookupData = obj;
+          updateOfflineLookupStatus();
+          return obj;
+        }
+
+        try {
+          return trySave(base);
+        } catch (err) {
+          const customers = base.customers || [];
+          const attempts = [1500, 1000, 750, 500, 300];
+          for (let i = 0; i < attempts.length; i++) {
+            if (customers.length <= attempts[i] && i < attempts.length - 1) continue;
+            try {
+              const smaller = Object.assign({}, base, {
+                version: (base.version || 'C89w') + '-trimmed-' + attempts[i],
+                customers: customers.slice(0, attempts[i]),
+                sites: []
+              });
+              const saved = trySave(smaller);
+              setOfflineStatus('Customer list was too large for this iPad, so a trimmed offline list was saved: ' + saved.customers.length + ' customers.');
+              return saved;
+            } catch (inner) {}
+          }
+          const msg = err && err.message ? err.message : String(err || 'storage error');
+          throw new Error('Could not save offline customer list on this iPad. Browser storage may be full: ' + msg);
+        }
       }
 
       function offlineLookupCountText() {
@@ -2802,7 +2829,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
         const script = document.createElement('script');
         script.id = 'fsdOfflineLookupJsonpScript';
         script.async = true;
-        script.src = APP_URL + '?page=offlineLookup&dataset=' + encodeURIComponent(stage) + '&callback=fsdReceiveOfflineLookupChunk&ts=' + Date.now();
+        script.src = APP_URL + '?page=offlineLookup&dataset=' + encodeURIComponent(stage) + '&customerLimit=1500&lite=1&callback=fsdReceiveOfflineLookupChunk&ts=' + Date.now();
         fsdOfflineLookupDownloadTimer = setTimeout(function() {
           if (!fsdOfflineLookupDownloadActive || fsdOfflineLookupDownloadStage !== stage) return;
           offlineLookupFail(label + ' timed out after ' + timeoutSeconds + ' seconds. This usually means the Apps Script web app deployment has not been updated, or the lookup build is too heavy.');
@@ -2822,11 +2849,12 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
       }
 
       window.fsdReceiveOfflineLookupChunk = function fsdReceiveOfflineLookupChunk(payload) {
-        const stage = fsdOfflineLookupDownloadStage;
-        clearOfflineLookupDownloadWatch();
-        removeOfflineLookupJsonpScript();
+        try {
+          const stage = fsdOfflineLookupDownloadStage;
+          clearOfflineLookupDownloadWatch();
+          removeOfflineLookupJsonpScript();
 
-        if (!payload || !payload.ok) {
+          if (!payload || !payload.ok) {
           const errText = payload && payload.error ? payload.error : 'No valid response.';
           offlineLookupFail('Offline customer/site list update failed during ' + (stage || 'download') + ': ' + errText);
           return;
@@ -2835,17 +2863,18 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
         fsdOfflineLookupChunkData = fsdOfflineLookupChunkData || { customers: [], sites: [], generatedAt: '' };
         if (stage === 'customers') {
           const customers = Array.isArray(payload.customers) ? payload.customers : [];
-          const fallbackSites = buildFallbackSitesFromCustomers(customers);
+          setOfflineStatus('Customer list received: ' + customers.length + ' customers. Saving to this iPad...');
           const saved = saveOfflineLookupData({
             ok: true,
-            version: 'C89t-customer-first',
+            version: payload.version || 'C89w-customer-lite',
             generatedAt: payload.generatedAt || new Date().toISOString(),
             customers: customers,
-            sites: fallbackSites,
+            // C89w: keep stored data light. The site picker builds searchable fallback site rows from customers when opened.
+            sites: [],
             materials: []
           });
           fsdOfflineLookupChunkData = null;
-          setOfflineStatus('Offline customer/site list updated: ' + (saved.customers || []).length + ' customers saved. Site picker is using saved customer/default site addresses, so it works straight away offline.');
+          setOfflineStatus('Offline customer/site list updated: ' + (saved.customers || []).length + ' customers saved. Site picker will search saved customer/default site addresses.');
           setOfflinePickerStatus(offlineLookupCountText());
           return;
         }
@@ -2866,8 +2895,15 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
         // Backwards-compatible fallback if the server returns the old all-in-one payload.
         const saved = saveOfflineLookupData(payload);
         fsdOfflineLookupChunkData = null;
-        setOfflineStatus('Offline customer list updated: ' + (saved.customers || []).length + ' customers and ' + (saved.sites || []).length + ' sites saved on this iPad.');
-        setOfflinePickerStatus(offlineLookupCountText());
+          setOfflineStatus('Offline customer list updated: ' + (saved.customers || []).length + ' customers and ' + (saved.sites || []).length + ' sites saved on this iPad.');
+          setOfflinePickerStatus(offlineLookupCountText());
+        } catch (err) {
+          const msg = err && err.message ? err.message : String(err || 'Unknown save error');
+          clearOfflineLookupDownloadWatch();
+          removeOfflineLookupJsonpScript();
+          setOfflineStatus('Offline customer list received but could not be saved: ' + msg);
+          setOfflinePickerStatus('Offline customer list received but could not be saved: ' + msg);
+        }
       };
 
       window.fsdReceiveOfflineLookupData = window.fsdReceiveOfflineLookupChunk;
@@ -2883,7 +2919,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
           clearOfflineLookupDownloadWatch();
           removeOfflineLookupJsonpScript();
           fsdOfflineLookupChunkData = { customers: [], sites: [], generatedAt: '' };
-          startOfflineLookupJsonpStage('customers', 'Downloading offline customer/site picker list', 45);
+          startOfflineLookupJsonpStage('customers', 'Downloading lightweight offline customer list', 45);
         } catch (err) {
           offlineLookupFail('Offline customer list update failed: ' + (err && err.message ? err.message : err));
         }
@@ -4975,6 +5011,6 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
 
     }());
   </script>
-  <div class="fixed-version-badge">App Shell C89t · customer-first offline picker</div>
+  <div class="fixed-version-badge">App Shell C89w · lightweight customer sync</div>
 </body>
 </html>
