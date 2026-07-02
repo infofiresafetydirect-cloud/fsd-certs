@@ -1616,7 +1616,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
 
       <div class="home-meta">
         <span class="home-credit">JARED720 LABS</span>
-        <span class="home-version">App Shell C90k · IndexedDB customer storage</span>
+        <span class="home-version">App Shell C90l · picker dirty fix</span>
       </div>
     </main>
   </section>
@@ -2950,7 +2950,7 @@ function clearOfflineLookupCustomerChunks() {
         const when = data.savedAt || data.generatedAt || '';
         const dateText = when ? (' Last updated: ' + new Date(when).toLocaleString()) : '';
         return c || s
-          ? ('Offline customer list ready: ' + c + ' invoice customers, ' + s + ' searchable site/customer addresses.' + dateText)
+          ? ('Offline customer list ready: ' + c + ' invoice customer records, ' + s + ' searchable site/customer address rows.' + dateText)
           : 'No offline customer list saved yet. Connect to the internet and press Update Offline Customer List.';
       }
 
@@ -3149,7 +3149,7 @@ function clearOfflineLookupCustomerChunks() {
             if (callbackFired) return;
             if (!fsdOfflineLookupDownloadActive || fsdOfflineLookupDownloadStage !== stage) return;
             try { delete window[callbackName]; } catch (ignore) { window[callbackName] = undefined; }
-            offlineLookupFail('Apps Script replied for ' + label.toLowerCase() + ', but did not call the C90k JSONP callback. Check Routing.gs page=offlineLookup and redeploy the web app.');
+            offlineLookupFail('Apps Script replied for ' + label.toLowerCase() + ', but did not call the C90l JSONP callback. Check Routing.gs page=offlineLookup and redeploy the web app.');
           }, 2500);
         };
         script.onerror = function() {
@@ -3177,7 +3177,7 @@ function clearOfflineLookupCustomerChunks() {
           }
           return JSON.parse(jsonText);
         } catch (err) {
-          return { ok:false, error:'C90k could not decode Apps Script customer response: ' + (err && err.message ? err.message : err) };
+          return { ok:false, error:'C90l could not decode Apps Script customer response: ' + (err && err.message ? err.message : err) };
         }
       }
 
@@ -3226,7 +3226,7 @@ function clearOfflineLookupCustomerChunks() {
               fsdOfflineLookupChunkData = null;
               fsdOfflineLookupAllCustomers = [];
               fsdOfflineLookupNextOffset = 0;
-              setOfflineStatus('Offline customer/site list updated: ' + (saved.customers || []).length + ' customers saved in IndexedDB. Site picker will search saved customer/default site addresses.');
+              setOfflineStatus('Offline customer/site list updated: ' + ((saved.customers || []).length || Number(saved.customerCount || 0)) + ' customer records saved in IndexedDB. Site picker will search saved customer/default site addresses.');
               setOfflinePickerStatus(offlineLookupCountText());
             })
             .catch(function(err) {
@@ -3364,7 +3364,32 @@ function clearOfflineLookupCustomerChunks() {
         });
       };
 
-      function applyOfflineLookupSelection(row) {
+      
+      function markOfflineEditorDirtySafe() {
+        try {
+          if (typeof markEditorDirty === 'function') {
+            markOfflineEditorDirtySafe();
+            return;
+          }
+        } catch (err) {}
+        try {
+          if (typeof markOfflineDraftDirty === 'function') {
+            markOfflineDraftDirty();
+            return;
+          }
+        } catch (err) {}
+        try {
+          if (typeof autosaveOfflineDraftSoon === 'function') {
+            autosaveOfflineDraftSoon();
+            return;
+          }
+        } catch (err) {}
+        try {
+          if (window.currentOfflineDraft) window.currentOfflineDraft.dirty = true;
+        } catch (err) {}
+      }
+
+function applyOfflineLookupSelection(row) {
         row = row || {};
         if (offlineLookupMode === 'site') {
           setEditValue('editSite', row.siteAddress || row.address || '');
@@ -5385,6 +5410,6 @@ function clearOfflineLookupCustomerChunks() {
 
     }());
   </script>
-  <div class="fixed-version-badge">App Shell C90k · IndexedDB customer storage</div>
+  <div class="fixed-version-badge">App Shell C90l · picker dirty fix</div>
 </body>
 </html>
