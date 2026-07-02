@@ -1616,7 +1616,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
 
       <div class="home-meta">
         <span class="home-credit">JARED720 LABS</span>
-        <span class="home-version">App Shell C90d · iframe customer sync</span>
+        <span class="home-version">App Shell C90e · stable JSONP customer sync</span>
       </div>
     </main>
   </section>
@@ -2808,7 +2808,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
       let fsdOfflineLookupChunkData = null;
       let fsdOfflineLookupAllCustomers = [];
       let fsdOfflineLookupNextOffset = 0;
-      const FSD_OFFLINE_LOOKUP_CHUNK_SIZE = 100;
+      const FSD_OFFLINE_LOOKUP_CHUNK_SIZE = 500;
 
       function clearOfflineLookupDownloadWatch() {
         fsdOfflineLookupDownloadActive = false;
@@ -2883,40 +2883,48 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
       }
 
       function startOfflineLookupJsonpStage(stage, label, timeoutSeconds, offset) {
-        // C90d: use a hidden Apps Script iframe + postMessage instead of JSONP script tags.
-        // The JSONP route kept stopping after the first 100 customers on some iPads/GitHub shells.
-        // An iframe response can post a base64 payload back to this page and avoids callback-script weirdness.
+        // C90e: stable JSONP again, but with a fresh callback name for every chunk.
+        // The C90d iframe can load Apps Script but Apps Script's HTML sandbox/wrapper does not reliably postMessage back to GitHub.
         removeOfflineLookupJsonpScript();
         fsdOfflineLookupDownloadActive = true;
         fsdOfflineLookupDownloadStage = stage;
         const safeOffset = Math.max(0, Number(offset || 0));
-        const frame = document.createElement('iframe');
-        frame.id = 'fsdOfflineLookupFrame';
-        frame.style.position = 'absolute';
-        frame.style.left = '-9999px';
-        frame.style.top = '-9999px';
-        frame.style.width = '1px';
-        frame.style.height = '1px';
-        frame.style.opacity = '0';
-        frame.setAttribute('aria-hidden', 'true');
-        frame.src = APP_URL
-          + '?page=offlineCustomerFrame'
+        const callbackName = 'fsdReceiveOfflineLookupChunk_' + Date.now() + '_' + String(Math.random()).replace(/[^0-9]/g, '');
+        const script = document.createElement('script');
+        script.id = 'fsdOfflineLookupJsonpScript';
+        script.async = true;
+        script.setAttribute('data-callback-name', callbackName);
+
+        window[callbackName] = function(payload) {
+          try { delete window[callbackName]; } catch (ignore) { window[callbackName] = undefined; }
+          window.fsdReceiveOfflineLookupChunk(payload);
+        };
+
+        script.src = APP_URL
+          + '?page=offlineLookup'
           + '&dataset=' + encodeURIComponent(stage)
           + '&offset=' + encodeURIComponent(safeOffset)
           + '&chunkSize=' + encodeURIComponent(FSD_OFFLINE_LOOKUP_CHUNK_SIZE)
           + '&allCustomers=1&lite=1'
+          + '&callback=' + encodeURIComponent(callbackName)
           + '&ts=' + Date.now();
         fsdOfflineLookupDownloadTimer = setTimeout(function() {
           if (!fsdOfflineLookupDownloadActive || fsdOfflineLookupDownloadStage !== stage) return;
-          offlineLookupFail(label + ' timed out after ' + timeoutSeconds + ' seconds. Check Routing.gs has page=offlineCustomerFrame and the Apps Script web app has been redeployed.');
-        }, Math.max(10, Number(timeoutSeconds || 35)) * 1000);
-        frame.onload = function() {
+          try { delete window[callbackName]; } catch (ignore) { window[callbackName] = undefined; }
+          offlineLookupFail(label + ' timed out after ' + timeoutSeconds + ' seconds. Check signal and Apps Script deployment.');
+        }, Math.max(10, Number(timeoutSeconds || 45)) * 1000);
+        script.onload = function() {
           setTimeout(function() {
             if (!fsdOfflineLookupDownloadActive || fsdOfflineLookupDownloadStage !== stage) return;
-            offlineLookupFail('Apps Script replied for ' + label.toLowerCase() + ', but the C90d iframe did not post the customer chunk back. Check Routing.gs has page=offlineCustomerFrame and the web app deployment is updated.');
-          }, 2500);
+            try { delete window[callbackName]; } catch (ignore) { window[callbackName] = undefined; }
+            offlineLookupFail('Apps Script replied for ' + label.toLowerCase() + ', but did not call the C90e JSONP callback. Check Routing.gs page=offlineLookup and redeploy the web app.');
+          }, 2000);
         };
-        document.body.appendChild(frame);
+        script.onerror = function() {
+          try { delete window[callbackName]; } catch (ignore) { window[callbackName] = undefined; }
+          offlineLookupFail(label + ' failed to download. Check signal and Apps Script deployment.');
+        };
+        document.body.appendChild(script);
         setOfflineStatus(label + '...');
         setOfflinePickerStatus(label + '...');
       }
@@ -2936,7 +2944,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
           }
           return JSON.parse(jsonText);
         } catch (err) {
-          return { ok:false, error:'C90d could not decode Apps Script customer response: ' + (err && err.message ? err.message : err) };
+          return { ok:false, error:'C90e could not decode Apps Script customer response: ' + (err && err.message ? err.message : err) };
         }
       }
 
@@ -2964,8 +2972,8 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
             setOfflineStatus('Downloaded ' + fsdOfflineLookupAllCustomers.length + totalText + ' invoice customers...');
             setOfflinePickerStatus('Downloaded ' + fsdOfflineLookupAllCustomers.length + totalText + ' invoice customers...');
             setTimeout(function() {
-              startOfflineLookupJsonpStage('customers', 'Downloading all offline customers ' + fsdOfflineLookupAllCustomers.length + totalText, 60, fsdOfflineLookupNextOffset);
-            }, 120);
+              startOfflineLookupJsonpStage('customers', 'Downloading all offline customers ' + fsdOfflineLookupAllCustomers.length + totalText, 75, fsdOfflineLookupNextOffset);
+            }, 900);
             return;
           }
 
@@ -5132,6 +5140,6 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
 
     }());
   </script>
-  <div class="fixed-version-badge">App Shell C90d · iframe customer sync</div>
+  <div class="fixed-version-badge">App Shell C90e · stable JSONP customer sync</div>
 </body>
 </html>
