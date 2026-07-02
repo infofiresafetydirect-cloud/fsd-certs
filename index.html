@@ -1616,7 +1616,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
 
       <div class="home-meta">
         <span class="home-credit">JARED720 LABS</span>
-        <span class="home-version">App Shell C90j · customer storage cleanup fix</span>
+        <span class="home-version">App Shell C90k · IndexedDB customer storage</span>
       </div>
     </main>
   </section>
@@ -2533,10 +2533,15 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
       const OFFLINE_LOOKUP_STORAGE_KEY = 'fsd_offline_customer_site_picker_v1';
       const OFFLINE_LOOKUP_STORAGE_CHUNK_PREFIX = OFFLINE_LOOKUP_STORAGE_KEY + '_customer_chunk_';
       const OFFLINE_LOOKUP_STORAGE_CHUNK_COUNT_KEY = OFFLINE_LOOKUP_STORAGE_KEY + '_customer_chunk_count';
+      const OFFLINE_LOOKUP_IDB_NAME = 'fsd_offline_lookup_db_v1';
+      const OFFLINE_LOOKUP_IDB_STORE = 'customer_chunks';
+      const OFFLINE_LOOKUP_IDB_META_KEY = '__meta__';
+      const OFFLINE_LOOKUP_IDB_CHUNK_SIZE = 500;
       const OFFLINE_LOOKUP_MAX_RESULTS = 80;
       const OFFLINE_CLOUD_DRAFT_SYNC_KEY = 'fsd_unified_cloud_drafts_last_sync_v1';
       let offlineLookupMode = 'invoice';
       let offlineLookupData = loadOfflineLookupData();
+      setTimeout(function() { refreshOfflineLookupDataFromIndexedDb(); }, 300);
 
       // V6.3c69b - Offline SFA online field-shape fix.
       // W remains the only offline report that can sync to Cloud Drafts.
@@ -2655,7 +2660,158 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
         return Object.assign({}, data, { customers: customers, sites: sites });
       }
 
-      function clearOfflineLookupCustomerChunks() {
+      
+      function fsdOfflineLookupIdbSupported() {
+        return !!window.indexedDB;
+      }
+
+      function openOfflineLookupIdb() {
+        return new Promise(function(resolve, reject) {
+          if (!fsdOfflineLookupIdbSupported()) {
+            reject(new Error('IndexedDB is not available on this browser.'));
+            return;
+          }
+          const req = indexedDB.open(OFFLINE_LOOKUP_IDB_NAME, 1);
+          req.onupgradeneeded = function(event) {
+            const db = event.target.result;
+            if (!db.objectStoreNames.contains(OFFLINE_LOOKUP_IDB_STORE)) {
+              db.createObjectStore(OFFLINE_LOOKUP_IDB_STORE, { keyPath: 'key' });
+            }
+          };
+          req.onsuccess = function() { resolve(req.result); };
+          req.onerror = function() { reject(req.error || new Error('Could not open IndexedDB.')); };
+        });
+      }
+
+      function idbPutOfflineLookupRecord(db, record) {
+        return new Promise(function(resolve, reject) {
+          const tx = db.transaction(OFFLINE_LOOKUP_IDB_STORE, 'readwrite');
+          tx.objectStore(OFFLINE_LOOKUP_IDB_STORE).put(record);
+          tx.oncomplete = function() { resolve(); };
+          tx.onerror = function() { reject(tx.error || new Error('IndexedDB write failed.')); };
+        });
+      }
+
+      function idbGetOfflineLookupRecord(db, key) {
+        return new Promise(function(resolve, reject) {
+          const tx = db.transaction(OFFLINE_LOOKUP_IDB_STORE, 'readonly');
+          const req = tx.objectStore(OFFLINE_LOOKUP_IDB_STORE).get(key);
+          req.onsuccess = function() { resolve(req.result || null); };
+          req.onerror = function() { reject(req.error || new Error('IndexedDB read failed.')); };
+        });
+      }
+
+      function idbClearOfflineLookup(db) {
+        return new Promise(function(resolve, reject) {
+          const tx = db.transaction(OFFLINE_LOOKUP_IDB_STORE, 'readwrite');
+          tx.objectStore(OFFLINE_LOOKUP_IDB_STORE).clear();
+          tx.oncomplete = function() { resolve(); };
+          tx.onerror = function() { reject(tx.error || new Error('IndexedDB clear failed.')); };
+        });
+      }
+
+      async function saveOfflineLookupDataIndexedDb(data) {
+        data = data || {};
+        const customers = Array.isArray(data.customers) ? data.customers : [];
+        const db = await openOfflineLookupIdb();
+        await idbClearOfflineLookup(db);
+
+        const compactRows = compactOfflineCustomerRows(customers);
+        const chunkCount = Math.ceil(compactRows.length / OFFLINE_LOOKUP_IDB_CHUNK_SIZE);
+        for (let i = 0; i < chunkCount; i++) {
+          const rows = compactRows.slice(i * OFFLINE_LOOKUP_IDB_CHUNK_SIZE, (i + 1) * OFFLINE_LOOKUP_IDB_CHUNK_SIZE);
+          await idbPutOfflineLookupRecord(db, { key: 'chunk_' + i, rows: rows });
+        }
+
+        const meta = {
+          key: OFFLINE_LOOKUP_IDB_META_KEY,
+          ok: !!data.ok,
+          version: data.version || 'C90k-indexeddb',
+          generatedAt: data.generatedAt || new Date().toISOString(),
+          savedAt: new Date().toISOString(),
+          indexedDbCustomers: true,
+          customerCount: compactRows.length,
+          customerChunkCount: chunkCount,
+          sites: []
+        };
+        await idbPutOfflineLookupRecord(db, meta);
+        try { db.close(); } catch (ignore) {}
+
+        // Keep only tiny metadata in localStorage, not the actual customer rows.
+        clearOfflineLookupCustomerChunks();
+        try {
+          localStorage.setItem(OFFLINE_LOOKUP_STORAGE_KEY, JSON.stringify({
+            ok: meta.ok,
+            version: meta.version,
+            generatedAt: meta.generatedAt,
+            savedAt: meta.savedAt,
+            indexedDbCustomers: true,
+            customerCount: meta.customerCount,
+            customerChunkCount: meta.customerChunkCount,
+            customers: [],
+            sites: []
+          }));
+        } catch (ignore) {}
+
+        offlineLookupData = {
+          ok: meta.ok,
+          version: meta.version,
+          generatedAt: meta.generatedAt,
+          savedAt: meta.savedAt,
+          indexedDbCustomers: true,
+          customerCount: meta.customerCount,
+          customerChunkCount: meta.customerChunkCount,
+          customers: customers,
+          sites: []
+        };
+        updateOfflineLookupStatus();
+        return offlineLookupData;
+      }
+
+      async function loadOfflineLookupDataIndexedDb() {
+        const db = await openOfflineLookupIdb();
+        const meta = await idbGetOfflineLookupRecord(db, OFFLINE_LOOKUP_IDB_META_KEY);
+        if (!meta || !meta.indexedDbCustomers) {
+          try { db.close(); } catch (ignore) {}
+          return null;
+        }
+
+        const compactRows = [];
+        const chunkCount = Number(meta.customerChunkCount || 0);
+        for (let i = 0; i < chunkCount; i++) {
+          const part = await idbGetOfflineLookupRecord(db, 'chunk_' + i);
+          if (part && Array.isArray(part.rows)) {
+            for (let r = 0; r < part.rows.length; r++) compactRows.push(part.rows[r]);
+          }
+        }
+        try { db.close(); } catch (ignore) {}
+
+        return {
+          ok: !!meta.ok,
+          version: meta.version || 'C90k-indexeddb',
+          generatedAt: meta.generatedAt || '',
+          savedAt: meta.savedAt || '',
+          indexedDbCustomers: true,
+          customerCount: compactRows.length,
+          customerChunkCount: chunkCount,
+          customers: expandCompactOfflineCustomerRows(compactRows),
+          sites: []
+        };
+      }
+
+      async function refreshOfflineLookupDataFromIndexedDb() {
+        try {
+          const data = await loadOfflineLookupDataIndexedDb();
+          if (data && Array.isArray(data.customers) && data.customers.length) {
+            offlineLookupData = data;
+            updateOfflineLookupStatus();
+            return data;
+          }
+        } catch (err) {}
+        return null;
+      }
+
+function clearOfflineLookupCustomerChunks() {
         try {
           // C90j: clear every old customer chunk key, including partial failed saves
           // where the chunk count was never written. The previous cleanup could leave
@@ -2789,8 +2945,8 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
         const customers = Array.isArray(data.customers) ? data.customers : [];
         let sites = Array.isArray(data.sites) ? data.sites : [];
         if (!sites.length && customers.length) sites = buildFallbackSitesFromCustomers(customers);
-        const c = customers.length;
-        const s = sites.length;
+        const c = customers.length || Number(data.customerCount || 0);
+        const s = sites.length || (c && data.indexedDbCustomers ? c : 0);
         const when = data.savedAt || data.generatedAt || '';
         const dateText = when ? (' Last updated: ' + new Date(when).toLocaleString()) : '';
         return c || s
@@ -2829,6 +2985,9 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
       }
 
       function searchOfflineLookupRows(mode, query) {
+        if ((offlineLookupData && offlineLookupData.indexedDbCustomers && !((offlineLookupData.customers || []).length))) {
+          refreshOfflineLookupDataFromIndexedDb();
+        }
         const q = normaliseOfflineLookupText(query || '');
         const terms = q.split(' ').filter(function(term) { return term.length >= 2; });
         let rows = offlineLookupRowsForMode(mode);
@@ -2990,7 +3149,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
             if (callbackFired) return;
             if (!fsdOfflineLookupDownloadActive || fsdOfflineLookupDownloadStage !== stage) return;
             try { delete window[callbackName]; } catch (ignore) { window[callbackName] = undefined; }
-            offlineLookupFail('Apps Script replied for ' + label.toLowerCase() + ', but did not call the C90j JSONP callback. Check Routing.gs page=offlineLookup and redeploy the web app.');
+            offlineLookupFail('Apps Script replied for ' + label.toLowerCase() + ', but did not call the C90k JSONP callback. Check Routing.gs page=offlineLookup and redeploy the web app.');
           }, 2500);
         };
         script.onerror = function() {
@@ -3018,7 +3177,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
           }
           return JSON.parse(jsonText);
         } catch (err) {
-          return { ok:false, error:'C90j could not decode Apps Script customer response: ' + (err && err.message ? err.message : err) };
+          return { ok:false, error:'C90k could not decode Apps Script customer response: ' + (err && err.message ? err.message : err) };
         }
       }
 
@@ -3051,21 +3210,33 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
             return;
           }
 
-          setOfflineStatus('Customer list received: ' + fsdOfflineLookupAllCustomers.length + ' customers. Saving compact list to this iPad...');
-          const saved = saveOfflineLookupData({
+          setOfflineStatus('Customer list received: ' + fsdOfflineLookupAllCustomers.length + ' customers. Saving full list to this iPad...');
+          const customersToSave = fsdOfflineLookupAllCustomers.slice();
+          const savePayload = {
             ok: true,
-            version: payload.version || 'C89x-all-customers',
+            version: payload.version || 'C90k-indexeddb',
             generatedAt: payload.generatedAt || new Date().toISOString(),
-            customers: fsdOfflineLookupAllCustomers,
-            // C89x: keep stored data light. The site picker builds searchable fallback site rows from customers when opened.
+            customers: customersToSave,
             sites: [],
             materials: []
-          });
-          fsdOfflineLookupChunkData = null;
-          fsdOfflineLookupAllCustomers = [];
-          fsdOfflineLookupNextOffset = 0;
-          setOfflineStatus('Offline customer/site list updated: ' + (saved.customers || []).length + ' customers saved. Site picker will search saved customer/default site addresses.');
-          setOfflinePickerStatus(offlineLookupCountText());
+          };
+
+          saveOfflineLookupDataIndexedDb(savePayload)
+            .then(function(saved) {
+              fsdOfflineLookupChunkData = null;
+              fsdOfflineLookupAllCustomers = [];
+              fsdOfflineLookupNextOffset = 0;
+              setOfflineStatus('Offline customer/site list updated: ' + (saved.customers || []).length + ' customers saved in IndexedDB. Site picker will search saved customer/default site addresses.');
+              setOfflinePickerStatus(offlineLookupCountText());
+            })
+            .catch(function(err) {
+              const saved = saveOfflineLookupData(savePayload);
+              fsdOfflineLookupChunkData = null;
+              fsdOfflineLookupAllCustomers = [];
+              fsdOfflineLookupNextOffset = 0;
+              setOfflineStatus('IndexedDB save failed, so fallback storage saved ' + (saved.customers || []).length + ' customers. Error: ' + (err && err.message ? err.message : err));
+              setOfflinePickerStatus(offlineLookupCountText());
+            });
           return;
         }
 
@@ -5214,6 +5385,6 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
 
     }());
   </script>
-  <div class="fixed-version-badge">App Shell C90j · customer storage cleanup fix</div>
+  <div class="fixed-version-badge">App Shell C90k · IndexedDB customer storage</div>
 </body>
 </html>
