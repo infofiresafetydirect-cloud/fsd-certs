@@ -1616,7 +1616,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
 
       <div class="home-meta">
         <span class="home-credit">JARED720 LABS</span>
-        <span class="home-version">App Shell C90h · 500 customer chunks</span>
+        <span class="home-version">App Shell C90i · full customer storage fix</span>
       </div>
     </main>
   </section>
@@ -2531,6 +2531,8 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
       const OFFLINE_W_OLD_QUEUE_KEY = 'fsd_esr_offline_w_queue_v6_3c37s';
       const OFFLINE_W_WINDOW_NAME_PREFIX = 'FSD_OFFLINE_W_PAYLOAD::';
       const OFFLINE_LOOKUP_STORAGE_KEY = 'fsd_offline_customer_site_picker_v1';
+      const OFFLINE_LOOKUP_STORAGE_CHUNK_PREFIX = OFFLINE_LOOKUP_STORAGE_KEY + '_customer_chunk_';
+      const OFFLINE_LOOKUP_STORAGE_CHUNK_COUNT_KEY = OFFLINE_LOOKUP_STORAGE_KEY + '_customer_chunk_count';
       const OFFLINE_LOOKUP_MAX_RESULTS = 80;
       const OFFLINE_CLOUD_DRAFT_SYNC_KEY = 'fsd_unified_cloud_drafts_last_sync_v1';
       let offlineLookupMode = 'invoice';
@@ -2653,11 +2655,42 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
         return Object.assign({}, data, { customers: customers, sites: sites });
       }
 
+      function clearOfflineLookupCustomerChunks() {
+        try {
+          const count = Number(localStorage.getItem(OFFLINE_LOOKUP_STORAGE_CHUNK_COUNT_KEY) || 0);
+          for (let i = 0; i < count + 20; i++) {
+            localStorage.removeItem(OFFLINE_LOOKUP_STORAGE_CHUNK_PREFIX + i);
+          }
+          localStorage.removeItem(OFFLINE_LOOKUP_STORAGE_CHUNK_COUNT_KEY);
+        } catch (err) {}
+      }
+
+      function loadChunkedOfflineLookupCustomers(meta) {
+        const chunks = [];
+        const count = Number((meta && meta.customerChunkCount) || localStorage.getItem(OFFLINE_LOOKUP_STORAGE_CHUNK_COUNT_KEY) || 0);
+        for (let i = 0; i < count; i++) {
+          const raw = localStorage.getItem(OFFLINE_LOOKUP_STORAGE_CHUNK_PREFIX + i);
+          if (!raw) continue;
+          const part = JSON.parse(raw);
+          if (Array.isArray(part)) {
+            for (let r = 0; r < part.length; r++) chunks.push(part[r]);
+          }
+        }
+        return chunks;
+      }
+
       function loadOfflineLookupData() {
         try {
           const raw = localStorage.getItem(OFFLINE_LOOKUP_STORAGE_KEY);
           const data = raw ? JSON.parse(raw) : null;
           if (!data || typeof data !== 'object') return { customers: [], sites: [], generatedAt: '' };
+
+          // C90i: full customer lists are saved across several localStorage keys.
+          // This avoids the browser/iPad single-item limit that was trimming back to 1000.
+          if (data.chunkedCustomers) {
+            data.compactCustomers = loadChunkedOfflineLookupCustomers(data);
+          }
+
           return normaliseLoadedOfflineLookupData(data);
         } catch (err) {
           return { customers: [], sites: [], generatedAt: '' };
@@ -2669,57 +2702,73 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
         const customers = Array.isArray(data.customers) ? data.customers : [];
         const memoryBase = {
           ok: !!data.ok,
-          version: data.version || 'C89x',
+          version: data.version || 'C90i',
           generatedAt: data.generatedAt || new Date().toISOString(),
           savedAt: new Date().toISOString(),
           customers: customers,
-          // C89x: compact storage; do not duplicate fallback site rows into storage.
-          // Site picker can build them from customers on demand, keeping the iPad save small.
+          // C90i: keep storage compact; build site search rows from customers when needed.
           sites: Array.isArray(data.sites) ? data.sites : []
         };
 
-        function makeStorageObj(customerRows, versionSuffix) {
+        function makeChunkedMeta(customerCount, chunkCount, versionSuffix) {
           return {
             ok: memoryBase.ok,
-            version: (memoryBase.version || 'C89x') + (versionSuffix || ''),
+            version: (memoryBase.version || 'C90i') + (versionSuffix || ''),
             generatedAt: memoryBase.generatedAt,
             savedAt: memoryBase.savedAt,
             compact: true,
-            compactCustomers: compactOfflineCustomerRows(customerRows || []),
+            chunkedCustomers: true,
+            customerCount: customerCount || 0,
+            customerChunkCount: chunkCount || 0,
+            compactCustomers: [],
             customers: [],
             sites: []
           };
         }
 
-        function trySave(storageObj, memoryObj) {
-          localStorage.setItem(OFFLINE_LOOKUP_STORAGE_KEY, JSON.stringify(storageObj));
-          offlineLookupData = memoryObj;
+        function writeChunkedCustomerStorage(customerRows, versionSuffix) {
+          const compactRows = compactOfflineCustomerRows(customerRows || []);
+          const chunkSize = 350; // storage chunks, not download chunks
+          const chunkCount = Math.ceil(compactRows.length / chunkSize);
+
+          clearOfflineLookupCustomerChunks();
+
+          for (let i = 0; i < chunkCount; i++) {
+            const part = compactRows.slice(i * chunkSize, (i + 1) * chunkSize);
+            localStorage.setItem(OFFLINE_LOOKUP_STORAGE_CHUNK_PREFIX + i, JSON.stringify(part));
+          }
+
+          localStorage.setItem(OFFLINE_LOOKUP_STORAGE_CHUNK_COUNT_KEY, String(chunkCount));
+          localStorage.setItem(
+            OFFLINE_LOOKUP_STORAGE_KEY,
+            JSON.stringify(makeChunkedMeta(compactRows.length, chunkCount, versionSuffix || ''))
+          );
+
+          offlineLookupData = Object.assign({}, memoryBase, { customers: customerRows || [], sites: [] });
           updateOfflineLookupStatus();
-          return memoryObj;
+          return offlineLookupData;
         }
 
         try {
-          return trySave(makeStorageObj(customers, ''), memoryBase);
+          // C90i: save the full list in storage chunks instead of one giant localStorage item.
+          return writeChunkedCustomerStorage(customers, '');
         } catch (err) {
-          // C89x: compact storage should hold far more records than the old verbose JSON.
-          // If the device is still full, trim only as a last resort and make that obvious.
-          const attempts = [5000, 4000, 3000, 2500, 2000, 1500, 1000, 750, 500, 300];
+          clearOfflineLookupCustomerChunks();
+
+          // Last-resort trimming only if the iPad/browser storage is genuinely full.
+          const attempts = [5500, 5000, 4500, 4000, 3500, 3000, 2500, 2000, 1500, 1000, 750, 500, 300];
           for (let i = 0; i < attempts.length; i++) {
             if (customers.length <= attempts[i] && i < attempts.length - 1) continue;
             try {
               const trimmedCustomers = customers.slice(0, attempts[i]);
-              const smallerMemory = Object.assign({}, memoryBase, {
-                version: (memoryBase.version || 'C89x') + '-trimmed-' + attempts[i],
-                customers: trimmedCustomers,
-                sites: []
-              });
-              const saved = trySave(makeStorageObj(trimmedCustomers, '-trimmed-' + attempts[i]), smallerMemory);
+              const saved = writeChunkedCustomerStorage(trimmedCustomers, '-trimmed-' + attempts[i]);
               setOfflineStatus('Customer list was too large for this iPad, so a trimmed offline list was saved: ' + saved.customers.length + ' customers.');
               return saved;
-            } catch (inner) {}
+            } catch (err2) {
+              clearOfflineLookupCustomerChunks();
+            }
           }
-          const msg = err && err.message ? err.message : String(err || 'storage error');
-          throw new Error('Could not save offline customer list on this iPad. Browser storage may be full: ' + msg);
+          throw err;
         }
       }
 
@@ -2929,7 +2978,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
             if (callbackFired) return;
             if (!fsdOfflineLookupDownloadActive || fsdOfflineLookupDownloadStage !== stage) return;
             try { delete window[callbackName]; } catch (ignore) { window[callbackName] = undefined; }
-            offlineLookupFail('Apps Script replied for ' + label.toLowerCase() + ', but did not call the C90h JSONP callback. Check Routing.gs page=offlineLookup and redeploy the web app.');
+            offlineLookupFail('Apps Script replied for ' + label.toLowerCase() + ', but did not call the C90i JSONP callback. Check Routing.gs page=offlineLookup and redeploy the web app.');
           }, 2500);
         };
         script.onerror = function() {
@@ -2957,7 +3006,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
           }
           return JSON.parse(jsonText);
         } catch (err) {
-          return { ok:false, error:'C90h could not decode Apps Script customer response: ' + (err && err.message ? err.message : err) };
+          return { ok:false, error:'C90i could not decode Apps Script customer response: ' + (err && err.message ? err.message : err) };
         }
       }
 
@@ -5153,6 +5202,6 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
 
     }());
   </script>
-  <div class="fixed-version-badge">App Shell C90h · 500 customer chunks</div>
+  <div class="fixed-version-badge">App Shell C90i · full customer storage fix</div>
 </body>
 </html>
