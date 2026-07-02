@@ -1616,7 +1616,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
 
       <div class="home-meta">
         <span class="home-credit">JARED720 LABS</span>
-        <span class="home-version">App Shell C89x · all-customer chunk sync</span>
+        <span class="home-version">App Shell C90b · safe encoded customer sync</span>
       </div>
     </main>
   </section>
@@ -2900,7 +2900,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
         script.onload = function() {
           setTimeout(function() {
             if (!fsdOfflineLookupDownloadActive || fsdOfflineLookupDownloadStage !== stage) return;
-            offlineLookupFail('Apps Script replied for ' + label.toLowerCase() + ', but did not return the C89x JSONP callback. Check that Routing.gs has page=offlineLookup and the web app deployment is updated.');
+            offlineLookupFail('Apps Script replied for ' + label.toLowerCase() + ', but did not return the C90b JSONP callback. Check that Routing.gs has page=offlineLookup and the web app deployment is updated.');
           }, 1500);
         };
         script.onerror = function() {
@@ -2911,8 +2911,28 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
         setOfflinePickerStatus(label + '...');
       }
 
+      function decodeOfflineLookupJsonpPayload_C90b(payload) {
+        try {
+          if (!payload || !payload.payloadB64) return payload;
+          const b64 = String(payload.payloadB64 || '');
+          let jsonText = '';
+          if (window.TextDecoder) {
+            const binary = atob(b64);
+            const bytes = new Uint8Array(binary.length);
+            for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+            jsonText = new TextDecoder('utf-8').decode(bytes);
+          } else {
+            jsonText = decodeURIComponent(escape(atob(b64)));
+          }
+          return JSON.parse(jsonText);
+        } catch (err) {
+          return { ok:false, error:'C90b could not decode Apps Script customer response: ' + (err && err.message ? err.message : err) };
+        }
+      }
+
       window.fsdReceiveOfflineLookupChunk = function fsdReceiveOfflineLookupChunk(payload) {
         try {
+          payload = decodeOfflineLookupJsonpPayload_C90b(payload);
           const stage = fsdOfflineLookupDownloadStage;
           clearOfflineLookupDownloadWatch();
           removeOfflineLookupJsonpScript();
@@ -5091,6 +5111,6 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
 
     }());
   </script>
-  <div class="fixed-version-badge">App Shell C89x · all-customer chunk sync</div>
+  <div class="fixed-version-badge">App Shell C90b · safe encoded customer sync</div>
 </body>
 </html>
