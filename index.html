@@ -1616,7 +1616,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
 
       <div class="home-meta">
         <span class="home-credit">JARED720 LABS</span>
-        <span class="home-version">App Shell C90i · full customer storage fix</span>
+        <span class="home-version">App Shell C90j · customer storage cleanup fix</span>
       </div>
     </main>
   </section>
@@ -2657,10 +2657,18 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
 
       function clearOfflineLookupCustomerChunks() {
         try {
-          const count = Number(localStorage.getItem(OFFLINE_LOOKUP_STORAGE_CHUNK_COUNT_KEY) || 0);
-          for (let i = 0; i < count + 20; i++) {
-            localStorage.removeItem(OFFLINE_LOOKUP_STORAGE_CHUNK_PREFIX + i);
+          // C90j: clear every old customer chunk key, including partial failed saves
+          // where the chunk count was never written. The previous cleanup could leave
+          // old chunks behind, filling iPad storage and forcing the 1000-record fallback.
+          const removeKeys = [];
+          for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+            if (!key) continue;
+            if (key === OFFLINE_LOOKUP_STORAGE_CHUNK_COUNT_KEY || key.indexOf(OFFLINE_LOOKUP_STORAGE_CHUNK_PREFIX) === 0) {
+              removeKeys.push(key);
+            }
           }
+          removeKeys.forEach(function(key) { localStorage.removeItem(key); });
           localStorage.removeItem(OFFLINE_LOOKUP_STORAGE_CHUNK_COUNT_KEY);
         } catch (err) {}
       }
@@ -2728,10 +2736,14 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
 
         function writeChunkedCustomerStorage(customerRows, versionSuffix) {
           const compactRows = compactOfflineCustomerRows(customerRows || []);
-          const chunkSize = 350; // storage chunks, not download chunks
+          const chunkSize = 250; // storage chunks, not download chunks
           const chunkCount = Math.ceil(compactRows.length / chunkSize);
 
           clearOfflineLookupCustomerChunks();
+
+          // C90j: remove the old single-key lookup before writing chunks.
+          // Otherwise Safari/iPad can hit quota while both old and new copies exist.
+          try { localStorage.removeItem(OFFLINE_LOOKUP_STORAGE_KEY); } catch (ignore) {}
 
           for (let i = 0; i < chunkCount; i++) {
             const part = compactRows.slice(i * chunkSize, (i + 1) * chunkSize);
@@ -2762,7 +2774,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
             try {
               const trimmedCustomers = customers.slice(0, attempts[i]);
               const saved = writeChunkedCustomerStorage(trimmedCustomers, '-trimmed-' + attempts[i]);
-              setOfflineStatus('Customer list was too large for this iPad, so a trimmed offline list was saved: ' + saved.customers.length + ' customers.');
+              setOfflineStatus('The iPad storage is still too full for the full customer list, so a trimmed offline list was saved: ' + saved.customers.length + ' customers. Clear Safari/site data for this GitHub app if you need the full list.');
               return saved;
             } catch (err2) {
               clearOfflineLookupCustomerChunks();
@@ -2978,7 +2990,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
             if (callbackFired) return;
             if (!fsdOfflineLookupDownloadActive || fsdOfflineLookupDownloadStage !== stage) return;
             try { delete window[callbackName]; } catch (ignore) { window[callbackName] = undefined; }
-            offlineLookupFail('Apps Script replied for ' + label.toLowerCase() + ', but did not call the C90i JSONP callback. Check Routing.gs page=offlineLookup and redeploy the web app.');
+            offlineLookupFail('Apps Script replied for ' + label.toLowerCase() + ', but did not call the C90j JSONP callback. Check Routing.gs page=offlineLookup and redeploy the web app.');
           }, 2500);
         };
         script.onerror = function() {
@@ -3006,7 +3018,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
           }
           return JSON.parse(jsonText);
         } catch (err) {
-          return { ok:false, error:'C90i could not decode Apps Script customer response: ' + (err && err.message ? err.message : err) };
+          return { ok:false, error:'C90j could not decode Apps Script customer response: ' + (err && err.message ? err.message : err) };
         }
       }
 
@@ -5202,6 +5214,6 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
 
     }());
   </script>
-  <div class="fixed-version-badge">App Shell C90i · full customer storage fix</div>
+  <div class="fixed-version-badge">App Shell C90j · customer storage cleanup fix</div>
 </body>
 </html>
