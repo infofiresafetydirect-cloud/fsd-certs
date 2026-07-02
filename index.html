@@ -1508,6 +1508,13 @@
       }
     }
 
+  
+    /* C90n: real fast tap support */
+    button, .button, .offline-lookup-result {
+      touch-action: manipulation !important;
+      -webkit-tap-highlight-color: transparent !important;
+    }
+
   </style>
 
 <script id="fsd-callout-config-v6-3c78d">
@@ -1629,7 +1636,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
 
       <div class="home-meta">
         <span class="home-credit">JARED720 LABS</span>
-        <span class="home-version">App Shell C90m · iPad speed + picker close</span>
+        <span class="home-version">App Shell C90n · picker close + fast tap</span>
       </div>
     </main>
   </section>
@@ -3368,12 +3375,18 @@ function clearOfflineLookupCustomerChunks() {
           return '<button class="offline-lookup-result" type="button" data-offline-lookup-index="' + idx + '"><strong>' + escapeHtml(title) + '</strong><span>' + escapeHtml(body || title) + '</span></button>';
         }).join('');
         Array.from(wrap.querySelectorAll('[data-offline-lookup-index]')).forEach(function(btn) {
-          btn.addEventListener('click', function(ev) {
+          function pick(ev) {
             stopTap(ev);
+            if (btn.getAttribute('data-picked') === '1') return false;
+            btn.setAttribute('data-picked', '1');
             const idx = Number(btn.getAttribute('data-offline-lookup-index') || 0);
             const selected = rows[idx];
             applyOfflineLookupSelection(selected);
-          });
+            setTimeout(function(){ try { btn.removeAttribute('data-picked'); } catch (ignore) {} }, 400);
+            return false;
+          }
+          btn.addEventListener('touchend', pick, {passive:false});
+          btn.addEventListener('click', pick);
         });
       };
 
@@ -3381,7 +3394,7 @@ function clearOfflineLookupCustomerChunks() {
       function markOfflineEditorDirtySafe() {
         try {
           if (typeof markEditorDirty === 'function') {
-            markOfflineEditorDirtySafe();
+            markEditorDirty(true);
             return;
           }
         } catch (err) {}
@@ -3406,7 +3419,11 @@ function clearOfflineLookupCustomerChunks() {
       function closeOfflineLookupPickerAfterSelection() {
         try {
           const modal = document.getElementById('offlineLookupModal');
-          if (modal) modal.classList.remove('open');
+          if (modal) {
+            modal.classList.remove('active');
+            modal.classList.remove('open');
+            modal.setAttribute('aria-hidden', 'true');
+          }
         } catch (err) {}
         try {
           const q = document.getElementById('offlineLookupSearch');
@@ -3414,6 +3431,7 @@ function clearOfflineLookupCustomerChunks() {
         } catch (err) {}
       }
 
+      
       function showOfflineLookupPickedFeedback(mode, row) {
         try {
           const name = row && (row.lookupName || row.customerName || firstLookupLine(row.customerAddress) || firstLookupLine(row.siteAddress)) || 'Selected';
@@ -3429,7 +3447,7 @@ function clearOfflineLookupCustomerChunks() {
 function applyOfflineLookupSelection(row) {
         row = row || {};
         if (offlineLookupMode === 'site') {
-          setEditValue('editSite', row.siteAddress || row.address || '');
+          setEditValue('editSite', row.siteAddress || row.address || row.customerAddress || '');
           setVisibleSageAccount(row.sageAccountNo || '', false);
         } else {
           setEditValue('editCustomer', row.customerAddress || row.customer || '');
@@ -3441,23 +3459,35 @@ function applyOfflineLookupSelection(row) {
           }
           if (row.defaultOurRefNo && document.getElementById('editOurRefNo') && !getEditValue('editOurRefNo')) setEditValue('editOurRefNo', row.defaultOurRefNo);
         }
-        markEditorDirty(true);
+
+        markOfflineEditorDirtySafe();
+
+        try {
+          if (offlineLookupMode === 'site') {
+            const el = document.getElementById('sitePickerSummary') || document.getElementById('offlineSitePickerSummary');
+            if (el) el.textContent = firstLookupLine((row && row.siteAddress) || (row && row.customerAddress) || '') || 'Site selected';
+          } else {
+            const el = document.getElementById('invoicePickerSummary') || document.getElementById('offlineInvoicePickerSummary');
+            if (el) el.textContent = (row && (row.lookupName || firstLookupLine(row.customerAddress))) || 'Customer selected';
+          }
+        } catch (err) {}
+
         setEditorStatus((offlineLookupMode === 'site' ? 'Site address' : 'Invoice customer') + ' selected from offline picker. Press Save Offline before leaving.');
-        window.closeOfflineCustomerPicker();
+        showOfflineLookupPickedFeedback(offlineLookupMode, row || {});
+        closeOfflineLookupPickerAfterSelection();
         try { autoNameOfflineW(); } catch (err) {}
       }
 
+      
       window.copyOfflineInvoiceToSite = function copyOfflineInvoiceToSite(event) {
         stopTap(event);
         setEditValue('editSite', getEditValue('editCustomer'));
-        markEditorDirty(true);
+        markOfflineEditorDirtySafe();
         setEditorStatus('Site address set to same as invoice/customer. Press Save Offline before leaving.');
         return false;
-      
-        showOfflineLookupPickedFeedback(offlineLookupMode, row || {});
-        closeOfflineLookupPickerAfterSelection();
       };
 
+      
       function getOfflineReportType(item) {
         const raw = item && (item.reportType || (item.draft && item.draft.reportType) || item.type || 'W');
         const normalized = String(raw || 'W').toUpperCase();
@@ -5450,6 +5480,6 @@ function applyOfflineLookupSelection(row) {
 
     }());
   </script>
-  <div class="fixed-version-badge">App Shell C90m · iPad speed + picker close</div>
+  <div class="fixed-version-badge">App Shell C90n · picker close + fast tap</div>
 </body>
 </html>
