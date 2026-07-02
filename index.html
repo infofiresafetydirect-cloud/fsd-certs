@@ -1515,6 +1515,17 @@
       -webkit-tap-highlight-color: transparent !important;
     }
 
+  
+    /* C90q: keep iPad scrolling native; do not trap touches globally */
+    html, body, .screen, .offline-drafts, .offline-editor, .ipad-home, .app-shell {
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior-y: contain;
+      touch-action: pan-y;
+    }
+    button, .button, a.button, .launch-card {
+      touch-action: manipulation;
+    }
+
   </style>
 
 <script id="fsd-callout-config-v6-3c78d">
@@ -1636,7 +1647,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
 
       <div class="home-meta">
         <span class="home-credit">JARED720 LABS</span>
-        <span class="home-version">App Shell C90o · site sync + real fast tap</span>
+        <span class="home-version">App Shell C90q · scroll fix + draft buttons</span>
       </div>
     </main>
   </section>
@@ -2623,76 +2634,6 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
         if (!event) return;
         event.preventDefault();
         event.stopPropagation();
-      }
-
-
-      function installFsdFastTap_C90o() {
-        if (window.__fsdFastTapC90oInstalled) return;
-        window.__fsdFastTapC90oInstalled = true;
-        let fastTapLockUntil = 0;
-        let fastTapElement = null;
-
-        function isTypingTarget(el) {
-          if (!el) return false;
-          const tag = String(el.tagName || '').toLowerCase();
-          return tag === 'input' || tag === 'textarea' || tag === 'select' || tag === 'canvas' || el.isContentEditable;
-        }
-
-        function runFastTap(el, event, fromStart) {
-          if (!el || el.disabled || el.getAttribute('aria-disabled') === 'true') return;
-          if (isTypingTarget(event && event.target)) return;
-
-          // Let the lookup result buttons use their own immediate picker handler.
-          if (el.closest && el.closest('#offlineLookupResults')) return;
-
-          const isLaunch = el.classList && (el.classList.contains('launch-card') || el.classList.contains('mini-home'));
-          if (fromStart && !isLaunch) return;
-
-          if (event) {
-            try { event.preventDefault(); event.stopPropagation(); } catch (ignore) {}
-          }
-
-          fastTapLockUntil = Date.now() + 700;
-          fastTapElement = el;
-
-          try { el.classList.add('isPressed'); } catch (ignore) {}
-          try {
-            if (el.tagName && String(el.tagName).toLowerCase() === 'a' && el.href) {
-              window.location.assign(el.href);
-            } else if (typeof el.onclick === 'function') {
-              el.onclick.call(el, event || window.event);
-            } else {
-              el.click();
-            }
-          } catch (err) {
-            try { el.click(); } catch (ignore) {}
-          }
-          setTimeout(function(){ try { el.classList.remove('isPressed'); } catch (ignore) {} }, 80);
-        }
-
-        document.addEventListener('touchstart', function(event) {
-          const el = event.target && event.target.closest ? event.target.closest('button, a.button, [role="button"]') : null;
-          runFastTap(el, event, true);
-        }, { capture: true, passive: false });
-
-        document.addEventListener('touchend', function(event) {
-          const el = event.target && event.target.closest ? event.target.closest('button, a.button, [role="button"]') : null;
-          runFastTap(el, event, false);
-        }, { capture: true, passive: false });
-
-        document.addEventListener('click', function(event) {
-          const el = event.target && event.target.closest ? event.target.closest('button, a.button, [role="button"]') : null;
-          if (el && fastTapElement === el && Date.now() < fastTapLockUntil) {
-            try { event.preventDefault(); event.stopPropagation(); } catch (ignore) {}
-            return false;
-          }
-        }, true);
-      }
-
-      if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', installFsdFastTap_C90o);
-      } else {
-        installFsdFastTap_C90o();
       }
 
 
@@ -5321,18 +5262,21 @@ function applyOfflineLookupSelection(row) {
         updateOfflineLookupStatus();
       };
 
+      function handleOfflineDraftActionTap(event) {
+        const btn = event && event.target && event.target.closest ? event.target.closest('[data-offline-action]') : null;
+        if (!btn) return;
+        stopTap(event);
+        const offlineId = btn.getAttribute('data-offline-id') || '';
+        const action = btn.getAttribute('data-offline-action') || '';
+        if (action === 'edit') return window.editOfflineItemById(offlineId);
+        if (action === 'sync') return window.syncOfflineItemById(offlineId);
+        if (action === 'online') return window.openOnlineDraftById(offlineId);
+        if (action === 'delete') return window.deleteOfflineItemById(offlineId);
+      }
+
       if (offlineList) {
-        offlineList.addEventListener('click', function(event) {
-          const btn = event.target && event.target.closest ? event.target.closest('[data-offline-action]') : null;
-          if (!btn) return;
-          stopTap(event);
-          const offlineId = btn.getAttribute('data-offline-id') || '';
-          const action = btn.getAttribute('data-offline-action') || '';
-          if (action === 'edit') return window.editOfflineItemById(offlineId);
-          if (action === 'sync') return window.syncOfflineItemById(offlineId);
-          if (action === 'online') return window.openOnlineDraftById(offlineId);
-          if (action === 'delete') return window.deleteOfflineItemById(offlineId);
-        });
+        offlineList.addEventListener('click', handleOfflineDraftActionTap);
+        offlineList.addEventListener('touchend', handleOfflineDraftActionTap, {passive:false});
       }
 
       window.syncOfflineItemById = function syncOfflineItemById(offlineId) {
@@ -5631,6 +5575,6 @@ function applyOfflineLookupSelection(row) {
 
     }());
   </script>
-  <div class="fixed-version-badge">App Shell C90o · site sync + real fast tap</div>
+  <div class="fixed-version-badge">App Shell C90q · scroll fix + draft buttons</div>
 </body>
 </html>
