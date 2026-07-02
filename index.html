@@ -1636,7 +1636,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
 
       <div class="home-meta">
         <span class="home-credit">JARED720 LABS</span>
-        <span class="home-version">App Shell C90n · picker close + fast tap</span>
+        <span class="home-version">App Shell C90o · site sync + real fast tap</span>
       </div>
     </main>
   </section>
@@ -2625,6 +2625,77 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
         event.stopPropagation();
       }
 
+
+      function installFsdFastTap_C90o() {
+        if (window.__fsdFastTapC90oInstalled) return;
+        window.__fsdFastTapC90oInstalled = true;
+        let fastTapLockUntil = 0;
+        let fastTapElement = null;
+
+        function isTypingTarget(el) {
+          if (!el) return false;
+          const tag = String(el.tagName || '').toLowerCase();
+          return tag === 'input' || tag === 'textarea' || tag === 'select' || tag === 'canvas' || el.isContentEditable;
+        }
+
+        function runFastTap(el, event, fromStart) {
+          if (!el || el.disabled || el.getAttribute('aria-disabled') === 'true') return;
+          if (isTypingTarget(event && event.target)) return;
+
+          // Let the lookup result buttons use their own immediate picker handler.
+          if (el.closest && el.closest('#offlineLookupResults')) return;
+
+          const isLaunch = el.classList && (el.classList.contains('launch-card') || el.classList.contains('mini-home'));
+          if (fromStart && !isLaunch) return;
+
+          if (event) {
+            try { event.preventDefault(); event.stopPropagation(); } catch (ignore) {}
+          }
+
+          fastTapLockUntil = Date.now() + 700;
+          fastTapElement = el;
+
+          try { el.classList.add('isPressed'); } catch (ignore) {}
+          try {
+            if (el.tagName && String(el.tagName).toLowerCase() === 'a' && el.href) {
+              window.location.assign(el.href);
+            } else if (typeof el.onclick === 'function') {
+              el.onclick.call(el, event || window.event);
+            } else {
+              el.click();
+            }
+          } catch (err) {
+            try { el.click(); } catch (ignore) {}
+          }
+          setTimeout(function(){ try { el.classList.remove('isPressed'); } catch (ignore) {} }, 80);
+        }
+
+        document.addEventListener('touchstart', function(event) {
+          const el = event.target && event.target.closest ? event.target.closest('button, a.button, [role="button"]') : null;
+          runFastTap(el, event, true);
+        }, { capture: true, passive: false });
+
+        document.addEventListener('touchend', function(event) {
+          const el = event.target && event.target.closest ? event.target.closest('button, a.button, [role="button"]') : null;
+          runFastTap(el, event, false);
+        }, { capture: true, passive: false });
+
+        document.addEventListener('click', function(event) {
+          const el = event.target && event.target.closest ? event.target.closest('button, a.button, [role="button"]') : null;
+          if (el && fastTapElement === el && Date.now() < fastTapLockUntil) {
+            try { event.preventDefault(); event.stopPropagation(); } catch (ignore) {}
+            return false;
+          }
+        }, true);
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', installFsdFastTap_C90o);
+      } else {
+        installFsdFastTap_C90o();
+      }
+
+
       function goDirect(url) {
         // iPad home-screen apps handle button-driven navigation more reliably
         // than normal anchor tags. This keeps Schedule/Callouts behaving like
@@ -2656,6 +2727,32 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
         });
       }
 
+      function compactOfflineSiteRows(rows) {
+        return (rows || []).map(function(row) {
+          row = row || {};
+          return [
+            String(row.lookupName || ''),
+            String(row.siteAddress || ''),
+            String(row.customerName || ''),
+            String(row.sageAccountNo || ''),
+            String(row.notes || '')
+          ];
+        });
+      }
+
+      function expandCompactOfflineSiteRows(rows) {
+        return (rows || []).map(function(row) {
+          if (!Array.isArray(row)) return row || {};
+          return {
+            lookupName: row[0] || '',
+            siteAddress: row[1] || '',
+            customerName: row[2] || '',
+            sageAccountNo: row[3] || '',
+            notes: row[4] || ''
+          };
+        });
+      }
+
       function expandCompactOfflineCustomerRows(rows) {
         return (rows || []).map(function(row) {
           if (!Array.isArray(row)) return row || {};
@@ -2676,7 +2773,9 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
         const customers = Array.isArray(data.compactCustomers)
           ? expandCompactOfflineCustomerRows(data.compactCustomers)
           : (Array.isArray(data.customers) ? expandCompactOfflineCustomerRows(data.customers) : []);
-        const sites = Array.isArray(data.sites) ? data.sites : [];
+        const sites = Array.isArray(data.compactSites)
+          ? expandCompactOfflineSiteRows(data.compactSites)
+          : (Array.isArray(data.sites) ? expandCompactOfflineSiteRows(data.sites) : []);
         return Object.assign({}, data, { customers: customers, sites: sites });
       }
 
@@ -2733,6 +2832,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
       async function saveOfflineLookupDataIndexedDb(data) {
         data = data || {};
         const customers = Array.isArray(data.customers) ? data.customers : [];
+        const sites = Array.isArray(data.sites) ? data.sites : [];
         const db = await openOfflineLookupIdb();
         await idbClearOfflineLookup(db);
 
@@ -2743,21 +2843,30 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
           await idbPutOfflineLookupRecord(db, { key: 'chunk_' + i, rows: rows });
         }
 
+        const compactSites = compactOfflineSiteRows(sites);
+        const siteChunkCount = Math.ceil(compactSites.length / OFFLINE_LOOKUP_IDB_CHUNK_SIZE);
+        for (let i = 0; i < siteChunkCount; i++) {
+          const rows = compactSites.slice(i * OFFLINE_LOOKUP_IDB_CHUNK_SIZE, (i + 1) * OFFLINE_LOOKUP_IDB_CHUNK_SIZE);
+          await idbPutOfflineLookupRecord(db, { key: 'site_chunk_' + i, rows: rows });
+        }
+
         const meta = {
           key: OFFLINE_LOOKUP_IDB_META_KEY,
           ok: !!data.ok,
-          version: data.version || 'C90k-indexeddb',
+          version: data.version || 'C90o-indexeddb-sites',
           generatedAt: data.generatedAt || new Date().toISOString(),
           savedAt: new Date().toISOString(),
           indexedDbCustomers: true,
+          indexedDbSites: true,
           customerCount: compactRows.length,
           customerChunkCount: chunkCount,
+          siteCount: compactSites.length,
+          siteChunkCount: siteChunkCount,
           sites: []
         };
         await idbPutOfflineLookupRecord(db, meta);
         try { db.close(); } catch (ignore) {}
 
-        // Keep only tiny metadata in localStorage, not the actual customer rows.
         clearOfflineLookupCustomerChunks();
         try {
           localStorage.setItem(OFFLINE_LOOKUP_STORAGE_KEY, JSON.stringify({
@@ -2766,8 +2875,11 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
             generatedAt: meta.generatedAt,
             savedAt: meta.savedAt,
             indexedDbCustomers: true,
+            indexedDbSites: true,
             customerCount: meta.customerCount,
             customerChunkCount: meta.customerChunkCount,
+            siteCount: meta.siteCount,
+            siteChunkCount: meta.siteChunkCount,
             customers: [],
             sites: []
           }));
@@ -2779,10 +2891,13 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
           generatedAt: meta.generatedAt,
           savedAt: meta.savedAt,
           indexedDbCustomers: true,
+          indexedDbSites: true,
           customerCount: meta.customerCount,
           customerChunkCount: meta.customerChunkCount,
+          siteCount: meta.siteCount,
+          siteChunkCount: meta.siteChunkCount,
           customers: customers,
-          sites: []
+          sites: sites
         };
         updateOfflineLookupStatus();
         return offlineLookupData;
@@ -2804,18 +2919,31 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
             for (let r = 0; r < part.rows.length; r++) compactRows.push(part.rows[r]);
           }
         }
+
+        const compactSites = [];
+        const siteChunkCount = Number(meta.siteChunkCount || 0);
+        for (let i = 0; i < siteChunkCount; i++) {
+          const part = await idbGetOfflineLookupRecord(db, 'site_chunk_' + i);
+          if (part && Array.isArray(part.rows)) {
+            for (let r = 0; r < part.rows.length; r++) compactSites.push(part.rows[r]);
+          }
+        }
+
         try { db.close(); } catch (ignore) {}
 
         return {
           ok: !!meta.ok,
-          version: meta.version || 'C90k-indexeddb',
+          version: meta.version || 'C90o-indexeddb-sites',
           generatedAt: meta.generatedAt || '',
           savedAt: meta.savedAt || '',
           indexedDbCustomers: true,
+          indexedDbSites: true,
           customerCount: compactRows.length,
           customerChunkCount: chunkCount,
+          siteCount: compactSites.length,
+          siteChunkCount: siteChunkCount,
           customers: expandCompactOfflineCustomerRows(compactRows),
-          sites: []
+          sites: expandCompactOfflineSiteRows(compactSites)
         };
       }
 
@@ -2966,7 +3094,7 @@ function clearOfflineLookupCustomerChunks() {
         let sites = Array.isArray(data.sites) ? data.sites : [];
         if (!sites.length && customers.length) sites = buildFallbackSitesFromCustomers(customers);
         const c = customers.length || Number(data.customerCount || 0);
-        const s = sites.length || (c && data.indexedDbCustomers ? c : 0);
+        const s = sites.length || Number(data.siteCount || 0) || (c && data.indexedDbCustomers ? c : 0);
         const when = data.savedAt || data.generatedAt || '';
         const dateText = when ? (' Last updated: ' + new Date(when).toLocaleString()) : '';
         return c || s
@@ -3047,6 +3175,7 @@ function clearOfflineLookupCustomerChunks() {
       let fsdOfflineLookupDownloadStage = '';
       let fsdOfflineLookupChunkData = null;
       let fsdOfflineLookupAllCustomers = [];
+      let fsdOfflineLookupAllSites = [];
       let fsdOfflineLookupNextOffset = 0;
       let fsdOfflineLookupRequestSeq = 0;
       const FSD_OFFLINE_LOOKUP_CHUNK_SIZE = 500;
@@ -3169,7 +3298,7 @@ function clearOfflineLookupCustomerChunks() {
             if (callbackFired) return;
             if (!fsdOfflineLookupDownloadActive || fsdOfflineLookupDownloadStage !== stage) return;
             try { delete window[callbackName]; } catch (ignore) { window[callbackName] = undefined; }
-            offlineLookupFail('Apps Script replied for ' + label.toLowerCase() + ', but did not call the C90l JSONP callback. Check Routing.gs page=offlineLookup and redeploy the web app.');
+            offlineLookupFail('Apps Script replied for ' + label.toLowerCase() + ', but did not call the C90o JSONP callback. Check Routing.gs page=offlineLookup and redeploy the web app.');
           }, 2500);
         };
         script.onerror = function() {
@@ -3197,7 +3326,7 @@ function clearOfflineLookupCustomerChunks() {
           }
           return JSON.parse(jsonText);
         } catch (err) {
-          return { ok:false, error:'C90l could not decode Apps Script customer response: ' + (err && err.message ? err.message : err) };
+          return { ok:false, error:'C90o could not decode Apps Script customer/site response: ' + (err && err.message ? err.message : err) };
         }
       }
 
@@ -3230,46 +3359,63 @@ function clearOfflineLookupCustomerChunks() {
             return;
           }
 
-          setOfflineStatus('Customer list received: ' + fsdOfflineLookupAllCustomers.length + ' customers. Saving full list to this iPad...');
-          const customersToSave = fsdOfflineLookupAllCustomers.slice();
-          const savePayload = {
+          setOfflineStatus('Customer list received: ' + fsdOfflineLookupAllCustomers.length + ' customers. Now downloading real site addresses...');
+          fsdOfflineLookupChunkData = {
             ok: true,
-            version: payload.version || 'C90k-indexeddb',
+            version: payload.version || 'C90o-sites',
             generatedAt: payload.generatedAt || new Date().toISOString(),
-            customers: customersToSave,
+            customers: fsdOfflineLookupAllCustomers.slice(),
             sites: [],
             materials: []
           };
-
-          saveOfflineLookupDataIndexedDb(savePayload)
-            .then(function(saved) {
-              fsdOfflineLookupChunkData = null;
-              fsdOfflineLookupAllCustomers = [];
-              fsdOfflineLookupNextOffset = 0;
-              setOfflineStatus('Offline customer/site list updated: ' + ((saved.customers || []).length || Number(saved.customerCount || 0)) + ' customer records saved in IndexedDB. Site picker will search saved customer/default site addresses.');
-              setOfflinePickerStatus(offlineLookupCountText());
-            })
-            .catch(function(err) {
-              const saved = saveOfflineLookupData(savePayload);
-              fsdOfflineLookupChunkData = null;
-              fsdOfflineLookupAllCustomers = [];
-              fsdOfflineLookupNextOffset = 0;
-              setOfflineStatus('IndexedDB save failed, so fallback storage saved ' + (saved.customers || []).length + ' customers. Error: ' + (err && err.message ? err.message : err));
-              setOfflinePickerStatus(offlineLookupCountText());
-            });
+          fsdOfflineLookupAllSites = [];
+          fsdOfflineLookupNextOffset = 0;
+          setTimeout(function() {
+            startOfflineLookupJsonpStage('sites', 'Downloading offline site addresses', 75, 0);
+          }, 400);
           return;
         }
 
         if (stage === 'sites') {
-          fsdOfflineLookupChunkData.sites = Array.isArray(payload.sites) ? payload.sites : [];
+          const sites = Array.isArray(payload.sites) ? payload.sites : [];
+          fsdOfflineLookupAllSites = (fsdOfflineLookupAllSites || []).concat(sites);
+          const totalText = payload.total ? (' of ' + payload.total) : '';
+
+          if (payload.hasMore && Number(payload.nextOffset || 0) > Number(payload.offset || 0)) {
+            fsdOfflineLookupNextOffset = Number(payload.nextOffset || fsdOfflineLookupAllSites.length || 0);
+            setOfflineStatus('Downloaded ' + fsdOfflineLookupAllSites.length + totalText + ' site addresses...');
+            setOfflinePickerStatus('Downloaded ' + fsdOfflineLookupAllSites.length + totalText + ' site addresses...');
+            setTimeout(function() {
+              startOfflineLookupJsonpStage('sites', 'Downloading offline site addresses ' + fsdOfflineLookupAllSites.length + totalText, 75, fsdOfflineLookupNextOffset);
+            }, 700);
+            return;
+          }
+
+          fsdOfflineLookupChunkData = fsdOfflineLookupChunkData || { customers: [], sites: [], generatedAt: '' };
+          fsdOfflineLookupChunkData.sites = fsdOfflineLookupAllSites.slice();
           fsdOfflineLookupChunkData.generatedAt = payload.generatedAt || fsdOfflineLookupChunkData.generatedAt || new Date().toISOString();
           fsdOfflineLookupChunkData.ok = true;
-          fsdOfflineLookupChunkData.version = 'C89s';
+          fsdOfflineLookupChunkData.version = 'C90o-customer-site-sync';
           fsdOfflineLookupChunkData.materials = [];
-          const saved = saveOfflineLookupData(fsdOfflineLookupChunkData);
-          fsdOfflineLookupChunkData = null;
-          setOfflineStatus('Offline customer/site list updated: ' + (saved.customers || []).length + ' customers and ' + (saved.sites || []).length + ' sites saved on this iPad.');
-          setOfflinePickerStatus(offlineLookupCountText());
+
+          saveOfflineLookupDataIndexedDb(fsdOfflineLookupChunkData)
+            .then(function(saved) {
+              fsdOfflineLookupChunkData = null;
+              fsdOfflineLookupAllCustomers = [];
+              fsdOfflineLookupAllSites = [];
+              fsdOfflineLookupNextOffset = 0;
+              setOfflineStatus('Offline customer/site list updated: ' + ((saved.customers || []).length || Number(saved.customerCount || 0)) + ' customers and ' + ((saved.sites || []).length || Number(saved.siteCount || 0)) + ' real site addresses saved on this iPad.');
+              setOfflinePickerStatus(offlineLookupCountText());
+            })
+            .catch(function(err) {
+              const saved = saveOfflineLookupData(fsdOfflineLookupChunkData);
+              fsdOfflineLookupChunkData = null;
+              fsdOfflineLookupAllCustomers = [];
+              fsdOfflineLookupAllSites = [];
+              fsdOfflineLookupNextOffset = 0;
+              setOfflineStatus('IndexedDB save failed, so fallback storage saved ' + (saved.customers || []).length + ' customers and ' + (saved.sites || []).length + ' sites. Error: ' + (err && err.message ? err.message : err));
+              setOfflinePickerStatus(offlineLookupCountText());
+            });
           return;
         }
 
@@ -3312,6 +3458,7 @@ function clearOfflineLookupCustomerChunks() {
           removeOfflineLookupJsonpScript();
           fsdOfflineLookupChunkData = { customers: [], sites: [], generatedAt: '' };
           fsdOfflineLookupAllCustomers = [];
+          fsdOfflineLookupAllSites = [];
           fsdOfflineLookupNextOffset = 0;
           startOfflineLookupJsonpStage('customers', 'Downloading all offline customers', 60, 0);
         } catch (err) {
@@ -3338,11 +3485,15 @@ function clearOfflineLookupCustomerChunks() {
         }
         updateOfflineLookupStatus();
         renderOfflineLookupResults();
+        refreshOfflineLookupDataFromIndexedDb().then(function() {
+          renderOfflineLookupResults();
+          updateOfflineLookupStatus();
+        }).catch(function(){});
         if (modal) {
           modal.classList.add('active');
           modal.setAttribute('aria-hidden', 'false');
         }
-        setTimeout(function(){ if (search) search.focus(); }, 120);
+        setTimeout(function(){ if (search) search.focus(); }, 40);
         return false;
       };
 
@@ -5480,6 +5631,6 @@ function applyOfflineLookupSelection(row) {
 
     }());
   </script>
-  <div class="fixed-version-badge">App Shell C90n · picker close + fast tap</div>
+  <div class="fixed-version-badge">App Shell C90o · site sync + real fast tap</div>
 </body>
 </html>
