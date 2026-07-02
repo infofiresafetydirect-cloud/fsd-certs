@@ -1616,7 +1616,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
 
       <div class="home-meta">
         <span class="home-credit">JARED720 LABS</span>
-        <span class="home-version">App Shell C90f · chunk loop callback fix</span>
+        <span class="home-version">App Shell C90h · 500 customer chunks</span>
       </div>
     </main>
   </section>
@@ -2809,7 +2809,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
       let fsdOfflineLookupAllCustomers = [];
       let fsdOfflineLookupNextOffset = 0;
       let fsdOfflineLookupRequestSeq = 0;
-      const FSD_OFFLINE_LOOKUP_CHUNK_SIZE = 100;
+      const FSD_OFFLINE_LOOKUP_CHUNK_SIZE = 500;
 
       function clearOfflineLookupDownloadWatch() {
         fsdOfflineLookupDownloadActive = false;
@@ -2929,7 +2929,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
             if (callbackFired) return;
             if (!fsdOfflineLookupDownloadActive || fsdOfflineLookupDownloadStage !== stage) return;
             try { delete window[callbackName]; } catch (ignore) { window[callbackName] = undefined; }
-            offlineLookupFail('Apps Script replied for ' + label.toLowerCase() + ', but did not call the C90f JSONP callback. Check Routing.gs page=offlineLookup and redeploy the web app.');
+            offlineLookupFail('Apps Script replied for ' + label.toLowerCase() + ', but did not call the C90h JSONP callback. Check Routing.gs page=offlineLookup and redeploy the web app.');
           }, 2500);
         };
         script.onerror = function() {
@@ -2957,7 +2957,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
           }
           return JSON.parse(jsonText);
         } catch (err) {
-          return { ok:false, error:'C90f could not decode Apps Script customer response: ' + (err && err.message ? err.message : err) };
+          return { ok:false, error:'C90h could not decode Apps Script customer response: ' + (err && err.message ? err.message : err) };
         }
       }
 
@@ -5153,6 +5153,6 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
 
     }());
   </script>
-  <div class="fixed-version-badge">App Shell C90f · chunk loop callback fix</div>
+  <div class="fixed-version-badge">App Shell C90h · 500 customer chunks</div>
 </body>
 </html>
