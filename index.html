@@ -65,7 +65,7 @@
         radial-gradient(circle at 88% 18%, rgba(255,255,255,.28), transparent 26%),
         radial-gradient(circle at 50% 95%, rgba(212,175,55,.30), transparent 32%),
         linear-gradient(145deg, #0b1020 0%, #123158 48%, #dbeafe 100%);
-      transition: transform .2s ease, opacity .2s ease, visibility .2s ease;
+      transition: none;
     }
 
     .home::before {
@@ -87,7 +87,7 @@
       background: linear-gradient(180deg, rgba(255,255,255,.86), rgba(255,255,255,.58));
       border: 1px solid rgba(255,255,255,.64);
       box-shadow: 0 34px 90px rgba(2, 8, 23, .36), inset 0 1px 0 rgba(255,255,255,.85);
-      backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+      backdrop-filter: none; -webkit-backdrop-filter: none;
     }
 
     .brand-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 16px; }
@@ -126,7 +126,7 @@
       color: #0b1220; text-decoration: none; font: inherit; font-weight: 500; font-size: clamp(20px, 3.2vw, 28px);
       letter-spacing: .05em; cursor: pointer;
       box-shadow: 0 18px 34px rgba(15,23,42,.13), inset 0 1px 0 rgba(255,255,255,.74);
-      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      backdrop-filter: none; -webkit-backdrop-filter: none;
     }
 
     .button .tile-icon { font-size: 32px; line-height: 1; filter: drop-shadow(0 10px 14px rgba(15,95,170,.18)); }
@@ -143,7 +143,7 @@
     .fixed-version-badge {
       position: fixed; right: calc(10px + var(--safe-right)); bottom: calc(10px + var(--safe-bottom)); z-index: 60;
       padding: 7px 10px; border-radius: 999px; background: rgba(15, 23, 42, .70); border: 1px solid rgba(255,255,255,.24);
-      color: rgba(255,255,255,.92); font-size: 11px; font-weight: 950; letter-spacing: .03em; pointer-events: none; backdrop-filter: blur(8px);
+      color: rgba(255,255,255,.92); font-size: 11px; font-weight: 950; letter-spacing: .03em; pointer-events: none; backdrop-filter: none;
     }
 
     .app-shell { background: #ffffff; z-index: 10; }
@@ -160,7 +160,7 @@
     .loader, .fallback {
       position: fixed; inset: 0; display: flex; align-items: center; justify-content: center;
       padding: calc(22px + var(--safe-top)) calc(22px + var(--safe-right)) calc(22px + var(--safe-bottom)) calc(22px + var(--safe-left));
-      background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%); color: var(--fsd-ink); z-index: 20; transition: opacity .18s ease, visibility .18s ease;
+      background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%); color: var(--fsd-ink); z-index: 20; transition: none;
     }
     .loader.hidden, .fallback.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
     .panel { width: min(420px, 100%); text-align: center; }
@@ -180,7 +180,7 @@
     .offline-card {
       width: min(720px, 100%); max-height: calc(100dvh - 48px - var(--safe-top) - var(--safe-bottom)); overflow-y: auto;
       border-radius: 30px; padding: 24px; background: rgba(255,255,255,.18); border: 1px solid rgba(255,255,255,.28);
-      box-shadow: 0 24px 70px rgba(0,0,0,.30), inset 0 1px 0 rgba(255,255,255,.20); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+      box-shadow: 0 24px 70px rgba(0,0,0,.30), inset 0 1px 0 rgba(255,255,255,.20); backdrop-filter: none; -webkit-backdrop-filter: none;
     }
     .offline-title { margin: 0 0 6px; font-size: 34px; font-weight: 800; letter-spacing: -.03em; }
     .offline-help { margin: 0 0 16px; color: rgba(255,255,255,.86); line-height: 1.38; font-weight: 650; }
@@ -207,7 +207,7 @@
     .editor-card {
       width: min(920px, 100%); max-height: calc(100dvh - 36px - var(--safe-top) - var(--safe-bottom)); overflow-y: auto;
       border-radius: 24px; padding: 18px; background: rgba(255,255,255,.94); border: 1px solid rgba(255,255,255,.55);
-      box-shadow: 0 24px 70px rgba(0,0,0,.32); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+      box-shadow: 0 24px 70px rgba(0,0,0,.32); backdrop-filter: none; -webkit-backdrop-filter: none;
     }
     .editor-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
     .editor-head h2 { margin: 0 0 5px; font-size: clamp(24px, 3.6vw, 34px); line-height: 1.05; color: var(--fsd-blue-dark); }
@@ -318,7 +318,7 @@
       color: #ffffff;
       background: #07101b;
       padding: calc(14px + var(--safe-top)) calc(18px + var(--safe-right)) calc(18px + var(--safe-bottom)) calc(18px + var(--safe-left));
-      transition: opacity .18s ease, transform .18s ease, visibility .18s ease;
+      transition: none;
       overflow-x: hidden;
       overflow-y: auto;
       min-height: 100dvh;
@@ -427,8 +427,8 @@
       background: linear-gradient(180deg, rgba(86,127,192,.36), rgba(69,99,155,.28));
       border: 1px solid rgba(255,255,255,.14);
       box-shadow: 0 18px 40px rgba(0,0,0,.20), inset 0 1px 0 rgba(255,255,255,.16);
-      backdrop-filter: blur(18px) saturate(145%);
-      -webkit-backdrop-filter: blur(18px) saturate(145%);
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
       align-items: center;
     }
     .ops-mini-brand {
@@ -550,9 +550,9 @@
       cursor: pointer;
       background: rgba(255,255,255,.04);
       box-shadow: 0 18px 38px rgba(0,0,0,.20), inset 0 1px 0 rgba(255,255,255,.10);
-      backdrop-filter: blur(14px) saturate(140%);
-      -webkit-backdrop-filter: blur(14px) saturate(140%);
-      transition: transform .15s ease, box-shadow .15s ease;
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+      transition: none;
     }
     .launch-card:hover { transform: translateY(-2px); box-shadow: 0 22px 42px rgba(0,0,0,.22), inset 0 1px 0 rgba(255,255,255,.10); }
     .launch-card:active { transform: scale(.988); }
@@ -900,8 +900,8 @@
       justify-content: center;
       padding: 22px;
       background: rgba(15,23,42,.55);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
     }
     .profile-modal.active { display: flex; }
     .profile-card {
@@ -1164,8 +1164,8 @@
       border-radius: 28px !important;
       background: transparent !important;
       box-shadow: none !important;
-      backdrop-filter: none !important;
-      -webkit-backdrop-filter: none !important;
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
       display: flex !important;
       flex-direction: column !important;
       align-items: center !important;
@@ -1177,8 +1177,8 @@
     .launch-card:hover {
       background: transparent !important;
       box-shadow: none !important;
-      backdrop-filter: none !important;
-      -webkit-backdrop-filter: none !important;
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
       transform: translateY(-5px) scale(1.035) !important;
     }
 
@@ -1495,6 +1495,19 @@
       color: #607086 !important;
     }
 
+  
+    /* C90m: iPad speed/tap feel - no blur, no animated button delay */
+    @supports (-webkit-touch-callout: none) {
+      .modal, .modalPanel, .card, .hint, .offlinePanel, .pickerPanel, .lookupPanel {
+        -webkit-backdrop-filter: none !important;
+        backdrop-filter: none !important;
+      }
+      button, .button, .tile, .offlineCard, .pickerBtn {
+        transition: none !important;
+        -webkit-transition: none !important;
+      }
+    }
+
   </style>
 
 <script id="fsd-callout-config-v6-3c78d">
@@ -1616,7 +1629,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
 
       <div class="home-meta">
         <span class="home-credit">JARED720 LABS</span>
-        <span class="home-version">App Shell C90l · picker dirty fix</span>
+        <span class="home-version">App Shell C90m · iPad speed + picker close</span>
       </div>
     </main>
   </section>
@@ -3389,6 +3402,30 @@ function clearOfflineLookupCustomerChunks() {
         } catch (err) {}
       }
 
+
+      function closeOfflineLookupPickerAfterSelection() {
+        try {
+          const modal = document.getElementById('offlineLookupModal');
+          if (modal) modal.classList.remove('open');
+        } catch (err) {}
+        try {
+          const q = document.getElementById('offlineLookupSearch');
+          if (q) q.blur();
+        } catch (err) {}
+      }
+
+      function showOfflineLookupPickedFeedback(mode, row) {
+        try {
+          const name = row && (row.lookupName || row.customerName || firstLookupLine(row.customerAddress) || firstLookupLine(row.siteAddress)) || 'Selected';
+          const msg = (mode === 'site' ? 'Site picked: ' : 'Customer picked: ') + name;
+          setOfflinePickerStatus(msg);
+          setOfflineStatus(msg);
+          setTimeout(function() {
+            updateOfflineLookupStatus();
+          }, 900);
+        } catch (err) {}
+      }
+
 function applyOfflineLookupSelection(row) {
         row = row || {};
         if (offlineLookupMode === 'site') {
@@ -3416,6 +3453,9 @@ function applyOfflineLookupSelection(row) {
         markEditorDirty(true);
         setEditorStatus('Site address set to same as invoice/customer. Press Save Offline before leaving.');
         return false;
+      
+        showOfflineLookupPickedFeedback(offlineLookupMode, row || {});
+        closeOfflineLookupPickerAfterSelection();
       };
 
       function getOfflineReportType(item) {
@@ -5410,6 +5450,6 @@ function applyOfflineLookupSelection(row) {
 
     }());
   </script>
-  <div class="fixed-version-badge">App Shell C90l · picker dirty fix</div>
+  <div class="fixed-version-badge">App Shell C90m · iPad speed + picker close</div>
 </body>
 </html>
