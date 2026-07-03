@@ -1647,7 +1647,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
 
       <div class="home-meta">
         <span class="home-credit">JARED720 LABS</span>
-        <span class="home-version">App Shell C91d · daily full sync + sites only</span>
+        <span class="home-version">App Shell C91f · local picker + site equipment</span>
       </div>
     </main>
   </section>
@@ -1656,9 +1656,9 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
     <main class="offline-card">
       <h2 class="offline-title">Jobs / Drafts</h2>
       <p class="offline-help">One GoFormz-style list for this iPad: cloud drafts you have synced down, offline-only drafts, and drafts with local changes waiting to sync.</p>
-      <p class="offline-help"><strong>How it works:</strong> press Sync Now while online before going out. The iPad downloads Cloud Drafts and the customer/site picker. Use Daily Full Sync once a day to pick up new customers/sites added by other engineers. Use Sites Only when you just want to refresh site addresses without downloading customers again.</p>
+      <p class="offline-help"><strong>How it works:</strong> press Sync Now while online before going out. The iPad downloads Cloud Drafts and the customer/site picker. When there is no signal, you can only open what has already been synced to this iPad.</p>
       <div class="actions">
-        <button class="button" type="button" onclick="syncUnifiedDrafts(event)"><span class="tile-icon">🔁</span><span>Sync Now - Drafts + Daily Lookup</span></button>
+        <button class="button" type="button" onclick="syncUnifiedDrafts(event)"><span class="tile-icon">🔁</span><span>Sync Now - Drafts + Customers</span></button>
         <button class="button secondary" type="button" onclick="openCloudDrafts(event)"><span class="tile-icon">☁️</span><span>Open Cloud Draft Manager</span></button>
         <button class="button secondary" type="button" onclick="refreshOfflineDrafts(event)"><span class="tile-icon">🔄</span><span>Refresh Jobs / Drafts</span></button>
       </div>
@@ -1667,8 +1667,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
         <button class="button" type="button" onclick="startNewOfflineW(event)"><span class="tile-icon">📝</span><span>New W / Engineer Service Report</span></button>
         <button class="button secondary" type="button" onclick="startNewOfflineSfaTrial(event)"><span class="tile-icon">🔥</span><span>New SFA</span></button>
         <button class="button secondary" type="button" onclick="startNewOfflineSelTrial(event)"><span class="tile-icon">💡</span><span>New SEL</span></button>
-        <button class="button secondary" type="button" onclick="syncOfflineCustomerPickerData(event)"><span class="tile-icon">📇</span><span>Daily Full Sync - Customers + Sites</span></button>
-        <button class="button secondary" type="button" onclick="syncOfflineSitePickerData(event)"><span class="tile-icon">📍</span><span>Update Site Addresses Only</span></button>
+        <button class="button secondary" type="button" onclick="syncOfflineCustomerPickerData(event)"><span class="tile-icon">📇</span><span>Update Customer List Only</span></button>
         <button class="button third" type="button" onclick="closeOfflineDrafts(event)"><span class="tile-icon">↩️</span><span>Back to Menu</span></button>
       </div>
       <div id="offlineStatus" class="offline-status"></div>
@@ -2075,7 +2074,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
       <input id="offlineLookupSearch" autocomplete="off" placeholder="Start typing..." oninput="renderOfflineLookupResults()">
       <div id="offlineLookupResults" class="offline-lookup-results"></div>
       <div class="profile-actions">
-        <button type="button" onclick="syncOfflineCustomerPickerData(event)">Daily Full Sync</button>
+        <button type="button" onclick="syncOfflineCustomerPickerData(event)">Update List Online</button>
         <button class="secondary" type="button" onclick="closeOfflineCustomerPicker(event)">Close</button>
       </div>
       <div id="offlineLookupModalStatus" class="profile-note">Offline list status will show here.</div>
@@ -2106,7 +2105,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
     (function () {
       'use strict';
 
-      const SHELL_VER = 'V6.3c91d';
+      const SHELL_VER = 'V6.3c91f';
       const APP_URL = 'https://script.google.com/macros/s/AKfycbzq9FTETNZwUJWHMGnMHECbu3sJ3jy3FFvGYyeaRXtkoK1GHBtqOu-GLBle_WGfoFtI/exec';
       const SCHEDULE_URL = 'https://docs.google.com/spreadsheets/d/1-lKMU6LIhW7oiWHskTZcbYFhjQCN6nZoSydLxq5A-Fc/edit?gid=720000000#gid=720000000';
       const CALLOUTS_PAGE = APP_URL + '?page=callouts&shell=ipad';
@@ -2691,7 +2690,9 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
             String(row.siteAddress || ''),
             String(row.customerName || ''),
             String(row.sageAccountNo || ''),
-            String(row.notes || '')
+            String(row.notes || ''),
+            Array.isArray(row.faEquipmentRows) ? row.faEquipmentRows : [],
+            String(row.emergencyLightCount || '')
           ];
         });
       }
@@ -2704,7 +2705,9 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
             siteAddress: row[1] || '',
             customerName: row[2] || '',
             sageAccountNo: row[3] || '',
-            notes: row[4] || ''
+            notes: row[4] || '',
+            faEquipmentRows: Array.isArray(row[5]) ? row[5] : [],
+            emergencyLightCount: row[6] || ''
           };
         });
       }
@@ -3310,6 +3313,97 @@ function clearOfflineLookupCustomerChunks() {
         return out;
       }
 
+      let fsdOfflineEquipmentMapCache = null;
+      let fsdOfflineEquipmentMapStamp = '';
+
+      function faEquipmentRowsHaveValues_C91f(rows) {
+        return (Array.isArray(rows) ? rows : []).some(function(row) {
+          row = row || {};
+          return !!(row.total || row.tested || row.passed || row.failed || row.checked);
+        });
+      }
+
+      function equipmentLookupKey_C91f(value) {
+        return normaliseOfflineLookupText(String(value || '').replace(/\r/g, ' ').replace(/\n/g, ' '));
+      }
+
+      function equipmentFirstLineKey_C91f(value) {
+        return equipmentLookupKey_C91f(firstLookupLine(value));
+      }
+
+      function buildOfflineEquipmentMap_C91f() {
+        const data = offlineLookupData || loadOfflineLookupData();
+        const sites = Array.isArray(data.sites) ? data.sites : [];
+        const stamp = String((data.savedAt || '') + '|' + sites.length);
+        if (fsdOfflineEquipmentMapCache && fsdOfflineEquipmentMapStamp === stamp) return fsdOfflineEquipmentMapCache;
+
+        const map = {};
+        function addKey(key, row) {
+          if (!key || key.length < 4 || map[key]) return;
+          map[key] = {
+            faEquipmentRows: Array.isArray(row.faEquipmentRows) ? row.faEquipmentRows : [],
+            emergencyLightCount: row.emergencyLightCount || ''
+          };
+        }
+
+        sites.forEach(function(row) {
+          row = row || {};
+          if (!faEquipmentRowsHaveValues_C91f(row.faEquipmentRows) && !row.emergencyLightCount) return;
+          addKey(equipmentLookupKey_C91f(row.siteAddress), row);
+          addKey(equipmentFirstLineKey_C91f(row.siteAddress), row);
+          addKey(equipmentLookupKey_C91f(row.lookupName), row);
+        });
+
+        fsdOfflineEquipmentMapCache = map;
+        fsdOfflineEquipmentMapStamp = stamp;
+        return map;
+      }
+
+      function enrichOfflineSiteRowsWithCachedEquipment_C91f(rows) {
+        rows = Array.isArray(rows) ? rows : [];
+        const map = buildOfflineEquipmentMap_C91f();
+        const keys = Object.keys(map || {});
+        if (!keys.length) return rows;
+
+        return rows.map(function(row) {
+          row = Object.assign({}, row || {});
+          if (faEquipmentRowsHaveValues_C91f(row.faEquipmentRows) || row.emergencyLightCount) return row;
+
+          const candidates = [
+            equipmentLookupKey_C91f(row.siteAddress),
+            equipmentFirstLineKey_C91f(row.siteAddress),
+            equipmentLookupKey_C91f(row.lookupName)
+          ].filter(Boolean);
+
+          let found = null;
+          for (let i = 0; i < candidates.length && !found; i++) {
+            if (map[candidates[i]]) found = map[candidates[i]];
+          }
+
+          for (let c = 0; c < candidates.length && !found; c++) {
+            const candidate = candidates[c];
+            if (!candidate || candidate.length < 8) continue;
+            for (let k = 0; k < keys.length; k++) {
+              const key = keys[k];
+              if (!key || key.length < 8) continue;
+              if (candidate.indexOf(key) !== -1 || key.indexOf(candidate) !== -1) {
+                found = map[key];
+                break;
+              }
+            }
+          }
+
+          if (found) {
+            row.faEquipmentRows = Array.isArray(found.faEquipmentRows) ? found.faEquipmentRows : [];
+            row.emergencyLightCount = found.emergencyLightCount || '';
+            if (row.emergencyLightCount && !String(row.notes || '').includes('E/L:')) {
+              row.notes = [row.notes, 'E/L: ' + row.emergencyLightCount].filter(Boolean).join(' | ');
+            }
+          }
+          return row;
+        });
+      }
+
       function startOfflineLookupJsonpStage(stage, label, timeoutSeconds, offset) {
         // C90f: keep the chunk loop, but stop old script onload handlers from
         // falsely failing the next chunk. Apps Script Routing caps chunks at 100,
@@ -3511,59 +3605,6 @@ function clearOfflineLookupCustomerChunks() {
         }
       });
 
-      function lookupSavedSameDay(savedAt) {
-        if (!savedAt) return false;
-        try {
-          const saved = new Date(savedAt);
-          const now = new Date();
-          return saved.getFullYear() === now.getFullYear()
-            && saved.getMonth() === now.getMonth()
-            && saved.getDate() === now.getDate();
-        } catch (err) {
-          return false;
-        }
-      }
-
-      async function getFullOfflineLookupDataForSync() {
-        // IndexedDB is the proper full store. localStorage often only has meta.
-        try {
-          const idb = await refreshOfflineLookupDataFromIndexedDb();
-          if (idb && Array.isArray(idb.customers) && idb.customers.length) return idb;
-        } catch (err) {}
-
-        const data = offlineLookupData || loadOfflineLookupData();
-        if (data && Array.isArray(data.customers) && data.customers.length) return data;
-        return null;
-      }
-
-      async function startOfflineSiteOnlySync() {
-        const existing = await getFullOfflineLookupDataForSync();
-        if (!existing || !Array.isArray(existing.customers) || !existing.customers.length) {
-          setOfflineStatus('No saved customer list found on this iPad yet. Run Daily Full Sync first, then Sites Only can be used after that.');
-          setOfflinePickerStatus('Run Daily Full Sync first.');
-          return;
-        }
-
-        clearOfflineLookupDownloadWatch();
-        removeOfflineLookupJsonpScript();
-
-        fsdOfflineLookupChunkData = {
-          ok: true,
-          version: existing.version || 'C91d-site-only-refresh',
-          generatedAt: existing.generatedAt || new Date().toISOString(),
-          customers: existing.customers.slice(),
-          sites: [],
-          materials: []
-        };
-        fsdOfflineLookupAllCustomers = existing.customers.slice();
-        fsdOfflineLookupAllSites = [];
-        fsdOfflineLookupNextOffset = 0;
-
-        setOfflineStatus('Keeping ' + existing.customers.length + ' saved customers. Downloading site addresses only...');
-        setOfflinePickerStatus('Keeping saved customers. Updating site addresses only...');
-        startOfflineLookupJsonpStage('sites', 'Downloading offline site addresses only', 75, 0);
-      }
-
       window.syncOfflineCustomerPickerData = function syncOfflineCustomerPickerData(event) {
         stopTap(event);
         if (!navigator.onLine) {
@@ -3582,20 +3623,6 @@ function clearOfflineLookupCustomerChunks() {
         } catch (err) {
           offlineLookupFail('Offline customer list update failed: ' + (err && err.message ? err.message : err));
         }
-        return false;
-      };
-
-      window.syncOfflineSitePickerData = function syncOfflineSitePickerData(event) {
-        stopTap(event);
-        if (!navigator.onLine) {
-          setOfflineStatus('Still offline. You can use the saved customer/site list, or connect to the internet and update site addresses.');
-          updateOfflineLookupStatus();
-          return false;
-        }
-
-        startOfflineSiteOnlySync().catch(function(err) {
-          offlineLookupFail('Site-address-only sync failed: ' + (err && err.message ? err.message : err));
-        });
         return false;
       };
 
@@ -5413,17 +5440,7 @@ function applyOfflineLookupSelection(row) {
           renderOfflineDrafts();
           return false;
         }
-
-        try {
-          const lookupMeta = offlineLookupData || loadOfflineLookupData();
-          if (!lookupMeta || !lookupSavedSameDay(lookupMeta.savedAt)) {
-            setOfflineStatus('Running today\'s full customer/site lookup sync, then downloading Cloud Drafts...');
-            window.syncOfflineCustomerPickerData({ preventDefault:function(){}, stopPropagation:function(){} });
-          } else {
-            setOfflinePickerStatus('Customer/site lookup already fully synced today. Skipping full lookup download.');
-          }
-        } catch (err) {}
-
+        try { window.syncOfflineCustomerPickerData({ preventDefault:function(){}, stopPropagation:function(){} }); } catch (err) {}
         return window.syncCloudDraftCache({ preventDefault:function(){}, stopPropagation:function(){} });
       };
 
@@ -5536,7 +5553,8 @@ function applyOfflineLookupSelection(row) {
             await refreshOfflineLookupDataFromIndexedDb();
           }
 
-          const rows = searchOfflineLookupRows(mode, query).slice(0, limit);
+          let rows = searchOfflineLookupRows(mode, query).slice(0, limit);
+          if (mode === 'site') rows = enrichOfflineSiteRowsWithCachedEquipment_C91f(rows);
           const metaData = offlineLookupData || {};
           const pendingRows = loadPendingOfflineLookupRows();
           event.source && event.source.postMessage({
@@ -5871,6 +5889,6 @@ function applyOfflineLookupSelection(row) {
 
     }());
   </script>
-  <div class="fixed-version-badge">App Shell C91d · daily full sync + sites only</div>
+  <div class="fixed-version-badge">App Shell C91f · local picker + site equipment</div>
 </body>
 </html>
