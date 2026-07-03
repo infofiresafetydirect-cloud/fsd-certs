@@ -1647,7 +1647,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
 
       <div class="home-meta">
         <span class="home-credit">JARED720 LABS</span>
-        <span class="home-version">App Shell C91f · local picker + site equipment</span>
+        <span class="home-version">App Shell C91g · SFA local picker fix</span>
       </div>
     </main>
   </section>
@@ -1656,9 +1656,9 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
     <main class="offline-card">
       <h2 class="offline-title">Jobs / Drafts</h2>
       <p class="offline-help">One GoFormz-style list for this iPad: cloud drafts you have synced down, offline-only drafts, and drafts with local changes waiting to sync.</p>
-      <p class="offline-help"><strong>How it works:</strong> press Sync Now while online before going out. The iPad downloads Cloud Drafts and the customer/site picker. When there is no signal, you can only open what has already been synced to this iPad.</p>
+      <p class="offline-help"><strong>How it works:</strong> press Sync Now while online before going out. The iPad downloads Cloud Drafts plus the full customer/site/equipment lookup. When there is no signal, you can only open what has already been synced to this iPad.</p>
       <div class="actions">
-        <button class="button" type="button" onclick="syncUnifiedDrafts(event)"><span class="tile-icon">🔁</span><span>Sync Now - Drafts + Customers</span></button>
+        <button class="button" type="button" onclick="syncUnifiedDrafts(event)"><span class="tile-icon">🔁</span><span>Sync Now - Drafts + Full Lookup</span></button>
         <button class="button secondary" type="button" onclick="openCloudDrafts(event)"><span class="tile-icon">☁️</span><span>Open Cloud Draft Manager</span></button>
         <button class="button secondary" type="button" onclick="refreshOfflineDrafts(event)"><span class="tile-icon">🔄</span><span>Refresh Jobs / Drafts</span></button>
       </div>
@@ -1667,7 +1667,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
         <button class="button" type="button" onclick="startNewOfflineW(event)"><span class="tile-icon">📝</span><span>New W / Engineer Service Report</span></button>
         <button class="button secondary" type="button" onclick="startNewOfflineSfaTrial(event)"><span class="tile-icon">🔥</span><span>New SFA</span></button>
         <button class="button secondary" type="button" onclick="startNewOfflineSelTrial(event)"><span class="tile-icon">💡</span><span>New SEL</span></button>
-        <button class="button secondary" type="button" onclick="syncOfflineCustomerPickerData(event)"><span class="tile-icon">📇</span><span>Update Customer List Only</span></button>
+        <button class="button secondary" type="button" onclick="syncOfflineCustomerPickerData(event)"><span class="tile-icon">📇</span><span>Full Lookup Sync - Customers / Sites / Equipment</span></button>
         <button class="button third" type="button" onclick="closeOfflineDrafts(event)"><span class="tile-icon">↩️</span><span>Back to Menu</span></button>
       </div>
       <div id="offlineStatus" class="offline-status"></div>
@@ -2105,7 +2105,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
     (function () {
       'use strict';
 
-      const SHELL_VER = 'V6.3c91f';
+      const SHELL_VER = 'V6.3c91g';
       const APP_URL = 'https://script.google.com/macros/s/AKfycbzq9FTETNZwUJWHMGnMHECbu3sJ3jy3FFvGYyeaRXtkoK1GHBtqOu-GLBle_WGfoFtI/exec';
       const SCHEDULE_URL = 'https://docs.google.com/spreadsheets/d/1-lKMU6LIhW7oiWHskTZcbYFhjQCN6nZoSydLxq5A-Fc/edit?gid=720000000#gid=720000000';
       const CALLOUTS_PAGE = APP_URL + '?page=callouts&shell=ipad';
@@ -3156,7 +3156,7 @@ function clearOfflineLookupCustomerChunks() {
         const dateText = when ? (' Last updated: ' + new Date(when).toLocaleString()) : '';
         return c || s
           ? ('Offline customer list ready: ' + c + ' invoice customer records, ' + s + ' searchable site/customer address rows.' + dateText)
-          : 'No offline customer list saved yet. Connect to the internet and press Update Offline Customer List.';
+          : 'No offline customer list saved yet. Connect to the internet and press Run Full Lookup Sync.';
       }
 
       function updateOfflineLookupStatus() {
@@ -3282,7 +3282,7 @@ function clearOfflineLookupCustomerChunks() {
             materials: []
           });
           fsdOfflineLookupChunkData = null;
-          setOfflineStatus('Customer list saved, but the full site list did not finish downloading. Saved ' + (saved.customers || []).length + ' customers and ' + (saved.sites || []).length + ' fallback site addresses. Try Update Customer List again when signal is stronger.');
+          setOfflineStatus('Customer list saved, but the full site list did not finish downloading. Saved ' + (saved.customers || []).length + ' customers and ' + (saved.sites || []).length + ' fallback site addresses. Try Full Lookup Sync again when signal is stronger.');
           setOfflinePickerStatus(offlineLookupCountText());
           return;
         }
@@ -5889,6 +5889,6 @@ function applyOfflineLookupSelection(row) {
 
     }());
   </script>
-  <div class="fixed-version-badge">App Shell C91f · local picker + site equipment</div>
+  <div class="fixed-version-badge">App Shell C91g · SFA local picker fix</div>
 </body>
 </html>
