@@ -1647,7 +1647,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
 
       <div class="home-meta">
         <span class="home-credit">JARED720 LABS</span>
-        <span class="home-version">App Shell C91b · local-first online picker</span>
+        <span class="home-version">App Shell C91c · local picker + site route guard</span>
       </div>
     </main>
   </section>
@@ -2105,7 +2105,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
     (function () {
       'use strict';
 
-      const SHELL_VER = 'V6.3c91b';
+      const SHELL_VER = 'V6.3c91c';
       const APP_URL = 'https://script.google.com/macros/s/AKfycbzq9FTETNZwUJWHMGnMHECbu3sJ3jy3FFvGYyeaRXtkoK1GHBtqOu-GLBle_WGfoFtI/exec';
       const SCHEDULE_URL = 'https://docs.google.com/spreadsheets/d/1-lKMU6LIhW7oiWHskTZcbYFhjQCN6nZoSydLxq5A-Fc/edit?gid=720000000#gid=720000000';
       const CALLOUTS_PAGE = APP_URL + '?page=callouts&shell=ipad';
@@ -3428,12 +3428,19 @@ function clearOfflineLookupCustomerChunks() {
           fsdOfflineLookupAllSites = [];
           fsdOfflineLookupNextOffset = 0;
           setTimeout(function() {
-            startOfflineLookupJsonpStage('sites', 'Downloading offline site addresses', 75, 0);
+            startOfflineLookupJsonpStage('sites', 'Downloading offline site addresses from Apps Script site route', 75, 0);
           }, 400);
           return;
         }
 
         if (stage === 'sites') {
+          // C91c guard: if this is missing, Apps Script Routing.gs is not on the
+          // customer/site sync route, or the web app was not redeployed.
+          if (!Array.isArray(payload.sites)) {
+            offlineLookupFail('Customers downloaded, but the site-address route did not return site rows. Replace Apps Script Routing.gs with C91c, save it, then redeploy/update the web app.');
+            return;
+          }
+
           const sites = Array.isArray(payload.sites) ? payload.sites : [];
           fsdOfflineLookupAllSites = (fsdOfflineLookupAllSites || []).concat(sites);
           const totalText = payload.total ? (' of ' + payload.total) : '';
@@ -5786,6 +5793,6 @@ function applyOfflineLookupSelection(row) {
 
     }());
   </script>
-  <div class="fixed-version-badge">App Shell C91b · local-first online picker</div>
+  <div class="fixed-version-badge">App Shell C91c · local picker + site route guard</div>
 </body>
 </html>
