@@ -1647,7 +1647,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
 
       <div class="home-meta">
         <span class="home-credit">JARED720 LABS</span>
-        <span class="home-version">App Shell C90q · scroll fix + draft buttons</span>
+        <span class="home-version">App Shell C90z · C90v scroll + shell linksns</span>
       </div>
     </main>
   </section>
@@ -2103,7 +2103,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
     (function () {
       'use strict';
 
-      const SHELL_VER = 'V6.3c81r';
+      const SHELL_VER = 'V6.3c90z';
       const APP_URL = 'https://script.google.com/macros/s/AKfycbzq9FTETNZwUJWHMGnMHECbu3sJ3jy3FFvGYyeaRXtkoK1GHBtqOu-GLBle_WGfoFtI/exec';
       const SCHEDULE_URL = 'https://docs.google.com/spreadsheets/d/1-lKMU6LIhW7oiWHskTZcbYFhjQCN6nZoSydLxq5A-Fc/edit?gid=720000000#gid=720000000';
       const CALLOUTS_PAGE = APP_URL + '?page=callouts&shell=ipad';
@@ -2418,9 +2418,20 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
       function addEngineerProfileToUrl(url) {
         let out = String(url || '');
         const engineer = getDefaultEngineerProfile();
-        if (!engineer) return out;
-        if (/[?&]engineer=/.test(out)) return out;
-        out += (out.indexOf('?') === -1 ? '?' : '&') + 'engineer=' + encodeURIComponent(engineer);
+
+        if (engineer && !/[?&]engineer=/.test(out)) {
+          out += (out.indexOf('?') === -1 ? '?' : '&') + 'engineer=' + encodeURIComponent(engineer);
+        }
+
+        // C90z: tell the Apps Script dashboard what GitHub shell URL to reopen.
+        // Dashboard tiles can stay as pure top-level anchor links for good iPad scrolling,
+        // but they top-open the GitHub shell with ?open=<Apps Script page>.
+        if (out.indexOf(APP_URL) === 0 && !/[?&]shellUrl=/.test(out)) {
+          try {
+            out += (out.indexOf('?') === -1 ? '?' : '&') + 'shellUrl=' + encodeURIComponent(currentShellProfileUrl(engineer));
+          } catch (err) {}
+        }
+
         return out;
       }
 
@@ -5534,7 +5545,8 @@ function applyOfflineLookupSelection(row) {
 
           if (!target) return;
 
-          target = decodeURIComponent(String(target || ''));
+          target = String(target || '');
+          try { target = decodeURIComponent(target); } catch (decodeErr) {}
 
           if (!target || target.indexOf(APP_URL) !== 0) return;
 
@@ -5575,6 +5587,6 @@ function applyOfflineLookupSelection(row) {
 
     }());
   </script>
-  <div class="fixed-version-badge">App Shell C90q · scroll fix + draft buttons</div>
+  <div class="fixed-version-badge">App Shell C90z · C90v scroll + shell linksns</div>
 </body>
 </html>
