@@ -1647,7 +1647,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
 
       <div class="home-meta">
         <span class="home-credit">JARED720 LABS</span>
-        <span class="home-version">App Shell C91a · postMessage dashboard nav</span>
+        <span class="home-version">App Shell C91b · local-first online picker</span>
       </div>
     </main>
   </section>
@@ -2105,7 +2105,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
     (function () {
       'use strict';
 
-      const SHELL_VER = 'V6.3c91a';
+      const SHELL_VER = 'V6.3c91b';
       const APP_URL = 'https://script.google.com/macros/s/AKfycbzq9FTETNZwUJWHMGnMHECbu3sJ3jy3FFvGYyeaRXtkoK1GHBtqOu-GLBle_WGfoFtI/exec';
       const SCHEDULE_URL = 'https://docs.google.com/spreadsheets/d/1-lKMU6LIhW7oiWHskTZcbYFhjQCN6nZoSydLxq5A-Fc/edit?gid=720000000#gid=720000000';
       const CALLOUTS_PAGE = APP_URL + '?page=callouts&shell=ipad';
@@ -2580,6 +2580,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
       const OFFLINE_LOOKUP_IDB_NAME = 'fsd_offline_lookup_db_v1';
       const OFFLINE_LOOKUP_IDB_STORE = 'customer_chunks';
       const OFFLINE_LOOKUP_IDB_META_KEY = '__meta__';
+      const OFFLINE_LOOKUP_PENDING_KEY = 'fsd_offline_lookup_pending_customer_site_v1';
       const OFFLINE_LOOKUP_IDB_CHUNK_SIZE = 500;
       const OFFLINE_LOOKUP_MAX_RESULTS = 80;
       const OFFLINE_CLOUD_DRAFT_SYNC_KEY = 'fsd_unified_cloud_drafts_last_sync_v1';
@@ -2732,6 +2733,104 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
           : (Array.isArray(data.sites) ? expandCompactOfflineSiteRows(data.sites) : []);
         return Object.assign({}, data, { customers: customers, sites: sites });
       }
+
+      function firstPendingLookupLine(value) {
+        return String(value || '').replace(/\r/g, '').split('\n').map(function(x) { return x.trim(); }).filter(Boolean)[0] || '';
+      }
+
+      function loadPendingOfflineLookupRows() {
+        try {
+          const raw = localStorage.getItem(OFFLINE_LOOKUP_PENDING_KEY);
+          const data = raw ? JSON.parse(raw) : {};
+          return {
+            customers: Array.isArray(data.customers) ? data.customers : [],
+            sites: Array.isArray(data.sites) ? data.sites : [],
+            savedAt: data.savedAt || ''
+          };
+        } catch (err) {
+          return { customers: [], sites: [], savedAt: '' };
+        }
+      }
+
+      function savePendingOfflineLookupRows(data) {
+        data = data || {};
+        const out = {
+          customers: Array.isArray(data.customers) ? data.customers.slice(0, 500) : [],
+          sites: Array.isArray(data.sites) ? data.sites.slice(0, 500) : [],
+          savedAt: new Date().toISOString()
+        };
+        try { localStorage.setItem(OFFLINE_LOOKUP_PENDING_KEY, JSON.stringify(out)); } catch (err) {}
+        return out;
+      }
+
+      function lookupDedupeKey(row, mode) {
+        row = row || {};
+        const line = mode === 'site'
+          ? (row.siteAddress || row.customerAddress || row.lookupName || '')
+          : (row.customerAddress || row.lookupName || '');
+        return normaliseOfflineLookupText([
+          mode,
+          firstPendingLookupLine(line),
+          row.sageAccountNo || '',
+          row.defaultCustomerOrderNo || '',
+          row.defaultOurRefNo || ''
+        ].join(' '));
+      }
+
+      function mergePendingLookupRows(baseRows, pendingRows, mode) {
+        const out = [];
+        const seen = {};
+        function add(row) {
+          row = row || {};
+          const key = lookupDedupeKey(row, mode);
+          if (!key || seen[key]) return;
+          seen[key] = true;
+          out.push(row);
+        }
+        (pendingRows || []).forEach(add);
+        (baseRows || []).forEach(add);
+        return out;
+      }
+
+      function upsertPendingLookupFromReportPayload(payload) {
+        payload = payload || {};
+        const customerAddress = String(payload.customer || payload.customerAddress || '').trim();
+        const siteAddress = String(payload.site || payload.siteAddress || '').trim();
+        const sageAccountNo = String(payload.sageAccountNo || '').trim();
+        const orderNo = String(payload.customerOrderNo || payload.defaultCustomerOrderNo || '').trim();
+        const ourRefNo = String(payload.ourRefNo || payload.defaultOurRefNo || '').trim();
+
+        if (!customerAddress && !siteAddress) return loadPendingOfflineLookupRows();
+
+        const pending = loadPendingOfflineLookupRows();
+
+        if (customerAddress) {
+          pending.customers = mergePendingLookupRows([{
+            lookupName: firstPendingLookupLine(customerAddress) || firstPendingLookupLine(siteAddress) || 'New Customer',
+            customerAddress: customerAddress,
+            siteAddress: siteAddress,
+            sageAccountNo: sageAccountNo,
+            defaultCustomerOrderNo: orderNo,
+            defaultOurRefNo: ourRefNo,
+            defaultEmail: ''
+          }], pending.customers || [], 'invoice');
+        }
+
+        if (siteAddress) {
+          pending.sites = mergePendingLookupRows([{
+            lookupName: firstPendingLookupLine(siteAddress) || firstPendingLookupLine(customerAddress) || 'New Site',
+            siteAddress: siteAddress,
+            customerName: firstPendingLookupLine(customerAddress),
+            sageAccountNo: sageAccountNo,
+            notes: orderNo ? ('Order: ' + orderNo) : ''
+          }], pending.sites || [], 'site');
+        }
+
+        const saved = savePendingOfflineLookupRows(pending);
+        updateOfflineLookupStatus();
+        return saved;
+      }
+
 
       
       function fsdOfflineLookupIdbSupported() {
@@ -3078,12 +3177,16 @@ function clearOfflineLookupCustomerChunks() {
 
       function offlineLookupRowsForMode(mode) {
         const data = offlineLookupData || loadOfflineLookupData();
+        const pending = loadPendingOfflineLookupRows();
         const customers = Array.isArray(data.customers) ? data.customers : [];
+
         if (mode === 'site') {
           const sites = Array.isArray(data.sites) ? data.sites : [];
-          return sites.length ? sites : buildFallbackSitesFromCustomers(customers);
+          const baseSites = sites.length ? sites : buildFallbackSitesFromCustomers(customers);
+          return mergePendingLookupRows(baseSites, pending.sites || [], 'site');
         }
-        return customers;
+
+        return mergePendingLookupRows(customers, pending.customers || [], 'invoice');
       }
 
       function searchOfflineLookupRows(mode, query) {
@@ -5336,6 +5439,82 @@ function applyOfflineLookupSelection(row) {
         if (item) window.deleteOfflineWById(item.offlineId);
       };
 
+      async function handleLocalLookupSearchRequest(event, msg) {
+        msg = msg || {};
+        const requestId = msg.requestId || '';
+        const mode = msg.mode === 'site' ? 'site' : 'invoice';
+        const query = String(msg.query || '');
+        const limit = Math.max(1, Math.min(Number(msg.limit || 80) || 80, 120));
+
+        try {
+          if (!offlineLookupData || offlineLookupData.indexedDbCustomers || !((offlineLookupData.customers || []).length)) {
+            await refreshOfflineLookupDataFromIndexedDb();
+          }
+
+          const rows = searchOfflineLookupRows(mode, query).slice(0, limit);
+          const metaData = offlineLookupData || {};
+          const pendingRows = loadPendingOfflineLookupRows();
+          event.source && event.source.postMessage({
+            type: 'FSD_LOCAL_LOOKUP_SEARCH_RESPONSE',
+            source: 'fsd-certs-shell',
+            requestId: requestId,
+            ok: true,
+            mode: mode,
+            query: query,
+            rows: rows,
+            meta: {
+              customerCount: (metaData.customerCount || (metaData.customers || []).length || 0),
+              siteCount: (metaData.siteCount || (metaData.sites || []).length || 0),
+              pendingCustomerCount: pendingRows.customers.length,
+              pendingSiteCount: pendingRows.sites.length
+            },
+            ts: Date.now()
+          }, '*');
+        } catch (err) {
+          try {
+            event.source && event.source.postMessage({
+              type: 'FSD_LOCAL_LOOKUP_SEARCH_RESPONSE',
+              source: 'fsd-certs-shell',
+              requestId: requestId,
+              ok: false,
+              mode: mode,
+              query: query,
+              rows: [],
+              error: err && err.message ? err.message : String(err || 'Local lookup failed'),
+              ts: Date.now()
+            }, '*');
+          } catch (ignore) {}
+        }
+      }
+
+      function handleLocalLookupUpsertRequest(event, msg) {
+        msg = msg || {};
+        const requestId = msg.requestId || '';
+        try {
+          const saved = upsertPendingLookupFromReportPayload(msg.payload || msg.item || {});
+          event.source && event.source.postMessage({
+            type: 'FSD_LOCAL_LOOKUP_UPSERT_RESPONSE',
+            source: 'fsd-certs-shell',
+            requestId: requestId,
+            ok: true,
+            pendingCustomerCount: (saved.customers || []).length,
+            pendingSiteCount: (saved.sites || []).length,
+            ts: Date.now()
+          }, '*');
+        } catch (err) {
+          try {
+            event.source && event.source.postMessage({
+              type: 'FSD_LOCAL_LOOKUP_UPSERT_RESPONSE',
+              source: 'fsd-certs-shell',
+              requestId: requestId,
+              ok: false,
+              error: err && err.message ? err.message : String(err || 'Local upsert failed'),
+              ts: Date.now()
+            }, '*');
+          } catch (ignore) {}
+        }
+      }
+
       function openAppUrlInShell(url) {
         var targetUrl = addEngineerProfileToUrl(String(url || APP_URL));
         if (targetUrl.indexOf(APP_URL) !== 0) return;
@@ -5439,6 +5618,16 @@ function applyOfflineLookupSelection(row) {
       window.addEventListener('message', function(event) {
         const msg = event && event.data ? event.data : null;
         if (!msg || typeof msg !== 'object') return;
+
+        if (msg.type === 'FSD_LOCAL_LOOKUP_SEARCH_REQUEST') {
+          handleLocalLookupSearchRequest(event, msg);
+          return;
+        }
+
+        if (msg.type === 'FSD_LOCAL_LOOKUP_UPSERT') {
+          handleLocalLookupUpsertRequest(event, msg);
+          return;
+        }
 
         if ((msg.type === 'FSD_DASHBOARD_NAVIGATE' || msg.navigateTo) && (msg.url || msg.navigateTo)) {
           const navUrl = String(msg.url || msg.navigateTo || '');
@@ -5597,6 +5786,6 @@ function applyOfflineLookupSelection(row) {
 
     }());
   </script>
-  <div class="fixed-version-badge">App Shell C91a · postMessage dashboard nav</div>
+  <div class="fixed-version-badge">App Shell C91b · local-first online picker</div>
 </body>
 </html>
