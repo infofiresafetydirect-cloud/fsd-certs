@@ -2105,7 +2105,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
     (function () {
       'use strict';
 
-      const SHELL_VER = 'V6.3c91s';
+      const SHELL_VER = 'V6.3c91t';
       const APP_URL = 'https://script.google.com/macros/s/AKfycbzq9FTETNZwUJWHMGnMHECbu3sJ3jy3FFvGYyeaRXtkoK1GHBtqOu-GLBle_WGfoFtI/exec';
       const SCHEDULE_URL = 'https://infofiresafetydirect-cloud.github.io/fsd-schedule-2026/';
       const CALLOUTS_PAGE = APP_URL + '?page=callouts&shell=ipad';
@@ -5641,6 +5641,35 @@ function applyOfflineLookupSelection(row) {
       }
 
 
+      function openExternalGithubPageInShell(url) {
+        var targetUrl = String(url || '');
+        if (!targetUrl) return false;
+
+        // Keep separate GitHub apps, like FSD Schedule 2026, inside this launcher iframe.
+        // This avoids iPad home-screen/Safari kicking out of the main GitHub shell.
+        if (targetUrl.indexOf('https://infofiresafetydirect-cloud.github.io/') !== 0) {
+          goDirect(targetUrl);
+          return false;
+        }
+
+        targetUrl += (targetUrl.indexOf('?') === -1 ? '?' : '&') + 'fromMainShell=1&v=' + encodeURIComponent(SHELL_VER) + '&ts=' + Date.now();
+
+        pendingShellAction = null;
+        clearTimeout(shellActionTimer);
+        home.classList.add('hidden');
+        offlineDrafts.classList.remove('active');
+        if (offlineEditor) offlineEditor.classList.remove('active');
+        fallback.classList.add('hidden');
+        loader.classList.remove('hidden');
+        loaded = false;
+        try { frame.name = ''; } catch (err) {}
+        frame.src = targetUrl;
+        hasStarted = true;
+        startFallbackTimer();
+        return false;
+      }
+
+
       window.openCloudDrafts = function openCloudDrafts(event) {
         stopTap(event);
         openAppUrlInShell(APP_URL + '?page=drafts');
@@ -5675,7 +5704,7 @@ function applyOfflineLookupSelection(row) {
 
       window.openSchedule = function openSchedule(event) {
         stopTap(event);
-        goDirect(SCHEDULE_URL);
+        openExternalGithubPageInShell(SCHEDULE_URL);
       };
 
       window.openCallouts = function openCallouts(event) {
