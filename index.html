@@ -2105,7 +2105,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
     (function () {
       'use strict';
 
-      const SHELL_VER = 'V6.3c91x';
+      const SHELL_VER = 'V6.3c91y';
       const APP_URL = 'https://script.google.com/macros/s/AKfycbzq9FTETNZwUJWHMGnMHECbu3sJ3jy3FFvGYyeaRXtkoK1GHBtqOu-GLBle_WGfoFtI/exec';
       const SCHEDULE_URL = 'https://infofiresafetydirect-cloud.github.io/fsd-schedule-2026/';
       const CALLOUTS_PAGE = APP_URL + '?page=callouts&shell=ipad';
@@ -5651,10 +5651,6 @@ function applyOfflineLookupSelection(row) {
           goDirect(targetUrl);
           return false;
         }
-
-        // C91x: pass the saved engineer profile into the Schedule app
-        // so it can open that engineer's weekly schedule automatically.
-        try { targetUrl = addEngineerProfileToUrl(targetUrl); } catch (profileErr) {}
 
         targetUrl += (targetUrl.indexOf('?') === -1 ? '?' : '&') + 'fromMainShell=1&v=' + encodeURIComponent(SHELL_VER) + '&ts=' + Date.now();
 
