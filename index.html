@@ -1647,7 +1647,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
 
       <div class="home-meta">
         <span class="home-credit">JARED720 LABS</span>
-        <span class="home-version">App Shell C91n · SFA local button defined</span>
+        <span class="home-version">App Shell C91l · SFA hard reset</span>
       </div>
     </main>
   </section>
@@ -2105,9 +2105,9 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
     (function () {
       'use strict';
 
-      const SHELL_VER = 'V6.3c91y';
+      const SHELL_VER = 'V6.3c91l';
       const APP_URL = 'https://script.google.com/macros/s/AKfycbzq9FTETNZwUJWHMGnMHECbu3sJ3jy3FFvGYyeaRXtkoK1GHBtqOu-GLBle_WGfoFtI/exec';
-      const SCHEDULE_URL = 'https://infofiresafetydirect-cloud.github.io/fsd-schedule-2026/';
+      const SCHEDULE_URL = 'https://docs.google.com/spreadsheets/d/1-lKMU6LIhW7oiWHskTZcbYFhjQCN6nZoSydLxq5A-Fc/edit?gid=720000000#gid=720000000';
       const CALLOUTS_PAGE = APP_URL + '?page=callouts&shell=ipad';
       const home = document.getElementById('home');
       const frame = document.getElementById('fsdFrame');
@@ -5641,35 +5641,6 @@ function applyOfflineLookupSelection(row) {
       }
 
 
-      function openExternalGithubPageInShell(url) {
-        var targetUrl = String(url || '');
-        if (!targetUrl) return false;
-
-        // Keep separate GitHub apps, like FSD Schedule 2026, inside this launcher iframe.
-        // This avoids iPad home-screen/Safari kicking out of the main GitHub shell.
-        if (targetUrl.indexOf('https://infofiresafetydirect-cloud.github.io/') !== 0) {
-          goDirect(targetUrl);
-          return false;
-        }
-
-        targetUrl += (targetUrl.indexOf('?') === -1 ? '?' : '&') + 'fromMainShell=1&v=' + encodeURIComponent(SHELL_VER) + '&ts=' + Date.now();
-
-        pendingShellAction = null;
-        clearTimeout(shellActionTimer);
-        home.classList.add('hidden');
-        offlineDrafts.classList.remove('active');
-        if (offlineEditor) offlineEditor.classList.remove('active');
-        fallback.classList.add('hidden');
-        loader.classList.remove('hidden');
-        loaded = false;
-        try { frame.name = ''; } catch (err) {}
-        frame.src = targetUrl;
-        hasStarted = true;
-        startFallbackTimer();
-        return false;
-      }
-
-
       window.openCloudDrafts = function openCloudDrafts(event) {
         stopTap(event);
         openAppUrlInShell(APP_URL + '?page=drafts');
@@ -5704,7 +5675,7 @@ function applyOfflineLookupSelection(row) {
 
       window.openSchedule = function openSchedule(event) {
         stopTap(event);
-        openExternalGithubPageInShell(SCHEDULE_URL);
+        goDirect(SCHEDULE_URL);
       };
 
       window.openCallouts = function openCallouts(event) {
@@ -5770,11 +5741,31 @@ function applyOfflineLookupSelection(row) {
         }
 
         if (msg.type === 'FSD_OPEN_IN_SHELL' && msg.url) {
+          try {
+            if (event.source && event.source.postMessage) {
+              event.source.postMessage({
+                type: 'FSD_OPEN_IN_SHELL_ACK',
+                requestId: msg.requestId || '',
+                source: 'fsd-certs-shell',
+                ts: Date.now()
+              }, '*');
+            }
+          } catch (ackErr) {}
           openAppUrlInShell(msg.url);
           return;
         }
 
         if (msg.type === 'FSD_CERTS_HOME') {
+          try {
+            if (event.source && event.source.postMessage) {
+              event.source.postMessage({
+                type: 'FSD_CERTS_HOME_ACK',
+                requestId: msg.requestId || '',
+                source: 'fsd-certs-shell',
+                ts: Date.now()
+              }, '*');
+            }
+          } catch (ackErr) {}
           window.showHome();
           return;
         }
@@ -5918,6 +5909,6 @@ function applyOfflineLookupSelection(row) {
 
     }());
   </script>
-  <div class="fixed-version-badge">App Shell C91n · SFA local button defined</div>
+  <div class="fixed-version-badge">App Shell C91l · SFA hard reset</div>
 </body>
 </html>
