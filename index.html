@@ -8,7 +8,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="FSD Certs">
   <meta name="application-name" content="FSD Certs by Jared720 Labs">
-  <meta name="theme-color" content="#0f172a">
+  <meta name="theme-color" content="#f3f6f9">
   <meta name="format-detection" content="telephone=no">
   <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
   <meta http-equiv="Pragma" content="no-cache">
@@ -968,6 +968,143 @@
       font-weight: 850;
     }
 
+
+    /* C93u - Secure AI Quick Quote */
+    .minimal-app-title-row { display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+    .minimal-ai-chip {
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-width:27px;
+      height:19px;
+      padding:0 7px;
+      border-radius:999px;
+      color:#7c2d12;
+      background:#ffedd5;
+      border:1px solid #fdba74;
+      font-size:9px;
+      font-weight:950;
+      letter-spacing:.08em;
+      line-height:1;
+    }
+    .ai-quote-card {
+      width:min(760px, 95vw);
+      max-height:92vh;
+      overflow:hidden;
+      display:flex;
+      flex-direction:column;
+      padding:0;
+      border-radius:24px;
+    }
+    .ai-quote-head {
+      padding:20px 20px 15px;
+      border-bottom:1px solid #e5e7eb;
+      background:linear-gradient(180deg,#fff,#fffaf5);
+    }
+    .ai-quote-title-row { display:flex; align-items:center; gap:12px; }
+    .ai-quote-icon {
+      width:42px;
+      height:42px;
+      border-radius:14px;
+      display:grid;
+      place-items:center;
+      flex:0 0 42px;
+      color:#9a3412;
+      background:#ffedd5;
+      border:1px solid #fdba74;
+    }
+    .ai-quote-icon svg { width:23px; height:23px; }
+    .ai-quote-head h2 { margin:0; color:#0f172a; font-size:24px; }
+    .ai-quote-head p { margin:7px 0 0; font-size:13px; font-weight:650; }
+    .ai-quote-body { padding:18px 20px 20px; overflow-y:auto; -webkit-overflow-scrolling:touch; }
+    .ai-quote-body textarea {
+      width:100%;
+      box-sizing:border-box;
+      min-height:124px;
+      padding:14px;
+      border-radius:15px;
+      border:1px solid #cbd5e1;
+      background:#f8fafc;
+      color:#0f172a;
+      font:inherit;
+      font-size:15px;
+      line-height:1.45;
+      resize:vertical;
+    }
+    .ai-quote-body textarea:focus { outline:3px solid rgba(249,115,22,.16); border-color:#f97316; }
+    .ai-quote-advice {
+      margin-top:10px;
+      padding:10px 12px;
+      border-radius:12px;
+      background:#fff7ed;
+      border:1px solid #fed7aa;
+      color:#7c2d12;
+      font-size:11px;
+      line-height:1.4;
+      font-weight:700;
+    }
+    .ai-quote-actions {
+      display:grid;
+      grid-template-columns:1.25fr 1fr 1fr;
+      gap:9px;
+      margin-top:14px;
+    }
+    .ai-quote-actions button {
+      min-height:47px;
+      border:0;
+      border-radius:13px;
+      padding:10px 12px;
+      cursor:pointer;
+      color:#fff;
+      background:#ea580c;
+      font-weight:900;
+      font-size:13px;
+    }
+    .ai-quote-actions button.secondary { background:#0f172a; }
+    .ai-quote-actions button.tertiary { background:#64748b; }
+    .ai-quote-actions button:disabled { opacity:.55; cursor:not-allowed; }
+    .ai-quote-loading { display:none; text-align:center; padding:25px 12px; color:#475569; font-weight:800; }
+    .ai-quote-loading .spinner { margin:0 auto 13px; border-top-color:#ea580c; width:38px; height:38px; border-width:5px; }
+    .ai-quote-status {
+      display:none;
+      margin-top:13px;
+      padding:11px 12px;
+      border-radius:12px;
+      font-size:12px;
+      line-height:1.4;
+      font-weight:800;
+    }
+    .ai-quote-status.show { display:block; }
+    .ai-quote-status.error { background:#fef2f2; border:1px solid #fecaca; color:#991b1b; }
+    .ai-quote-status.ready { background:#ecfdf5; border:1px solid #a7f3d0; color:#166534; }
+    .ai-quote-result { display:none; margin-top:15px; }
+    .ai-quote-result.show { display:block; }
+    .ai-quote-result h3 { margin:0; color:#0f172a; font-size:20px; letter-spacing:-.02em; }
+    .ai-quote-summary { margin:7px 0 13px; color:#475569; font-size:13px; line-height:1.5; font-weight:650; }
+    .ai-quote-table-wrap { overflow-x:auto; border:1px solid #e2e8f0; border-radius:14px; }
+    .ai-quote-result table { width:100%; border-collapse:collapse; min-width:610px; }
+    .ai-quote-result th { background:#f8fafc; padding:10px; text-align:left; border-bottom:1px solid #cbd5e1; color:#334155; font-size:11px; text-transform:uppercase; letter-spacing:.04em; }
+    .ai-quote-result td { padding:10px; border-bottom:1px solid #e2e8f0; color:#334155; font-size:13px; vertical-align:top; }
+    .ai-quote-result td.num, .ai-quote-result th.num { text-align:right; white-space:nowrap; }
+    .ai-quote-totals { margin:12px 0 0 auto; width:min(330px,100%); display:grid; gap:5px; }
+    .ai-quote-total-row { display:flex; justify-content:space-between; gap:14px; padding:7px 9px; border-radius:9px; background:#f8fafc; color:#334155; font-size:13px; font-weight:750; }
+    .ai-quote-total-row.grand { color:#fff; background:#0f172a; font-size:15px; }
+    .ai-quote-lists { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:14px; }
+    .ai-quote-list { padding:12px; border:1px solid #e2e8f0; border-radius:13px; background:#fff; }
+    .ai-quote-list h4 { margin:0 0 7px; color:#0f172a; font-size:13px; }
+    .ai-quote-list ul { margin:0; padding-left:18px; color:#475569; font-size:12px; line-height:1.45; }
+    .ai-quote-disclaimer { margin-top:12px; padding:10px 12px; border-radius:11px; background:#fff7ed; color:#7c2d12; border:1px solid #fed7aa; font-size:10px; line-height:1.4; font-weight:750; }
+    .ai-quote-result-actions { display:flex; flex-wrap:wrap; gap:8px; margin-top:12px; }
+    .ai-quote-result-actions button { min-height:42px; border:0; border-radius:11px; padding:9px 12px; color:#fff; background:#0f172a; font-weight:850; cursor:pointer; }
+    .ai-quote-result-actions button.copy { background:#15803d; }
+    .ai-quote-result-actions button.new { background:#ea580c; }
+    .ai-bridge-frame { position:fixed; left:-10000px; top:-10000px; width:2px; height:2px; opacity:0; pointer-events:none; border:0; }
+    @media (max-width:720px) {
+      .ai-quote-actions { grid-template-columns:1fr; }
+      .ai-quote-lists { grid-template-columns:1fr; }
+      .ai-quote-card { max-height:94vh; }
+    }
+
     .offline-lookup-card { width: min(780px, 96vw); max-height: 92vh; overflow: hidden; display: flex; flex-direction: column; }
     .offline-lookup-results { margin-top: 12px; overflow: auto; display: grid; gap: 9px; max-height: min(48vh, 430px); padding-right: 2px; }
     .offline-lookup-result { text-align: left; border: 1px solid #e5e7eb; background: #ffffff; color: #111827; border-radius: 16px; padding: 12px; cursor: pointer; box-shadow: 0 8px 22px rgba(15,23,42,.08); }
@@ -1526,7 +1663,838 @@
       touch-action: manipulation;
     }
 
-  </style>
+  
+
+
+    /* ==============================================================
+       C93r SIGNATURE LIGHT HOME — Fire Safety Direct × Jared720 Labs
+       Premium light enterprise redesign. Home-only visual changes.
+       Existing routes, IDs and application behaviour are preserved.
+       ============================================================== */
+    .ipad-home.fsd-light-home {
+      --lh-navy: #0b1d33;
+      --lh-navy-2: #17314e;
+      --lh-red: #b51224;
+      --lh-red-dark: #8d0d1b;
+      --lh-blue: #1769aa;
+      --lh-cyan: #0c8fa0;
+      --lh-green: #178259;
+      --lh-amber: #b66b12;
+      --lh-purple: #7552b8;
+      --lh-slate: #5c6d82;
+      --lh-ink: #102033;
+      --lh-muted: #607187;
+      --lh-line: #dfe6ee;
+      --lh-surface: #ffffff;
+      --lh-soft: #f5f8fb;
+      display: block !important;
+      overflow-y: auto !important;
+      overflow-x: hidden !important;
+      padding: calc(18px + var(--safe-top)) calc(22px + var(--safe-right)) calc(14px + var(--safe-bottom)) calc(22px + var(--safe-left)) !important;
+      color: var(--lh-ink) !important;
+      background:
+        radial-gradient(circle at 4% 0%, rgba(181,18,36,.08), transparent 27%),
+        radial-gradient(circle at 96% 10%, rgba(23,105,170,.10), transparent 30%),
+        linear-gradient(180deg, #f9fbfd 0%, #eef3f8 100%) !important;
+      isolation: isolate;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+
+    .fsd-light-home::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -2;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(11,29,51,.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(11,29,51,.025) 1px, transparent 1px);
+      background-size: 44px 44px;
+      mask-image: linear-gradient(to bottom, rgba(0,0,0,.48), transparent 78%);
+    }
+
+    .light-home-shell {
+      width: min(1390px, 100%);
+      min-height: calc(100dvh - 32px - var(--safe-top) - var(--safe-bottom));
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 13px;
+    }
+
+    .light-topbar {
+      min-height: 70px;
+      display: grid;
+      grid-template-columns: minmax(250px, 1fr) auto minmax(250px, 1fr);
+      align-items: center;
+      gap: 18px;
+      padding: 11px 13px;
+      border: 1px solid rgba(205,216,227,.95);
+      border-radius: 20px;
+      background: rgba(255,255,255,.94);
+      box-shadow: 0 12px 35px rgba(30,50,76,.08), inset 0 1px 0 #fff;
+    }
+
+    .light-brand {
+      display: flex;
+      align-items: center;
+      min-width: 0;
+      gap: 12px;
+    }
+
+    .light-brand-logo {
+      position: relative;
+      width: 48px;
+      height: 48px;
+      flex: 0 0 48px;
+      padding: 4px;
+      border-radius: 14px;
+      background: #fff;
+      border: 1px solid #e1e8ef;
+      box-shadow: 0 8px 18px rgba(20,43,70,.13);
+    }
+
+    .light-brand-logo::after {
+      content: "";
+      position: absolute;
+      right: -3px;
+      bottom: -3px;
+      width: 13px;
+      height: 13px;
+      border-radius: 999px;
+      background: var(--lh-red);
+      border: 3px solid #fff;
+    }
+
+    .light-brand-logo img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      border-radius: 10px;
+      object-fit: cover;
+    }
+
+    .light-brand-copy { min-width: 0; }
+    .light-brand-copy strong {
+      display: block;
+      color: var(--lh-navy);
+      font-size: 21px;
+      line-height: 1;
+      letter-spacing: -.035em;
+      font-weight: 950;
+      white-space: nowrap;
+    }
+    .light-brand-copy small {
+      display: block;
+      margin-top: 5px;
+      color: #738399;
+      font-size: 10px;
+      line-height: 1;
+      font-weight: 850;
+      letter-spacing: .11em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .light-system-pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 38px;
+      padding: 8px 15px;
+      border: 1px solid #dce8df;
+      border-radius: 999px;
+      color: #176640;
+      background: #f2faf5;
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: .055em;
+      text-transform: uppercase;
+    }
+
+    .light-live-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: #28a66a;
+      box-shadow: 0 0 0 4px rgba(40,166,106,.12);
+      flex: 0 0 8px;
+    }
+
+    .light-session {
+      justify-self: end;
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      min-width: 0;
+      padding: 7px 8px 7px 13px;
+      border-radius: 15px;
+      background: #f6f8fb;
+      border: 1px solid #e3e9f0;
+    }
+
+    .light-session-copy { min-width: 0; text-align: right; }
+    .light-session-copy span {
+      display: block;
+      color: #8591a1;
+      font-size: 8px;
+      line-height: 1;
+      font-weight: 900;
+      letter-spacing: .11em;
+      text-transform: uppercase;
+    }
+    .light-session #shellEngineerName {
+      display: block;
+      max-width: 165px;
+      margin-top: 5px;
+      overflow: hidden;
+      color: var(--lh-navy);
+      font-size: 12px;
+      line-height: 1;
+      font-weight: 950;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .light-session-avatar {
+      width: 38px;
+      height: 38px;
+      flex: 0 0 38px;
+      display: grid;
+      place-items: center;
+      border-radius: 12px;
+      color: #fff;
+      background: linear-gradient(145deg, var(--lh-navy-2), var(--lh-navy));
+      box-shadow: 0 8px 17px rgba(11,29,51,.21);
+      font-size: 11px;
+      font-weight: 950;
+      letter-spacing: -.02em;
+    }
+
+    .light-hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.52fr) minmax(330px, .78fr);
+      gap: 13px;
+    }
+
+    .light-statement,
+    .light-command {
+      position: relative;
+      overflow: hidden;
+      min-height: 186px;
+      border-radius: 24px;
+      box-shadow: 0 13px 38px rgba(29,50,76,.09);
+    }
+
+    .light-statement {
+      padding: 27px 31px 25px 35px;
+      color: #fff;
+      background:
+        linear-gradient(100deg, rgba(255,255,255,.025), transparent 45%),
+        linear-gradient(135deg, #0b1d33 0%, #142e4a 68%, #1f456c 100%);
+      border: 1px solid rgba(11,29,51,.8);
+    }
+
+    .light-statement::before {
+      content: "";
+      position: absolute;
+      inset: 0 auto 0 0;
+      width: 6px;
+      background: linear-gradient(180deg, #e12236, #9f0e1e);
+    }
+
+    .light-statement::after {
+      content: "";
+      position: absolute;
+      width: 230px;
+      height: 230px;
+      right: -85px;
+      top: -100px;
+      border-radius: 50%;
+      border: 42px solid rgba(255,255,255,.035);
+      box-shadow: 0 0 0 32px rgba(255,255,255,.018);
+    }
+
+    .light-kicker {
+      position: relative;
+      z-index: 1;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: #e8eef5;
+      font-size: 9px;
+      line-height: 1;
+      font-weight: 900;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+
+    .light-kicker::before {
+      content: "";
+      width: 22px;
+      height: 2px;
+      border-radius: 999px;
+      background: #e52a3e;
+    }
+
+    .light-statement h1 {
+      position: relative;
+      z-index: 1;
+      max-width: 760px;
+      margin: 15px 0 0;
+      color: #fff !important;
+      font-size: clamp(38px, 4.7vw, 66px) !important;
+      line-height: .94 !important;
+      letter-spacing: -.055em !important;
+      font-weight: 900 !important;
+      text-shadow: none !important;
+    }
+
+    .light-statement h1 span {
+      display: block;
+      margin-top: 6px;
+      color: #ff5b6d;
+    }
+
+    .light-statement p {
+      position: relative;
+      z-index: 1;
+      max-width: 680px;
+      margin: 14px 0 0 !important;
+      color: #c9d5e2 !important;
+      font-size: 14px !important;
+      line-height: 1.48 !important;
+      font-weight: 600 !important;
+      letter-spacing: 0 !important;
+    }
+
+    .light-command {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding: 17px;
+      background: #fff;
+      border: 1px solid #dce4ed;
+    }
+
+    .light-command-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .light-command-title span {
+      display: block;
+      color: #8a97a7;
+      font-size: 8px;
+      font-weight: 900;
+      letter-spacing: .13em;
+      text-transform: uppercase;
+    }
+    .light-command-title strong {
+      display: block;
+      margin-top: 5px;
+      color: var(--lh-navy);
+      font-size: 19px;
+      line-height: 1;
+      font-weight: 950;
+      letter-spacing: -.035em;
+    }
+
+    .light-labs-signature {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 8px 6px 6px;
+      border: 1px solid #e0e7ef;
+      border-radius: 12px;
+      background: #f8fafc;
+    }
+    .light-labs-mark {
+      width: 28px;
+      height: 28px;
+      flex: 0 0 28px;
+      display: grid;
+      place-items: center;
+      border-radius: 9px;
+      color: #fff;
+      background: var(--lh-red);
+      font-size: 9px;
+      font-weight: 950;
+      letter-spacing: -.02em;
+    }
+    .light-labs-copy small,
+    .light-labs-copy strong { display: block; white-space: nowrap; }
+    .light-labs-copy small {
+      color: #929dab;
+      font-size: 7px;
+      line-height: 1;
+      font-weight: 900;
+      letter-spacing: .09em;
+      text-transform: uppercase;
+    }
+    .light-labs-copy strong {
+      margin-top: 4px;
+      color: var(--lh-navy);
+      font-size: 10px;
+      line-height: 1;
+      font-weight: 950;
+    }
+
+    .light-engineer-card {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      padding: 10px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, #f5f8fb, #eef3f7);
+      border: 1px solid #e0e7ee;
+    }
+    .light-engineer-avatar {
+      width: 45px;
+      height: 45px;
+      flex: 0 0 45px;
+      display: grid;
+      place-items: center;
+      border-radius: 14px;
+      color: #fff;
+      background: linear-gradient(145deg, #284f76, var(--lh-navy));
+      box-shadow: 0 8px 17px rgba(11,29,51,.17);
+      font-size: 13px;
+      font-weight: 950;
+    }
+    .light-engineer-copy { min-width: 0; }
+    .light-engineer-copy strong {
+      display: block;
+      overflow: hidden;
+      color: var(--lh-navy);
+      font-size: 15px;
+      line-height: 1.08;
+      font-weight: 950;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .light-engineer-copy small,
+    .light-engineer-copy em {
+      display: block;
+      margin-top: 4px;
+      font-size: 9px;
+      line-height: 1.05;
+      font-style: normal;
+      font-weight: 850;
+    }
+    .light-engineer-copy small { color: var(--lh-green); }
+    .light-engineer-copy em { color: #7e8b9c; }
+
+    .light-capabilities {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 7px;
+      margin-top: auto;
+    }
+    .light-capability {
+      min-width: 0;
+      padding: 8px 7px;
+      border: 1px solid #e3e9ef;
+      border-radius: 12px;
+      background: #fbfcfd;
+    }
+    .light-capability strong,
+    .light-capability small { display: block; }
+    .light-capability strong {
+      color: var(--lh-navy);
+      font-size: 9px;
+      line-height: 1.05;
+      font-weight: 950;
+    }
+    .light-capability small {
+      margin-top: 4px;
+      color: #8a96a5;
+      font-size: 7px;
+      line-height: 1.1;
+      font-weight: 800;
+    }
+
+    .light-workspace {
+      padding: 14px;
+      border: 1px solid #dce4ec;
+      border-radius: 24px;
+      background: rgba(255,255,255,.92);
+      box-shadow: 0 14px 40px rgba(30,50,76,.08);
+    }
+
+    .light-workspace-head {
+      min-height: 39px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 11px;
+      padding: 0 3px;
+    }
+    .light-workspace-title span {
+      display: block;
+      color: var(--lh-red);
+      font-size: 8px;
+      line-height: 1;
+      font-weight: 950;
+      letter-spacing: .13em;
+      text-transform: uppercase;
+    }
+    .light-workspace-title h2 {
+      margin: 5px 0 0;
+      color: var(--lh-navy);
+      font-size: 20px;
+      line-height: 1;
+      font-weight: 950;
+      letter-spacing: -.035em;
+    }
+
+    .light-date-time { text-align: right; }
+    .light-date-time strong {
+      display: block;
+      color: var(--lh-navy);
+      font-size: 17px;
+      line-height: 1;
+      font-weight: 950;
+      letter-spacing: -.025em;
+    }
+    .light-date-time small {
+      display: block;
+      margin-top: 5px;
+      color: #8592a2;
+      font-size: 8px;
+      line-height: 1;
+      font-weight: 850;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+    }
+
+    .fsd-light-home .card-grid {
+      display: grid !important;
+      grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+      gap: 10px !important;
+      width: 100% !important;
+      max-width: none !important;
+      margin: 0 !important;
+      padding: 0 !important;
+    }
+
+    .fsd-light-home .launch-card {
+      --card-accent: var(--lh-navy);
+      position: relative;
+      min-width: 0;
+      min-height: 111px !important;
+      display: grid !important;
+      grid-template-columns: 46px minmax(0, 1fr) 26px;
+      grid-template-rows: auto 1fr;
+      align-items: center !important;
+      gap: 3px 11px !important;
+      overflow: hidden;
+      margin: 0 !important;
+      padding: 13px 12px !important;
+      color: var(--lh-ink) !important;
+      text-align: left !important;
+      border: 1px solid #dfe6ed !important;
+      border-radius: 17px !important;
+      background: #fff !important;
+      box-shadow: 0 7px 18px rgba(31,52,77,.065) !important;
+      cursor: pointer;
+      transform: translateZ(0);
+      transition: transform .16s ease, box-shadow .16s ease, border-color .16s ease !important;
+    }
+
+    .fsd-light-home .launch-card::before {
+      content: "";
+      position: absolute;
+      inset: 0 auto 0 0;
+      width: 3px;
+      background: var(--card-accent);
+    }
+    .fsd-light-home .launch-card::after {
+      content: "";
+      position: absolute;
+      width: 78px;
+      height: 78px;
+      right: -42px;
+      bottom: -45px;
+      border-radius: 50%;
+      background: color-mix(in srgb, var(--card-accent) 8%, transparent);
+      pointer-events: none;
+    }
+
+    .fsd-light-home .launch-card.certs { --card-accent: #b51224; }
+    .fsd-light-home .launch-card.offline { --card-accent: #187d58; }
+    .fsd-light-home .launch-card.callouts { --card-accent: #d5243e; }
+    .fsd-light-home .launch-card.quote { --card-accent: #b66b12; }
+    .fsd-light-home .launch-card.cloud { --card-accent: #7552b8; }
+    .fsd-light-home .launch-card.profile { --card-accent: #0c8fa0; }
+    .fsd-light-home .launch-card.schedule { --card-accent: #1769aa; }
+    .fsd-light-home .launch-card.submitted { --card-accent: #5c6d82; }
+
+    .fsd-light-home .card-art {
+      grid-row: 1 / 3;
+      grid-column: 1;
+      position: relative !important;
+      inset: auto !important;
+      width: 46px !important;
+      height: 46px !important;
+      display: grid !important;
+      place-items: center !important;
+      border-radius: 14px !important;
+      background: color-mix(in srgb, var(--card-accent) 10%, white) !important;
+      border: 1px solid color-mix(in srgb, var(--card-accent) 18%, white) !important;
+      box-shadow: none !important;
+    }
+    .fsd-light-home .card-art::before,
+    .fsd-light-home .card-art::after { display: none !important; }
+    .fsd-light-home .emboss-icon {
+      width: 25px !important;
+      height: 25px !important;
+      fill: none !important;
+      stroke: var(--card-accent) !important;
+      stroke-width: 6 !important;
+      stroke-linecap: round !important;
+      stroke-linejoin: round !important;
+      filter: none !important;
+    }
+
+    .fsd-light-home .card-chip {
+      grid-column: 2;
+      grid-row: 1;
+      justify-self: start;
+      position: static !important;
+      display: inline-flex !important;
+      align-items: center;
+      min-height: 18px;
+      margin: 0 !important;
+      padding: 4px 7px !important;
+      border: 0 !important;
+      border-radius: 999px !important;
+      color: var(--card-accent) !important;
+      background: color-mix(in srgb, var(--card-accent) 9%, white) !important;
+      font-size: 7px !important;
+      line-height: 1 !important;
+      font-weight: 950 !important;
+      letter-spacing: .08em !important;
+      text-transform: uppercase !important;
+      box-shadow: none !important;
+    }
+    .fsd-light-home .card-note { display: none !important; }
+
+    .fsd-light-home .card-copy {
+      grid-column: 2;
+      grid-row: 2;
+      min-width: 0;
+      align-self: start;
+      position: static !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      text-align: left !important;
+    }
+    .fsd-light-home .card-copy strong {
+      display: block !important;
+      margin: 0 !important;
+      overflow: hidden;
+      color: var(--lh-navy) !important;
+      font-size: 14px !important;
+      line-height: 1.08 !important;
+      font-weight: 950 !important;
+      letter-spacing: -.025em !important;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .fsd-light-home .card-copy small {
+      display: -webkit-box !important;
+      margin-top: 5px !important;
+      overflow: hidden;
+      color: #738195 !important;
+      font-size: 9px !important;
+      line-height: 1.3 !important;
+      font-weight: 650 !important;
+      letter-spacing: 0 !important;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+    }
+
+    .light-card-arrow {
+      grid-column: 3;
+      grid-row: 1 / 3;
+      align-self: center;
+      justify-self: end;
+      width: 25px;
+      height: 25px;
+      display: grid;
+      place-items: center;
+      border-radius: 9px;
+      color: #68788b;
+      background: #f3f6f9;
+      border: 1px solid #e3e9ef;
+      font-size: 13px;
+      font-weight: 900;
+      transition: transform .16s ease, color .16s ease, background .16s ease;
+    }
+
+    @media (hover:hover) and (pointer:fine) {
+      .fsd-light-home .launch-card:hover {
+        transform: translateY(-2px) !important;
+        border-color: color-mix(in srgb, var(--card-accent) 36%, #dfe6ed) !important;
+        box-shadow: 0 12px 25px rgba(31,52,77,.105) !important;
+      }
+      .fsd-light-home .launch-card:hover .light-card-arrow {
+        color: #fff;
+        background: var(--card-accent);
+        border-color: var(--card-accent);
+        transform: translateX(2px);
+      }
+    }
+    .fsd-light-home .launch-card:active { transform: scale(.985) !important; }
+    .fsd-light-home .launch-card:focus-visible {
+      outline: 3px solid rgba(23,105,170,.23) !important;
+      outline-offset: 2px !important;
+    }
+
+    .light-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      min-height: 24px;
+      padding: 1px 4px 0;
+      color: #8190a2;
+      font-size: 8px;
+      font-weight: 800;
+      letter-spacing: .035em;
+    }
+    .light-footer strong { color: #4f6075; font-weight: 950; }
+    .light-footer-version { white-space: nowrap; }
+
+    @media (max-width: 1030px) {
+      .light-topbar { grid-template-columns: minmax(0, 1fr) auto; }
+      .light-system-pill { display: none; }
+      .light-hero { grid-template-columns: minmax(0, 1.24fr) minmax(300px, .76fr); }
+      .fsd-light-home .card-grid { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+    }
+
+    @media (max-width: 760px) {
+      .ipad-home.fsd-light-home {
+        padding: calc(10px + var(--safe-top)) calc(10px + var(--safe-right)) calc(10px + var(--safe-bottom)) calc(10px + var(--safe-left)) !important;
+      }
+      .light-home-shell { gap: 10px; }
+      .light-topbar {
+        min-height: 58px;
+        grid-template-columns: minmax(0, 1fr) auto;
+        padding: 8px;
+        border-radius: 17px;
+      }
+      .light-brand-logo { width: 41px; height: 41px; flex-basis: 41px; border-radius: 12px; }
+      .light-brand-copy strong { font-size: 17px; }
+      .light-brand-copy small { display: none; }
+      .light-session { padding-left: 8px; }
+      .light-session-copy span { display: none; }
+      .light-session #shellEngineerName { max-width: 96px; margin-top: 0; }
+      .light-session-avatar { width: 34px; height: 34px; flex-basis: 34px; }
+      .light-hero { grid-template-columns: 1fr; }
+      .light-statement, .light-command { min-height: auto; border-radius: 20px; }
+      .light-statement { padding: 24px 22px 22px 27px; }
+      .light-statement h1 { font-size: clamp(34px, 10vw, 52px) !important; }
+      .light-command { padding: 13px; }
+      .light-workspace { padding: 11px; border-radius: 20px; }
+      .fsd-light-home .card-grid { grid-template-columns: 1fr !important; }
+      .fsd-light-home .launch-card { min-height: 99px !important; }
+      .light-footer { flex-direction: column; align-items: flex-start; gap: 4px; }
+    }
+
+    @media (min-width: 1024px) and (max-height: 760px) {
+      .ipad-home.fsd-light-home {
+        padding-top: calc(10px + var(--safe-top)) !important;
+        padding-bottom: calc(8px + var(--safe-bottom)) !important;
+      }
+      .light-home-shell { gap: 9px; }
+      .light-topbar { min-height: 58px; padding-top: 7px; padding-bottom: 7px; }
+      .light-brand-logo { width: 42px; height: 42px; flex-basis: 42px; }
+      .light-statement, .light-command { min-height: 161px; }
+      .light-statement { padding-top: 22px; padding-bottom: 19px; }
+      .light-statement h1 { font-size: clamp(36px, 4.2vw, 58px) !important; }
+      .light-statement p { margin-top: 10px !important; font-size: 12px !important; }
+      .light-command { padding: 13px; gap: 8px; }
+      .light-engineer-card { padding: 8px; }
+      .light-engineer-avatar { width: 39px; height: 39px; flex-basis: 39px; }
+      .light-capability { padding: 6px; }
+      .light-workspace { padding: 11px; }
+      .light-workspace-head { min-height: 31px; margin-bottom: 8px; }
+      .fsd-light-home .card-grid { gap: 8px !important; }
+      .fsd-light-home .launch-card { min-height: 96px !important; padding: 10px !important; }
+      .fsd-light-home .card-art { width: 41px !important; height: 41px !important; }
+      .fsd-light-home .emboss-icon { width: 22px !important; height: 22px !important; }
+      .fsd-light-home .card-copy strong { font-size: 13px !important; }
+      .fsd-light-home .card-copy small { font-size: 8px !important; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .fsd-light-home .launch-card,
+      .light-card-arrow { transition: none !important; }
+    }
+
+
+  
+/* C93s MINIMAL HOME */
+#home.fsd-minimal-home{--bg:#f5f6f8;--surface:#fff;--text:#111827;--muted:#6b7280;--line:#e5e7eb;--navy:#0f172a;--red:#b91c1c;background:var(--bg)!important;color:var(--text);overflow-y:auto;-webkit-overflow-scrolling:touch}
+#home .minimal-shell{width:min(1120px,calc(100% - 32px));min-height:100%;margin:0 auto;padding:22px 0 18px;box-sizing:border-box;display:flex;flex-direction:column;gap:26px}
+#home .minimal-header{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:18px}
+#home .minimal-brand{display:flex;align-items:center;min-width:0;gap:13px}
+#home .minimal-logo{width:46px;height:46px;border-radius:13px;overflow:hidden;flex:0 0 46px;background:#fff;border:1px solid var(--line);box-shadow:0 3px 12px rgba(15,23,42,.08)}
+#home .minimal-logo img{width:100%;height:100%;object-fit:cover;display:block}
+#home .minimal-brand-copy strong{display:block;color:var(--navy);font-size:20px;line-height:1.05;letter-spacing:-.035em;font-weight:850}
+#home .minimal-brand-copy small{display:block;margin-top:4px;color:var(--muted);font-size:12px;font-weight:650}
+#home .minimal-header-right{display:flex;align-items:center;gap:14px}
+#home .minimal-status{display:inline-flex;align-items:center;gap:7px;color:#374151;font-size:12px;font-weight:750;white-space:nowrap}
+#home .minimal-dot{width:8px;height:8px;border-radius:99px;background:#22c55e;box-shadow:0 0 0 4px rgba(34,197,94,.11)}
+#home .minimal-engineer{display:flex;align-items:center;gap:9px;padding-left:14px;border-left:1px solid var(--line)}
+#home .minimal-engineer-avatar{width:35px;height:35px;border-radius:11px;display:grid;place-items:center;color:#fff;background:var(--navy);font-size:11px;font-weight:850}
+#home .minimal-engineer-copy span,#home .minimal-engineer-copy strong{display:block;line-height:1.1;text-align:left}
+#home .minimal-engineer-copy span{color:var(--muted);font-size:9px;font-weight:750;text-transform:uppercase;letter-spacing:.09em}
+#home .minimal-engineer-copy strong{margin-top:3px;color:var(--navy);font-size:12px;font-weight:800;max-width:145px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#home .minimal-intro{display:flex;align-items:end;justify-content:space-between;gap:24px;padding-top:10px}
+#home .minimal-intro-copy{max-width:610px}
+#home .minimal-kicker{color:var(--red);font-size:11px;font-weight:850;letter-spacing:.12em;text-transform:uppercase}
+#home .minimal-intro h1{margin:10px 0 0;color:var(--navy);font-size:clamp(31px,5vw,50px);line-height:.98;letter-spacing:-.055em;font-weight:850}
+#home .minimal-intro p{margin:13px 0 0;color:var(--muted);font-size:14px;line-height:1.55;max-width:560px}
+#home .minimal-clock{text-align:right;flex:0 0 auto;padding-bottom:4px}
+#home .minimal-clock strong{display:block;color:var(--navy);font-size:24px;line-height:1;letter-spacing:-.04em;font-variant-numeric:tabular-nums}
+#home .minimal-clock small{display:block;margin-top:5px;color:var(--muted);font-size:11px;font-weight:650;white-space:nowrap}
+#home .minimal-divider{height:1px;background:var(--line)}
+#home .minimal-apps-head{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:12px}
+#home .minimal-apps-head h2{margin:0;color:var(--navy);font-size:15px;font-weight:820}
+#home .minimal-apps-head span{color:var(--muted);font-size:11px;font-weight:650}
+#home .minimal-app-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+#home .minimal-app{--tone:#334155;--tone-soft:#f1f5f9;position:relative;appearance:none;width:100%;min-height:154px;padding:17px;border:1px solid var(--line);border-radius:18px;background:var(--surface);color:var(--text);text-align:left;cursor:pointer;display:flex;flex-direction:column;align-items:flex-start;transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease,background .18s ease;box-shadow:0 2px 8px rgba(15,23,42,.035);overflow:hidden}
+#home .minimal-app:before{content:"";position:absolute;inset:0 0 auto 0;height:3px;background:var(--tone);opacity:.82}
+#home .minimal-app:after{content:"";position:absolute;width:104px;height:104px;right:-50px;top:-58px;border-radius:999px;background:var(--tone-soft);opacity:.72;transition:transform .2s ease,opacity .2s ease}
+#home .minimal-app:hover,#home .minimal-app:focus-visible{transform:translateY(-3px);border-color:#cbd5e1;box-shadow:0 15px 34px rgba(15,23,42,.10);background:#fff;outline:none}
+#home .minimal-app:hover:after,#home .minimal-app:focus-visible:after{transform:scale(1.08);opacity:1}
+#home .minimal-app-icon{position:relative;z-index:1;width:44px;height:44px;display:grid;place-items:center;border-radius:13px;background:var(--tone-soft);color:var(--tone);margin-bottom:17px;box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--tone) 14%,transparent)}
+#home .minimal-app-icon svg{width:23px;height:23px;display:block;fill:none;stroke:currentColor;stroke-width:1.85;stroke-linecap:round;stroke-linejoin:round}
+#home .minimal-app strong{position:relative;z-index:1;color:var(--navy);font-size:15px;line-height:1.15;letter-spacing:-.025em;font-weight:820}
+#home .minimal-app small{position:relative;z-index:1;margin-top:6px;color:var(--muted);font-size:11px;line-height:1.42;max-width:90%}
+#home .minimal-app-arrow{position:absolute;right:15px;bottom:14px;color:#9ca3af;font-size:17px;z-index:1;transition:color .18s ease,transform .18s ease}
+#home .minimal-app:hover .minimal-app-arrow,#home .minimal-app:focus-visible .minimal-app-arrow{color:var(--tone);transform:translateX(2px)}
+#home .minimal-app.tone-red{--tone:#b91c1c;--tone-soft:#fef2f2}
+#home .minimal-app.tone-blue{--tone:#1d4ed8;--tone-soft:#eff6ff}
+#home .minimal-app.tone-amber{--tone:#b45309;--tone-soft:#fffbeb}
+#home .minimal-app.tone-violet{--tone:#6d28d9;--tone-soft:#f5f3ff}
+#home .minimal-app.tone-teal{--tone:#0f766e;--tone-soft:#f0fdfa}
+#home .minimal-app.tone-slate{--tone:#475569;--tone-soft:#f8fafc}
+#home .minimal-app.tone-green{--tone:#15803d;--tone-soft:#f0fdf4}
+#home .minimal-app.tone-navy{--tone:#0f172a;--tone-soft:#f1f5f9}
+#home .minimal-footer{margin-top:auto;padding-top:16px;border-top:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:16px;color:var(--muted);font-size:10px;font-weight:600}
+#home .minimal-footer strong,#home .minimal-labs{color:#4b5563;font-weight:760}
+@media(max-width:900px){#home .minimal-shell{width:min(100% - 24px,760px);padding-top:15px;gap:20px}#home .minimal-app-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:620px){#home .minimal-shell{width:min(100% - 18px,560px);gap:17px}#home .minimal-header{grid-template-columns:1fr}#home .minimal-header-right{justify-content:space-between}#home .minimal-intro p{display:none}#home .minimal-app{min-height:142px;padding:14px}#home .minimal-app-icon{width:41px;height:41px;margin-bottom:14px}#home .minimal-app-icon svg{width:21px;height:21px}#home .minimal-footer{align-items:flex-start;flex-direction:column;gap:5px}}
+
+</style>
 
 <script id="fsd-callout-config-v6-3c78d">
 window.FSD_CALLOUT_SHEET_ID = "1-lKMU6LIhW7oiWHskTZcbYFhjQCN6nZoSydLxq5A-Fc";
@@ -1552,106 +2520,29 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
     App shell mark: Jared720 Labs
   -->
 
-  <section id="home" class="screen home ipad-home" aria-label="FSD Certs Home Screen">
-    <div class="ipad-wallpaper" aria-hidden="true"></div>
-
-    <header class="ipad-statusbar">
-      <div class="status-left">← FSD Certs</div>
-      <div class="status-centre">Fire Safety Direct</div>
-      <div class="status-right" id="shellEngineerStatus"><div>●</div><small id="shellEngineerName">Ready</small></div>
-    </header>
-
-    <main class="ipad-home-grid" aria-label="FSD Certs apps">
-      <section class="hero-panel">
-        <div class="hero-kicker">Fire Safety Direct</div>
-        <h1>FSD Certs</h1>
-        <p>Certificates, engineer reports, quotes and scheduling — built for site work on iPad.</p>
-      </section>
-
-      <section class="ops-strip" aria-label="Command centre status strip">
-        <div class="ops-mini-brand">
-          <img src="fsd-certs-logo.png" alt="FSD Certs logo" width="42" height="42" decoding="async">
-          <span>FSD<br>Certs</span>
-        </div>
-        <div class="ops-ready-card">
-          <span>Command centre</span>
-          <strong>Ready for work</strong>
-        </div>
-        <div class="ops-engineer">
-          <div class="ops-engineer-copy">
-            <strong id="commandEngineerName">No engineer</strong>
-            <small id="commandEngineerState">● Online</small>
-            <em id="commandEngineerLevel">★ Ready on this iPad</em>
-          </div>
-          <div class="ops-avatar" id="commandEngineerAvatar">FS</div>
-        </div>
-      </section>
-
-      <section class="card-grid" aria-label="Main apps">
-        <button class="launch-card certs" type="button" onclick="openCerts(event)" aria-label="Open Certificate Portal">
-          <span class="card-chip mini-chip">FSD</span>
-          <span class="card-note">Portal</span>
-          <div class="card-art"><svg class="emboss-icon" viewBox="0 0 96 96" aria-hidden="true"><path d="M29 15h26l19 19v47H29a8 8 0 0 1-8-8V23a8 8 0 0 1 8-8Z"/><path d="M55 15v20h19"/><path d="M33 49h30"/><path d="M33 60h28"/><path d="M33 71h20"/></svg></div>
-          <div class="card-copy"><strong>Certificate Portal</strong><small>Safety &amp; compliance certificates, reports and forms.</small></div>
-        </button>
-
-        <button class="launch-card offline" type="button" onclick="openOfflineDrafts(event)" aria-label="Open Offline Certs and Reports">
-          <span class="card-chip mini-chip">OFF</span>
-          <span class="card-note">Offline</span>
-          <div class="card-art"><svg class="emboss-icon" viewBox="0 0 96 96" aria-hidden="true"><path d="M14 34a10 10 0 0 1 10-10h16l8 9h26a10 10 0 0 1 10 10v25a10 10 0 0 1-10 10H24a10 10 0 0 1-10-10Z"/><path d="M48 42v21"/><path d="M38 55l10 10 10-10"/></svg></div>
-          <div class="card-copy"><strong>Jobs / Drafts</strong><small>One list for cloud-cached and offline drafts, like GoFormz.</small></div>
-        </button>
-
-        <button class="launch-card callouts" type="button" onclick="openCallouts(event)" aria-label="Open Callouts">
-          <span class="card-chip mini-chip">SOS</span>
-          <span class="card-note">Live jobs</span>
-          <div class="card-art"><svg class="emboss-icon" viewBox="0 0 96 96" aria-hidden="true"><path d="M28 72V52a20 20 0 0 1 40 0v20"/><path d="M22 72h52"/><path d="M34 82h28"/><path d="M48 15v-6"/><path d="M23 27l-8-8"/><path d="M73 27l8-8"/></svg></div>
-          <div class="card-copy"><strong>Callouts</strong><small>App view: Open, Taken and Done - Pending Clear until daily clear down.</small></div>
-        </button>
-
-        <button class="launch-card quote" type="button" onclick="openQuickQuote(event)" aria-label="Open Quick Quote">
-          <span class="card-chip mini-chip">£</span>
-          <span class="card-note">QQ</span>
-          <div class="card-art"><svg class="emboss-icon" viewBox="0 0 96 96" aria-hidden="true"><path d="M29 14h28l17 17v48H29a8 8 0 0 1-8-8V22a8 8 0 0 1 8-8Z"/><path d="M57 14v18h17"/><path d="M36 42h24"/><path d="M36 56h24"/><path d="M36 70h17"/><path d="M40 34c8-8 23 1 14 10-4 4-11 4-15 9"/></svg></div>
-          <div class="card-copy"><strong>Quick Quote</strong><small>Fast quotes and pricing while you are on site.</small></div>
-        </button>
-
-        <button class="launch-card cloud" type="button" onclick="openOfflineDrafts(event)" aria-label="Open Jobs and Drafts">
-          <span class="card-chip mini-chip">SYNC</span>
-          <span class="card-note">Sync</span>
-          <div class="card-art"><svg class="emboss-icon" viewBox="0 0 96 96" aria-hidden="true"><path d="M30 72h36a17 17 0 0 0 2-34 23 23 0 0 0-43-7A17 17 0 0 0 30 72Z"/><path d="M48 35v24"/><path d="M37 47l11-11 11 11"/></svg></div>
-          <div class="card-copy"><strong>Jobs / Drafts</strong><small>Unified draft list: offline, synced, needs sync and cloud cached.</small></div>
-        </button>
-
-        <button class="launch-card profile" type="button" onclick="openEngineerProfile(event)" aria-label="Open Engineer Profile">
-          <span class="card-chip mini-chip">ENG</span>
-          <span class="card-note">Engineer</span>
-          <div class="card-art"><svg class="emboss-icon" viewBox="0 0 96 96" aria-hidden="true"><circle cx="48" cy="36" r="13"/><path d="M24 76c7-26 41-26 48 0"/><path d="M66 20h14"/><path d="M73 13v14"/></svg></div>
-          <div class="card-copy"><strong>Engineer Profile</strong><small>Set the default engineer profile for this iPad.</small></div>
-        </button>
-
-        <button class="launch-card schedule" type="button" onclick="openSchedule(event)" aria-label="Open FSD Schedule">
-          <span class="card-chip mini-chip">PLAN</span>
-          <span class="card-note">Today</span>
-          <div class="card-art"><svg class="emboss-icon" viewBox="0 0 96 96" aria-hidden="true"><rect x="17" y="22" width="62" height="58" rx="10"/><path d="M32 12v18"/><path d="M64 12v18"/><path d="M17 39h62"/><path d="M34 55h8"/><path d="M54 55h8"/><path d="M55 72l8 8 17-20"/></svg></div>
-          <div class="card-copy"><strong>Schedule</strong><small>Daily jobs, appointments and engineer planning.</small></div>
-        </button>
-
-        <button class="launch-card submitted" type="button" onclick="openCerts(event)" aria-label="Open Submitted Reports via Certificate Portal">
-          <span class="card-chip mini-chip">LOG</span>
-          <span class="card-note">History</span>
-          <div class="card-art"><svg class="emboss-icon" viewBox="0 0 96 96" aria-hidden="true"><path d="M27 14h34l14 14v54H27a8 8 0 0 1-8-8V22a8 8 0 0 1 8-8Z"/><path d="M61 14v15h14"/><path d="M34 68V50"/><path d="M48 68V38"/><path d="M62 68V56"/><path d="M30 72h38"/></svg></div>
-          <div class="card-copy"><strong>Submitted Reports</strong><small>Open completed paperwork and previously submitted work.</small></div>
-        </button>
-      </section>
-
-      <div class="home-meta">
-        <span class="home-credit">JARED720 LABS</span>
-        <span class="home-version">App Shell C91l · SFA hard reset</span>
-      </div>
-    </main>
+  <section id="home" class="screen home ipad-home fsd-minimal-home" aria-label="FSD Certs Home Screen">
+    <div class="minimal-shell">
+      <header class="minimal-header">
+        <div class="minimal-brand"><div class="minimal-logo"><img src="fsd-certs-logo.png" alt="FSD Certs logo"></div><div class="minimal-brand-copy"><strong>FSD Certs</strong><small>Fire Safety Direct</small></div></div>
+        <div class="minimal-header-right"><div class="minimal-status"><span class="minimal-dot"></span>System ready</div><div class="minimal-engineer" id="shellEngineerStatus"><div class="minimal-engineer-avatar" id="commandEngineerAvatar">FS</div><div class="minimal-engineer-copy"><span>Active engineer</span><strong id="shellEngineerName">Ready</strong><span id="commandEngineerName" style="display:none">No engineer</span><span id="commandEngineerState" style="display:none">Online</span><span id="commandEngineerLevel" style="display:none">Ready</span></div></div></div>
+      </header>
+      <main>
+        <section class="minimal-intro"><div class="minimal-intro-copy"><div class="minimal-kicker">Fire Safety Direct × Jared720 Labs</div><h1>Your work.<br>One place.</h1><p>Certificates, jobs, callouts, quotes and scheduling — clear, fast and ready whenever you are.</p></div><div class="minimal-clock"><strong id="homeClock">--:--</strong><small id="homeDate">Loading date</small></div></section>
+        <div class="minimal-divider"></div>
+        <section><div class="minimal-apps-head"><h2>Applications</h2><span>Choose where to go</span></div><div class="minimal-app-grid">
+          <button class="minimal-app tone-red" type="button" onclick="openCerts(event)"><span class="minimal-app-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3.5h9l3 3V20.5H6z"/><path d="M15 3.5v4h4"/><path d="M9 11h6M9 14.5h6M9 18h4"/></svg></span><strong>Certificate Portal</strong><small>Create certificates and report packs.</small><span class="minimal-app-arrow" aria-hidden="true">→</span></button>
+          <button class="minimal-app tone-blue" type="button" onclick="openOfflineDrafts(event)"><span class="minimal-app-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 6.5h5l1.6 2H20v10.5H4z"/><path d="M8 13h8M8 16h5"/></svg></span><strong>Jobs &amp; Drafts</strong><small>Resume cloud and offline work.</small><span class="minimal-app-arrow" aria-hidden="true">→</span></button>
+          <button class="minimal-app tone-amber" type="button" onclick="openCallouts(event)"><span class="minimal-app-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 3.5h8l4 4v9l-4 4H8l-4-4v-9z"/><path d="M12 7.5v5M12 16.5h.01"/></svg></span><strong>Callouts</strong><small>Manage live and accepted jobs.</small><span class="minimal-app-arrow" aria-hidden="true">→</span></button>
+          <button class="minimal-app tone-violet" type="button" onclick="openQuickQuote(event)"><span class="minimal-app-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 4.5h14v15H5z"/><path d="M8 8h8M8 12h5M8 16h4"/><path d="M16 13.5v4M14.5 15h3"/></svg></span><span class="minimal-app-title-row"><strong>Quick Quote</strong><span class="minimal-ai-chip">AI</span></span><small>Generate a draft estimate or open the full quote.</small><span class="minimal-app-arrow" aria-hidden="true">→</span></button>
+          <button class="minimal-app tone-teal" type="button" onclick="openOfflineDrafts(event)"><span class="minimal-app-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7.5 17.5a4.5 4.5 0 0 1 .9-8.9A6 6 0 0 1 19.5 11a3.5 3.5 0 0 1-1 6.8"/><path d="M12 11v8M8.8 15.8 12 19l3.2-3.2"/></svg></span><strong>Offline Workspace</strong><small>Keep working without a signal.</small><span class="minimal-app-arrow" aria-hidden="true">→</span></button>
+          <button class="minimal-app tone-slate" type="button" onclick="openEngineerProfile(event)"><span class="minimal-app-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.5"/><path d="M5.5 20c.7-4 3-6 6.5-6s5.8 2 6.5 6"/></svg></span><strong>Engineer Profile</strong><small>Set the active engineer identity.</small><span class="minimal-app-arrow" aria-hidden="true">→</span></button>
+          <button class="minimal-app tone-green" type="button" onclick="openSchedule(event)"><span class="minimal-app-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="4" y="5.5" width="16" height="14" rx="2"/><path d="M8 3.5v4M16 3.5v4M4 9.5h16M8 13h3M13 13h3M8 16h3"/></svg></span><strong>Schedule</strong><small>Plan engineers and appointments.</small><span class="minimal-app-arrow" aria-hidden="true">→</span></button>
+          <button class="minimal-app tone-navy" type="button" onclick="openCerts(event)"><span class="minimal-app-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3.5h12v17H6z"/><path d="m9 12 2 2 4-4M9 17h6M9 7h6"/></svg></span><strong>Submitted Reports</strong><small>Review completed paperwork.</small><span class="minimal-app-arrow" aria-hidden="true">→</span></button>
+        </div></section>
+      </main>
+      <footer class="minimal-footer"><span><strong>FSD Certs</strong> · Built for Fire Safety Direct</span><span class="minimal-labs">Designed &amp; engineered by Jared720 Labs · C93t</span></footer>
+    </div>
   </section>
-
   <section id="offlineDrafts" class="screen offline-screen" aria-label="Jobs and Drafts">
     <main class="offline-card">
       <h2 class="offline-title">Jobs / Drafts</h2>
@@ -2027,6 +2918,46 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
     </div>
   </section>
 
+  <section id="aiQuoteModal" class="profile-modal" aria-label="AI Quick Quote" aria-hidden="true">
+    <div class="profile-card ai-quote-card" role="dialog" aria-modal="true" aria-labelledby="aiQuoteHeading">
+      <div class="ai-quote-head">
+        <div class="ai-quote-title-row">
+          <div class="ai-quote-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3L12 3Z"/><path d="M5 3v4M19 17v4M3 5h4M17 19h4"/></svg>
+          </div>
+          <div>
+            <h2 id="aiQuoteHeading">AI Quick Quote</h2>
+            <p>Turn rough site notes into a structured draft estimate.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="ai-quote-body">
+        <label for="aiQuoteInput">Field notes / requirements</label>
+        <textarea id="aiQuoteInput" maxlength="6000" placeholder="Example: Replace three outdated water extinguishers, add one CO2 unit beside the server rack, fit matching signs and allow two hours for installation and handover."></textarea>
+
+        <div class="ai-quote-advice">Draft estimate only. Prices, quantities, scope and compliance must be reviewed before anything is sent to a customer.</div>
+
+        <div id="aiQuoteStatus" class="ai-quote-status" role="status"></div>
+
+        <div id="aiQuoteLoading" class="ai-quote-loading">
+          <div class="spinner" aria-hidden="true"></div>
+          Building and checking the draft estimate…
+        </div>
+
+        <div id="aiQuoteResult" class="ai-quote-result" aria-live="polite"></div>
+
+        <div id="aiQuoteActions" class="ai-quote-actions">
+          <button id="generateAiQuoteBtn" type="button" onclick="generateAIQuote(event)">Generate Estimate</button>
+          <button type="button" class="secondary" onclick="openFullQuickQuote(event)">Open Full Quick Quote</button>
+          <button type="button" class="tertiary" onclick="closeAiQuoteModal(event)">Close</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <iframe id="aiQuoteBridgeFrame" class="ai-bridge-frame" title="Secure AI quote bridge" src="about:blank" aria-hidden="true" tabindex="-1"></iframe>
+
   <section class="screen app-shell" aria-label="FSD Certs App Shell">
     <div class="top-safe-fill"></div>
     <button class="mini-home" type="button" onclick="showHome()">⌂ Menu</button>
@@ -2107,7 +3038,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
 
       const SHELL_VER = 'V6.3c91l';
       const APP_URL = 'https://script.google.com/macros/s/AKfycbzq9FTETNZwUJWHMGnMHECbu3sJ3jy3FFvGYyeaRXtkoK1GHBtqOu-GLBle_WGfoFtI/exec';
-      const SCHEDULE_URL = 'https://docs.google.com/spreadsheets/d/1-lKMU6LIhW7oiWHskTZcbYFhjQCN6nZoSydLxq5A-Fc/edit?gid=720000000#gid=720000000';
+      const SCHEDULE_URL = 'https://infofiresafetydirect-cloud.github.io/fsd-schedule-2026/';
       const CALLOUTS_PAGE = APP_URL + '?page=callouts&shell=ipad';
       const home = document.getElementById('home');
       const frame = document.getElementById('fsdFrame');
@@ -5646,10 +6577,295 @@ function applyOfflineLookupSelection(row) {
         openAppUrlInShell(APP_URL + '?page=drafts');
       };
 
+      var aiQuoteBridgeReady = false;
+      var aiQuoteBridgeStarted = false;
+      var aiQuotePendingRequest = null;
+      var aiQuoteLastResult = null;
+
+      function aiQuoteSetStatus(message, kind) {
+        var el = document.getElementById('aiQuoteStatus');
+        if (!el) return;
+        el.textContent = message || '';
+        el.className = 'ai-quote-status' + (message ? ' show ' + (kind || 'ready') : '');
+      }
+
+      function ensureAiQuoteBridge() {
+        var bridge = document.getElementById('aiQuoteBridgeFrame');
+        if (!bridge || aiQuoteBridgeStarted) return;
+        aiQuoteBridgeStarted = true;
+        bridge.src = APP_URL + '?page=qq&aiBridge=1&shell=ipad&v=' + encodeURIComponent(SHELL_VER) + '&ts=' + Date.now();
+      }
+
+      function postToAiQuoteBridge(message) {
+        var bridge = document.getElementById('aiQuoteBridgeFrame');
+        if (!bridge || !bridge.contentWindow) return false;
+        try {
+          bridge.contentWindow.postMessage(message, '*');
+          return true;
+        } catch (err) {
+          return false;
+        }
+      }
+
+      function requestAiQuoteSetupStatus() {
+        if (!aiQuoteBridgeReady) return;
+        postToAiQuoteBridge({
+          type: 'FSD_AI_QUOTE_STATUS_REQUEST',
+          source: 'fsd-certs-shell',
+          requestId: 'status-' + Date.now()
+        });
+      }
+
       window.openQuickQuote = function openQuickQuote(event) {
         stopTap(event);
+        var modal = document.getElementById('aiQuoteModal');
+        if (!modal) {
+          openAppUrlInShell(APP_URL + '?page=qq');
+          return;
+        }
+        modal.classList.add('active');
+        modal.setAttribute('aria-hidden', 'false');
+        ensureAiQuoteBridge();
+        aiQuoteSetStatus(aiQuoteBridgeReady ? 'Secure AI service connected.' : 'Connecting to the secure AI service…', 'ready');
+        if (aiQuoteBridgeReady) requestAiQuoteSetupStatus();
+        setTimeout(function(){
+          var input = document.getElementById('aiQuoteInput');
+          if (input) input.focus();
+        }, 100);
+      };
+
+      window.closeAiQuoteModal = function closeAiQuoteModal(event) {
+        if (event) stopTap(event);
+        var modal = document.getElementById('aiQuoteModal');
+        if (modal) {
+          modal.classList.remove('active');
+          modal.setAttribute('aria-hidden', 'true');
+        }
+      };
+
+      window.openFullQuickQuote = function openFullQuickQuote(event) {
+        if (event) stopTap(event);
+        window.closeAiQuoteModal();
         openAppUrlInShell(APP_URL + '?page=qq');
       };
+
+      function setAiQuoteBusy(isBusy) {
+        var loading = document.getElementById('aiQuoteLoading');
+        var actions = document.getElementById('aiQuoteActions');
+        var button = document.getElementById('generateAiQuoteBtn');
+        if (loading) loading.style.display = isBusy ? 'block' : 'none';
+        if (actions) actions.style.opacity = isBusy ? '.55' : '1';
+        if (button) button.disabled = !!isBusy;
+      }
+
+      function aiQuoteMoney(value) {
+        var number = Number(value || 0);
+        return new Intl.NumberFormat('en-GB', { style:'currency', currency:'GBP' }).format(number);
+      }
+
+      function aiQuoteMake(tag, className, text) {
+        var el = document.createElement(tag);
+        if (className) el.className = className;
+        if (text !== undefined && text !== null) el.textContent = String(text);
+        return el;
+      }
+
+      function aiQuotePlainText(result) {
+        if (!result || !result.ok) return '';
+        var lines = [result.quoteTitle || 'Draft Quotation', '', result.summary || '', ''];
+        (result.items || []).forEach(function(item){
+          lines.push(String(item.quantity) + ' × ' + item.description + ' @ ' + aiQuoteMoney(item.unitPrice) + ' = ' + aiQuoteMoney(item.lineTotal));
+        });
+        lines.push('', 'Subtotal: ' + aiQuoteMoney(result.subtotal));
+        lines.push('VAT @ ' + result.vatRate + '%: ' + aiQuoteMoney(result.vat));
+        lines.push('Total: ' + aiQuoteMoney(result.total));
+        if (result.assumptions && result.assumptions.length) {
+          lines.push('', 'Assumptions:');
+          result.assumptions.forEach(function(item){ lines.push('- ' + item); });
+        }
+        if (result.exclusions && result.exclusions.length) {
+          lines.push('', 'Exclusions:');
+          result.exclusions.forEach(function(item){ lines.push('- ' + item); });
+        }
+        lines.push('', result.disclaimer || 'Draft estimate only.');
+        return lines.join('\n');
+      }
+
+      window.copyAiQuoteResult = function copyAiQuoteResult(event) {
+        if (event) stopTap(event);
+        var text = aiQuotePlainText(aiQuoteLastResult);
+        if (!text) return;
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(function(){
+            aiQuoteSetStatus('Draft estimate copied.', 'ready');
+          }).catch(function(){
+            aiQuoteSetStatus('Could not copy automatically. Select the result manually.', 'error');
+          });
+        } else {
+          aiQuoteSetStatus('Clipboard access is not available on this device.', 'error');
+        }
+      };
+
+      window.startNewAiQuote = function startNewAiQuote(event) {
+        if (event) stopTap(event);
+        aiQuoteLastResult = null;
+        var result = document.getElementById('aiQuoteResult');
+        var input = document.getElementById('aiQuoteInput');
+        var button = document.getElementById('generateAiQuoteBtn');
+        if (result) { result.innerHTML = ''; result.classList.remove('show'); }
+        if (input) { input.value = ''; input.focus(); }
+        if (button) button.textContent = 'Generate Estimate';
+        aiQuoteSetStatus('Ready for new field notes.', 'ready');
+      };
+
+      function renderAiQuoteResult(result) {
+        var root = document.getElementById('aiQuoteResult');
+        if (!root) return;
+        root.innerHTML = '';
+        root.classList.add('show');
+
+        root.appendChild(aiQuoteMake('h3', '', result.quoteTitle || 'Draft Fire Safety Quotation'));
+        root.appendChild(aiQuoteMake('p', 'ai-quote-summary', result.summary || ''));
+
+        var wrap = aiQuoteMake('div', 'ai-quote-table-wrap');
+        var table = document.createElement('table');
+        var thead = document.createElement('thead');
+        var headRow = document.createElement('tr');
+        [['Description',''],['Qty','num'],['Unit',''],['Unit price','num'],['Total','num']].forEach(function(def){
+          headRow.appendChild(aiQuoteMake('th', def[1], def[0]));
+        });
+        thead.appendChild(headRow);
+        table.appendChild(thead);
+
+        var tbody = document.createElement('tbody');
+        (result.items || []).forEach(function(item){
+          var row = document.createElement('tr');
+          row.appendChild(aiQuoteMake('td', '', item.description));
+          row.appendChild(aiQuoteMake('td', 'num', item.quantity));
+          row.appendChild(aiQuoteMake('td', '', item.unit));
+          row.appendChild(aiQuoteMake('td', 'num', aiQuoteMoney(item.unitPrice)));
+          row.appendChild(aiQuoteMake('td', 'num', aiQuoteMoney(item.lineTotal)));
+          tbody.appendChild(row);
+        });
+        table.appendChild(tbody);
+        wrap.appendChild(table);
+        root.appendChild(wrap);
+
+        var totals = aiQuoteMake('div', 'ai-quote-totals');
+        [['Subtotal', result.subtotal, ''], ['VAT @ ' + result.vatRate + '%', result.vat, ''], ['Total', result.total, 'grand']].forEach(function(rowData){
+          var row = aiQuoteMake('div', 'ai-quote-total-row ' + rowData[2]);
+          row.appendChild(aiQuoteMake('span', '', rowData[0]));
+          row.appendChild(aiQuoteMake('strong', '', aiQuoteMoney(rowData[1])));
+          totals.appendChild(row);
+        });
+        root.appendChild(totals);
+
+        var lists = aiQuoteMake('div', 'ai-quote-lists');
+        [['Assumptions', result.assumptions || []], ['Exclusions', result.exclusions || []]].forEach(function(def){
+          var box = aiQuoteMake('div', 'ai-quote-list');
+          box.appendChild(aiQuoteMake('h4', '', def[0]));
+          var ul = document.createElement('ul');
+          if (!def[1].length) def[1] = ['None stated.'];
+          def[1].forEach(function(item){ ul.appendChild(aiQuoteMake('li', '', item)); });
+          box.appendChild(ul);
+          lists.appendChild(box);
+        });
+        root.appendChild(lists);
+
+        if (result.customerNotes) {
+          var noteBox = aiQuoteMake('div', 'ai-quote-list');
+          noteBox.style.marginTop = '12px';
+          noteBox.appendChild(aiQuoteMake('h4', '', 'Customer note'));
+          noteBox.appendChild(aiQuoteMake('div', 'ai-quote-summary', result.customerNotes));
+          root.appendChild(noteBox);
+        }
+
+        root.appendChild(aiQuoteMake('div', 'ai-quote-disclaimer', result.disclaimer || 'AI-generated draft estimate only. Review before issuing.'));
+
+        var resultActions = aiQuoteMake('div', 'ai-quote-result-actions');
+        var copy = aiQuoteMake('button', 'copy', 'Copy Estimate');
+        copy.type = 'button';
+        copy.onclick = window.copyAiQuoteResult;
+        var full = aiQuoteMake('button', '', 'Open Full Quick Quote');
+        full.type = 'button';
+        full.onclick = window.openFullQuickQuote;
+        var fresh = aiQuoteMake('button', 'new', 'New Estimate');
+        fresh.type = 'button';
+        fresh.onclick = window.startNewAiQuote;
+        resultActions.appendChild(copy);
+        resultActions.appendChild(full);
+        resultActions.appendChild(fresh);
+        root.appendChild(resultActions);
+      }
+
+      window.generateAIQuote = function generateAIQuote(event) {
+        if (event) stopTap(event);
+        var input = document.getElementById('aiQuoteInput');
+        var notes = String(input && input.value || '').trim();
+        if (notes.length < 8) {
+          aiQuoteSetStatus('Please add a little more detail about the work required.', 'error');
+          if (input) input.focus();
+          return;
+        }
+
+        var request = {
+          type: 'FSD_AI_QUOTE_REQUEST',
+          source: 'fsd-certs-shell',
+          requestId: 'quote-' + Date.now() + '-' + Math.random().toString(36).slice(2,8),
+          notes: notes,
+          context: { engineer: getDefaultEngineerProfile ? getDefaultEngineerProfile() : '' }
+        };
+        aiQuotePendingRequest = request;
+        setAiQuoteBusy(true);
+        aiQuoteSetStatus(aiQuoteBridgeReady ? 'Secure request sent.' : 'Connecting to the secure AI service…', 'ready');
+        ensureAiQuoteBridge();
+        if (aiQuoteBridgeReady) postToAiQuoteBridge(request);
+      };
+
+      function handleAiQuoteBridgeMessage(event) {
+        var bridge = document.getElementById('aiQuoteBridgeFrame');
+        var msg = event && event.data ? event.data : null;
+        if (!bridge || event.source !== bridge.contentWindow || !msg || msg.source !== 'fsd-ai-quote-bridge') return;
+
+        if (msg.type === 'FSD_AI_QUOTE_BRIDGE_READY') {
+          aiQuoteBridgeReady = true;
+          aiQuoteSetStatus('Secure AI service connected.', 'ready');
+          requestAiQuoteSetupStatus();
+          if (aiQuotePendingRequest) {
+            var pending = aiQuotePendingRequest;
+            aiQuotePendingRequest = null;
+            postToAiQuoteBridge(pending);
+          }
+          return;
+        }
+
+        if (msg.type === 'FSD_AI_QUOTE_STATUS_RESULT') {
+          var status = msg.result || {};
+          if (!status.configured) {
+            aiQuoteSetStatus(status.message || status.error || 'AI service setup is required.', 'error');
+          } else {
+            aiQuoteSetStatus('Secure AI service ready · ' + (status.model || 'Gemini'), 'ready');
+          }
+          return;
+        }
+
+        if (msg.type === 'FSD_AI_QUOTE_RESULT') {
+          setAiQuoteBusy(false);
+          var result = msg.result || {};
+          if (!result.ok) {
+            aiQuoteSetStatus(result.error || 'The draft estimate could not be generated.', 'error');
+            return;
+          }
+          aiQuoteLastResult = result;
+          try { localStorage.setItem('fsdAiQuoteLastResult', JSON.stringify(result)); } catch (e) {}
+          renderAiQuoteResult(result);
+          aiQuoteSetStatus('Draft estimate generated. Review every line before use.', 'ready');
+          var button = document.getElementById('generateAiQuoteBtn');
+          if (button) button.textContent = 'Regenerate Estimate';
+        }
+      }
+
+      window.addEventListener('message', handleAiQuoteBridgeMessage, false);
 
       window.openCerts = function openCerts(event) {
         stopTap(event);
@@ -5883,6 +7099,16 @@ function applyOfflineLookupSelection(row) {
         } catch (err) {}
       }
 
+      document.addEventListener('keydown', function(event){
+        if (event.key === 'Escape') window.closeAiQuoteModal();
+      });
+      var aiQuoteModalEl = document.getElementById('aiQuoteModal');
+      if (aiQuoteModalEl) {
+        aiQuoteModalEl.addEventListener('click', function(event){
+          if (event.target === aiQuoteModalEl) window.closeAiQuoteModal(event);
+        });
+      }
+
       refreshDefaultEngineerProfileUi();
       handleExternalOpenParam();
 
@@ -5909,6 +7135,28 @@ function applyOfflineLookupSelection(row) {
 
     }());
   </script>
-  <div class="fixed-version-badge">App Shell C91l · SFA hard reset</div>
+  <div class="fixed-version-badge">FSD Certs · Minimal AI Home C93u</div>
+
+
+  <!-- C93p Premium Home clock -->
+  <script>
+  (function(){
+    function updatePremiumHomeClock(){
+      var clock = document.getElementById('homeClock');
+      var date = document.getElementById('homeDate');
+      if (!clock && !date) return;
+      var now = new Date();
+      try {
+        if (clock) clock.textContent = now.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false });
+        if (date) date.textContent = now.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' });
+      } catch(e) {
+        if (clock) clock.textContent = String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0');
+      }
+    }
+    updatePremiumHomeClock();
+    setInterval(updatePremiumHomeClock, 30000);
+  })();
+  </script>
+
 </body>
 </html>
