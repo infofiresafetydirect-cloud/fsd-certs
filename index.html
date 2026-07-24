@@ -968,143 +968,6 @@
       font-weight: 850;
     }
 
-
-    /* C93u - Secure AI Quick Quote */
-    .minimal-app-title-row { display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
-    .minimal-ai-chip {
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      min-width:27px;
-      height:19px;
-      padding:0 7px;
-      border-radius:999px;
-      color:#7c2d12;
-      background:#ffedd5;
-      border:1px solid #fdba74;
-      font-size:9px;
-      font-weight:950;
-      letter-spacing:.08em;
-      line-height:1;
-    }
-    .ai-quote-card {
-      width:min(760px, 95vw);
-      max-height:92vh;
-      overflow:hidden;
-      display:flex;
-      flex-direction:column;
-      padding:0;
-      border-radius:24px;
-    }
-    .ai-quote-head {
-      padding:20px 20px 15px;
-      border-bottom:1px solid #e5e7eb;
-      background:linear-gradient(180deg,#fff,#fffaf5);
-    }
-    .ai-quote-title-row { display:flex; align-items:center; gap:12px; }
-    .ai-quote-icon {
-      width:42px;
-      height:42px;
-      border-radius:14px;
-      display:grid;
-      place-items:center;
-      flex:0 0 42px;
-      color:#9a3412;
-      background:#ffedd5;
-      border:1px solid #fdba74;
-    }
-    .ai-quote-icon svg { width:23px; height:23px; }
-    .ai-quote-head h2 { margin:0; color:#0f172a; font-size:24px; }
-    .ai-quote-head p { margin:7px 0 0; font-size:13px; font-weight:650; }
-    .ai-quote-body { padding:18px 20px 20px; overflow-y:auto; -webkit-overflow-scrolling:touch; }
-    .ai-quote-body textarea {
-      width:100%;
-      box-sizing:border-box;
-      min-height:124px;
-      padding:14px;
-      border-radius:15px;
-      border:1px solid #cbd5e1;
-      background:#f8fafc;
-      color:#0f172a;
-      font:inherit;
-      font-size:15px;
-      line-height:1.45;
-      resize:vertical;
-    }
-    .ai-quote-body textarea:focus { outline:3px solid rgba(249,115,22,.16); border-color:#f97316; }
-    .ai-quote-advice {
-      margin-top:10px;
-      padding:10px 12px;
-      border-radius:12px;
-      background:#fff7ed;
-      border:1px solid #fed7aa;
-      color:#7c2d12;
-      font-size:11px;
-      line-height:1.4;
-      font-weight:700;
-    }
-    .ai-quote-actions {
-      display:grid;
-      grid-template-columns:1.25fr 1fr 1fr;
-      gap:9px;
-      margin-top:14px;
-    }
-    .ai-quote-actions button {
-      min-height:47px;
-      border:0;
-      border-radius:13px;
-      padding:10px 12px;
-      cursor:pointer;
-      color:#fff;
-      background:#ea580c;
-      font-weight:900;
-      font-size:13px;
-    }
-    .ai-quote-actions button.secondary { background:#0f172a; }
-    .ai-quote-actions button.tertiary { background:#64748b; }
-    .ai-quote-actions button:disabled { opacity:.55; cursor:not-allowed; }
-    .ai-quote-loading { display:none; text-align:center; padding:25px 12px; color:#475569; font-weight:800; }
-    .ai-quote-loading .spinner { margin:0 auto 13px; border-top-color:#ea580c; width:38px; height:38px; border-width:5px; }
-    .ai-quote-status {
-      display:none;
-      margin-top:13px;
-      padding:11px 12px;
-      border-radius:12px;
-      font-size:12px;
-      line-height:1.4;
-      font-weight:800;
-    }
-    .ai-quote-status.show { display:block; }
-    .ai-quote-status.error { background:#fef2f2; border:1px solid #fecaca; color:#991b1b; }
-    .ai-quote-status.ready { background:#ecfdf5; border:1px solid #a7f3d0; color:#166534; }
-    .ai-quote-result { display:none; margin-top:15px; }
-    .ai-quote-result.show { display:block; }
-    .ai-quote-result h3 { margin:0; color:#0f172a; font-size:20px; letter-spacing:-.02em; }
-    .ai-quote-summary { margin:7px 0 13px; color:#475569; font-size:13px; line-height:1.5; font-weight:650; }
-    .ai-quote-table-wrap { overflow-x:auto; border:1px solid #e2e8f0; border-radius:14px; }
-    .ai-quote-result table { width:100%; border-collapse:collapse; min-width:610px; }
-    .ai-quote-result th { background:#f8fafc; padding:10px; text-align:left; border-bottom:1px solid #cbd5e1; color:#334155; font-size:11px; text-transform:uppercase; letter-spacing:.04em; }
-    .ai-quote-result td { padding:10px; border-bottom:1px solid #e2e8f0; color:#334155; font-size:13px; vertical-align:top; }
-    .ai-quote-result td.num, .ai-quote-result th.num { text-align:right; white-space:nowrap; }
-    .ai-quote-totals { margin:12px 0 0 auto; width:min(330px,100%); display:grid; gap:5px; }
-    .ai-quote-total-row { display:flex; justify-content:space-between; gap:14px; padding:7px 9px; border-radius:9px; background:#f8fafc; color:#334155; font-size:13px; font-weight:750; }
-    .ai-quote-total-row.grand { color:#fff; background:#0f172a; font-size:15px; }
-    .ai-quote-lists { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:14px; }
-    .ai-quote-list { padding:12px; border:1px solid #e2e8f0; border-radius:13px; background:#fff; }
-    .ai-quote-list h4 { margin:0 0 7px; color:#0f172a; font-size:13px; }
-    .ai-quote-list ul { margin:0; padding-left:18px; color:#475569; font-size:12px; line-height:1.45; }
-    .ai-quote-disclaimer { margin-top:12px; padding:10px 12px; border-radius:11px; background:#fff7ed; color:#7c2d12; border:1px solid #fed7aa; font-size:10px; line-height:1.4; font-weight:750; }
-    .ai-quote-result-actions { display:flex; flex-wrap:wrap; gap:8px; margin-top:12px; }
-    .ai-quote-result-actions button { min-height:42px; border:0; border-radius:11px; padding:9px 12px; color:#fff; background:#0f172a; font-weight:850; cursor:pointer; }
-    .ai-quote-result-actions button.copy { background:#15803d; }
-    .ai-quote-result-actions button.new { background:#ea580c; }
-    .ai-bridge-frame { position:fixed; left:-10000px; top:-10000px; width:2px; height:2px; opacity:0; pointer-events:none; border:0; }
-    @media (max-width:720px) {
-      .ai-quote-actions { grid-template-columns:1fr; }
-      .ai-quote-lists { grid-template-columns:1fr; }
-      .ai-quote-card { max-height:94vh; }
-    }
-
     .offline-lookup-card { width: min(780px, 96vw); max-height: 92vh; overflow: hidden; display: flex; flex-direction: column; }
     .offline-lookup-results { margin-top: 12px; overflow: auto; display: grid; gap: 9px; max-height: min(48vh, 430px); padding-right: 2px; }
     .offline-lookup-result { text-align: left; border: 1px solid #e5e7eb; background: #ffffff; color: #111827; border-radius: 16px; padding: 12px; cursor: pointer; box-shadow: 0 8px 22px rgba(15,23,42,.08); }
@@ -2533,14 +2396,14 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
           <button class="minimal-app tone-red" type="button" onclick="openCerts(event)"><span class="minimal-app-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3.5h9l3 3V20.5H6z"/><path d="M15 3.5v4h4"/><path d="M9 11h6M9 14.5h6M9 18h4"/></svg></span><strong>Certificate Portal</strong><small>Create certificates and report packs.</small><span class="minimal-app-arrow" aria-hidden="true">→</span></button>
           <button class="minimal-app tone-blue" type="button" onclick="openOfflineDrafts(event)"><span class="minimal-app-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 6.5h5l1.6 2H20v10.5H4z"/><path d="M8 13h8M8 16h5"/></svg></span><strong>Jobs &amp; Drafts</strong><small>Resume cloud and offline work.</small><span class="minimal-app-arrow" aria-hidden="true">→</span></button>
           <button class="minimal-app tone-amber" type="button" onclick="openCallouts(event)"><span class="minimal-app-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 3.5h8l4 4v9l-4 4H8l-4-4v-9z"/><path d="M12 7.5v5M12 16.5h.01"/></svg></span><strong>Callouts</strong><small>Manage live and accepted jobs.</small><span class="minimal-app-arrow" aria-hidden="true">→</span></button>
-          <button class="minimal-app tone-violet" type="button" onclick="openQuickQuote(event)"><span class="minimal-app-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 4.5h14v15H5z"/><path d="M8 8h8M8 12h5M8 16h4"/><path d="M16 13.5v4M14.5 15h3"/></svg></span><span class="minimal-app-title-row"><strong>Quick Quote</strong><span class="minimal-ai-chip">AI</span></span><small>Generate a draft estimate or open the full quote.</small><span class="minimal-app-arrow" aria-hidden="true">→</span></button>
+          <button class="minimal-app tone-violet" type="button" onclick="openQuickQuote(event)"><span class="minimal-app-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 4.5h14v15H5z"/><path d="M8 8h8M8 12h5M8 16h4"/><path d="M16 13.5v4M14.5 15h3"/></svg></span><strong>Quick Quote</strong><small>Create and manage a professional site quote.</small><span class="minimal-app-arrow" aria-hidden="true">→</span></button>
           <button class="minimal-app tone-teal" type="button" onclick="openOfflineDrafts(event)"><span class="minimal-app-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7.5 17.5a4.5 4.5 0 0 1 .9-8.9A6 6 0 0 1 19.5 11a3.5 3.5 0 0 1-1 6.8"/><path d="M12 11v8M8.8 15.8 12 19l3.2-3.2"/></svg></span><strong>Offline Workspace</strong><small>Keep working without a signal.</small><span class="minimal-app-arrow" aria-hidden="true">→</span></button>
           <button class="minimal-app tone-slate" type="button" onclick="openEngineerProfile(event)"><span class="minimal-app-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.5"/><path d="M5.5 20c.7-4 3-6 6.5-6s5.8 2 6.5 6"/></svg></span><strong>Engineer Profile</strong><small>Set the active engineer identity.</small><span class="minimal-app-arrow" aria-hidden="true">→</span></button>
           <button class="minimal-app tone-green" type="button" onclick="openSchedule(event)"><span class="minimal-app-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="4" y="5.5" width="16" height="14" rx="2"/><path d="M8 3.5v4M16 3.5v4M4 9.5h16M8 13h3M13 13h3M8 16h3"/></svg></span><strong>Schedule</strong><small>Plan engineers and appointments.</small><span class="minimal-app-arrow" aria-hidden="true">→</span></button>
           <button class="minimal-app tone-navy" type="button" onclick="openCerts(event)"><span class="minimal-app-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3.5h12v17H6z"/><path d="m9 12 2 2 4-4M9 17h6M9 7h6"/></svg></span><strong>Submitted Reports</strong><small>Review completed paperwork.</small><span class="minimal-app-arrow" aria-hidden="true">→</span></button>
         </div></section>
       </main>
-      <footer class="minimal-footer"><span><strong>FSD Certs</strong> · Built for Fire Safety Direct</span><span class="minimal-labs">Designed &amp; engineered by Jared720 Labs · C93t</span></footer>
+      <footer class="minimal-footer"><span><strong>FSD Certs</strong> · Built for Fire Safety Direct</span><span class="minimal-labs">Designed &amp; engineered by Jared720 Labs · C93u2</span></footer>
     </div>
   </section>
   <section id="offlineDrafts" class="screen offline-screen" aria-label="Jobs and Drafts">
@@ -2917,47 +2780,6 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
       </div>
     </div>
   </section>
-
-  <section id="aiQuoteModal" class="profile-modal" aria-label="AI Quick Quote" aria-hidden="true">
-    <div class="profile-card ai-quote-card" role="dialog" aria-modal="true" aria-labelledby="aiQuoteHeading">
-      <div class="ai-quote-head">
-        <div class="ai-quote-title-row">
-          <div class="ai-quote-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3L12 3Z"/><path d="M5 3v4M19 17v4M3 5h4M17 19h4"/></svg>
-          </div>
-          <div>
-            <h2 id="aiQuoteHeading">AI Quick Quote</h2>
-            <p>Turn rough site notes into a structured draft estimate.</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="ai-quote-body">
-        <label for="aiQuoteInput">Field notes / requirements</label>
-        <textarea id="aiQuoteInput" maxlength="6000" placeholder="Example: Replace three outdated water extinguishers, add one CO2 unit beside the server rack, fit matching signs and allow two hours for installation and handover."></textarea>
-
-        <div class="ai-quote-advice">Draft estimate only. Prices, quantities, scope and compliance must be reviewed before anything is sent to a customer.</div>
-
-        <div id="aiQuoteStatus" class="ai-quote-status" role="status"></div>
-
-        <div id="aiQuoteLoading" class="ai-quote-loading">
-          <div class="spinner" aria-hidden="true"></div>
-          Building and checking the draft estimate…
-        </div>
-
-        <div id="aiQuoteResult" class="ai-quote-result" aria-live="polite"></div>
-
-        <div id="aiQuoteActions" class="ai-quote-actions">
-          <button id="generateAiQuoteBtn" type="button" onclick="generateAIQuote(event)">Generate Estimate</button>
-          <button type="button" class="secondary" onclick="openFullQuickQuote(event)">Open Full Quick Quote</button>
-          <button type="button" class="tertiary" onclick="closeAiQuoteModal(event)">Close</button>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <iframe id="aiQuoteBridgeFrame" class="ai-bridge-frame" title="Secure AI quote bridge" src="about:blank" aria-hidden="true" tabindex="-1"></iframe>
-
   <section class="screen app-shell" aria-label="FSD Certs App Shell">
     <div class="top-safe-fill"></div>
     <button class="mini-home" type="button" onclick="showHome()">⌂ Menu</button>
@@ -3580,19 +3402,6 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
         event.preventDefault();
         event.stopPropagation();
       }
-
-
-      function goDirect(url) {
-        // iPad home-screen apps handle button-driven navigation more reliably
-        // than normal anchor tags. This keeps Schedule/Callouts behaving like
-        // the Certificate Portal button instead of doing nothing on some iPads.
-        try {
-          window.location.assign(url);
-        } catch (err) {
-          window.location.href = url;
-        }
-      }
-
 
       function setOfflineStatus(message) {
         if (offlineStatus) offlineStatus.textContent = message || '';
@@ -6572,300 +6381,38 @@ function applyOfflineLookupSelection(row) {
       }
 
 
+      function openExternalAppInShell(url, allowedBaseUrl) {
+        var targetUrl = String(url || '').trim();
+        var allowedBase = String(allowedBaseUrl || '').trim();
+        if (!targetUrl || !allowedBase || targetUrl.indexOf(allowedBase) !== 0) return;
+
+        targetUrl += (targetUrl.indexOf('?') === -1 ? '?' : '&') +
+          'embedded=fsd-certs&v=' + encodeURIComponent(SHELL_VER) + '&ts=' + Date.now();
+
+        pendingShellAction = null;
+        clearTimeout(shellActionTimer);
+        home.classList.add('hidden');
+        offlineDrafts.classList.remove('active');
+        if (offlineEditor) offlineEditor.classList.remove('active');
+        fallback.classList.add('hidden');
+        loader.classList.remove('hidden');
+        loaded = false;
+        try { frame.name = 'fsdScheduleFrame'; } catch (err) {}
+        frame.src = targetUrl;
+        hasStarted = true;
+        startFallbackTimer();
+      }
+
+
       window.openCloudDrafts = function openCloudDrafts(event) {
         stopTap(event);
         openAppUrlInShell(APP_URL + '?page=drafts');
       };
 
-      var aiQuoteBridgeReady = false;
-      var aiQuoteBridgeStarted = false;
-      var aiQuotePendingRequest = null;
-      var aiQuoteLastResult = null;
-
-      function aiQuoteSetStatus(message, kind) {
-        var el = document.getElementById('aiQuoteStatus');
-        if (!el) return;
-        el.textContent = message || '';
-        el.className = 'ai-quote-status' + (message ? ' show ' + (kind || 'ready') : '');
-      }
-
-      function ensureAiQuoteBridge() {
-        var bridge = document.getElementById('aiQuoteBridgeFrame');
-        if (!bridge || aiQuoteBridgeStarted) return;
-        aiQuoteBridgeStarted = true;
-        bridge.src = APP_URL + '?page=qq&aiBridge=1&shell=ipad&v=' + encodeURIComponent(SHELL_VER) + '&ts=' + Date.now();
-      }
-
-      function postToAiQuoteBridge(message) {
-        var bridge = document.getElementById('aiQuoteBridgeFrame');
-        if (!bridge || !bridge.contentWindow) return false;
-        try {
-          bridge.contentWindow.postMessage(message, '*');
-          return true;
-        } catch (err) {
-          return false;
-        }
-      }
-
-      function requestAiQuoteSetupStatus() {
-        if (!aiQuoteBridgeReady) return;
-        postToAiQuoteBridge({
-          type: 'FSD_AI_QUOTE_STATUS_REQUEST',
-          source: 'fsd-certs-shell',
-          requestId: 'status-' + Date.now()
-        });
-      }
-
       window.openQuickQuote = function openQuickQuote(event) {
         stopTap(event);
-        var modal = document.getElementById('aiQuoteModal');
-        if (!modal) {
-          openAppUrlInShell(APP_URL + '?page=qq');
-          return;
-        }
-        modal.classList.add('active');
-        modal.setAttribute('aria-hidden', 'false');
-        ensureAiQuoteBridge();
-        aiQuoteSetStatus(aiQuoteBridgeReady ? 'Secure AI service connected.' : 'Connecting to the secure AI service…', 'ready');
-        if (aiQuoteBridgeReady) requestAiQuoteSetupStatus();
-        setTimeout(function(){
-          var input = document.getElementById('aiQuoteInput');
-          if (input) input.focus();
-        }, 100);
-      };
-
-      window.closeAiQuoteModal = function closeAiQuoteModal(event) {
-        if (event) stopTap(event);
-        var modal = document.getElementById('aiQuoteModal');
-        if (modal) {
-          modal.classList.remove('active');
-          modal.setAttribute('aria-hidden', 'true');
-        }
-      };
-
-      window.openFullQuickQuote = function openFullQuickQuote(event) {
-        if (event) stopTap(event);
-        window.closeAiQuoteModal();
         openAppUrlInShell(APP_URL + '?page=qq');
       };
-
-      function setAiQuoteBusy(isBusy) {
-        var loading = document.getElementById('aiQuoteLoading');
-        var actions = document.getElementById('aiQuoteActions');
-        var button = document.getElementById('generateAiQuoteBtn');
-        if (loading) loading.style.display = isBusy ? 'block' : 'none';
-        if (actions) actions.style.opacity = isBusy ? '.55' : '1';
-        if (button) button.disabled = !!isBusy;
-      }
-
-      function aiQuoteMoney(value) {
-        var number = Number(value || 0);
-        return new Intl.NumberFormat('en-GB', { style:'currency', currency:'GBP' }).format(number);
-      }
-
-      function aiQuoteMake(tag, className, text) {
-        var el = document.createElement(tag);
-        if (className) el.className = className;
-        if (text !== undefined && text !== null) el.textContent = String(text);
-        return el;
-      }
-
-      function aiQuotePlainText(result) {
-        if (!result || !result.ok) return '';
-        var lines = [result.quoteTitle || 'Draft Quotation', '', result.summary || '', ''];
-        (result.items || []).forEach(function(item){
-          lines.push(String(item.quantity) + ' × ' + item.description + ' @ ' + aiQuoteMoney(item.unitPrice) + ' = ' + aiQuoteMoney(item.lineTotal));
-        });
-        lines.push('', 'Subtotal: ' + aiQuoteMoney(result.subtotal));
-        lines.push('VAT @ ' + result.vatRate + '%: ' + aiQuoteMoney(result.vat));
-        lines.push('Total: ' + aiQuoteMoney(result.total));
-        if (result.assumptions && result.assumptions.length) {
-          lines.push('', 'Assumptions:');
-          result.assumptions.forEach(function(item){ lines.push('- ' + item); });
-        }
-        if (result.exclusions && result.exclusions.length) {
-          lines.push('', 'Exclusions:');
-          result.exclusions.forEach(function(item){ lines.push('- ' + item); });
-        }
-        lines.push('', result.disclaimer || 'Draft estimate only.');
-        return lines.join('\n');
-      }
-
-      window.copyAiQuoteResult = function copyAiQuoteResult(event) {
-        if (event) stopTap(event);
-        var text = aiQuotePlainText(aiQuoteLastResult);
-        if (!text) return;
-        if (navigator.clipboard && navigator.clipboard.writeText) {
-          navigator.clipboard.writeText(text).then(function(){
-            aiQuoteSetStatus('Draft estimate copied.', 'ready');
-          }).catch(function(){
-            aiQuoteSetStatus('Could not copy automatically. Select the result manually.', 'error');
-          });
-        } else {
-          aiQuoteSetStatus('Clipboard access is not available on this device.', 'error');
-        }
-      };
-
-      window.startNewAiQuote = function startNewAiQuote(event) {
-        if (event) stopTap(event);
-        aiQuoteLastResult = null;
-        var result = document.getElementById('aiQuoteResult');
-        var input = document.getElementById('aiQuoteInput');
-        var button = document.getElementById('generateAiQuoteBtn');
-        if (result) { result.innerHTML = ''; result.classList.remove('show'); }
-        if (input) { input.value = ''; input.focus(); }
-        if (button) button.textContent = 'Generate Estimate';
-        aiQuoteSetStatus('Ready for new field notes.', 'ready');
-      };
-
-      function renderAiQuoteResult(result) {
-        var root = document.getElementById('aiQuoteResult');
-        if (!root) return;
-        root.innerHTML = '';
-        root.classList.add('show');
-
-        root.appendChild(aiQuoteMake('h3', '', result.quoteTitle || 'Draft Fire Safety Quotation'));
-        root.appendChild(aiQuoteMake('p', 'ai-quote-summary', result.summary || ''));
-
-        var wrap = aiQuoteMake('div', 'ai-quote-table-wrap');
-        var table = document.createElement('table');
-        var thead = document.createElement('thead');
-        var headRow = document.createElement('tr');
-        [['Description',''],['Qty','num'],['Unit',''],['Unit price','num'],['Total','num']].forEach(function(def){
-          headRow.appendChild(aiQuoteMake('th', def[1], def[0]));
-        });
-        thead.appendChild(headRow);
-        table.appendChild(thead);
-
-        var tbody = document.createElement('tbody');
-        (result.items || []).forEach(function(item){
-          var row = document.createElement('tr');
-          row.appendChild(aiQuoteMake('td', '', item.description));
-          row.appendChild(aiQuoteMake('td', 'num', item.quantity));
-          row.appendChild(aiQuoteMake('td', '', item.unit));
-          row.appendChild(aiQuoteMake('td', 'num', aiQuoteMoney(item.unitPrice)));
-          row.appendChild(aiQuoteMake('td', 'num', aiQuoteMoney(item.lineTotal)));
-          tbody.appendChild(row);
-        });
-        table.appendChild(tbody);
-        wrap.appendChild(table);
-        root.appendChild(wrap);
-
-        var totals = aiQuoteMake('div', 'ai-quote-totals');
-        [['Subtotal', result.subtotal, ''], ['VAT @ ' + result.vatRate + '%', result.vat, ''], ['Total', result.total, 'grand']].forEach(function(rowData){
-          var row = aiQuoteMake('div', 'ai-quote-total-row ' + rowData[2]);
-          row.appendChild(aiQuoteMake('span', '', rowData[0]));
-          row.appendChild(aiQuoteMake('strong', '', aiQuoteMoney(rowData[1])));
-          totals.appendChild(row);
-        });
-        root.appendChild(totals);
-
-        var lists = aiQuoteMake('div', 'ai-quote-lists');
-        [['Assumptions', result.assumptions || []], ['Exclusions', result.exclusions || []]].forEach(function(def){
-          var box = aiQuoteMake('div', 'ai-quote-list');
-          box.appendChild(aiQuoteMake('h4', '', def[0]));
-          var ul = document.createElement('ul');
-          if (!def[1].length) def[1] = ['None stated.'];
-          def[1].forEach(function(item){ ul.appendChild(aiQuoteMake('li', '', item)); });
-          box.appendChild(ul);
-          lists.appendChild(box);
-        });
-        root.appendChild(lists);
-
-        if (result.customerNotes) {
-          var noteBox = aiQuoteMake('div', 'ai-quote-list');
-          noteBox.style.marginTop = '12px';
-          noteBox.appendChild(aiQuoteMake('h4', '', 'Customer note'));
-          noteBox.appendChild(aiQuoteMake('div', 'ai-quote-summary', result.customerNotes));
-          root.appendChild(noteBox);
-        }
-
-        root.appendChild(aiQuoteMake('div', 'ai-quote-disclaimer', result.disclaimer || 'AI-generated draft estimate only. Review before issuing.'));
-
-        var resultActions = aiQuoteMake('div', 'ai-quote-result-actions');
-        var copy = aiQuoteMake('button', 'copy', 'Copy Estimate');
-        copy.type = 'button';
-        copy.onclick = window.copyAiQuoteResult;
-        var full = aiQuoteMake('button', '', 'Open Full Quick Quote');
-        full.type = 'button';
-        full.onclick = window.openFullQuickQuote;
-        var fresh = aiQuoteMake('button', 'new', 'New Estimate');
-        fresh.type = 'button';
-        fresh.onclick = window.startNewAiQuote;
-        resultActions.appendChild(copy);
-        resultActions.appendChild(full);
-        resultActions.appendChild(fresh);
-        root.appendChild(resultActions);
-      }
-
-      window.generateAIQuote = function generateAIQuote(event) {
-        if (event) stopTap(event);
-        var input = document.getElementById('aiQuoteInput');
-        var notes = String(input && input.value || '').trim();
-        if (notes.length < 8) {
-          aiQuoteSetStatus('Please add a little more detail about the work required.', 'error');
-          if (input) input.focus();
-          return;
-        }
-
-        var request = {
-          type: 'FSD_AI_QUOTE_REQUEST',
-          source: 'fsd-certs-shell',
-          requestId: 'quote-' + Date.now() + '-' + Math.random().toString(36).slice(2,8),
-          notes: notes,
-          context: { engineer: getDefaultEngineerProfile ? getDefaultEngineerProfile() : '' }
-        };
-        aiQuotePendingRequest = request;
-        setAiQuoteBusy(true);
-        aiQuoteSetStatus(aiQuoteBridgeReady ? 'Secure request sent.' : 'Connecting to the secure AI service…', 'ready');
-        ensureAiQuoteBridge();
-        if (aiQuoteBridgeReady) postToAiQuoteBridge(request);
-      };
-
-      function handleAiQuoteBridgeMessage(event) {
-        var bridge = document.getElementById('aiQuoteBridgeFrame');
-        var msg = event && event.data ? event.data : null;
-        if (!bridge || event.source !== bridge.contentWindow || !msg || msg.source !== 'fsd-ai-quote-bridge') return;
-
-        if (msg.type === 'FSD_AI_QUOTE_BRIDGE_READY') {
-          aiQuoteBridgeReady = true;
-          aiQuoteSetStatus('Secure AI service connected.', 'ready');
-          requestAiQuoteSetupStatus();
-          if (aiQuotePendingRequest) {
-            var pending = aiQuotePendingRequest;
-            aiQuotePendingRequest = null;
-            postToAiQuoteBridge(pending);
-          }
-          return;
-        }
-
-        if (msg.type === 'FSD_AI_QUOTE_STATUS_RESULT') {
-          var status = msg.result || {};
-          if (!status.configured) {
-            aiQuoteSetStatus(status.message || status.error || 'AI service setup is required.', 'error');
-          } else {
-            aiQuoteSetStatus('Secure AI service ready · ' + (status.model || 'Gemini'), 'ready');
-          }
-          return;
-        }
-
-        if (msg.type === 'FSD_AI_QUOTE_RESULT') {
-          setAiQuoteBusy(false);
-          var result = msg.result || {};
-          if (!result.ok) {
-            aiQuoteSetStatus(result.error || 'The draft estimate could not be generated.', 'error');
-            return;
-          }
-          aiQuoteLastResult = result;
-          try { localStorage.setItem('fsdAiQuoteLastResult', JSON.stringify(result)); } catch (e) {}
-          renderAiQuoteResult(result);
-          aiQuoteSetStatus('Draft estimate generated. Review every line before use.', 'ready');
-          var button = document.getElementById('generateAiQuoteBtn');
-          if (button) button.textContent = 'Regenerate Estimate';
-        }
-      }
-
-      window.addEventListener('message', handleAiQuoteBridgeMessage, false);
 
       window.openCerts = function openCerts(event) {
         stopTap(event);
@@ -6891,7 +6438,7 @@ function applyOfflineLookupSelection(row) {
 
       window.openSchedule = function openSchedule(event) {
         stopTap(event);
-        goDirect(SCHEDULE_URL);
+        openExternalAppInShell(SCHEDULE_URL, SCHEDULE_URL);
       };
 
       window.openCallouts = function openCallouts(event) {
@@ -7099,16 +6646,6 @@ function applyOfflineLookupSelection(row) {
         } catch (err) {}
       }
 
-      document.addEventListener('keydown', function(event){
-        if (event.key === 'Escape') window.closeAiQuoteModal();
-      });
-      var aiQuoteModalEl = document.getElementById('aiQuoteModal');
-      if (aiQuoteModalEl) {
-        aiQuoteModalEl.addEventListener('click', function(event){
-          if (event.target === aiQuoteModalEl) window.closeAiQuoteModal(event);
-        });
-      }
-
       refreshDefaultEngineerProfileUi();
       handleExternalOpenParam();
 
@@ -7135,7 +6672,7 @@ function applyOfflineLookupSelection(row) {
 
     }());
   </script>
-  <div class="fixed-version-badge">FSD Certs · Minimal AI Home C93u</div>
+  <div class="fixed-version-badge">FSD Certs · Minimal Home C93u2</div>
 
 
   <!-- C93p Premium Home clock -->
