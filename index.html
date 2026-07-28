@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -2424,7 +2424,35 @@
 @media(max-width:900px){#home .minimal-shell{width:min(100% - 24px,760px);padding-top:15px;gap:20px}#home .minimal-app-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:620px){#home .minimal-shell{width:min(100% - 18px,560px);gap:17px}#home .minimal-header{grid-template-columns:1fr}#home .minimal-header-right{justify-content:space-between}#home .minimal-intro p{display:none}#home .minimal-app{min-height:142px;padding:14px}#home .minimal-app-icon{width:41px;height:41px;margin-bottom:14px}#home .minimal-app-icon svg{width:21px;height:21px}#home .minimal-footer{align-items:flex-start;flex-direction:column;gap:5px}}
 
-</style>
+
+
+    /* C94e: older iPad / iOS WebKit instant-touch optimisation */
+    button,
+    a,
+    input,
+    select,
+    textarea,
+    summary,
+    label[for],
+    [role="button"],
+    [onclick],
+    [data-action],
+    .button,
+    .portal-card,
+    .minimal-app,
+    .pickerBtn,
+    .resultCard,
+    .actionLink,
+    .linkButton,
+    .offlineCard,
+    .editor-mini-btn,
+    .launch-card,
+    .tile {
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+  </style>
 
 <script id="fsd-callout-config-v6-3c78d">
 window.FSD_CALLOUT_SHEET_ID = "1-lKMU6LIhW7oiWHskTZcbYFhjQCN6nZoSydLxq5A-Fc";
@@ -2460,14 +2488,14 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
         <section class="minimal-intro"><div class="minimal-intro-copy"><div class="minimal-kicker">Fire Safety Direct × Jared720 Labs</div><h1>Your work.<br>One place.</h1><p>Certificates, jobs, callouts, quotes and scheduling — clear, fast and ready whenever you are.</p></div><div class="minimal-clock"><strong id="homeClock">--:--</strong><small id="homeDate">Loading date</small></div></section>
         <div class="minimal-divider"></div>
         <section><div class="minimal-apps-head"><h2>Applications</h2><span>Choose where to go</span></div><div class="minimal-app-grid">
-          <button class="minimal-app tone-red" type="button" onclick="openCerts(event)"><span class="minimal-app-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3.5h9l3 3V20.5H6z"/><path d="M15 3.5v4h4"/><path d="M9 11h6M9 14.5h6M9 18h4"/></svg></span><strong>Certificate Portal</strong><small>Create certificates and report packs.</small><span class="minimal-app-arrow" aria-hidden="true">→</span></button>
-          <button class="minimal-app tone-blue" type="button" onclick="openOfflineDrafts(event)"><span class="minimal-app-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 6.5h5l1.6 2H20v10.5H4z"/><path d="M8 13h8M8 16h5"/></svg></span><strong>Jobs &amp; Drafts</strong><small>Resume cloud and offline work.</small><span class="minimal-app-arrow" aria-hidden="true">→</span></button>
-          <button class="minimal-app tone-amber" type="button" onclick="openCallouts(event)"><span class="minimal-app-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 3.5h8l4 4v9l-4 4H8l-4-4v-9z"/><path d="M12 7.5v5M12 16.5h.01"/></svg></span><strong>Callouts</strong><small>Manage live and accepted jobs.</small><span class="minimal-app-arrow" aria-hidden="true">→</span></button>
-          <button class="minimal-app tone-violet" type="button" onclick="openQuickQuote(event)"><span class="minimal-app-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 4.5h14v15H5z"/><path d="M8 8h8M8 12h5M8 16h4"/><path d="M16 13.5v4M14.5 15h3"/></svg></span><strong>Quick Quote</strong><small>Create and manage a professional site quote.</small><span class="minimal-app-arrow" aria-hidden="true">→</span></button>
-          <button class="minimal-app tone-teal" type="button" onclick="openOfflineDrafts(event)"><span class="minimal-app-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7.5 17.5a4.5 4.5 0 0 1 .9-8.9A6 6 0 0 1 19.5 11a3.5 3.5 0 0 1-1 6.8"/><path d="M12 11v8M8.8 15.8 12 19l3.2-3.2"/></svg></span><strong>Offline Workspace</strong><small>Keep working without a signal.</small><span class="minimal-app-arrow" aria-hidden="true">→</span></button>
-          <button class="minimal-app tone-slate" type="button" onclick="openEngineerProfile(event)"><span class="minimal-app-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.5"/><path d="M5.5 20c.7-4 3-6 6.5-6s5.8 2 6.5 6"/></svg></span><strong>Engineer Profile</strong><small>Set the active engineer identity.</small><span class="minimal-app-arrow" aria-hidden="true">→</span></button>
-          <button class="minimal-app tone-green" type="button" onclick="openSchedule(event)"><span class="minimal-app-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="4" y="5.5" width="16" height="14" rx="2"/><path d="M8 3.5v4M16 3.5v4M4 9.5h16M8 13h3M13 13h3M8 16h3"/></svg></span><strong>Schedule</strong><small>Plan engineers and appointments.</small><span class="minimal-app-arrow" aria-hidden="true">→</span></button>
-          <button class="minimal-app tone-navy" type="button" onclick="openCerts(event)"><span class="minimal-app-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3.5h12v17H6z"/><path d="m9 12 2 2 4-4M9 17h6M9 7h6"/></svg></span><strong>Submitted Reports</strong><small>Review completed paperwork.</small><span class="minimal-app-arrow" aria-hidden="true">→</span></button>
+          <button data-fsd-fasttap class="minimal-app tone-red" type="button" onclick="openCerts(event)"><span class="minimal-app-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3.5h9l3 3V20.5H6z"/><path d="M15 3.5v4h4"/><path d="M9 11h6M9 14.5h6M9 18h4"/></svg></span><strong>Certificate Portal</strong><small>Create certificates and report packs.</small><span class="minimal-app-arrow" aria-hidden="true">→</span></button>
+          <button data-fsd-fasttap class="minimal-app tone-blue" type="button" onclick="openOfflineDrafts(event)"><span class="minimal-app-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 6.5h5l1.6 2H20v10.5H4z"/><path d="M8 13h8M8 16h5"/></svg></span><strong>Jobs &amp; Drafts</strong><small>Resume cloud and offline work.</small><span class="minimal-app-arrow" aria-hidden="true">→</span></button>
+          <button data-fsd-fasttap class="minimal-app tone-amber" type="button" onclick="openCallouts(event)"><span class="minimal-app-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 3.5h8l4 4v9l-4 4H8l-4-4v-9z"/><path d="M12 7.5v5M12 16.5h.01"/></svg></span><strong>Callouts</strong><small>Manage live and accepted jobs.</small><span class="minimal-app-arrow" aria-hidden="true">→</span></button>
+          <button data-fsd-fasttap class="minimal-app tone-violet" type="button" onclick="openQuickQuote(event)"><span class="minimal-app-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 4.5h14v15H5z"/><path d="M8 8h8M8 12h5M8 16h4"/><path d="M16 13.5v4M14.5 15h3"/></svg></span><strong>Quick Quote</strong><small>Create and manage a professional site quote.</small><span class="minimal-app-arrow" aria-hidden="true">→</span></button>
+          <button data-fsd-fasttap class="minimal-app tone-teal" type="button" onclick="openOfflineDrafts(event)"><span class="minimal-app-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7.5 17.5a4.5 4.5 0 0 1 .9-8.9A6 6 0 0 1 19.5 11a3.5 3.5 0 0 1-1 6.8"/><path d="M12 11v8M8.8 15.8 12 19l3.2-3.2"/></svg></span><strong>Offline Workspace</strong><small>Keep working without a signal.</small><span class="minimal-app-arrow" aria-hidden="true">→</span></button>
+          <button data-fsd-fasttap class="minimal-app tone-slate" type="button" onclick="openEngineerProfile(event)"><span class="minimal-app-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.5"/><path d="M5.5 20c.7-4 3-6 6.5-6s5.8 2 6.5 6"/></svg></span><strong>Engineer Profile</strong><small>Set the active engineer identity.</small><span class="minimal-app-arrow" aria-hidden="true">→</span></button>
+          <button data-fsd-fasttap class="minimal-app tone-green" type="button" onclick="openSchedule(event)"><span class="minimal-app-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="4" y="5.5" width="16" height="14" rx="2"/><path d="M8 3.5v4M16 3.5v4M4 9.5h16M8 13h3M13 13h3M8 16h3"/></svg></span><strong>Schedule</strong><small>Plan engineers and appointments.</small><span class="minimal-app-arrow" aria-hidden="true">→</span></button>
+          <button data-fsd-fasttap class="minimal-app tone-navy" type="button" onclick="openCerts(event)"><span class="minimal-app-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3.5h12v17H6z"/><path d="m9 12 2 2 4-4M9 17h6M9 7h6"/></svg></span><strong>Submitted Reports</strong><small>Review completed paperwork.</small><span class="minimal-app-arrow" aria-hidden="true">→</span></button>
         </div></section>
       </main>
       <footer class="minimal-footer"><span><strong>FSD Certs</strong> · Built for Fire Safety Direct</span><span class="minimal-labs">Designed &amp; engineered by Jared720 Labs · C93u3</span></footer>
@@ -2510,7 +2538,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
             <span id="editorDirtyBadge" class="dirty-badge saved">Saved offline</span>
           </div>
         </div>
-        <button class="mini-home" style="position:static;" type="button" onclick="closeOfflineEditor(event)">Back</button>
+        <button data-fsd-fasttap class="mini-home" style="position:static;" type="button" onclick="closeOfflineEditor(event)">Back</button>
       </div>
       <form id="offlineWEditorForm" onsubmit="saveOfflineEditor(event)">
         <div class="editor-grid">
@@ -2849,7 +2877,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
   </section>
   <section class="screen app-shell" aria-label="FSD Certs App Shell">
     <div class="top-safe-fill"></div>
-    <button class="mini-home" type="button" onclick="showHome()">⌂ Menu</button>
+    <button data-fsd-fasttap class="mini-home" type="button" onclick="showHome()">⌂ Menu</button>
     <iframe
       id="fsdFrame"
       title="FSD Certs"
@@ -2864,7 +2892,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
 
   <section id="scheduleShell" class="schedule-shell" aria-label="FSD Schedule 2026" aria-hidden="true">
     <div class="top-safe-fill"></div>
-    <button class="mini-home" type="button" onclick="showHome()">⌂ Menu</button>
+    <button data-fsd-fasttap class="mini-home" type="button" onclick="showHome()">⌂ Menu</button>
     <iframe
       id="scheduleFrame"
       title="FSD Schedule 2026"
@@ -2948,7 +2976,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
     (function () {
       'use strict';
 
-      const SHELL_VER = 'V6.3c93u3';
+      const SHELL_VER = 'V6.3c94e';
       const APP_URL = 'https://script.google.com/macros/s/AKfycbzq9FTETNZwUJWHMGnMHECbu3sJ3jy3FFvGYyeaRXtkoK1GHBtqOu-GLBle_WGfoFtI/exec';
       const SCHEDULE_URL = 'https://infofiresafetydirect-cloud.github.io/fsd-schedule-2026/';
       const CALLOUTS_PAGE = APP_URL + '?page=callouts&shell=ipad';
@@ -3489,6 +3517,53 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
         loader.classList.add('hidden');
         fallback.classList.add('hidden');
       }
+
+
+      let fsdFastTapSynthetic = false;
+      let fsdFastTapSuppressUntil = 0;
+      let fsdFastTapLastTarget = null;
+
+      function installFsdShellFastTap() {
+        if (document.documentElement.__fsdShellFastTapInstalled) return;
+        document.documentElement.__fsdShellFastTapInstalled = true;
+
+        function activateFromTouch(event) {
+          if (!event) return;
+          if (event.type === 'pointerdown') {
+            if (event.isPrimary === false) return;
+            if (event.pointerType && event.pointerType !== 'touch' && event.pointerType !== 'pen') return;
+          } else if (event.touches && event.touches.length !== 1) {
+            return;
+          }
+
+          const target = event.target && event.target.closest
+            ? event.target.closest('[data-fsd-fasttap]')
+            : null;
+          if (!target || target.disabled || target.getAttribute('aria-disabled') === 'true') return;
+
+          if (event.cancelable) event.preventDefault();
+          fsdFastTapLastTarget = target;
+          fsdFastTapSuppressUntil = Date.now() + 850;
+          fsdFastTapSynthetic = true;
+          try { target.click(); } finally { fsdFastTapSynthetic = false; }
+        }
+
+        if (window.PointerEvent) {
+          document.addEventListener('pointerdown', activateFromTouch, { capture: true, passive: false });
+        } else {
+          document.addEventListener('touchstart', activateFromTouch, { capture: true, passive: false });
+        }
+
+        document.addEventListener('click', function(event) {
+          if (fsdFastTapSynthetic || Date.now() > fsdFastTapSuppressUntil) return;
+          const target = fsdFastTapLastTarget;
+          if (!target || !(event.target === target || target.contains(event.target))) return;
+          event.preventDefault();
+          event.stopImmediatePropagation();
+        }, true);
+      }
+
+      installFsdShellFastTap();
 
       function stopTap(event) {
         if (!event) return;
