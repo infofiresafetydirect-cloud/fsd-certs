@@ -238,6 +238,29 @@
     .spinner { width: 34px; height: 34px; border: 4px solid #dbeafe; border-top-color: var(--fsd-blue); border-radius: 999px; margin: 22px auto 0; animation: spin .85s linear infinite; }
     @keyframes spin { to { transform: rotate(360deg); } }
 
+    .draft-flash {
+      position: fixed;
+      top: calc(16px + var(--safe-top));
+      left: 50%;
+      z-index: 90;
+      display: none;
+      width: min(520px, calc(100vw - 32px));
+      transform: translateX(-50%);
+      padding: 14px 18px;
+      border: 1px solid #86efac;
+      border-radius: 16px;
+      background: #166534;
+      color: #ffffff;
+      box-shadow: 0 14px 34px rgba(15,23,42,.24);
+      font-size: 15px;
+      font-weight: 900;
+      line-height: 1.3;
+      text-align: center;
+      pointer-events: none;
+    }
+    .draft-flash.active { display: block; }
+    .draft-flash.error { border-color: #fecaca; background: #991b1b; }
+
     .offline-screen {
       display: none; align-items: center; justify-content: center;
       padding: calc(24px + var(--safe-top)) calc(22px + var(--safe-right)) calc(24px + var(--safe-bottom)) calc(22px + var(--safe-left));
@@ -2543,7 +2566,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
           <button data-fsd-fasttap class="minimal-app tone-navy" type="button" onclick="openCerts(event)"><span class="minimal-app-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3.5h12v17H6z"/><path d="m9 12 2 2 4-4M9 17h6M9 7h6"/></svg></span><strong>Submitted Reports</strong><small>Review completed paperwork.</small><span class="minimal-app-arrow" aria-hidden="true">→</span></button>
         </div></section>
       </main>
-      <footer class="minimal-footer"><span><strong>FSD Certs</strong> · Built for Fire Safety Direct</span><span class="minimal-labs">Designed &amp; engineered by Jared720 Labs · C94f</span></footer>
+      <footer class="minimal-footer"><span><strong>FSD Certs</strong> · Built for Fire Safety Direct</span><span class="minimal-labs">Designed &amp; engineered by Jared720 Labs · C95f</span></footer>
     </div>
   </section>
   <section id="offlineDrafts" class="screen offline-screen" aria-label="Jobs and Drafts">
@@ -2962,11 +2985,13 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
     <div class="panel">
       <img class="logo" src="fsd-certs-logo.png" alt="FSD Certs cloud logo" width="104" height="104" decoding="async">
       <h2>FSD Certs</h2>
-      <p>Loading the certificate system…</p>
+      <p id="loaderMessage">Loading the certificate system…</p>
       <div class="maker-mark">Jared720 Labs</div>
       <div class="spinner" aria-hidden="true"></div>
     </div>
   </div>
+
+  <div id="draftFlash" class="draft-flash" role="status" aria-live="polite"></div>
 
   <div id="fallback" class="fallback hidden">
     <div class="panel">
@@ -3021,7 +3046,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
     (function () {
       'use strict';
 
-      const SHELL_VER = 'V6.3c94f';
+      const SHELL_VER = 'V6.3c95f';
       const APP_URL = 'https://script.google.com/macros/s/AKfycbzq9FTETNZwUJWHMGnMHECbu3sJ3jy3FFvGYyeaRXtkoK1GHBtqOu-GLBle_WGfoFtI/exec';
       const SCHEDULE_URL = 'https://infofiresafetydirect-cloud.github.io/fsd-schedule-2026/';
       const CALLOUTS_PAGE = APP_URL + '?page=callouts&shell=ipad';
@@ -3208,6 +3233,8 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
       };
 
       const loader = document.getElementById('loader');
+      const loaderMessage = document.getElementById('loaderMessage');
+      const draftFlash = document.getElementById('draftFlash');
       const fallback = document.getElementById('fallback');
       const offlineDrafts = document.getElementById('offlineDrafts');
       const offlineList = document.getElementById('offlineList');
@@ -3216,6 +3243,8 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
       const editorStatus = document.getElementById('editorStatus');
       const editorNetBadge = document.getElementById('editorNetBadge');
       const editorDirtyBadge = document.getElementById('editorDirtyBadge');
+      let pendingDraftFlashMessage = '';
+      let draftFlashTimer = null;
 
       const FSD_DEFAULT_ENGINEER_KEY = 'fsd_certs_default_engineer_v6_3c78z';
       const FSD_OLD_DEFAULT_ENGINEER_KEYS = [
@@ -3561,6 +3590,62 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
         clearTimeout(fallbackTimer);
         loader.classList.add('hidden');
         fallback.classList.add('hidden');
+        if (loaderMessage) loaderMessage.textContent = 'Loading the certificate system…';
+      }
+
+      function setLoaderMessage(message) {
+        if (loaderMessage) loaderMessage.textContent = String(message || 'Loading the certificate system…');
+      }
+
+      function showDraftFlash(message, isError) {
+        if (!draftFlash) return;
+        clearTimeout(draftFlashTimer);
+        draftFlash.textContent = String(message || (isError ? 'Draft save failed.' : 'Draft saved successfully.'));
+        draftFlash.className = 'draft-flash active' + (isError ? ' error' : '');
+        draftFlashTimer = setTimeout(function() {
+          draftFlash.className = 'draft-flash';
+        }, isError ? 3600 : 2600);
+      }
+
+      function acknowledgeDraftSaveMessage(event, message) {
+        try {
+          if (event.source && event.source.postMessage) {
+            event.source.postMessage({
+              type: 'FSD_DRAFT_SAVE_ACK',
+              requestId: message.requestId || '',
+              source: 'fsd-certs-shell-c95f',
+              ts: Date.now()
+            }, '*');
+          }
+        } catch (ackErr) {}
+      }
+
+      function showDraftSaveLoader() {
+        pendingDraftFlashMessage = '';
+        clearTimeout(draftFlashTimer);
+        if (draftFlash) draftFlash.className = 'draft-flash';
+        home.classList.add('hidden');
+        offlineDrafts.classList.remove('active');
+        if (offlineEditor) offlineEditor.classList.remove('active');
+        fallback.classList.add('hidden');
+        setLoaderMessage('Saving your draft…');
+        loader.classList.remove('hidden');
+        loaded = false;
+        startFallbackTimer();
+      }
+
+      function openCertificatePortalAfterDraftSave(message) {
+        const name = String(message && message.draftName || '').trim();
+        pendingDraftFlashMessage = name
+          ? 'Draft saved successfully: ' + name
+          : 'Draft saved successfully.';
+        openAppUrlInShell(APP_URL);
+        setLoaderMessage('Opening Certificate Portal…');
+      }
+
+      function releaseDraftSaveLoaderWithError(message) {
+        hideLoader();
+        showDraftFlash(String(message || 'Cloud draft save failed. Please try again.'), true);
       }
 
 
@@ -6804,7 +6889,14 @@ function applyOfflineLookupSelection(row) {
           // The screen returns to Offline Drafts when sync confirms or fails.
           loader.classList.remove('hidden');
         } else {
-          setTimeout(hideLoader, 250);
+          setTimeout(function() {
+            hideLoader();
+            if (pendingDraftFlashMessage) {
+              const message = pendingDraftFlashMessage;
+              pendingDraftFlashMessage = '';
+              showDraftFlash(message, false);
+            }
+          }, 250);
         }
         if (pendingShellAction) {
           clearTimeout(shellActionTimer);
@@ -6823,6 +6915,24 @@ function applyOfflineLookupSelection(row) {
 
         if (msg.type === 'FSD_LOCAL_LOOKUP_UPSERT') {
           handleLocalLookupUpsertRequest(event, msg);
+          return;
+        }
+
+        if (msg.source === 'fsd-cloud-draft-client-c95f' && msg.type === 'FSD_DRAFT_SAVE_BEGIN') {
+          acknowledgeDraftSaveMessage(event, msg);
+          showDraftSaveLoader();
+          return;
+        }
+
+        if (msg.source === 'fsd-cloud-draft-client-c95f' && msg.type === 'FSD_DRAFT_SAVE_SUCCESS') {
+          acknowledgeDraftSaveMessage(event, msg);
+          openCertificatePortalAfterDraftSave(msg);
+          return;
+        }
+
+        if (msg.source === 'fsd-cloud-draft-client-c95f' && msg.type === 'FSD_DRAFT_SAVE_FAILURE') {
+          acknowledgeDraftSaveMessage(event, msg);
+          releaseDraftSaveLoaderWithError(msg.message);
           return;
         }
 
