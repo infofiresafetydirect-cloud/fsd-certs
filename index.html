@@ -2566,7 +2566,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
           <button data-fsd-fasttap class="minimal-app tone-navy" type="button" onclick="openCerts(event)"><span class="minimal-app-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3.5h12v17H6z"/><path d="m9 12 2 2 4-4M9 17h6M9 7h6"/></svg></span><strong>Submitted Reports</strong><small>Review completed paperwork.</small><span class="minimal-app-arrow" aria-hidden="true">→</span></button>
         </div></section>
       </main>
-      <footer class="minimal-footer"><span><strong>FSD Certs</strong> · Built for Fire Safety Direct</span><span class="minimal-labs">Designed &amp; engineered by Jared720 Labs · C95l</span></footer>
+      <footer class="minimal-footer"><span><strong>FSD Certs</strong> · Built for Fire Safety Direct</span><span class="minimal-labs">Designed &amp; engineered by Jared720 Labs · C95m</span></footer>
     </div>
   </section>
   <section id="offlineDrafts" class="screen offline-screen" aria-label="Jobs and Drafts">
@@ -2589,7 +2589,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
       </div>
       <div id="offlineStatus" class="offline-status"></div>
       <div id="offlineLookupStatus" class="offline-status"></div>
-      <div class="maker-mark">Jared720 Labs · C95l Unified Drafts</div>
+      <div class="maker-mark">Jared720 Labs · C95m Unified Drafts</div>
     </main>
   </section>
 
@@ -3046,7 +3046,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
     (function () {
       'use strict';
 
-      const SHELL_VER = 'V6.3c95l';
+      const SHELL_VER = 'V6.3c95m';
       const APP_URL = 'https://script.google.com/macros/s/AKfycbzq9FTETNZwUJWHMGnMHECbu3sJ3jy3FFvGYyeaRXtkoK1GHBtqOu-GLBle_WGfoFtI/exec';
       const SCHEDULE_URL = 'https://infofiresafetydirect-cloud.github.io/fsd-schedule-2026/';
       const CALLOUTS_PAGE = APP_URL + '?page=callouts&shell=ipad';
@@ -3247,6 +3247,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
       let draftFlashTimer = null;
 
       const FSD_DEFAULT_ENGINEER_KEY = 'fsd_certs_default_engineer_v6_3c78z';
+      const FSD_PENDING_PORTAL_FLASH_KEY = 'fsd_certs_pending_portal_flash_c95m';
       const FSD_OLD_DEFAULT_ENGINEER_KEYS = [
         'fsd_certs_default_engineer_v6_3c76a'
       ];
@@ -3262,6 +3263,42 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
           if (value) store.setItem(key, value);
           else store.removeItem(key);
         } catch (err) {}
+      }
+
+      function clearPendingPortalFlash() {
+        pendingDraftFlashMessage = '';
+        try { sessionStorage.removeItem(FSD_PENDING_PORTAL_FLASH_KEY); } catch (err) {}
+      }
+
+      function rememberPendingPortalFlash(message) {
+        pendingDraftFlashMessage = String(message || '').trim();
+        if (!pendingDraftFlashMessage) {
+          clearPendingPortalFlash();
+          return;
+        }
+        try {
+          sessionStorage.setItem(FSD_PENDING_PORTAL_FLASH_KEY, JSON.stringify({
+            message: pendingDraftFlashMessage,
+            savedAt: Date.now()
+          }));
+        } catch (err) {}
+      }
+
+      function takePendingPortalFlash() {
+        let message = String(pendingDraftFlashMessage || '').trim();
+        if (!message) {
+          try {
+            const raw = sessionStorage.getItem(FSD_PENDING_PORTAL_FLASH_KEY);
+            if (raw) {
+              const saved = JSON.parse(raw);
+              if (saved && Date.now() - Number(saved.savedAt || 0) <= 120000) {
+                message = String(saved.message || '').trim();
+              }
+            }
+          } catch (err) {}
+        }
+        clearPendingPortalFlash();
+        return message;
       }
 
       function getCookieValue(name) {
@@ -3605,7 +3642,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
         draftFlash.className = 'draft-flash active' + (isError ? ' error' : '');
         draftFlashTimer = setTimeout(function() {
           draftFlash.className = 'draft-flash';
-        }, isError ? 3600 : 2600);
+        }, isError ? 3600 : 3400);
       }
 
       function acknowledgeDraftSaveMessage(event, message) {
@@ -3622,7 +3659,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
       }
 
       function showDraftSaveLoader() {
-        pendingDraftFlashMessage = '';
+        clearPendingPortalFlash();
         clearTimeout(draftFlashTimer);
         if (draftFlash) draftFlash.className = 'draft-flash';
         home.classList.add('hidden');
@@ -3637,9 +3674,9 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
 
       function openCertificatePortalAfterDraftSave(message) {
         const name = String(message && message.draftName || '').trim();
-        pendingDraftFlashMessage = name
+        rememberPendingPortalFlash(name
           ? 'Draft saved successfully: ' + name
-          : 'Draft saved successfully.';
+          : 'Draft saved successfully.');
         openAppUrlInShell(APP_URL);
         setLoaderMessage('Opening Certificate Portal…');
       }
@@ -3664,7 +3701,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
 
       function showReportCompletionLoader(message) {
         const reportType = String(message && message.reportType || 'report').trim();
-        pendingDraftFlashMessage = '';
+        clearPendingPortalFlash();
         clearTimeout(draftFlashTimer);
         if (draftFlash) draftFlash.className = 'draft-flash';
         home.classList.add('hidden');
@@ -3683,7 +3720,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
         const label = message && message.combinedPack === true
           ? 'Combined Report Pack'
           : reportType;
-        pendingDraftFlashMessage = label + ' completed successfully' + (reportNo ? ': ' + reportNo : '.');
+        rememberPendingPortalFlash(label + ' completed successfully' + (reportNo ? ': ' + reportNo : '.'));
         openAppUrlInShell(APP_URL);
         setLoaderMessage('Opening Certificate Portal…');
       }
@@ -7077,9 +7114,8 @@ function applyOfflineLookupSelection(row) {
         } else {
           setTimeout(function() {
             hideLoader();
-            if (pendingDraftFlashMessage) {
-              const message = pendingDraftFlashMessage;
-              pendingDraftFlashMessage = '';
+            const message = takePendingPortalFlash();
+            if (message) {
               showDraftFlash(message, false);
             }
           }, 250);
@@ -7317,7 +7353,7 @@ function applyOfflineLookupSelection(row) {
 
     }());
   </script>
-  <div class="fixed-version-badge">FSD Certs · Minimal Home C95l</div>
+  <div class="fixed-version-badge">FSD Certs · Minimal Home C95m</div>
 
 
   <!-- C93p Premium Home clock -->
