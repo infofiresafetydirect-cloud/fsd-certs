@@ -2566,7 +2566,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
           <button data-fsd-fasttap class="minimal-app tone-navy" type="button" onclick="openCerts(event)"><span class="minimal-app-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3.5h12v17H6z"/><path d="m9 12 2 2 4-4M9 17h6M9 7h6"/></svg></span><strong>Submitted Reports</strong><small>Review completed paperwork.</small><span class="minimal-app-arrow" aria-hidden="true">→</span></button>
         </div></section>
       </main>
-      <footer class="minimal-footer"><span><strong>FSD Certs</strong> · Built for Fire Safety Direct</span><span class="minimal-labs">Designed &amp; engineered by Jared720 Labs · C95k</span></footer>
+      <footer class="minimal-footer"><span><strong>FSD Certs</strong> · Built for Fire Safety Direct</span><span class="minimal-labs">Designed &amp; engineered by Jared720 Labs · C95l</span></footer>
     </div>
   </section>
   <section id="offlineDrafts" class="screen offline-screen" aria-label="Jobs and Drafts">
@@ -2589,7 +2589,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
       </div>
       <div id="offlineStatus" class="offline-status"></div>
       <div id="offlineLookupStatus" class="offline-status"></div>
-      <div class="maker-mark">Jared720 Labs · C95k Unified Drafts</div>
+      <div class="maker-mark">Jared720 Labs · C95l Unified Drafts</div>
     </main>
   </section>
 
@@ -3046,7 +3046,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
     (function () {
       'use strict';
 
-      const SHELL_VER = 'V6.3c95k';
+      const SHELL_VER = 'V6.3c95l';
       const APP_URL = 'https://script.google.com/macros/s/AKfycbzq9FTETNZwUJWHMGnMHECbu3sJ3jy3FFvGYyeaRXtkoK1GHBtqOu-GLBle_WGfoFtI/exec';
       const SCHEDULE_URL = 'https://infofiresafetydirect-cloud.github.io/fsd-schedule-2026/';
       const CALLOUTS_PAGE = APP_URL + '?page=callouts&shell=ipad';
@@ -3543,6 +3543,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
         W:   { code: 'W',   label: 'Engineer Service Report',             page: 'esr', editableOffline: true,  syncableOffline: true },
         SFA: { code: 'SFA', label: 'Fire Alarm Service Report',           page: 'fael', editableOffline: true,  syncableOffline: true },
         SEL: { code: 'SEL', label: 'Emergency Lighting Report',           page: 'sel',  editableOffline: true,  syncableOffline: true },
+        QQ:  { code: 'QQ',  label: 'Quick Quote',                          page: 'qq',   editableOffline: false, syncableOffline: false },
         FAC: { code: 'FAC', label: 'Fire Alarm Commissioning Certificate', page: 'fac', editableOffline: false, syncableOffline: false }
       };
 
@@ -6619,6 +6620,7 @@ function applyOfflineLookupSelection(row) {
         row = row || {};
         draft = draft || {};
         const raw = String(draft.reportTypeCode || draft.reportType || row.reportType || row.certificateType || '').toUpperCase();
+        if (raw === 'QQ' || raw.indexOf('QUICK QUOTE') !== -1) return 'QQ';
         if (raw === 'SFA' || raw.indexOf('FIRE ALARM SERVICE') !== -1) return 'SFA';
         if (raw === 'SEL' || raw.indexOf('EMERGENCY LIGHTING') !== -1) return 'SEL';
         return 'W';
@@ -6826,9 +6828,9 @@ function applyOfflineLookupSelection(row) {
         const limit = Math.max(1, Math.min(Number(msg.limit || 80) || 80, 120));
 
         try {
-          const isSelC95iRequest = msg.source === 'fsd-sel-c95i';
+          const isWarmLookupRequest = msg.source === 'fsd-sel-c95i' || msg.source === 'fsd-qq-c95l';
           const cachedData = offlineLookupData || {};
-          const selCacheMissing = isSelC95iRequest && (
+          const warmCacheMissing = isWarmLookupRequest && (
             !offlineLookupData ||
             (mode === 'material'
               ? !((cachedData.materials || []).length)
@@ -6836,10 +6838,10 @@ function applyOfflineLookupSelection(row) {
                 ? !((cachedData.sites || []).length)
                 : !((cachedData.customers || []).length)))
           );
-          // C95k: SEL uses the already-hydrated iPad cache. Do not rebuild all
-          // 24,000+ customer/site rows before every keystroke on a 2018 iPad.
+          // C95l: SEL and QQ use the already-hydrated iPad cache. Do not rebuild
+          // all 24,000+ customer/site rows before every keystroke on a 2018 iPad.
           // Other reports retain their established lookup path unchanged.
-          if (selCacheMissing || (!isSelC95iRequest && (
+          if (warmCacheMissing || (!isWarmLookupRequest && (
             !offlineLookupData ||
             offlineLookupData.indexedDbCustomers ||
             !((offlineLookupData.customers || []).length)
@@ -7315,7 +7317,7 @@ function applyOfflineLookupSelection(row) {
 
     }());
   </script>
-  <div class="fixed-version-badge">FSD Certs · Minimal Home C95k</div>
+  <div class="fixed-version-badge">FSD Certs · Minimal Home C95l</div>
 
 
   <!-- C93p Premium Home clock -->
