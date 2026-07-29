@@ -2566,7 +2566,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
           <button data-fsd-fasttap class="minimal-app tone-navy" type="button" onclick="openCerts(event)"><span class="minimal-app-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3.5h12v17H6z"/><path d="m9 12 2 2 4-4M9 17h6M9 7h6"/></svg></span><strong>Submitted Reports</strong><small>Review completed paperwork.</small><span class="minimal-app-arrow" aria-hidden="true">→</span></button>
         </div></section>
       </main>
-      <footer class="minimal-footer"><span><strong>FSD Certs</strong> · Built for Fire Safety Direct</span><span class="minimal-labs">Designed &amp; engineered by Jared720 Labs · C95f</span></footer>
+      <footer class="minimal-footer"><span><strong>FSD Certs</strong> · Built for Fire Safety Direct</span><span class="minimal-labs">Designed &amp; engineered by Jared720 Labs · C95i</span></footer>
     </div>
   </section>
   <section id="offlineDrafts" class="screen offline-screen" aria-label="Jobs and Drafts">
@@ -3046,7 +3046,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
     (function () {
       'use strict';
 
-      const SHELL_VER = 'V6.3c95f';
+      const SHELL_VER = 'V6.3c95i';
       const APP_URL = 'https://script.google.com/macros/s/AKfycbzq9FTETNZwUJWHMGnMHECbu3sJ3jy3FFvGYyeaRXtkoK1GHBtqOu-GLBle_WGfoFtI/exec';
       const SCHEDULE_URL = 'https://infofiresafetydirect-cloud.github.io/fsd-schedule-2026/';
       const CALLOUTS_PAGE = APP_URL + '?page=callouts&shell=ipad';
@@ -3648,6 +3648,50 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
         showDraftFlash(String(message || 'Cloud draft save failed. Please try again.'), true);
       }
 
+      function acknowledgeReportCompletionMessage(event, message) {
+        try {
+          if (event.source && event.source.postMessage) {
+            event.source.postMessage({
+              type: 'FSD_REPORT_COMPLETE_ACK',
+              requestId: message.requestId || '',
+              source: 'fsd-certs-shell-c95i',
+              ts: Date.now()
+            }, '*');
+          }
+        } catch (ackErr) {}
+      }
+
+      function showReportCompletionLoader(message) {
+        const reportType = String(message && message.reportType || 'report').trim();
+        pendingDraftFlashMessage = '';
+        clearTimeout(draftFlashTimer);
+        if (draftFlash) draftFlash.className = 'draft-flash';
+        home.classList.add('hidden');
+        offlineDrafts.classList.remove('active');
+        if (offlineEditor) offlineEditor.classList.remove('active');
+        fallback.classList.add('hidden');
+        setLoaderMessage('Completing ' + reportType + '…');
+        loader.classList.remove('hidden');
+        loaded = false;
+        startFallbackTimer();
+      }
+
+      function openCertificatePortalAfterReportCompletion(message) {
+        const reportType = String(message && message.reportType || 'Report').trim();
+        const reportNo = String(message && message.reportNo || '').trim();
+        const label = message && message.combinedPack === true
+          ? 'Combined Report Pack'
+          : reportType;
+        pendingDraftFlashMessage = label + ' completed successfully' + (reportNo ? ': ' + reportNo : '.');
+        openAppUrlInShell(APP_URL);
+        setLoaderMessage('Opening Certificate Portal…');
+      }
+
+      function releaseReportCompletionLoaderWithError(message) {
+        hideLoader();
+        showDraftFlash(String(message || 'Report creation failed. Please try again.'), true);
+      }
+
 
       let fsdFastTapSynthetic = false;
       let fsdFastTapSuppressUntil = 0;
@@ -3808,6 +3852,32 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
         });
       }
 
+      function compactOfflineMaterialRows(rows) {
+        return (rows || []).map(function(row) {
+          row = row || {};
+          return [
+            String(row.material || row.description || ''),
+            String(row.description || row.material || ''),
+            String(row.code || ''),
+            String(row.unitPrice || ''),
+            String(row.supplier || '')
+          ];
+        });
+      }
+
+      function expandCompactOfflineMaterialRows(rows) {
+        return (rows || []).map(function(row) {
+          if (!Array.isArray(row)) return row || {};
+          return {
+            material: row[0] || '',
+            description: row[1] || row[0] || '',
+            code: row[2] || '',
+            unitPrice: row[3] || '',
+            supplier: row[4] || ''
+          };
+        });
+      }
+
       function expandCompactOfflineSiteRows(rows) {
         return (rows || []).map(function(row) {
           if (!Array.isArray(row)) return row || {};
@@ -3846,7 +3916,10 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
         const sites = Array.isArray(data.compactSites)
           ? expandCompactOfflineSiteRows(data.compactSites)
           : (Array.isArray(data.sites) ? expandCompactOfflineSiteRows(data.sites) : []);
-        return Object.assign({}, data, { customers: customers, sites: sites });
+        const materials = Array.isArray(data.compactMaterials)
+          ? expandCompactOfflineMaterialRows(data.compactMaterials)
+          : (Array.isArray(data.materials) ? expandCompactOfflineMaterialRows(data.materials) : []);
+        return Object.assign({}, data, { customers: customers, sites: sites, materials: materials });
       }
 
       function firstPendingLookupLine(value) {
@@ -4001,6 +4074,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
         data = data || {};
         const customers = Array.isArray(data.customers) ? data.customers : [];
         const sites = Array.isArray(data.sites) ? data.sites : [];
+        const materials = Array.isArray(data.materials) ? data.materials : [];
         const db = await openOfflineLookupIdb();
         await idbClearOfflineLookup(db);
 
@@ -4012,6 +4086,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
         }
 
         const compactSites = compactOfflineSiteRows(sites);
+        const compactMaterials = compactOfflineMaterialRows(materials);
         const siteChunkCount = Math.ceil(compactSites.length / OFFLINE_LOOKUP_IDB_CHUNK_SIZE);
         for (let i = 0; i < siteChunkCount; i++) {
           const rows = compactSites.slice(i * OFFLINE_LOOKUP_IDB_CHUNK_SIZE, (i + 1) * OFFLINE_LOOKUP_IDB_CHUNK_SIZE);
@@ -4030,7 +4105,11 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
           customerChunkCount: chunkCount,
           siteCount: compactSites.length,
           siteChunkCount: siteChunkCount,
-          sites: []
+          sites: [],
+          // C95i additive metadata: materials stay on the existing meta record.
+          // The IndexedDB name, version, object store and existing keys are unchanged.
+          materials: compactMaterials,
+          materialCount: compactMaterials.length
         };
         await idbPutOfflineLookupRecord(db, meta);
         try { db.close(); } catch (ignore) {}
@@ -4048,8 +4127,10 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
             customerChunkCount: meta.customerChunkCount,
             siteCount: meta.siteCount,
             siteChunkCount: meta.siteChunkCount,
+            materialCount: meta.materialCount,
             customers: [],
-            sites: []
+            sites: [],
+            compactMaterials: compactMaterials
           }));
         } catch (ignore) {}
 
@@ -4065,7 +4146,8 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
           siteCount: meta.siteCount,
           siteChunkCount: meta.siteChunkCount,
           customers: customers,
-          sites: sites
+          sites: sites,
+          materials: materials
         };
         updateOfflineLookupStatus();
         return offlineLookupData;
@@ -4111,7 +4193,9 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
           siteCount: compactSites.length,
           siteChunkCount: siteChunkCount,
           customers: expandCompactOfflineCustomerRows(compactRows),
-          sites: expandCompactOfflineSiteRows(compactSites)
+          sites: expandCompactOfflineSiteRows(compactSites),
+          materials: expandCompactOfflineMaterialRows(meta.materials || []),
+          materialCount: Number(meta.materialCount || (meta.materials || []).length || 0)
         };
       }
 
@@ -4180,6 +4264,7 @@ function clearOfflineLookupCustomerChunks() {
       function saveOfflineLookupData(data) {
         data = data || {};
         const customers = Array.isArray(data.customers) ? data.customers : [];
+        const materials = Array.isArray(data.materials) ? data.materials : [];
         const memoryBase = {
           ok: !!data.ok,
           version: data.version || 'C90i',
@@ -4187,7 +4272,8 @@ function clearOfflineLookupCustomerChunks() {
           savedAt: new Date().toISOString(),
           customers: customers,
           // C90i: keep storage compact; build site search rows from customers when needed.
-          sites: Array.isArray(data.sites) ? data.sites : []
+          sites: Array.isArray(data.sites) ? data.sites : [],
+          materials: materials
         };
 
         function makeChunkedMeta(customerCount, chunkCount, versionSuffix) {
@@ -4201,6 +4287,8 @@ function clearOfflineLookupCustomerChunks() {
             customerCount: customerCount || 0,
             customerChunkCount: chunkCount || 0,
             compactCustomers: [],
+            compactMaterials: compactOfflineMaterialRows(materials),
+            materialCount: materials.length,
             customers: [],
             sites: []
           };
@@ -4263,10 +4351,11 @@ function clearOfflineLookupCustomerChunks() {
         if (!sites.length && customers.length) sites = buildFallbackSitesFromCustomers(customers);
         const c = customers.length || Number(data.customerCount || 0);
         const s = sites.length || Number(data.siteCount || 0) || (c && data.indexedDbCustomers ? c : 0);
+        const m = (Array.isArray(data.materials) ? data.materials.length : 0) || Number(data.materialCount || 0);
         const when = data.savedAt || data.generatedAt || '';
         const dateText = when ? (' Last updated: ' + new Date(when).toLocaleString()) : '';
-        return c || s
-          ? ('Offline customer list ready: ' + c + ' invoice customer records, ' + s + ' searchable site/customer address rows.' + dateText)
+        return c || s || m
+          ? ('Offline lookup ready: ' + c + ' invoice customers, ' + s + ' site addresses and ' + m + ' materials.' + dateText)
           : 'No offline customer list saved yet. Connect to the internet and press Run Full Lookup Sync.';
       }
 
@@ -4284,6 +4373,9 @@ function clearOfflineLookupCustomerChunks() {
 
       function offlineLookupSearchHay(row, mode) {
         row = row || {};
+        if (mode === 'material') {
+          return normaliseOfflineLookupText([row.material, row.description, row.code, row.supplier, row.unitPrice].join(' '));
+        }
         if (mode === 'site') {
           return normaliseOfflineLookupText([row.lookupName, row.siteAddress, row.customerName, row.sageAccountNo].join(' '));
         }
@@ -4295,6 +4387,9 @@ function clearOfflineLookupCustomerChunks() {
         const pending = loadPendingOfflineLookupRows();
         const customers = Array.isArray(data.customers) ? data.customers : [];
 
+        if (mode === 'material') {
+          return Array.isArray(data.materials) ? data.materials : [];
+        }
         if (mode === 'site') {
           const sites = Array.isArray(data.sites) ? data.sites : [];
           const baseSites = sites.length ? sites : buildFallbackSitesFromCustomers(customers);
@@ -4348,6 +4443,7 @@ function clearOfflineLookupCustomerChunks() {
       let fsdOfflineLookupChunkData = null;
       let fsdOfflineLookupAllCustomers = [];
       let fsdOfflineLookupAllSites = [];
+      let fsdOfflineLookupAllMaterials = [];
       let fsdOfflineLookupNextOffset = 0;
       let fsdOfflineLookupRequestSeq = 0;
       const FSD_OFFLINE_LOOKUP_CHUNK_SIZE = 500;
@@ -4390,11 +4486,36 @@ function clearOfflineLookupCustomerChunks() {
             generatedAt: fsdOfflineLookupChunkData.generatedAt || new Date().toISOString(),
             customers: fsdOfflineLookupChunkData.customers || [],
             sites: fallbackSites,
-            materials: []
+            materials: (offlineLookupData && offlineLookupData.materials) || []
           });
           fsdOfflineLookupChunkData = null;
           setOfflineStatus('Customer list saved, but the full site list did not finish downloading. Saved ' + (saved.customers || []).length + ' customers and ' + (saved.sites || []).length + ' fallback site addresses. Try Full Lookup Sync again when signal is stronger.');
           setOfflinePickerStatus(offlineLookupCountText());
+          return;
+        }
+
+        if (failedStage === 'materials' && fsdOfflineLookupChunkData && Array.isArray(fsdOfflineLookupChunkData.customers)) {
+          fsdOfflineLookupChunkData.materials = (offlineLookupData && offlineLookupData.materials) || [];
+          saveOfflineLookupDataIndexedDb(fsdOfflineLookupChunkData)
+            .then(function(saved) {
+              fsdOfflineLookupChunkData = null;
+              fsdOfflineLookupAllCustomers = [];
+              fsdOfflineLookupAllSites = [];
+              fsdOfflineLookupAllMaterials = [];
+              fsdOfflineLookupNextOffset = 0;
+              setOfflineStatus('Customers and sites updated. The previous saved material list was kept because the material download did not finish.');
+              setOfflinePickerStatus(offlineLookupCountText());
+            })
+            .catch(function() {
+              saveOfflineLookupData(fsdOfflineLookupChunkData);
+              fsdOfflineLookupChunkData = null;
+              fsdOfflineLookupAllCustomers = [];
+              fsdOfflineLookupAllSites = [];
+              fsdOfflineLookupAllMaterials = [];
+              fsdOfflineLookupNextOffset = 0;
+              setOfflineStatus('Customers and sites updated. The previous saved material list was kept because the material download did not finish.');
+              setOfflinePickerStatus(offlineLookupCountText());
+            });
           return;
         }
 
@@ -4632,6 +4753,7 @@ function clearOfflineLookupCustomerChunks() {
             materials: []
           };
           fsdOfflineLookupAllSites = [];
+          fsdOfflineLookupAllMaterials = [];
           fsdOfflineLookupNextOffset = 0;
           setTimeout(function() {
             startOfflineLookupJsonpStage('sites', 'Downloading offline site addresses from Apps Script site route', 75, 0);
@@ -4665,16 +4787,52 @@ function clearOfflineLookupCustomerChunks() {
           fsdOfflineLookupChunkData.sites = fsdOfflineLookupAllSites.slice();
           fsdOfflineLookupChunkData.generatedAt = payload.generatedAt || fsdOfflineLookupChunkData.generatedAt || new Date().toISOString();
           fsdOfflineLookupChunkData.ok = true;
-          fsdOfflineLookupChunkData.version = 'C90o-customer-site-sync';
+          fsdOfflineLookupChunkData.version = 'C95i-customer-site-material-sync';
           fsdOfflineLookupChunkData.materials = [];
+          fsdOfflineLookupAllMaterials = [];
+          fsdOfflineLookupNextOffset = 0;
+          setOfflineStatus('Site list received: ' + fsdOfflineLookupAllSites.length + ' sites. Now downloading the ESR material list...');
+          setOfflinePickerStatus('Site list received. Downloading ESR materials...');
+          setTimeout(function() {
+            startOfflineLookupJsonpStage('materials', 'Downloading offline ESR materials', 75, 0);
+          }, 400);
+          return;
+        }
 
+        if (stage === 'materials') {
+          if (!Array.isArray(payload.materials)) {
+            offlineLookupFail('Customers and sites downloaded, but the material route did not return material rows. The previous saved material list will be kept.');
+            return;
+          }
+
+          const materials = Array.isArray(payload.materials) ? payload.materials : [];
+          fsdOfflineLookupAllMaterials = (fsdOfflineLookupAllMaterials || []).concat(materials);
+          const totalText = payload.total ? (' of ' + payload.total) : '';
+
+          if (payload.hasMore && Number(payload.nextOffset || 0) > Number(payload.offset || 0)) {
+            fsdOfflineLookupNextOffset = Number(payload.nextOffset || fsdOfflineLookupAllMaterials.length || 0);
+            setOfflineStatus('Downloaded ' + fsdOfflineLookupAllMaterials.length + totalText + ' ESR materials...');
+            setOfflinePickerStatus('Downloaded ' + fsdOfflineLookupAllMaterials.length + totalText + ' ESR materials...');
+            setTimeout(function() {
+              startOfflineLookupJsonpStage('materials', 'Downloading offline ESR materials ' + fsdOfflineLookupAllMaterials.length + totalText, 75, fsdOfflineLookupNextOffset);
+            }, 700);
+            return;
+          }
+
+          fsdOfflineLookupChunkData.materials = fsdOfflineLookupAllMaterials.slice();
           saveOfflineLookupDataIndexedDb(fsdOfflineLookupChunkData)
             .then(function(saved) {
               fsdOfflineLookupChunkData = null;
               fsdOfflineLookupAllCustomers = [];
               fsdOfflineLookupAllSites = [];
+              fsdOfflineLookupAllMaterials = [];
               fsdOfflineLookupNextOffset = 0;
-              setOfflineStatus('Offline customer/site list updated: ' + ((saved.customers || []).length || Number(saved.customerCount || 0)) + ' customers and ' + ((saved.sites || []).length || Number(saved.siteCount || 0)) + ' real site addresses saved on this iPad.');
+              setOfflineStatus(
+                'Offline lookup updated: ' +
+                ((saved.customers || []).length || Number(saved.customerCount || 0)) + ' customers, ' +
+                ((saved.sites || []).length || Number(saved.siteCount || 0)) + ' sites and ' +
+                ((saved.materials || []).length || Number(saved.materialCount || 0)) + ' ESR materials saved on this iPad.'
+              );
               setOfflinePickerStatus(offlineLookupCountText());
             })
             .catch(function(err) {
@@ -4682,8 +4840,15 @@ function clearOfflineLookupCustomerChunks() {
               fsdOfflineLookupChunkData = null;
               fsdOfflineLookupAllCustomers = [];
               fsdOfflineLookupAllSites = [];
+              fsdOfflineLookupAllMaterials = [];
               fsdOfflineLookupNextOffset = 0;
-              setOfflineStatus('IndexedDB save failed, so fallback storage saved ' + (saved.customers || []).length + ' customers and ' + (saved.sites || []).length + ' sites. Error: ' + (err && err.message ? err.message : err));
+              setOfflineStatus(
+                'IndexedDB save failed, so fallback storage saved ' +
+                (saved.customers || []).length + ' customers, ' +
+                (saved.sites || []).length + ' sites and ' +
+                (saved.materials || []).length + ' materials. Error: ' +
+                (err && err.message ? err.message : err)
+              );
               setOfflinePickerStatus(offlineLookupCountText());
             });
           return;
@@ -4729,6 +4894,7 @@ function clearOfflineLookupCustomerChunks() {
           fsdOfflineLookupChunkData = { customers: [], sites: [], generatedAt: '' };
           fsdOfflineLookupAllCustomers = [];
           fsdOfflineLookupAllSites = [];
+          fsdOfflineLookupAllMaterials = [];
           fsdOfflineLookupNextOffset = 0;
           startOfflineLookupJsonpStage('customers', 'Downloading all offline customers', 60, 0);
         } catch (err) {
@@ -6655,7 +6821,7 @@ function applyOfflineLookupSelection(row) {
       async function handleLocalLookupSearchRequest(event, msg) {
         msg = msg || {};
         const requestId = msg.requestId || '';
-        const mode = msg.mode === 'site' ? 'site' : 'invoice';
+        const mode = msg.mode === 'material' ? 'material' : (msg.mode === 'site' ? 'site' : 'invoice');
         const query = String(msg.query || '');
         const limit = Math.max(1, Math.min(Number(msg.limit || 80) || 80, 120));
 
@@ -6679,6 +6845,7 @@ function applyOfflineLookupSelection(row) {
             meta: {
               customerCount: (metaData.customerCount || (metaData.customers || []).length || 0),
               siteCount: (metaData.siteCount || (metaData.sites || []).length || 0),
+              materialCount: (metaData.materialCount || (metaData.materials || []).length || 0),
               pendingCustomerCount: pendingRows.customers.length,
               pendingSiteCount: pendingRows.sites.length
             },
@@ -6915,6 +7082,24 @@ function applyOfflineLookupSelection(row) {
 
         if (msg.type === 'FSD_LOCAL_LOOKUP_UPSERT') {
           handleLocalLookupUpsertRequest(event, msg);
+          return;
+        }
+
+        if (msg.source === 'fsd-report-completion-c95i' && msg.type === 'FSD_REPORT_COMPLETE_BEGIN') {
+          acknowledgeReportCompletionMessage(event, msg);
+          showReportCompletionLoader(msg);
+          return;
+        }
+
+        if (msg.source === 'fsd-report-completion-c95i' && msg.type === 'FSD_REPORT_COMPLETE_SUCCESS') {
+          acknowledgeReportCompletionMessage(event, msg);
+          openCertificatePortalAfterReportCompletion(msg);
+          return;
+        }
+
+        if (msg.source === 'fsd-report-completion-c95i' && msg.type === 'FSD_REPORT_COMPLETE_FAILURE') {
+          acknowledgeReportCompletionMessage(event, msg);
+          releaseReportCompletionLoaderWithError(msg.message);
           return;
         }
 
