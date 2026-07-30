@@ -317,30 +317,85 @@
     .offline-status-guide strong, .offline-status-guide span { display: block; }
     .offline-status-guide strong { color: #111827; font-size: 13px; }
     .offline-status-guide span { margin-top: 3px; color: #64748b; font-size: 12px; line-height: 1.3; }
-    .offline-list { display: grid; gap: 10px; margin: 14px 0; }
+    .offline-list { display: grid; gap: 18px; margin: 18px 0; }
     .offline-item {
-      padding: 14px; border-radius: 17px; background: #ffffff; color: #111827; text-align: left;
-      border: 1px solid #e5e7eb; box-shadow: 0 6px 16px rgba(0,0,0,.06);
+      --draft-accent: #1d4ed8;
+      --draft-soft: #eff6ff;
+      position: relative; overflow: hidden; padding: 0; border-radius: 19px; background: #ffffff; color: #111827; text-align: left;
+      border: 2px solid #dbe3ed; border-left: 7px solid var(--draft-accent); box-shadow: 0 11px 24px rgba(15,23,42,.12);
     }
-    .offline-item strong { display: block; color: #991b1b; font-size: 18px; margin-bottom: 4px; }
-    .offline-meta-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 7px; margin: 10px 0 12px; }
-    .offline-meta-grid div { min-width: 0; padding: 8px 10px; border-radius: 12px; background: #f8fafc; border: 1px solid #eef2f7; }
+    .offline-item.report-card-sfa { --draft-accent: #b91c1c; --draft-soft: #fff1f2; }
+    .offline-item.report-card-sel { --draft-accent: #b45309; --draft-soft: #fffbeb; }
+    .offline-item.report-card-w { --draft-accent: #1d4ed8; --draft-soft: #eff6ff; }
+    .offline-item-head {
+      display: grid; grid-template-columns: minmax(0,1fr) auto; gap: 14px; align-items: start;
+      padding: 15px 16px 13px 18px; background: var(--draft-soft); border-bottom: 1px solid #dbe3ed;
+    }
+    .offline-job-heading { min-width: 0; }
+    .offline-job-heading > span {
+      display: block; margin-bottom: 5px; color: var(--draft-accent); font-size: 11px; line-height: 1;
+      font-weight: 950; letter-spacing: .08em; text-transform: uppercase;
+    }
+    .offline-job-heading strong {
+      display: block; overflow: hidden; margin: 0; color: #111827; font-size: 20px; line-height: 1.15;
+      font-weight: 950; text-overflow: ellipsis; white-space: nowrap;
+    }
+    .offline-job-heading strong.job-identity-missing { color: #9a3412; }
+    .offline-job-heading small {
+      display: block; overflow: hidden; margin-top: 5px; color: #64748b; font-size: 13px; font-weight: 750;
+      text-overflow: ellipsis; white-space: nowrap;
+    }
+    .offline-item-side { display: grid; justify-items: end; gap: 7px; }
+    .offline-engineer-chip {
+      min-width: 132px; padding: 8px 11px; border: 1px solid #d1d5db; border-radius: 13px; background: #ffffff;
+      box-shadow: 0 3px 8px rgba(15,23,42,.06);
+    }
+    .offline-engineer-chip span, .offline-engineer-chip b { display: block; }
+    .offline-engineer-chip span { color: #64748b; font-size: 9px; font-weight: 950; letter-spacing: .08em; text-transform: uppercase; }
+    .offline-engineer-chip b { margin-top: 2px; color: #111827; font-size: 17px; line-height: 1.05; font-weight: 950; }
+    .offline-job-route {
+      display: grid; grid-template-columns: minmax(0,1fr) 34px minmax(0,1fr); gap: 9px; align-items: stretch;
+      margin: 14px 16px 8px 18px; padding: 10px; border: 1px solid #dbe3ed; border-radius: 15px; background: #ffffff;
+      box-shadow: inset 0 0 0 1px #f8fafc;
+    }
+    .offline-job-point { min-width: 0; padding: 5px 7px; }
+    .offline-job-point span, .offline-job-point b { display: block; }
+    .offline-job-point span { color: #64748b; font-size: 10px; font-weight: 950; letter-spacing: .06em; text-transform: uppercase; }
+    .offline-job-point b {
+      overflow: hidden; margin-top: 4px; color: #111827; font-size: 16px; line-height: 1.2; font-weight: 900;
+      text-overflow: ellipsis; white-space: nowrap;
+    }
+    .offline-job-point.missing b { color: #9a3412; }
+    .offline-job-arrow {
+      align-self: center; width: 30px; height: 30px; display: grid; place-items: center; border-radius: 999px;
+      color: #ffffff; background: var(--draft-accent); font-size: 16px; font-weight: 950;
+    }
+    .offline-meta-grid {
+      display: grid; grid-template-columns: minmax(0,1.35fr) minmax(0,.65fr); gap: 7px;
+      margin: 8px 16px 13px 18px;
+    }
+    .offline-meta-grid div { min-width: 0; padding: 8px 10px; border-radius: 12px; background: #f8fafc; border: 1px solid #e5e7eb; }
     .offline-meta-grid span { display: block; color: #64748b; font-size: 10px; font-weight: 900; letter-spacing: .04em; text-transform: uppercase; }
     .offline-meta-grid b { display: block; overflow: hidden; margin-top: 3px; color: #1f2937; font-size: 13px; text-overflow: ellipsis; white-space: nowrap; }
-    .offline-actions { display: grid; gap: 8px; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
+    .offline-actions { display: grid; gap: 8px; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); padding: 0 16px 16px 18px; }
     .offline-actions .button { min-height: 46px; padding: 10px 12px; border-radius: 14px; font-size: 14px; box-shadow: none; }
     .offline-item .badge { display:inline-block; border-radius:999px; padding:5px 9px; background:#dcfce7; color:#14532d; font-size:12px; font-weight:900; border:1px solid #86efac; }
     .draft-state-needs-sync .badge { background:#fef3c7; color:#78350f; border-color:#fcd34d; }
     .draft-state-offline-only .badge { background:#fef3c7; color:#78350f; border-color:#fcd34d; }
     .offline-empty { padding: 14px; border-radius: 16px; background: #fff1f2; border: 1px dashed #fca5a5; color: #7f1d1d; font-weight: 750; }
     .offline-status { min-height: 20px; margin-top: 10px; color: #4b5563; font-size: 14px; font-weight: 700; }
-    .offline-footer-actions { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 8px; margin-top: 14px; }
+    .offline-footer-actions { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 8px; margin-top: 14px; }
     .offline-card .maker-mark { color: #9ca3af; margin-top: 14px; text-align: center; }
     @media (max-width: 620px) {
       .offline-manager-head { display: grid; }
       .offline-home-button { width: 100%; }
       .offline-status-guide, .offline-meta-grid, .offline-footer-actions { grid-template-columns: 1fr; }
       .offline-folder-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+      .offline-item-head { grid-template-columns: 1fr; }
+      .offline-item-side { grid-template-columns: minmax(0,1fr) auto; justify-items: stretch; align-items: center; }
+      .offline-engineer-chip { min-width: 0; }
+      .offline-job-route { grid-template-columns: 1fr; }
+      .offline-job-arrow { transform: rotate(90deg); justify-self: center; }
     }
 
 
@@ -2637,7 +2692,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
           <button data-fsd-fasttap class="minimal-app tone-navy" type="button" onclick="openCerts(event)"><span class="minimal-app-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3.5h12v17H6z"/><path d="m9 12 2 2 4-4M9 17h6M9 7h6"/></svg></span><strong>Submitted Reports</strong><small>Review completed paperwork.</small><span class="minimal-app-arrow" aria-hidden="true">→</span></button>
         </div></section>
       </main>
-      <footer class="minimal-footer"><span><strong>FSD Certs</strong> · Built for Fire Safety Direct</span><span class="minimal-labs">Designed &amp; engineered by Jared720 Labs · C95s</span></footer>
+      <footer class="minimal-footer"><span><strong>FSD Certs</strong> · Built for Fire Safety Direct</span><span class="minimal-labs">Designed &amp; engineered by Jared720 Labs · C95t</span></footer>
     </div>
   </section>
   <section id="offlineDrafts" class="screen offline-screen" aria-label="Jobs and Drafts">
@@ -2680,10 +2735,9 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
           <button class="button" type="button" onclick="startNewOfflineW(event)">+ New Engineer Service Report</button>
           <button class="button secondary" type="button" onclick="startNewOfflineSfaTrial(event)">+ New SFA</button>
           <button class="button secondary" type="button" onclick="startNewOfflineSelTrial(event)">+ New SEL</button>
-          <button class="button third" type="button" onclick="openCloudDrafts(event)">Cloud Admin – Rename / Delete</button>
         </div>
       </section>
-      <div class="maker-mark">Jared720 Labs · C95s Unified Drafts</div>
+      <div class="maker-mark">Jared720 Labs · C95t Clear Job Cards</div>
     </main>
   </section>
 
@@ -3209,7 +3263,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
     (function () {
       'use strict';
 
-      const SHELL_VER = 'V6.3c95s';
+      const SHELL_VER = 'V6.3c95t';
       const APP_URL = 'https://script.google.com/macros/s/AKfycbzq9FTETNZwUJWHMGnMHECbu3sJ3jy3FFvGYyeaRXtkoK1GHBtqOu-GLBle_WGfoFtI/exec';
       const SCHEDULE_URL = 'https://infofiresafetydirect-cloud.github.io/fsd-schedule-2026/';
       const CALLOUTS_PAGE = APP_URL + '?page=callouts&shell=ipad';
@@ -3805,7 +3859,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
       let offlineLookupData = loadOfflineLookupData();
       setTimeout(function() { refreshOfflineLookupDataFromIndexedDb(); }, 300);
 
-      // C95s: W/ESR, SFA and SEL use the same valid Add Page combinations as online.
+      // C95t: W/ESR, SFA and SEL use the same valid Add Page combinations as online.
       // into the same cloud Drafts records. QQ/FAC stay cloud-only.
       const OFFLINE_REPORT_TYPES = {
         W:   { code: 'W',   label: 'Engineer Service Report',             page: 'esr', editableOffline: true,  syncableOffline: true },
@@ -5587,6 +5641,21 @@ function applyOfflineLookupSelection(row) {
           const reportDisplay = report.label + (addedInline.length ? ' + ' + addedInline.join(' / ') : '');
           const customerDisplay = firstLine(row.customer || (row.draft && row.draft.customer) || '') || 'Not entered';
           const siteDisplay = firstLine(row.site || (row.draft && row.draft.site) || '') || 'Not entered';
+          const customerMissing = customerDisplay === 'Not entered';
+          const siteMissing = siteDisplay === 'Not entered';
+          const identityMissing = customerMissing && siteMissing;
+          let jobIdentity = 'Customer / site not entered';
+          if (!customerMissing && !siteMissing) {
+            jobIdentity = customerDisplay.toLowerCase() === siteDisplay.toLowerCase()
+              ? customerDisplay
+              : customerDisplay + ' — ' + siteDisplay;
+          } else if (!customerMissing) {
+            jobIdentity = customerDisplay;
+          } else if (!siteMissing) {
+            jobIdentity = siteDisplay;
+          }
+          const reportTag = report.code === 'W' ? 'ESR' : report.code;
+          const reportCardClass = 'report-card-' + String(report.code || 'W').toLowerCase();
           const id = escapeHtml(row.offlineId);
           const canSync = report.syncableOffline && state !== 'synced' && state !== 'cloud_cached';
           const syncButton = canSync
@@ -5601,16 +5670,25 @@ function applyOfflineLookupSelection(row) {
               '</button>'
             : '<button class="button secondary" type="button" disabled>Not Editable Yet</button>';
           parts.push(
-            '<article class="offline-item draft-state-' + escapeHtml(draftStateClass(state)) + '">',
-              '<div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start;flex-wrap:wrap;">',
-                '<strong>', escapeHtml(title), '</strong>',
-                '<span class="badge">', escapeHtml(stateLabel), '</span>',
+            '<article class="offline-item ' + escapeHtml(reportCardClass) + ' draft-state-' + escapeHtml(draftStateClass(state)) + '">',
+              '<div class="offline-item-head">',
+                '<div class="offline-job-heading">',
+                  '<span>', escapeHtml(reportTag), ' report</span>',
+                  '<strong class="', identityMissing ? 'job-identity-missing' : '', '">', escapeHtml(jobIdentity), '</strong>',
+                  '<small>', escapeHtml(title), '</small>',
+                '</div>',
+                '<div class="offline-item-side">',
+                  '<div class="offline-engineer-chip"><span>Engineer</span><b>', escapeHtml(engineer), '</b></div>',
+                  '<span class="badge">', escapeHtml(stateLabel), '</span>',
+                '</div>',
+              '</div>',
+              '<div class="offline-job-route">',
+                '<div class="offline-job-point', customerMissing ? ' missing' : '', '"><span>Customer</span><b>', escapeHtml(customerDisplay), '</b></div>',
+                '<div class="offline-job-arrow" aria-hidden="true">→</div>',
+                '<div class="offline-job-point', siteMissing ? ' missing' : '', '"><span>Site / job location</span><b>', escapeHtml(siteDisplay), '</b></div>',
               '</div>',
               '<div class="offline-meta-grid">',
-                '<div><span>Report</span><b>', escapeHtml(reportDisplay), '</b></div>',
-                '<div><span>Engineer</span><b>', escapeHtml(engineer), '</b></div>',
-                '<div><span>Customer</span><b>', escapeHtml(customerDisplay), '</b></div>',
-                '<div><span>Site</span><b>', escapeHtml(siteDisplay), '</b></div>',
+                '<div><span>Report pack</span><b>', escapeHtml(reportDisplay), '</b></div>',
                 '<div><span>Last saved</span><b>', escapeHtml(saved), '</b></div>',
               '</div>',
               '<div class="offline-actions">',
@@ -6605,7 +6683,7 @@ function applyOfflineLookupSelection(row) {
           engineer: getDefaultEngineerProfile() || '',
           customer: '',
           site: '',
-          stage: 'c95s-unified-drafts',
+          stage: 'c95t-clear-job-cards',
           note: 'The iPad SFA working copy uses the same valid Add Page combinations as the online SFA form.',
           sageAccountNo: '',
           contractId: '',
@@ -6683,7 +6761,7 @@ function applyOfflineLookupSelection(row) {
           engineer: getDefaultEngineerProfile() || '',
           customer: '',
           site: '',
-          stage: 'c95s-unified-drafts',
+          stage: 'c95t-clear-job-cards',
           note: 'The iPad SEL working copy uses the same valid Add Page combinations as the online SEL form.',
           sageAccountNo: '',
           contractId: '',
@@ -8282,7 +8360,7 @@ function applyOfflineLookupSelection(row) {
 
     }());
   </script>
-  <div class="fixed-version-badge">FSD Certs · Minimal Home C95s</div>
+  <div class="fixed-version-badge">FSD Certs · Minimal Home C95t</div>
 
 
   <!-- C93p Premium Home clock -->
