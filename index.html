@@ -262,38 +262,86 @@
     .draft-flash.error { border-color: #fecaca; background: #991b1b; }
 
     .offline-screen {
-      display: none; align-items: center; justify-content: center;
-      padding: calc(24px + var(--safe-top)) calc(22px + var(--safe-right)) calc(24px + var(--safe-bottom)) calc(22px + var(--safe-left));
-      background: linear-gradient(145deg, #0f172a 0%, #16355c 55%, #dbeafe 100%); color: #ffffff; z-index: 35; overflow-y: auto; -webkit-overflow-scrolling: touch;
+      display: none; align-items: flex-start; justify-content: center;
+      padding: calc(18px + var(--safe-top)) calc(18px + var(--safe-right)) calc(24px + var(--safe-bottom)) calc(18px + var(--safe-left));
+      background: #f8fafc; color: #111827; z-index: 35; overflow-y: auto; -webkit-overflow-scrolling: touch;
     }
     .offline-screen.active { display: flex; }
     .offline-card {
-      width: min(720px, 100%); max-height: calc(100dvh - 48px - var(--safe-top) - var(--safe-bottom)); overflow-y: auto;
-      border-radius: 30px; padding: 24px; background: rgba(255,255,255,.18); border: 1px solid rgba(255,255,255,.28);
-      box-shadow: 0 24px 70px rgba(0,0,0,.30), inset 0 1px 0 rgba(255,255,255,.20); backdrop-filter: none; -webkit-backdrop-filter: none;
+      width: min(880px, 100%); max-height: none; overflow: visible;
+      border-radius: 0; padding: 0; background: transparent; border: 0;
+      box-shadow: none;
     }
-    .offline-title { margin: 0 0 6px; font-size: 34px; font-weight: 800; letter-spacing: -.03em; }
-    .offline-help { margin: 0 0 16px; color: rgba(255,255,255,.86); line-height: 1.38; font-weight: 650; }
+    .offline-manager-head {
+      display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; margin-bottom: 14px;
+    }
+    .offline-title { margin: 0 0 6px; color: #991b1b; font-size: 32px; font-weight: 900; letter-spacing: -.03em; }
+    .offline-help { margin: 0; color: #4b5563; line-height: 1.42; font-weight: 600; }
+    .offline-home-button {
+      flex: 0 0 auto; min-height: 46px; padding: 11px 20px; border: 0; border-radius: 14px;
+      color: #ffffff; background: linear-gradient(135deg,#4b5563,#1f2937); font: inherit; font-size: 15px; font-weight: 900;
+    }
+    .offline-control-card, .offline-new-card {
+      padding: 16px; border: 1px solid #e5e7eb; border-radius: 22px; background: #ffffff;
+      box-shadow: 0 8px 22px rgba(0,0,0,.08);
+    }
+    .offline-new-card { margin-top: 14px; }
+    .offline-section-title { margin: 0; color: #111827; font-size: 16px; font-weight: 900; }
+    .offline-section-note { margin: 6px 0 0; color: #4b5563; font-size: 14px; line-height: 1.4; }
+    .offline-folder-grid {
+      display: grid; grid-template-columns: repeat(auto-fit,minmax(170px,1fr)); gap: 8px; margin-top: 12px;
+    }
+    .offline-folder-button {
+      min-height: 46px; padding: 10px; border: 0; border-radius: 16px; color: #ffffff;
+      background: linear-gradient(135deg,#0f766e,#115e59); font: inherit; font-size: 14px; font-weight: 900;
+    }
+    .offline-folder-button.show-all { background: linear-gradient(135deg,#7c2d12,#431407); }
+    .offline-folder-button.active { outline: 3px solid #fbbf24; box-shadow: 0 0 0 4px rgba(251,191,36,.25); }
     .offline-filter-row {
-      display: grid; grid-template-columns: minmax(0, 1fr); gap: 6px; margin: 14px 0 4px;
-      padding: 12px; border-radius: 16px; background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.22);
+      display: grid; grid-template-columns: minmax(0, 1fr); gap: 6px; margin: 14px 0 0;
     }
-    .offline-filter-row label { color: #ffffff; font-size: 14px; font-weight: 850; }
+    .offline-filter-row label { color: #111827; font-size: 14px; font-weight: 850; }
     .offline-filter-row select {
       width: 100%; min-height: 46px; margin: 0; padding: 10px 12px; border-radius: 12px;
-      border: 1px solid rgba(255,255,255,.55); background: #ffffff; color: #111827; font-size: 16px; font-weight: 750;
+      border: 1px solid #d1d5db; background: #ffffff; color: #111827; font-size: 16px; font-weight: 750;
     }
-    .offline-list { display: grid; gap: 12px; margin: 16px 0; }
-    .offline-item { padding: 14px; border-radius: 18px; background: rgba(255,255,255,.94); color: #111827; text-align: left; box-shadow: 0 12px 28px rgba(0,0,0,.18); }
-    .offline-item strong { display: block; color: var(--fsd-blue-dark); font-size: 17px; margin-bottom: 4px; }
-    .offline-meta { color: #4b5563; font-size: 13px; line-height: 1.35; font-weight: 650; margin-bottom: 12px; }
-    .offline-actions { display: grid; gap: 8px; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); }
-    .offline-actions .button { min-height: 44px; padding: 10px 12px; border-radius: 14px; font-size: 14px; box-shadow: none; }
+    .offline-screen .button, .offline-screen button.button {
+      min-height: 50px; padding: 12px; border-radius: 16px; font-size: 16px; letter-spacing: 0;
+    }
+    .offline-toolbar { display: grid; grid-template-columns: 1fr; gap: 8px; margin-top: 10px; }
+    .offline-toolbar .button { margin: 0; background: linear-gradient(135deg,#16a34a,#166534); }
+    .offline-status-guide {
+      display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 8px; margin-top: 12px;
+    }
+    .offline-status-guide div { padding: 10px 12px; border-radius: 14px; border: 1px solid #e5e7eb; background: #f8fafc; }
+    .offline-status-guide strong, .offline-status-guide span { display: block; }
+    .offline-status-guide strong { color: #111827; font-size: 13px; }
+    .offline-status-guide span { margin-top: 3px; color: #64748b; font-size: 12px; line-height: 1.3; }
+    .offline-list { display: grid; gap: 10px; margin: 14px 0; }
+    .offline-item {
+      padding: 14px; border-radius: 17px; background: #ffffff; color: #111827; text-align: left;
+      border: 1px solid #e5e7eb; box-shadow: 0 6px 16px rgba(0,0,0,.06);
+    }
+    .offline-item strong { display: block; color: #991b1b; font-size: 18px; margin-bottom: 4px; }
+    .offline-meta-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 7px; margin: 10px 0 12px; }
+    .offline-meta-grid div { min-width: 0; padding: 8px 10px; border-radius: 12px; background: #f8fafc; border: 1px solid #eef2f7; }
+    .offline-meta-grid span { display: block; color: #64748b; font-size: 10px; font-weight: 900; letter-spacing: .04em; text-transform: uppercase; }
+    .offline-meta-grid b { display: block; overflow: hidden; margin-top: 3px; color: #1f2937; font-size: 13px; text-overflow: ellipsis; white-space: nowrap; }
+    .offline-actions { display: grid; gap: 8px; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
+    .offline-actions .button { min-height: 46px; padding: 10px 12px; border-radius: 14px; font-size: 14px; box-shadow: none; }
     .offline-item .badge { display:inline-block; border-radius:999px; padding:5px 9px; background:#dcfce7; color:#14532d; font-size:12px; font-weight:900; border:1px solid #86efac; }
     .draft-state-needs-sync .badge { background:#fef3c7; color:#78350f; border-color:#fcd34d; }
-    .draft-state-offline-only .badge { background:#fee2e2; color:#7f1d1d; border-color:#fecaca; }
-    .offline-empty { padding: 18px; border-radius: 18px; background: rgba(255,255,255,.13); border: 1px dashed rgba(255,255,255,.32); color: rgba(255,255,255,.90); font-weight: 750; }
-    .offline-status { min-height: 22px; margin-top: 12px; color: rgba(255,255,255,.90); font-size: 14px; font-weight: 750; }
+    .draft-state-offline-only .badge { background:#fef3c7; color:#78350f; border-color:#fcd34d; }
+    .offline-empty { padding: 14px; border-radius: 16px; background: #fff1f2; border: 1px dashed #fca5a5; color: #7f1d1d; font-weight: 750; }
+    .offline-status { min-height: 20px; margin-top: 10px; color: #4b5563; font-size: 14px; font-weight: 700; }
+    .offline-footer-actions { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 8px; margin-top: 14px; }
+    .offline-card .maker-mark { color: #9ca3af; margin-top: 14px; text-align: center; }
+    @media (max-width: 620px) {
+      .offline-manager-head { display: grid; }
+      .offline-home-button { width: 100%; }
+      .offline-status-guide, .offline-meta-grid, .offline-footer-actions { grid-template-columns: 1fr; }
+      .offline-folder-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+    }
 
 
     .offline-editor-screen {
@@ -2581,7 +2629,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
         <div class="minimal-divider"></div>
         <section><div class="minimal-apps-head"><h2>Applications</h2><span>Choose where to go</span></div><div class="minimal-app-grid">
           <button data-fsd-fasttap class="minimal-app tone-red" type="button" onclick="openCerts(event)"><span class="minimal-app-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3.5h9l3 3V20.5H6z"/><path d="M15 3.5v4h4"/><path d="M9 11h6M9 14.5h6M9 18h4"/></svg></span><strong>Certificate Portal</strong><small>Create certificates and report packs.</small><span class="minimal-app-arrow" aria-hidden="true">→</span></button>
-          <button data-fsd-fasttap class="minimal-app tone-blue" type="button" onclick="openOfflineDrafts(event)"><span class="minimal-app-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 6.5h5l1.6 2H20v10.5H4z"/><path d="M8 13h8M8 16h5"/></svg></span><strong>Jobs &amp; Drafts</strong><small>Resume cloud and offline work.</small><span class="minimal-app-arrow" aria-hidden="true">→</span></button>
+          <button data-fsd-fasttap class="minimal-app tone-blue" type="button" onclick="openOfflineDrafts(event)"><span class="minimal-app-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 6.5h5l1.6 2H20v10.5H4z"/><path d="M8 13h8M8 16h5"/></svg></span><strong>Jobs &amp; Drafts</strong><small>One list, online or without signal.</small><span class="minimal-app-arrow" aria-hidden="true">→</span></button>
           <button data-fsd-fasttap class="minimal-app tone-amber" type="button" onclick="openCallouts(event)"><span class="minimal-app-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 3.5h8l4 4v9l-4 4H8l-4-4v-9z"/><path d="M12 7.5v5M12 16.5h.01"/></svg></span><strong>Callouts</strong><small>Manage live and accepted jobs.</small><span class="minimal-app-arrow" aria-hidden="true">→</span></button>
           <button data-fsd-fasttap class="minimal-app tone-violet" type="button" onclick="openQuickQuote(event)"><span class="minimal-app-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 4.5h14v15H5z"/><path d="M8 8h8M8 12h5M8 16h4"/><path d="M16 13.5v4M14.5 15h3"/></svg></span><strong>Quick Quote</strong><small>Create and manage a professional site quote.</small><span class="minimal-app-arrow" aria-hidden="true">→</span></button>
           <button data-fsd-fasttap class="minimal-app tone-slate" type="button" onclick="openEngineerProfile(event)"><span class="minimal-app-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.5"/><path d="M5.5 20c.7-4 3-6 6.5-6s5.8 2 6.5 6"/></svg></span><strong>Engineer Profile</strong><small>Set the active engineer identity.</small><span class="minimal-app-arrow" aria-hidden="true">→</span></button>
@@ -2589,51 +2637,67 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
           <button data-fsd-fasttap class="minimal-app tone-navy" type="button" onclick="openCerts(event)"><span class="minimal-app-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3.5h12v17H6z"/><path d="m9 12 2 2 4-4M9 17h6M9 7h6"/></svg></span><strong>Submitted Reports</strong><small>Review completed paperwork.</small><span class="minimal-app-arrow" aria-hidden="true">→</span></button>
         </div></section>
       </main>
-      <footer class="minimal-footer"><span><strong>FSD Certs</strong> · Built for Fire Safety Direct</span><span class="minimal-labs">Designed &amp; engineered by Jared720 Labs · C95r</span></footer>
+      <footer class="minimal-footer"><span><strong>FSD Certs</strong> · Built for Fire Safety Direct</span><span class="minimal-labs">Designed &amp; engineered by Jared720 Labs · C95s</span></footer>
     </div>
   </section>
   <section id="offlineDrafts" class="screen offline-screen" aria-label="Jobs and Drafts">
     <main class="offline-card">
-      <h2 class="offline-title">Jobs / Drafts</h2>
-      <p class="offline-help">One Jobs &amp; Drafts list for this iPad: cloud drafts you have synced down, offline-only drafts, and drafts with local changes waiting to sync.</p>
-      <p class="offline-help"><strong>How it works:</strong> press Sync Now while online before going out. The iPad downloads Cloud Drafts plus the full customer/site/equipment lookup. When there is no signal, you can only open what has already been synced to this iPad.</p>
-      <p class="offline-help"><strong>Same report pack:</strong> Add Pages, photos and signatures saved offline travel with the draft. When signal returns, sync it and continue in the normal online form to complete the PDF.</p>
-      <div class="actions">
-        <button class="button" type="button" onclick="syncUnifiedDrafts(event)"><span class="tile-icon">🔁</span><span>Sync Now - Drafts + Full Lookup</span></button>
-        <button class="button secondary" type="button" onclick="refreshOfflineDrafts(event)"><span class="tile-icon">🔄</span><span>Refresh Jobs / Drafts</span></button>
+      <div class="offline-manager-head">
+        <div>
+          <h2 class="offline-title">FSD Jobs &amp; Drafts</h2>
+          <p class="offline-help">One working list for cloud drafts and the copies available without signal.</p>
+        </div>
+        <button class="offline-home-button" type="button" onclick="closeOfflineDrafts(event)">← Home</button>
       </div>
-      <div class="offline-filter-row">
-        <label for="offlineEngineerFilter">Filter Jobs &amp; Drafts by engineer</label>
-        <select id="offlineEngineerFilter" onchange="filterOfflineDraftsByEngineer(event)">
-          <option value="">All engineers saved on this iPad</option>
-        </select>
-      </div>
+
+      <section class="offline-control-card">
+        <h3 class="offline-section-title">Engineer Draft Folders</h3>
+        <p class="offline-section-note">Choose an engineer, then Sync &amp; Refresh before leaving signal.</p>
+        <div id="offlineEngineerFolders" class="offline-folder-grid"></div>
+        <div class="offline-filter-row">
+          <label for="offlineEngineerFilter">Engineer</label>
+          <select id="offlineEngineerFilter" onchange="filterOfflineDraftsByEngineer(event)">
+            <option value="">Show all drafts saved on this iPad</option>
+          </select>
+        </div>
+        <div class="offline-toolbar">
+          <button class="button" type="button" onclick="syncUnifiedDrafts(event)">Sync &amp; Refresh Drafts</button>
+        </div>
+        <div class="offline-status-guide">
+          <div><strong>Available Everywhere</strong><span>Saved in Cloud Drafts and available on this iPad.</span></div>
+          <div><strong>Upload Needed</strong><span>New work or changes are currently saved on this iPad only.</span></div>
+        </div>
+        <div id="offlineStatus" class="offline-status"></div>
+        <div id="offlineLookupStatus" class="offline-status"></div>
+      </section>
+
       <div id="offlineList" class="offline-list"></div>
-      <div class="actions">
-        <button class="button" type="button" onclick="startNewOfflineW(event)"><span class="tile-icon">📝</span><span>New W / Engineer Service Report</span></button>
-        <button class="button secondary" type="button" onclick="startNewOfflineSfaTrial(event)"><span class="tile-icon">🔥</span><span>New SFA</span></button>
-        <button class="button secondary" type="button" onclick="startNewOfflineSelTrial(event)"><span class="tile-icon">💡</span><span>New SEL</span></button>
-        <button class="button secondary" type="button" onclick="syncOfflineCustomerPickerData(event)"><span class="tile-icon">📇</span><span>Full Lookup Sync - Customers / Sites / Equipment</span></button>
-        <button class="button third" type="button" onclick="openCloudDrafts(event)"><span class="tile-icon">☁️</span><span>Cloud Rename / Delete Tools</span></button>
-        <button class="button third" type="button" onclick="closeOfflineDrafts(event)"><span class="tile-icon">↩️</span><span>Back to Menu</span></button>
-      </div>
-      <div id="offlineStatus" class="offline-status"></div>
-      <div id="offlineLookupStatus" class="offline-status"></div>
-      <div class="maker-mark">Jared720 Labs · C95r Offline Parity</div>
+
+      <section class="offline-new-card">
+        <h3 class="offline-section-title">Start New Report</h3>
+        <p class="offline-section-note">These use the same report-pack Add Pages whether you have signal or not.</p>
+        <div class="offline-footer-actions">
+          <button class="button" type="button" onclick="startNewOfflineW(event)">+ New Engineer Service Report</button>
+          <button class="button secondary" type="button" onclick="startNewOfflineSfaTrial(event)">+ New SFA</button>
+          <button class="button secondary" type="button" onclick="startNewOfflineSelTrial(event)">+ New SEL</button>
+          <button class="button third" type="button" onclick="openCloudDrafts(event)">Cloud Admin – Rename / Delete</button>
+        </div>
+      </section>
+      <div class="maker-mark">Jared720 Labs · C95s Unified Drafts</div>
     </main>
   </section>
 
 
 
-  <section id="offlineEditor" class="screen offline-editor-screen" aria-label="Edit Offline Report Draft">
+  <section id="offlineEditor" class="screen offline-editor-screen" aria-label="Edit Report Draft">
     <main class="editor-card">
       <div class="editor-head">
         <div>
-          <h2 id="offlineEditorTitle">Edit Offline Report Draft</h2>
-          <p id="offlineEditorNote" class="editor-note">This is the local iPad editor. W, SFA and SEL can save offline and sync to Cloud Drafts when signal returns.</p>
+          <h2 id="offlineEditorTitle">Edit Report Draft</h2>
+          <p id="offlineEditorNote" class="editor-note">This working copy stays available on the iPad and can be uploaded to Cloud Drafts when signal returns.</p>
           <div class="editor-pill-row">
             <span id="editorNetBadge" class="net-badge">Checking signal</span>
-            <span id="editorDirtyBadge" class="dirty-badge saved">Saved offline</span>
+            <span id="editorDirtyBadge" class="dirty-badge saved">Saved on iPad</span>
           </div>
         </div>
         <button data-fsd-fasttap class="mini-home" style="position:static;" type="button" onclick="closeOfflineEditor(event)">Back</button>
@@ -3011,9 +3075,9 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
           </div>
         </div>
         <div class="editor-actions">
-          <button class="button" type="submit">Save Offline</button>
-          <button id="offlineEditorSyncBtn" class="button secondary" type="button" onclick="saveOfflineEditorAndSync(event)">Save + Sync</button>
-          <button class="button third" type="button" onclick="closeOfflineEditor(event)">Back to Offline Drafts</button>
+          <button class="button" type="submit">Save on iPad</button>
+          <button id="offlineEditorSyncBtn" class="button secondary" type="button" onclick="saveOfflineEditorAndSync(event)">Save &amp; Upload</button>
+          <button class="button third" type="button" onclick="closeOfflineEditor(event)">Back to Jobs &amp; Drafts</button>
         </div>
         <div id="editorStatus" class="editor-status"></div>
       </form>
@@ -3145,7 +3209,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
     (function () {
       'use strict';
 
-      const SHELL_VER = 'V6.3c95r';
+      const SHELL_VER = 'V6.3c95s';
       const APP_URL = 'https://script.google.com/macros/s/AKfycbzq9FTETNZwUJWHMGnMHECbu3sJ3jy3FFvGYyeaRXtkoK1GHBtqOu-GLBle_WGfoFtI/exec';
       const SCHEDULE_URL = 'https://infofiresafetydirect-cloud.github.io/fsd-schedule-2026/';
       const CALLOUTS_PAGE = APP_URL + '?page=callouts&shell=ipad';
@@ -3320,7 +3384,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
         if (sigHelperLocalTarget) {
           setOfflineSignatureData(sigHelperLocalTarget, dataUrl);
           setEditorDirty(true);
-          setEditorStatus((sigHelperLocalTarget === 'engineer' ? 'Engineer' : 'Customer') + ' signature added. Press Save Offline before leaving.');
+          setEditorStatus((sigHelperLocalTarget === 'engineer' ? 'Engineer' : 'Customer') + ' signature added. Press Save on iPad before leaving.');
           window.closeSignatureHelper();
           return;
         }
@@ -3388,7 +3452,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
         stopTap(event);
         setOfflineSignatureData(type === 'engineer' ? 'engineer' : 'customer', '');
         setEditorDirty(true);
-        setEditorStatus((type === 'engineer' ? 'Engineer' : 'Customer') + ' signature cleared. Press Save Offline before leaving.');
+        setEditorStatus((type === 'engineer' ? 'Engineer' : 'Customer') + ' signature cleared. Press Save on iPad before leaving.');
         return false;
       };
 
@@ -3400,12 +3464,14 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
       const offlineList = document.getElementById('offlineList');
       const offlineStatus = document.getElementById('offlineStatus');
       const offlineEngineerFilter = document.getElementById('offlineEngineerFilter');
+      const offlineEngineerFolders = document.getElementById('offlineEngineerFolders');
       const offlineEditor = document.getElementById('offlineEditor');
       const editorStatus = document.getElementById('editorStatus');
       const editorNetBadge = document.getElementById('editorNetBadge');
       const editorDirtyBadge = document.getElementById('editorDirtyBadge');
       let pendingDraftFlashMessage = '';
       let draftFlashTimer = null;
+      let offlineEngineerFilterInitialized = false;
 
       const FSD_DEFAULT_ENGINEER_KEY = 'fsd_certs_default_engineer_v6_3c78z';
       const FSD_PENDING_PORTAL_FLASH_KEY = 'fsd_certs_pending_portal_flash_c95m';
@@ -3739,7 +3805,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
       let offlineLookupData = loadOfflineLookupData();
       setTimeout(function() { refreshOfflineLookupDataFromIndexedDb(); }, 300);
 
-      // C95r: W/ESR, SFA and SEL use the same valid Add Page combinations as online.
+      // C95s: W/ESR, SFA and SEL use the same valid Add Page combinations as online.
       // into the same cloud Drafts records. QQ/FAC stay cloud-only.
       const OFFLINE_REPORT_TYPES = {
         W:   { code: 'W',   label: 'Engineer Service Report',             page: 'esr', editableOffline: true,  syncableOffline: true },
@@ -3793,6 +3859,12 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
       const PSC_OFFLINE_FIELD_IDS = ["pscPanelLocation", "pscPanelType", "pscPowerSupply", "pscBatteriesAh", "pscBatteryDate", "pscMeterType", "pscMeterNo", "pscSystemType", "pscPowerSupplyUnitCorrect", "pscStandbyHours", "pscAlarmTimeT2", "pscOtherAlarmTime", "pscExistingPsuSize", "pscQuiescentCurrentL1", "pscAlarmCurrentL2", "pscZonesUsed", "pscAllow50maPerZoneL3", "pscAgeingFactor", "pscDeRatingFactor", "pscCalculatedBatteryAh", "pscBatteriesInstalled", "pscExistingBatteryAh", "pscNotes"];
       let pendingShellAction = null;
       let shellActionTimer = null;
+      let unifiedDraftSyncQueue = [];
+      let unifiedDraftSyncActiveId = '';
+      let unifiedDraftSyncRunning = false;
+      let unifiedDraftSyncFailures = 0;
+      let unifiedDraftSyncTotal = 0;
+      let unifiedDraftSyncSummary = '';
 
       let loaded = false;
       let hasStarted = false;
@@ -5283,7 +5355,7 @@ function applyOfflineLookupSelection(row) {
           }
         } catch (err) {}
 
-        setEditorStatus((offlineLookupMode === 'site' ? 'Site address' : 'Invoice customer') + ' selected from offline picker. Press Save Offline before leaving.');
+        setEditorStatus((offlineLookupMode === 'site' ? 'Site address' : 'Invoice customer') + ' selected from the iPad list. Press Save on iPad before leaving.');
         showOfflineLookupPickedFeedback(offlineLookupMode, row || {});
         closeOfflineLookupPickerAfterSelection();
         try { autoNameOfflineW(); } catch (err) {}
@@ -5294,7 +5366,7 @@ function applyOfflineLookupSelection(row) {
         stopTap(event);
         setEditValue('editSite', getEditValue('editCustomer'));
         markOfflineEditorDirtySafe();
-        setEditorStatus('Site address set to same as invoice/customer. Press Save Offline before leaving.');
+        setEditorStatus('Site address set to same as invoice/customer. Press Save on iPad before leaving.');
         return false;
       };
 
@@ -5379,10 +5451,8 @@ function applyOfflineLookupSelection(row) {
 
       function draftStateLabel(state) {
         state = String(state || '').toLowerCase();
-        if (state === 'synced') return 'Synced';
-        if (state === 'needs_sync') return 'Needs Sync';
-        if (state === 'cloud_cached') return 'Cloud Cached';
-        return 'Offline Only';
+        if (state === 'synced' || state === 'cloud_cached') return 'Available Everywhere';
+        return 'Upload Needed';
       }
 
       function draftStateClass(state) {
@@ -5397,12 +5467,68 @@ function applyOfflineLookupSelection(row) {
         return String(row.engineer || (row.draft && row.draft.engineer) || '').trim();
       }
 
+      function offlineEngineerIsUnassigned(value) {
+        const name = String(value || '').trim().toLowerCase();
+        return !name || name === 'not selected' || name === 'not selected yet' || name === 'no engineer';
+      }
+
+      function cleanUnifiedDraftName(value) {
+        return String(value || '').replace(/^Offline\s+/i, '').trim();
+      }
+
+      function normaliseUnifiedDrafts(rows) {
+        const activeEngineer = String(getDefaultEngineerProfile() || '').trim();
+        let changed = false;
+        const updatedRows = (Array.isArray(rows) ? rows : []).map(function(row) {
+          if (!row) return row;
+          const needsEngineer = activeEngineer && offlineEngineerIsUnassigned(offlineItemEngineer(row));
+          const oldName = row.draftName || (row.draft && row.draft.draftName) || '';
+          const cleanName = cleanUnifiedDraftName(oldName);
+          const needsNameCleanup = Boolean(cleanName && cleanName !== oldName);
+          if (!needsEngineer && !needsNameCleanup) return row;
+          changed = true;
+          const state = normaliseDraftSyncState(row);
+          return Object.assign({}, row, {
+            engineer: needsEngineer ? activeEngineer : offlineItemEngineer(row),
+            draftName: cleanName || oldName,
+            syncState: row.draftId && (state === 'synced' || state === 'cloud_cached') ? 'needs_sync' : state,
+            draft: Object.assign({}, row.draft || {}, {
+              engineer: needsEngineer ? activeEngineer : offlineItemEngineer(row),
+              draftName: cleanName || oldName
+            })
+          });
+        });
+        if (changed) writeOfflineQueue(updatedRows);
+        return updatedRows;
+      }
+
+      function renderOfflineEngineerFolders(names, selectedEngineer) {
+        if (!offlineEngineerFolders) return;
+        const selected = String(selectedEngineer || '').toLowerCase();
+        const buttons = [
+          '<button type="button" class="offline-folder-button show-all' + (!selected ? ' active' : '') + '" data-offline-engineer="">📂 Show All</button>'
+        ];
+        (names || []).forEach(function(name) {
+          const active = String(name || '').toLowerCase() === selected ? ' active' : '';
+          buttons.push(
+            '<button type="button" class="offline-folder-button' + active + '" data-offline-engineer="' +
+            escapeHtml(name) + '">📁 ' + escapeHtml(name) + '</button>'
+          );
+        });
+        offlineEngineerFolders.innerHTML = buttons.join('');
+      }
+
       function refreshOfflineEngineerFilter(rows) {
         if (!offlineEngineerFilter) return;
-        const selected = String(offlineEngineerFilter.value || '');
+        let selected = String(offlineEngineerFilter.value || '');
+        const activeEngineer = String(getDefaultEngineerProfile() || '').trim();
+        if (!offlineEngineerFilterInitialized) {
+          selected = activeEngineer;
+          offlineEngineerFilterInitialized = true;
+        }
         const seen = {};
         const names = [];
-        (liveEngineerProfileNames || []).concat((rows || []).map(offlineItemEngineer)).forEach(function(name) {
+        (liveEngineerProfileNames || []).concat([activeEngineer]).concat((rows || []).map(offlineItemEngineer)).forEach(function(name) {
           const clean = String(name || '').trim();
           const key = clean.toLowerCase();
           if (!clean || seen[key]) return;
@@ -5411,17 +5537,18 @@ function applyOfflineLookupSelection(row) {
         });
         names.sort(function(a, b) { return a.localeCompare(b); });
         offlineEngineerFilter.innerHTML =
-          '<option value="">All engineers saved on this iPad</option>' +
+          '<option value="">Show all drafts saved on this iPad</option>' +
           names.map(function(name) {
             return '<option value="' + escapeHtml(name) + '">' + escapeHtml(name) + '</option>';
           }).join('');
         if (selected && names.some(function(name) { return name.toLowerCase() === selected.toLowerCase(); })) {
           offlineEngineerFilter.value = names.find(function(name) { return name.toLowerCase() === selected.toLowerCase(); }) || '';
         }
+        renderOfflineEngineerFolders(names, offlineEngineerFilter.value || '');
       }
 
       function renderOfflineDrafts() {
-        const allRows = readOfflineQueue().sort(function(a, b) { return String(b.savedAt || b.cloudLastUpdated || '').localeCompare(String(a.savedAt || a.cloudLastUpdated || '')); });
+        const allRows = normaliseUnifiedDrafts(readOfflineQueue()).sort(function(a, b) { return String(b.savedAt || b.cloudLastUpdated || '').localeCompare(String(a.savedAt || a.cloudLastUpdated || '')); });
         if (!offlineList) return;
         refreshOfflineEngineerFilter(allRows);
         const selectedEngineer = String(offlineEngineerFilter && offlineEngineerFilter.value || '').trim().toLowerCase();
@@ -5430,16 +5557,17 @@ function applyOfflineLookupSelection(row) {
           : allRows;
         if (!rows.length) {
           offlineList.innerHTML = selectedEngineer
-            ? '<div class="offline-empty">No Jobs/Drafts for this engineer are saved on this iPad yet. While online, press Sync Now to download that engineer’s Cloud Drafts.</div>'
-            : '<div class="offline-empty">No Jobs/Drafts are saved on this iPad yet. Press Sync Now while online to download Cloud Drafts, or start a new ESR, SFA or SEL.</div>';
-          setOfflineStatus(selectedEngineer ? 'No saved Jobs/Drafts match this engineer filter.' : 'No local draft cache on this iPad yet.');
+            ? '<div class="offline-empty">No drafts for this engineer are available on this iPad yet. While online, press Sync &amp; Refresh Drafts.</div>'
+            : '<div class="offline-empty">No drafts are available on this iPad yet. Sync while online or start a new ESR, SFA or SEL.</div>';
+          setOfflineStatus(selectedEngineer ? 'No drafts match this engineer.' : 'No drafts are saved on this iPad yet.');
           return;
         }
 
         const parts = [];
         rows.forEach(function(row) {
           const report = getOfflineReportConfig(row);
-          let title = row.draftName || row.customer || ('Offline ' + report.label + ' draft');
+          let title = row.draftName || row.customer || (report.label + ' draft');
+          title = String(title || '').replace(/^Offline\s+/i, '');
           if (report.code === 'W') {
             title = String(title || '').replace(/Offline\s+W\b/gi, 'Engineer Service Report').replace(/\bW\s+draft\b/gi, 'Engineer Service Report draft');
           }
@@ -5455,27 +5583,21 @@ function applyOfflineLookupSelection(row) {
           if (String(draftForMeta.includeSoundLevelTestReport || '').toUpperCase() === 'YES') addedInline.push('SLT');
           const state = normaliseDraftSyncState(row);
           const stateLabel = draftStateLabel(state);
-          const engineer = offlineItemEngineer(row) || 'Not selected';
-          const meta = [
-            'Status: ' + stateLabel,
-            'Type: ' + report.label + (addedInline.length ? ' + ' + addedInline.join('/') : ''),
-            'Engineer: ' + engineer,
-            row.customer ? 'Customer: ' + row.customer : '',
-            row.site ? 'Site: ' + row.site : '',
-            row.draftId ? 'Cloud ID: ' + row.draftId : '',
-            'Saved: ' + saved
-          ].filter(Boolean).join(' · ');
+          const engineer = offlineItemEngineer(row) || 'Choose engineer';
+          const reportDisplay = report.label + (addedInline.length ? ' + ' + addedInline.join(' / ') : '');
+          const customerDisplay = firstLine(row.customer || (row.draft && row.draft.customer) || '') || 'Not entered';
+          const siteDisplay = firstLine(row.site || (row.draft && row.draft.site) || '') || 'Not entered';
           const id = escapeHtml(row.offlineId);
           const canSync = report.syncableOffline && state !== 'synced' && state !== 'cloud_cached';
           const syncButton = canSync
-            ? '<button class="button" type="button" data-offline-id="' + id + '" data-offline-action="sync">Sync to Cloud</button>'
-            : '<button class="button" type="button" disabled>' + (row.draftId ? 'Synced' : 'No Sync Yet') + '</button>';
+            ? '<button class="button" type="button" data-offline-id="' + id + '" data-offline-action="sync">Upload to Cloud</button>'
+            : '';
           const onlineButton = row.draftId && (state === 'synced' || state === 'cloud_cached')
-            ? '<button class="button" type="button" data-offline-id="' + id + '" data-offline-action="online">Continue in Full Form</button>'
+            ? '<button class="button" type="button" data-offline-id="' + id + '" data-offline-action="online">Open Full Form</button>'
             : '';
           const offlineButton = report.editableOffline
             ? '<button class="button secondary" type="button" data-offline-id="' + id + '" data-offline-action="edit">' +
-                (row.draftId ? 'Edit Offline Copy' : 'Edit Offline') +
+                'Edit on iPad' +
               '</button>'
             : '<button class="button secondary" type="button" disabled>Not Editable Yet</button>';
           parts.push(
@@ -5484,12 +5606,18 @@ function applyOfflineLookupSelection(row) {
                 '<strong>', escapeHtml(title), '</strong>',
                 '<span class="badge">', escapeHtml(stateLabel), '</span>',
               '</div>',
-              '<div class="offline-meta">', escapeHtml(meta), '</div>',
+              '<div class="offline-meta-grid">',
+                '<div><span>Report</span><b>', escapeHtml(reportDisplay), '</b></div>',
+                '<div><span>Engineer</span><b>', escapeHtml(engineer), '</b></div>',
+                '<div><span>Customer</span><b>', escapeHtml(customerDisplay), '</b></div>',
+                '<div><span>Site</span><b>', escapeHtml(siteDisplay), '</b></div>',
+                '<div><span>Last saved</span><b>', escapeHtml(saved), '</b></div>',
+              '</div>',
               '<div class="offline-actions">',
                 onlineButton,
                 offlineButton,
                 syncButton,
-                '<button class="button third" type="button" data-offline-id="', id, '" data-offline-action="delete">Delete Local Copy</button>',
+                '<button class="button third" type="button" data-offline-id="', id, '" data-offline-action="delete">Remove from iPad</button>',
               '</div>',
             '</article>'
           );
@@ -5497,11 +5625,14 @@ function applyOfflineLookupSelection(row) {
         offlineList.innerHTML = parts.join('');
         const needs = rows.filter(function(row) { return normaliseDraftSyncState(row) === 'needs_sync' || normaliseDraftSyncState(row) === 'offline_only'; }).length;
         const lastCloud = safeStorageGet(localStorage, OFFLINE_CLOUD_DRAFT_SYNC_KEY);
-        setOfflineStatus(rows.length + ' job/draft' + (rows.length === 1 ? '' : 's') + (selectedEngineer ? ' for ' + offlineItemEngineer(rows[0]) : ' on this iPad') + (needs ? ' · ' + needs + ' waiting to sync' : '') + (lastCloud ? ' · Cloud sync: ' + lastCloud : '') + '.');
+        setOfflineStatus(rows.length + ' draft' + (rows.length === 1 ? '' : 's') + (selectedEngineer ? ' for ' + offlineItemEngineer(rows[0]) : ' on this iPad') + (needs ? ' · ' + needs + ' need upload' : ' · everything is available everywhere') + (lastCloud ? ' · Last refreshed: ' + lastCloud : '') + '.');
       }
 
       window.filterOfflineDraftsByEngineer = function filterOfflineDraftsByEngineer() {
         renderOfflineDrafts();
+        if (navigator.onLine && offlineEngineerFilter && offlineEngineerFilter.value) {
+          window.syncCloudDraftCache({ preventDefault:function(){}, stopPropagation:function(){} });
+        }
         return false;
       };
 
@@ -5537,7 +5668,7 @@ function applyOfflineLookupSelection(row) {
       function setEditorDirty(isDirty) {
         if (!editorDirtyBadge) return;
         editorDirtyBadge.className = isDirty ? 'dirty-badge' : 'dirty-badge saved';
-        editorDirtyBadge.textContent = isDirty ? 'Unsaved changes' : 'Saved offline';
+        editorDirtyBadge.textContent = isDirty ? 'Unsaved changes' : 'Saved on iPad';
       }
 
       function updateEditorNetworkBadge() {
@@ -5672,7 +5803,7 @@ function applyOfflineLookupSelection(row) {
         setOfflineInlineFlag(type, true);
         updateOfflineInlineCertUi();
         setEditorDirty(true);
-        setEditorStatus((type || 'Report') + ' page added to this offline report pack. Press Save Offline before leaving.');
+        setEditorStatus((type || 'Report') + ' page added to this report pack. Press Save on iPad before leaving.');
         return false;
       };
 
@@ -5769,7 +5900,7 @@ function applyOfflineLookupSelection(row) {
               offlinePanelPhotoData = canvas.toDataURL('image/jpeg', 0.72);
               updateOfflinePanelPhotoUi();
               setEditorDirty(true);
-              setEditorStatus('Panel photo added. Press Save Offline before leaving.');
+              setEditorStatus('Panel photo added. Press Save on iPad before leaving.');
             } catch (err) {
               if (status) status.textContent = 'Could not compress that photo: ' + (err && err.message ? err.message : err);
             }
@@ -5787,7 +5918,7 @@ function applyOfflineLookupSelection(row) {
         if (input) input.value = '';
         updateOfflinePanelPhotoUi();
         setEditorDirty(true);
-        setEditorStatus('Panel photo removed. Press Save Offline before leaving.');
+        setEditorStatus('Panel photo removed. Press Save on iPad before leaving.');
         return false;
       };
 
@@ -6202,13 +6333,13 @@ function applyOfflineLookupSelection(row) {
         const titleEl = document.getElementById('offlineEditorTitle');
         const noteEl = document.getElementById('offlineEditorNote');
         const syncBtn = document.getElementById('offlineEditorSyncBtn');
-        if (titleEl) titleEl.textContent = 'Edit Offline ' + report.code + ' Draft';
+        if (titleEl) titleEl.textContent = 'Edit ' + report.code + ' Draft';
         if (noteEl) {
-          noteEl.textContent = 'This local iPad editor uses the same Add Page combinations as the online ' + report.code + ' form. Save offline now, then sync and complete the PDF when signal returns.';
+          noteEl.textContent = 'This iPad working copy uses the same Add Page combinations as the online ' + report.code + ' form. Save here anytime, then upload and complete the PDF when signal returns.';
         }
         if (syncBtn) {
           syncBtn.disabled = !report.syncableOffline;
-          syncBtn.textContent = report.syncableOffline ? 'Save + Sync' : 'Save Local Only';
+          syncBtn.textContent = report.syncableOffline ? 'Save & Upload' : 'Save on iPad';
         }
         applyEditorReportLayout(report);
         const sfaPayloadPreview = document.getElementById('sfaCloudPayloadPreview');
@@ -6219,7 +6350,7 @@ function applyOfflineLookupSelection(row) {
         const restoringAddedW = report.code !== 'W' && offlineBoolYes(d.includeServiceReport);
         document.getElementById('editOfflineId').value = item.offlineId || '';
         setEditValue('editDraftName', item.draftName || d.draftName || buildEditorDraftName(d));
-        setEditValue('editEngineer', d.engineer || item.engineer || '');
+        setEditValue('editEngineer', d.engineer || item.engineer || getDefaultEngineerProfile() || '');
         setEditValue('editServiceDate', d.serviceDate || '');
         setEditValue('editCustomer', d.customer || item.customer || '');
         setEditValue('editSite', d.site || item.site || '');
@@ -6372,7 +6503,7 @@ function applyOfflineLookupSelection(row) {
         calculateEditorTotals();
         updateOfflineInlineCertUi();
         setEditorDirty(false);
-        setEditorStatus(report.code === 'W' ? 'Editing offline Engineer Service Report draft saved on this iPad. Press Save Offline before leaving.' : ('Editing offline ' + report.code + ' draft saved on this iPad. Save locally, then Sync to Cloud when ready.'));
+        setEditorStatus('Editing the ' + report.code + ' working copy on this iPad. Press Save on iPad before leaving, or Save & Upload while online.');
       }
 
       function firstLine(value) {
@@ -6409,7 +6540,7 @@ function applyOfflineLookupSelection(row) {
           includeFireAlarmModificationReport: 'NO',
           includePowerSupplyCertificate: 'NO',
           includeSoundLevelTestReport: 'NO',
-          draftName: 'Offline Engineer Service Report - ' + today,
+          draftName: 'Engineer Service Report - ' + today,
           serviceDate: today,
           engineer: getDefaultEngineerProfile() || '',
           customer: '',
@@ -6469,13 +6600,13 @@ function applyOfflineLookupSelection(row) {
           includeServiceReport: 'NO',
           includeFireAlarmReport: 'NO',
           includeEmergencyLightingReport: 'NO',
-          draftName: 'Offline SFA - ' + today,
+          draftName: 'SFA - ' + today,
           serviceDate: today,
           engineer: getDefaultEngineerProfile() || '',
           customer: '',
           site: '',
-          stage: 'c95r-offline-parity',
-          note: 'Offline SFA uses the same valid Add Page combinations as the online SFA form.',
+          stage: 'c95s-unified-drafts',
+          note: 'The iPad SFA working copy uses the same valid Add Page combinations as the online SFA form.',
           sageAccountNo: '',
           contractId: '',
           orderNo: '',
@@ -6546,14 +6677,14 @@ function applyOfflineLookupSelection(row) {
           includeServiceReport: 'NO',
           includeFireAlarmReport: 'NO',
           includeEmergencyLightingReport: 'NO',
-          draftName: 'Offline SEL - ' + today,
+          draftName: 'SEL - ' + today,
           serviceDate: today,
           customerDate: today,
           engineer: getDefaultEngineerProfile() || '',
           customer: '',
           site: '',
-          stage: 'c95r-offline-parity',
-          note: 'Offline SEL uses the same valid Add Page combinations as the online SEL form.',
+          stage: 'c95s-unified-drafts',
+          note: 'The iPad SEL working copy uses the same valid Add Page combinations as the online SEL form.',
           sageAccountNo: '',
           contractId: '',
           asbestosAvailable: 'NO',
@@ -6666,7 +6797,7 @@ function applyOfflineLookupSelection(row) {
         const item = createBlankOfflineWItem();
         upsertOfflineItem(item);
         openEditorForItem(item);
-        setEditorStatus('New offline Engineer Service Report draft started on this iPad. Fill it in and press Save Offline. Sync to Cloud Drafts when signal returns.');
+        setEditorStatus('New Engineer Service Report started on this iPad. Save here anytime, then upload when signal returns.');
         return false;
       };
 
@@ -6676,7 +6807,7 @@ function applyOfflineLookupSelection(row) {
         upsertOfflineItem(item);
         renderOfflineDrafts();
         openEditorForItem(item);
-        setEditorStatus('New offline SFA draft started on this iPad. Fill the SFA details, save locally, then Sync to Cloud when ready.');
+        setEditorStatus('New SFA started on this iPad. Save here anytime, then upload when signal returns.');
         return false;
       };
 
@@ -6686,7 +6817,7 @@ function applyOfflineLookupSelection(row) {
         upsertOfflineItem(item);
         renderOfflineDrafts();
         openEditorForItem(item);
-        setEditorStatus('New offline SEL draft started on this iPad. Fill the Emergency Lighting details, save locally, then Sync to Cloud when ready.');
+        setEditorStatus('New SEL started on this iPad. Save here anytime, then upload when signal returns.');
         return false;
       };
 
@@ -6761,13 +6892,13 @@ function applyOfflineLookupSelection(row) {
         const offlineId = getEditValue('editOfflineId');
         const item = getOfflineItemById(offlineId);
         if (!item || !item.draft) {
-          setEditorStatus('Could not find this offline draft on the iPad. Go back and refresh Offline Drafts.');
+          setEditorStatus('Could not find this draft on the iPad. Go back to Jobs & Drafts and refresh.');
           return null;
         }
         calculateEditorTotals();
         const d = Object.assign({}, item.draft);
         d.savedAt = new Date().toISOString();
-        d.engineer = getEditValue('editEngineer');
+        d.engineer = getEditValue('editEngineer') || getDefaultEngineerProfile() || '';
         d.serviceDate = getEditValue('editServiceDate');
         d.customer = getEditValue('editCustomer');
         d.site = getEditValue('editSite');
@@ -7005,7 +7136,7 @@ function applyOfflineLookupSelection(row) {
         });
         upsertOfflineItem(updated);
         setEditorDirty(false);
-        setEditorStatus('Saved offline on this iPad at ' + new Date().toLocaleTimeString() + '.');
+        setEditorStatus('Saved on this iPad at ' + new Date().toLocaleTimeString() + '.');
         return updated;
       }
 
@@ -7240,11 +7371,11 @@ function applyOfflineLookupSelection(row) {
           return;
         }
         if (!navigator.onLine) {
-          setEditorStatus('Saved offline. Still no internet, so it cannot sync yet.');
+          setEditorStatus('Saved on this iPad. There is no signal yet, so upload is waiting.');
           return;
         }
         offlineEditor.classList.remove('active');
-        setOfflineStatus('Saved offline changes. Syncing to Cloud Drafts...');
+        setOfflineStatus('Saved on the iPad. Uploading the changes to Cloud Drafts...');
         loadOfflineBridgeForShellAction('sync', updated);
       };
 
@@ -7401,8 +7532,10 @@ function applyOfflineLookupSelection(row) {
           safeStorageSet(localStorage, OFFLINE_CLOUD_DRAFT_SYNC_KEY, stamp);
           renderOfflineDrafts();
           updateOfflineLookupStatus();
+          const uploadSummary = unifiedDraftSyncSummary;
+          unifiedDraftSyncSummary = '';
           setOfflineStatus(
-            'Cloud drafts synced to this iPad: ' + result.added + ' added, ' +
+            uploadSummary + 'Cloud drafts refreshed: ' + result.added + ' added, ' +
             result.updated + ' updated' +
             (result.removedStale ? ', ' + result.removedStale + ' completed/deleted copy removed' : '') +
             (result.skippedLocalChanges ? ', ' + result.skippedLocalChanges + ' kept as local changes' : '') +
@@ -7444,25 +7577,91 @@ function applyOfflineLookupSelection(row) {
         return false;
       };
 
+      function finishUnifiedDraftSync() {
+        unifiedDraftSyncRunning = false;
+        unifiedDraftSyncActiveId = '';
+        unifiedDraftSyncSummary = unifiedDraftSyncFailures
+          ? unifiedDraftSyncFailures + ' draft upload' + (unifiedDraftSyncFailures === 1 ? '' : 's') + ' failed and remain on this iPad. '
+          : 'All waiting drafts were uploaded. ';
+        unifiedDraftSyncQueue = [];
+        unifiedDraftSyncTotal = 0;
+        setOfflineStatus(unifiedDraftSyncSummary + 'Refreshing Cloud Drafts...');
+        window.syncCloudDraftCache({ preventDefault:function(){}, stopPropagation:function(){} });
+      }
+
+      function runNextUnifiedDraftSync() {
+        if (!unifiedDraftSyncRunning) return;
+        if (!unifiedDraftSyncQueue.length) {
+          finishUnifiedDraftSync();
+          return;
+        }
+        unifiedDraftSyncActiveId = unifiedDraftSyncQueue.shift();
+        const item = getOfflineItemById(unifiedDraftSyncActiveId);
+        if (!item) {
+          unifiedDraftSyncActiveId = '';
+          runNextUnifiedDraftSync();
+          return;
+        }
+        setOfflineStatus(
+          'Uploading draft ' + (unifiedDraftSyncTotal - unifiedDraftSyncQueue.length) +
+          ' of ' + unifiedDraftSyncTotal + '...'
+        );
+        window.syncOfflineItemById(unifiedDraftSyncActiveId);
+      }
+
+      function continueUnifiedDraftSync(uploadSucceeded) {
+        if (!unifiedDraftSyncRunning) return;
+        if (!uploadSucceeded) unifiedDraftSyncFailures += 1;
+        unifiedDraftSyncActiveId = '';
+        setTimeout(runNextUnifiedDraftSync, 250);
+      }
+
       window.syncUnifiedDrafts = function syncUnifiedDrafts(event) {
         stopTap(event);
         if (!navigator.onLine) {
-          setOfflineStatus('No signal. The Jobs/Drafts list is working from the last sync saved on this iPad.');
+          setOfflineStatus('No signal. Jobs & Drafts is showing the working copies already saved on this iPad.');
           renderOfflineDrafts();
           return false;
         }
+        if (unifiedDraftSyncRunning) {
+          setOfflineStatus('Draft upload is already running. Keep this screen open.');
+          return false;
+        }
         try { window.syncOfflineCustomerPickerData({ preventDefault:function(){}, stopPropagation:function(){} }); } catch (err) {}
-        return window.syncCloudDraftCache({ preventDefault:function(){}, stopPropagation:function(){} });
+        const allRows = normaliseUnifiedDrafts(readOfflineQueue());
+        const selectedEngineer = String(offlineEngineerFilter && offlineEngineerFilter.value || '').trim().toLowerCase();
+        const waiting = allRows.filter(function(row) {
+          const state = normaliseDraftSyncState(row);
+          const report = getOfflineReportConfig(row);
+          if (!report.syncableOffline || (state !== 'offline_only' && state !== 'needs_sync')) return false;
+          return !selectedEngineer || offlineItemEngineer(row).toLowerCase() === selectedEngineer;
+        });
+        if (waiting.some(function(row) { return offlineEngineerIsUnassigned(offlineItemEngineer(row)); })) {
+          setOfflineStatus('Choose the active engineer before uploading the waiting drafts.');
+          return false;
+        }
+        if (!waiting.length) {
+          setOfflineStatus('No uploads are waiting. Refreshing Cloud Drafts...');
+          return window.syncCloudDraftCache({ preventDefault:function(){}, stopPropagation:function(){} });
+        }
+        unifiedDraftSyncQueue = waiting.map(function(row) { return row.offlineId; });
+        unifiedDraftSyncFailures = 0;
+        unifiedDraftSyncTotal = waiting.length;
+        unifiedDraftSyncSummary = '';
+        unifiedDraftSyncRunning = true;
+        setOfflineStatus('Uploading ' + waiting.length + ' waiting draft' + (waiting.length === 1 ? '' : 's') + ' before refresh...');
+        runNextUnifiedDraftSync();
+        return false;
       };
 
       window.openOnlineDraftById = function openOnlineDraftById(offlineId) {
         const item = getOfflineItemById(offlineId);
         if (!item || !item.draftId) {
-          setOfflineStatus('This draft is not in Cloud Drafts yet. Press Sync to Cloud first.');
+          setOfflineStatus('This draft still needs uploading before the full online form can open.');
           return;
         }
         if (!navigator.onLine) {
-          setOfflineStatus('No signal. You can edit the synced copy on the iPad, then sync it back later.');
+          setOfflineStatus('No signal. Use Edit on iPad now, then upload the changes when signal returns.');
           return;
         }
         const report = getOfflineReportConfig(item);
@@ -7508,20 +7707,43 @@ function applyOfflineLookupSelection(row) {
         offlineList.addEventListener('click', handleOfflineDraftActionTap);
         offlineList.addEventListener('touchend', handleOfflineDraftActionTap, {passive:false});
       }
+      if (offlineEngineerFolders) {
+        offlineEngineerFolders.addEventListener('click', function(event) {
+          const button = event && event.target && event.target.closest
+            ? event.target.closest('[data-offline-engineer]')
+            : null;
+          if (!button || !offlineEngineerFilter) return;
+          stopTap(event);
+          offlineEngineerFilter.value = button.getAttribute('data-offline-engineer') || '';
+          window.filterOfflineDraftsByEngineer();
+        });
+      }
 
       window.syncOfflineItemById = function syncOfflineItemById(offlineId) {
-        const item = getOfflineItemById(offlineId);
+        let item = getOfflineItemById(offlineId);
         if (!item) return renderOfflineDrafts();
+        if (offlineEngineerIsUnassigned(offlineItemEngineer(item))) {
+          const activeEngineer = String(getDefaultEngineerProfile() || '').trim();
+          if (!activeEngineer) {
+            setOfflineStatus('Choose the active engineer before uploading this draft.');
+            return;
+          }
+          item = Object.assign({}, item, {
+            engineer: activeEngineer,
+            draft: Object.assign({}, item.draft || {}, { engineer: activeEngineer })
+          });
+          upsertOfflineItem(item);
+        }
         const report = getOfflineReportConfig(item);
         if (!report.syncableOffline) {
           setOfflineStatus(report.code + ' drafts are not syncable in this version.');
           return;
         }
         if (!navigator.onLine) {
-          setOfflineStatus('Still offline. You can press Edit Offline and carry on working, or connect the iPad and press Sync again.');
+          setOfflineStatus('There is still no signal. Use Edit on iPad now, then upload when connected.');
           return;
         }
-        setOfflineStatus('Syncing offline ' + report.code + ' draft to Cloud Drafts. Keep this screen open...');
+        setOfflineStatus('Uploading this ' + report.code + ' draft to Cloud Drafts. Keep this screen open...');
         loadOfflineBridgeForShellAction('sync', item);
       };
 
@@ -7531,7 +7753,8 @@ function applyOfflineLookupSelection(row) {
         const item = getOfflineItemById(offlineId);
         if (!item) return renderOfflineDrafts();
         const report = getOfflineReportConfig(item);
-        if (!confirm('Delete this offline ' + report.code + ' draft from this iPad?')) return;
+        const cloudNote = item.draftId ? ' The Cloud Draft will not be deleted.' : '';
+        if (!confirm('Remove this ' + report.code + ' working copy from this iPad?' + cloudNote)) return;
         removeOfflineItem(item.offlineId);
         renderOfflineDrafts();
       };
@@ -7983,7 +8206,12 @@ function applyOfflineLookupSelection(row) {
             home.classList.add('hidden');
             offlineDrafts.classList.add('active');
             renderOfflineDrafts();
-            setOfflineStatus('Synced ' + resultCode + ' to Cloud Drafts and kept a synced copy on this iPad: ' + (result.draftName || result.draftId || resultCode + ' draft') + '.');
+            if (unifiedDraftSyncRunning) {
+              setOfflineStatus((result.draftName || result.draftId || resultCode + ' draft') + ' uploaded. Continuing...');
+              continueUnifiedDraftSync(true);
+            } else {
+              setOfflineStatus((result.draftName || result.draftId || resultCode + ' draft') + ' is now available everywhere.');
+            }
           } else {
             pendingShellAction = null;
             // Keep the hidden sync bridge clean so the next Open Portal starts fresh.
@@ -7994,7 +8222,12 @@ function applyOfflineLookupSelection(row) {
             home.classList.add('hidden');
             offlineDrafts.classList.add('active');
             renderOfflineDrafts();
-            setOfflineStatus(resultCode + ' sync failed, so the iPad copy has been kept: ' + (result.error || 'Cloud save did not confirm.'));
+            if (unifiedDraftSyncRunning) {
+              setOfflineStatus(resultCode + ' upload failed; its iPad copy was kept. Continuing...');
+              continueUnifiedDraftSync(false);
+            } else {
+              setOfflineStatus(resultCode + ' upload failed, so the iPad copy has been kept: ' + (result.error || 'Cloud save did not confirm.'));
+            }
           }
         }
       });
@@ -8049,7 +8282,7 @@ function applyOfflineLookupSelection(row) {
 
     }());
   </script>
-  <div class="fixed-version-badge">FSD Certs · Minimal Home C95r</div>
+  <div class="fixed-version-badge">FSD Certs · Minimal Home C95s</div>
 
 
   <!-- C93p Premium Home clock -->
