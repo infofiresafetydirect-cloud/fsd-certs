@@ -2692,7 +2692,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
           <button data-fsd-fasttap class="minimal-app tone-navy" type="button" onclick="openCerts(event)"><span class="minimal-app-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3.5h12v17H6z"/><path d="m9 12 2 2 4-4M9 17h6M9 7h6"/></svg></span><strong>Submitted Reports</strong><small>Review completed paperwork.</small><span class="minimal-app-arrow" aria-hidden="true">→</span></button>
         </div></section>
       </main>
-      <footer class="minimal-footer"><span><strong>FSD Certs</strong> · Built for Fire Safety Direct</span><span class="minimal-labs">Designed &amp; engineered by Jared720 Labs · C95u</span></footer>
+      <footer class="minimal-footer"><span><strong>FSD Certs</strong> · Built for Fire Safety Direct</span><span class="minimal-labs">Designed &amp; engineered by Jared720 Labs · C95v</span></footer>
     </div>
   </section>
   <section id="offlineDrafts" class="screen offline-screen" aria-label="Jobs and Drafts">
@@ -2737,7 +2737,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
           <button class="button secondary" type="button" onclick="startNewOfflineSelTrial(event)">+ New SEL</button>
         </div>
       </section>
-      <div class="maker-mark">Jared720 Labs · C95u Smart Lookup Sync</div>
+      <div class="maker-mark">Jared720 Labs · C95v Auto Draft Refresh</div>
     </main>
   </section>
 
@@ -3263,7 +3263,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
     (function () {
       'use strict';
 
-      const SHELL_VER = 'V6.3c95u';
+      const SHELL_VER = 'V6.3c95v';
       const APP_URL = 'https://script.google.com/macros/s/AKfycbzq9FTETNZwUJWHMGnMHECbu3sJ3jy3FFvGYyeaRXtkoK1GHBtqOu-GLBle_WGfoFtI/exec';
       const SCHEDULE_URL = 'https://infofiresafetydirect-cloud.github.io/fsd-schedule-2026/';
       const CALLOUTS_PAGE = APP_URL + '?page=callouts&shell=ipad';
@@ -3859,7 +3859,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
       let offlineLookupData = loadOfflineLookupData();
       setTimeout(function() { refreshOfflineLookupDataFromIndexedDb(); }, 300);
 
-      // C95u: W/ESR, SFA and SEL use the same valid Add Page combinations as online.
+      // C95v: W/ESR, SFA and SEL use the same valid Add Page combinations as online.
       // into the same cloud Drafts records. QQ/FAC stay cloud-only.
       const OFFLINE_REPORT_TYPES = {
         W:   { code: 'W',   label: 'Engineer Service Report',             page: 'esr', editableOffline: true,  syncableOffline: true },
@@ -6727,7 +6727,7 @@ function applyOfflineLookupSelection(row) {
           engineer: getDefaultEngineerProfile() || '',
           customer: '',
           site: '',
-          stage: 'c95u-smart-lookup-sync',
+          stage: 'c95v-auto-draft-refresh',
           note: 'The iPad SFA working copy uses the same valid Add Page combinations as the online SFA form.',
           sageAccountNo: '',
           contractId: '',
@@ -6805,7 +6805,7 @@ function applyOfflineLookupSelection(row) {
           engineer: getDefaultEngineerProfile() || '',
           customer: '',
           site: '',
-          stage: 'c95u-smart-lookup-sync',
+          stage: 'c95v-auto-draft-refresh',
           note: 'The iPad SEL working copy uses the same valid Add Page combinations as the online SEL form.',
           sageAccountNo: '',
           contractId: '',
@@ -7799,7 +7799,12 @@ function applyOfflineLookupSelection(row) {
         home.classList.add('hidden');
         offlineDrafts.classList.add('active');
         renderOfflineDrafts();
-        if (navigator.onLine) loadLiveEngineerProfileList();
+        if (navigator.onLine) {
+          loadLiveEngineerProfileList();
+          // C95v: opening Jobs & Drafts checks Cloud Drafts automatically.
+          // This deliberately does not run the larger lookup customer/site/material sync.
+          window.syncCloudDraftCache({ preventDefault:function(){}, stopPropagation:function(){} });
+        }
       };
 
       window.closeOfflineDrafts = function closeOfflineDrafts(event) {
@@ -8406,7 +8411,7 @@ function applyOfflineLookupSelection(row) {
 
     }());
   </script>
-  <div class="fixed-version-badge">FSD Certs · Minimal Home C95u</div>
+  <div class="fixed-version-badge">FSD Certs · Minimal Home C95v</div>
 
 
   <!-- C93p Premium Home clock -->
