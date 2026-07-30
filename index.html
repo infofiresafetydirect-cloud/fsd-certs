@@ -2692,7 +2692,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
           <button data-fsd-fasttap class="minimal-app tone-navy" type="button" onclick="openCerts(event)"><span class="minimal-app-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3.5h12v17H6z"/><path d="m9 12 2 2 4-4M9 17h6M9 7h6"/></svg></span><strong>Submitted Reports</strong><small>Review completed paperwork.</small><span class="minimal-app-arrow" aria-hidden="true">→</span></button>
         </div></section>
       </main>
-      <footer class="minimal-footer"><span><strong>FSD Certs</strong> · Built for Fire Safety Direct</span><span class="minimal-labs">Designed &amp; engineered by Jared720 Labs · C95t</span></footer>
+      <footer class="minimal-footer"><span><strong>FSD Certs</strong> · Built for Fire Safety Direct</span><span class="minimal-labs">Designed &amp; engineered by Jared720 Labs · C95u</span></footer>
     </div>
   </section>
   <section id="offlineDrafts" class="screen offline-screen" aria-label="Jobs and Drafts">
@@ -2737,7 +2737,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
           <button class="button secondary" type="button" onclick="startNewOfflineSelTrial(event)">+ New SEL</button>
         </div>
       </section>
-      <div class="maker-mark">Jared720 Labs · C95t Clear Job Cards</div>
+      <div class="maker-mark">Jared720 Labs · C95u Smart Lookup Sync</div>
     </main>
   </section>
 
@@ -3263,7 +3263,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
     (function () {
       'use strict';
 
-      const SHELL_VER = 'V6.3c95t';
+      const SHELL_VER = 'V6.3c95u';
       const APP_URL = 'https://script.google.com/macros/s/AKfycbzq9FTETNZwUJWHMGnMHECbu3sJ3jy3FFvGYyeaRXtkoK1GHBtqOu-GLBle_WGfoFtI/exec';
       const SCHEDULE_URL = 'https://infofiresafetydirect-cloud.github.io/fsd-schedule-2026/';
       const CALLOUTS_PAGE = APP_URL + '?page=callouts&shell=ipad';
@@ -3859,7 +3859,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
       let offlineLookupData = loadOfflineLookupData();
       setTimeout(function() { refreshOfflineLookupDataFromIndexedDb(); }, 300);
 
-      // C95t: W/ESR, SFA and SEL use the same valid Add Page combinations as online.
+      // C95u: W/ESR, SFA and SEL use the same valid Add Page combinations as online.
       // into the same cloud Drafts records. QQ/FAC stay cloud-only.
       const OFFLINE_REPORT_TYPES = {
         W:   { code: 'W',   label: 'Engineer Service Report',             page: 'esr', editableOffline: true,  syncableOffline: true },
@@ -4459,7 +4459,8 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
           // C95i additive metadata: materials stay on the existing meta record.
           // The IndexedDB name, version, object store and existing keys are unchanged.
           materials: compactMaterials,
-          materialCount: compactMaterials.length
+          materialCount: compactMaterials.length,
+          lookupRevision: String(data.lookupRevision || '')
         };
         await idbPutOfflineLookupRecord(db, meta);
         try { db.close(); } catch (ignore) {}
@@ -4478,6 +4479,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
             siteCount: meta.siteCount,
             siteChunkCount: meta.siteChunkCount,
             materialCount: meta.materialCount,
+            lookupRevision: meta.lookupRevision,
             customers: [],
             sites: [],
             compactMaterials: compactMaterials
@@ -4497,7 +4499,8 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
           siteChunkCount: meta.siteChunkCount,
           customers: customers,
           sites: sites,
-          materials: materials
+          materials: materials,
+          lookupRevision: meta.lookupRevision
         };
         updateOfflineLookupStatus();
         return offlineLookupData;
@@ -4545,7 +4548,8 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
           customers: expandCompactOfflineCustomerRows(compactRows),
           sites: expandCompactOfflineSiteRows(compactSites),
           materials: expandCompactOfflineMaterialRows(meta.materials || []),
-          materialCount: Number(meta.materialCount || (meta.materials || []).length || 0)
+          materialCount: Number(meta.materialCount || (meta.materials || []).length || 0),
+          lookupRevision: String(meta.lookupRevision || '')
         };
       }
 
@@ -4620,6 +4624,7 @@ function clearOfflineLookupCustomerChunks() {
           version: data.version || 'C90i',
           generatedAt: data.generatedAt || new Date().toISOString(),
           savedAt: new Date().toISOString(),
+          lookupRevision: String(data.lookupRevision || ''),
           customers: customers,
           // C90i: keep storage compact; build site search rows from customers when needed.
           sites: Array.isArray(data.sites) ? data.sites : [],
@@ -4639,6 +4644,7 @@ function clearOfflineLookupCustomerChunks() {
             compactCustomers: [],
             compactMaterials: compactOfflineMaterialRows(materials),
             materialCount: materials.length,
+            lookupRevision: memoryBase.lookupRevision,
             customers: [],
             sites: []
           };
@@ -4796,6 +4802,7 @@ function clearOfflineLookupCustomerChunks() {
       let fsdOfflineLookupAllMaterials = [];
       let fsdOfflineLookupNextOffset = 0;
       let fsdOfflineLookupRequestSeq = 0;
+      let fsdOfflineLookupExpectedRevision = '';
       const FSD_OFFLINE_LOOKUP_CHUNK_SIZE = 500;
 
       function clearOfflineLookupDownloadWatch() {
@@ -5098,6 +5105,7 @@ function clearOfflineLookupCustomerChunks() {
             ok: true,
             version: payload.version || 'C90o-sites',
             generatedAt: payload.generatedAt || new Date().toISOString(),
+            lookupRevision: fsdOfflineLookupExpectedRevision,
             customers: fsdOfflineLookupAllCustomers.slice(),
             sites: [],
             materials: []
@@ -5231,17 +5239,12 @@ function clearOfflineLookupCustomerChunks() {
         }
       });
 
-      window.syncOfflineCustomerPickerData = function syncOfflineCustomerPickerData(event) {
-        stopTap(event);
-        if (!navigator.onLine) {
-          setOfflineStatus('Still offline. Use the saved customer list, or connect to the internet and update it.');
-          updateOfflineLookupStatus();
-          return false;
-        }
+      function startFullOfflineLookupDownload(revision) {
         try {
           clearOfflineLookupDownloadWatch();
           removeOfflineLookupJsonpScript();
           fsdOfflineLookupChunkData = { customers: [], sites: [], generatedAt: '' };
+          fsdOfflineLookupExpectedRevision = String(revision || '');
           fsdOfflineLookupAllCustomers = [];
           fsdOfflineLookupAllSites = [];
           fsdOfflineLookupAllMaterials = [];
@@ -5250,6 +5253,47 @@ function clearOfflineLookupCustomerChunks() {
         } catch (err) {
           offlineLookupFail('Offline customer list update failed: ' + (err && err.message ? err.message : err));
         }
+      }
+
+      function checkOfflineLookupChanges() {
+        if (!navigator.onLine) return false;
+        const callbackName = 'fsdReceiveOfflineLookupStatus_' + Date.now() + '_' + String(Math.random()).replace(/[^0-9]/g, '');
+        const script = document.createElement('script');
+        window[callbackName] = function(payload) {
+          try { delete window[callbackName]; } catch (ignore) { window[callbackName] = undefined; }
+          try { if (script.parentNode) script.parentNode.removeChild(script); } catch (ignore) {}
+          const revision = String(payload && payload.lookupRevision || '');
+          if (!payload || !payload.ok || !revision) {
+            setOfflineStatus('Lookup change check failed. Your saved iPad list has been kept.');
+            return;
+          }
+          const localRevision = String((offlineLookupData || loadOfflineLookupData()).lookupRevision || '');
+          if (localRevision && localRevision === revision) {
+            setOfflineStatus('Cloud Drafts refreshed. Customer, site and material lists are already up to date.');
+            return;
+          }
+          setOfflineStatus('Lookup changes found. Updating the saved customer, site and material lists...');
+          startFullOfflineLookupDownload(revision);
+        };
+        script.async = true;
+        script.src = APP_URL + '?page=offlineLookup&dataset=status&callback=' + encodeURIComponent(callbackName) + '&ts=' + Date.now();
+        script.onerror = function() {
+          try { delete window[callbackName]; } catch (ignore) { window[callbackName] = undefined; }
+          setOfflineStatus('Lookup change check failed. Your saved iPad list has been kept.');
+        };
+        document.body.appendChild(script);
+        return false;
+      }
+
+      window.syncOfflineCustomerPickerData = function syncOfflineCustomerPickerData(event) {
+        stopTap(event);
+        if (!navigator.onLine) {
+          setOfflineStatus('Still offline. Use the saved customer list, or connect to the internet and update it.');
+          updateOfflineLookupStatus();
+          return false;
+        }
+        setOfflineStatus('Checking whether the saved customer, site and material lists have changed...');
+        checkOfflineLookupChanges();
         return false;
       };
 
@@ -6683,7 +6727,7 @@ function applyOfflineLookupSelection(row) {
           engineer: getDefaultEngineerProfile() || '',
           customer: '',
           site: '',
-          stage: 'c95t-clear-job-cards',
+          stage: 'c95u-smart-lookup-sync',
           note: 'The iPad SFA working copy uses the same valid Add Page combinations as the online SFA form.',
           sageAccountNo: '',
           contractId: '',
@@ -6761,7 +6805,7 @@ function applyOfflineLookupSelection(row) {
           engineer: getDefaultEngineerProfile() || '',
           customer: '',
           site: '',
-          stage: 'c95t-clear-job-cards',
+          stage: 'c95u-smart-lookup-sync',
           note: 'The iPad SEL working copy uses the same valid Add Page combinations as the online SEL form.',
           sageAccountNo: '',
           contractId: '',
@@ -7665,6 +7709,7 @@ function applyOfflineLookupSelection(row) {
         unifiedDraftSyncTotal = 0;
         setOfflineStatus(unifiedDraftSyncSummary + 'Refreshing Cloud Drafts...');
         window.syncCloudDraftCache({ preventDefault:function(){}, stopPropagation:function(){} });
+        checkOfflineLookupChanges();
       }
 
       function runNextUnifiedDraftSync() {
@@ -7705,7 +7750,6 @@ function applyOfflineLookupSelection(row) {
           setOfflineStatus('Draft upload is already running. Keep this screen open.');
           return false;
         }
-        try { window.syncOfflineCustomerPickerData({ preventDefault:function(){}, stopPropagation:function(){} }); } catch (err) {}
         const allRows = normaliseUnifiedDrafts(readOfflineQueue());
         const selectedEngineer = String(offlineEngineerFilter && offlineEngineerFilter.value || '').trim().toLowerCase();
         const waiting = allRows.filter(function(row) {
@@ -7720,7 +7764,9 @@ function applyOfflineLookupSelection(row) {
         }
         if (!waiting.length) {
           setOfflineStatus('No uploads are waiting. Refreshing Cloud Drafts...');
-          return window.syncCloudDraftCache({ preventDefault:function(){}, stopPropagation:function(){} });
+          window.syncCloudDraftCache({ preventDefault:function(){}, stopPropagation:function(){} });
+          checkOfflineLookupChanges();
+          return false;
         }
         unifiedDraftSyncQueue = waiting.map(function(row) { return row.offlineId; });
         unifiedDraftSyncFailures = 0;
@@ -8360,7 +8406,7 @@ function applyOfflineLookupSelection(row) {
 
     }());
   </script>
-  <div class="fixed-version-badge">FSD Certs · Minimal Home C95t</div>
+  <div class="fixed-version-badge">FSD Certs · Minimal Home C95u</div>
 
 
   <!-- C93p Premium Home clock -->
