@@ -2692,7 +2692,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
           <button data-fsd-fasttap class="minimal-app tone-navy" type="button" onclick="openCerts(event)"><span class="minimal-app-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3.5h12v17H6z"/><path d="m9 12 2 2 4-4M9 17h6M9 7h6"/></svg></span><strong>Submitted Reports</strong><small>Review completed paperwork.</small><span class="minimal-app-arrow" aria-hidden="true">→</span></button>
         </div></section>
       </main>
-      <footer class="minimal-footer"><span><strong>FSD Certs</strong> · Built for Fire Safety Direct</span><span class="minimal-labs">Designed &amp; engineered by Jared720 Labs · C95v</span></footer>
+      <footer class="minimal-footer"><span><strong>FSD Certs</strong> · Built for Fire Safety Direct</span><span class="minimal-labs">Designed &amp; engineered by Jared720 Labs · C95w</span></footer>
     </div>
   </section>
   <section id="offlineDrafts" class="screen offline-screen" aria-label="Jobs and Drafts">
@@ -2737,7 +2737,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
           <button class="button secondary" type="button" onclick="startNewOfflineSelTrial(event)">+ New SEL</button>
         </div>
       </section>
-      <div class="maker-mark">Jared720 Labs · C95v Auto Draft Refresh</div>
+      <div class="maker-mark">Jared720 Labs · C95w Offline ESR Parity</div>
     </main>
   </section>
 
@@ -2759,11 +2759,12 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
       <form id="offlineWEditorForm" onsubmit="saveOfflineEditor(event)">
         <div class="editor-grid">
           <input type="hidden" id="editOfflineId">
+          <div class="editor-section-title offline-esr-job-heading">Job Details</div>
           <div class="editor-field editor-wide"><label>Draft name</label><input id="editDraftName"></div>
           <div class="editor-quick-row">
             <button class="editor-mini-btn" type="button" onclick="autoNameOfflineW(event)">Auto-name from customer/site</button>
             <button class="editor-mini-btn" type="button" onclick="setCustomerDateToday(event)">Set customer date today</button>
-            <button id="editorMaterialQuickBtn" class="editor-mini-btn" type="button" onclick="addThreeMaterialRows(event)">Add 3 material rows</button>
+            <button id="editorMaterialQuickBtn" class="editor-mini-btn" type="button" onclick="openOfflineCustomerPicker(event,'material')">+ Add / Search Material</button>
             <button id="editorSfaEquipmentQuickBtn" class="editor-mini-btn" type="button" onclick="addCommonSfaEquipmentRows(event)">Add SFA equipment checked rows</button>
           </div>
           <div class="editor-field"><label>Engineer</label><input id="editEngineer"></div>
@@ -3059,22 +3060,26 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
             </div>
           </div>
           <div id="wOfflineAdminFields" class="nested-editor-grid">
+            <div class="editor-section-title">ESR Customer / Job Details</div>
             <div class="editor-field"><label>Sage account no.</label><input id="editSageAccountNo"></div>
             <div class="editor-field"><label>Customer order no.</label><input id="editCustomerOrderNo"></div>
             <div class="editor-field"><label>Our ref no.</label><input id="editOurRefNo"></div>
             <div class="editor-field"><label>Asbestos register available?</label><select id="editAsbestosAvailable"><option value=""></option><option>Yes</option><option>No</option><option>N/A</option></select></div>
           </div>
           <div id="wOfflineWorkCostFields" class="nested-editor-grid">
-          <div class="editor-section-title">Work description</div>
-          <div class="editor-field editor-wide"><label>Material / work description</label><textarea id="editWorkDescription" rows="4"></textarea></div>
+          <div class="editor-section-title">Work Description / Job Body</div>
+          <div class="editor-field editor-wide"><label>Work description paragraph</label><textarea id="editWorkDescription" rows="4"></textarea></div>
           <div class="editor-field"><label>Qty</label><input id="editWorkDescriptionQty"></div>
           <div class="editor-field"><label>Unit price</label><input id="editWorkDescriptionUnitPrice" type="number" step="0.01"></div>
           <div class="editor-field"><label>Total price</label><input id="editWorkDescriptionTotalPrice" type="number" step="0.01"></div>
           <div class="editor-field"><label>Charge note</label><input id="editWorkDescriptionChargeNote"></div>
-          <div class="editor-section-title">Materials / work rows</div>
+          <div class="editor-section-title">Materials / Pricing</div>
           <div id="editorMaterials" class="editor-materials"></div>
-          <div class="editor-wide"><button class="button secondary" style="min-height:48px;font-size:16px;" type="button" onclick="addEditorMaterialRow()">+ Add material/work row</button></div>
-          <div class="editor-section-title">Mandatory panel photo</div>
+          <div class="editor-quick-row editor-wide">
+            <button class="editor-mini-btn" type="button" onclick="openOfflineCustomerPicker(event,'material')">+ Add / Search Material</button>
+            <button class="editor-mini-btn" type="button" onclick="addEditorMaterialRow()">Add Blank Manual Row</button>
+          </div>
+          <div class="editor-section-title">Mandatory Panel Photo</div>
           <div class="editor-field editor-wide">
             <label>Panel photo at time of leaving site</label>
             <input id="editPanelPhotoFile" type="file" accept="image/*" onchange="handleOfflinePanelPhoto(event)">
@@ -3082,13 +3087,13 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
             <img id="editPanelPhotoPreview" class="offline-photo-preview" alt="Offline ESR panel photo preview">
             <button id="editPanelPhotoRemoveBtn" class="editor-mini-btn hidden-report-fields" type="button" onclick="clearOfflinePanelPhoto(event)">Remove / Replace Panel Photo</button>
           </div>
-          <div class="editor-section-title">Comments and time</div>
+          <div class="editor-section-title">Comments / Time</div>
           <div class="editor-field editor-wide"><label>Comments</label><textarea id="editComments" rows="4"></textarea></div>
           <div class="editor-field"><label>Travel time</label><input id="editTravelTime"></div>
           <div class="editor-field"><label>Arrival time</label><input id="editArrivalTime"></div>
           <div class="editor-field"><label>Time on site</label><input id="editTimeOnSite"></div>
           <div class="editor-field"><label>Carriage</label><input id="editCarriage" type="number" step="0.01"></div>
-          <div class="editor-section-title">Costs</div>
+          <div class="editor-section-title">Totals</div>
           <div class="editor-field"><label>Manual subtotal override</label><select id="editManualSubtotalOverride"><option value=""></option><option value="YES">YES</option><option value="NO">NO</option></select></div>
           <div class="editor-field"><label>Manual subtotal</label><input id="editManualSubtotal" type="number" step="0.01"></div>
           <div class="editor-field"><label>Sub total</label><input id="editSubTotal" type="number" step="0.01"></div>
@@ -3263,7 +3268,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
     (function () {
       'use strict';
 
-      const SHELL_VER = 'V6.3c95v';
+      const SHELL_VER = 'V6.3c95w';
       const APP_URL = 'https://script.google.com/macros/s/AKfycbzq9FTETNZwUJWHMGnMHECbu3sJ3jy3FFvGYyeaRXtkoK1GHBtqOu-GLBle_WGfoFtI/exec';
       const SCHEDULE_URL = 'https://infofiresafetydirect-cloud.github.io/fsd-schedule-2026/';
       const CALLOUTS_PAGE = APP_URL + '?page=callouts&shell=ipad';
@@ -3859,7 +3864,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
       let offlineLookupData = loadOfflineLookupData();
       setTimeout(function() { refreshOfflineLookupDataFromIndexedDb(); }, 300);
 
-      // C95v: W/ESR, SFA and SEL use the same valid Add Page combinations as online.
+      // C95w: W/ESR, SFA and SEL use the same valid Add Page combinations as online.
       // into the same cloud Drafts records. QQ/FAC stay cloud-only.
       const OFFLINE_REPORT_TYPES = {
         W:   { code: 'W',   label: 'Engineer Service Report',             page: 'esr', editableOffline: true,  syncableOffline: true },
@@ -5299,19 +5304,25 @@ function clearOfflineLookupCustomerChunks() {
 
       window.openOfflineCustomerPicker = function openOfflineCustomerPicker(event, mode) {
         stopTap(event);
-        offlineLookupMode = mode === 'site' ? 'site' : 'invoice';
+        offlineLookupMode = mode === 'material' ? 'material' : (mode === 'site' ? 'site' : 'invoice');
         offlineLookupData = loadOfflineLookupData();
         const modal = document.getElementById('offlineLookupModal');
         const title = document.getElementById('offlineLookupTitle');
         const help = document.getElementById('offlineLookupHelp');
         const search = document.getElementById('offlineLookupSearch');
-        if (title) title.textContent = offlineLookupMode === 'site' ? 'Pick Offline Site Address' : 'Pick Offline Invoice Customer';
-        if (help) help.textContent = offlineLookupMode === 'site'
-          ? 'Search the site addresses saved on this iPad. This works without signal after you update the list once.'
-          : 'Search invoice customers saved on this iPad. This works without signal after you update the list once.';
+        if (title) title.textContent = offlineLookupMode === 'material'
+          ? 'Add Offline Material'
+          : (offlineLookupMode === 'site' ? 'Pick Offline Site Address' : 'Pick Offline Invoice Customer');
+        if (help) help.textContent = offlineLookupMode === 'material'
+          ? 'Search the materials saved on this iPad. Selecting one adds it to the ESR material rows.'
+          : (offlineLookupMode === 'site'
+            ? 'Search the site addresses saved on this iPad. This works without signal after you update the list once.'
+            : 'Search invoice customers saved on this iPad. This works without signal after you update the list once.');
         if (search) {
           search.value = '';
-          search.placeholder = offlineLookupMode === 'site' ? 'Search site, postcode or account...' : 'Search customer, postcode or Sage account...';
+          search.placeholder = offlineLookupMode === 'material'
+            ? 'Search material, code or supplier...'
+            : (offlineLookupMode === 'site' ? 'Search site, postcode or account...' : 'Search customer, postcode or Sage account...');
         }
         updateOfflineLookupStatus();
         renderOfflineLookupResults();
@@ -5347,12 +5358,16 @@ function clearOfflineLookupCustomerChunks() {
           return;
         }
         wrap.innerHTML = rows.map(function(row, idx) {
-          const title = offlineLookupMode === 'site'
-            ? (row.lookupName || firstLookupLine(row.siteAddress) || 'Site address')
-            : (row.lookupName || firstLookupLine(row.customerAddress) || 'Invoice customer');
-          const body = offlineLookupMode === 'site'
-            ? [row.siteAddress, row.customerName ? ('Customer: ' + row.customerName) : '', row.sageAccountNo ? ('A/C: ' + row.sageAccountNo) : ''].filter(Boolean).join('\n')
-            : [row.customerAddress, row.siteAddress ? ('Site: ' + firstLookupLine(row.siteAddress)) : '', row.defaultCustomerOrderNo ? ('Order: ' + row.defaultCustomerOrderNo) : '', row.sageAccountNo ? ('A/C: ' + row.sageAccountNo) : ''].filter(Boolean).join('\n');
+          const title = offlineLookupMode === 'material'
+            ? (row.material || row.description || row.code || 'Material')
+            : (offlineLookupMode === 'site'
+              ? (row.lookupName || firstLookupLine(row.siteAddress) || 'Site address')
+              : (row.lookupName || firstLookupLine(row.customerAddress) || 'Invoice customer'));
+          const body = offlineLookupMode === 'material'
+            ? [row.description && row.description !== title ? row.description : '', row.code ? ('Code: ' + row.code) : '', row.supplier ? ('Supplier: ' + row.supplier) : '', row.unitPrice ? ('Unit: £' + row.unitPrice) : ''].filter(Boolean).join('\n')
+            : (offlineLookupMode === 'site'
+              ? [row.siteAddress, row.customerName ? ('Customer: ' + row.customerName) : '', row.sageAccountNo ? ('A/C: ' + row.sageAccountNo) : ''].filter(Boolean).join('\n')
+              : [row.customerAddress, row.siteAddress ? ('Site: ' + firstLookupLine(row.siteAddress)) : '', row.defaultCustomerOrderNo ? ('Order: ' + row.defaultCustomerOrderNo) : '', row.sageAccountNo ? ('A/C: ' + row.sageAccountNo) : ''].filter(Boolean).join('\n'));
           return '<button class="offline-lookup-result" type="button" data-offline-lookup-index="' + idx + '"><strong>' + escapeHtml(title) + '</strong><span>' + escapeHtml(body || title) + '</span></button>';
         }).join('');
         Array.from(wrap.querySelectorAll('[data-offline-lookup-index]')).forEach(function(btn) {
@@ -5415,8 +5430,10 @@ function clearOfflineLookupCustomerChunks() {
       
       function showOfflineLookupPickedFeedback(mode, row) {
         try {
-          const name = row && (row.lookupName || row.customerName || firstLookupLine(row.customerAddress) || firstLookupLine(row.siteAddress)) || 'Selected';
-          const msg = (mode === 'site' ? 'Site picked: ' : 'Customer picked: ') + name;
+          const name = row && (mode === 'material'
+            ? (row.material || row.description || row.code)
+            : (row.lookupName || row.customerName || firstLookupLine(row.customerAddress) || firstLookupLine(row.siteAddress))) || 'Selected';
+          const msg = (mode === 'material' ? 'Material added: ' : (mode === 'site' ? 'Site picked: ' : 'Customer picked: ')) + name;
           setOfflinePickerStatus(msg);
           setOfflineStatus(msg);
           setTimeout(function() {
@@ -5427,7 +5444,15 @@ function clearOfflineLookupCustomerChunks() {
 
 function applyOfflineLookupSelection(row) {
         row = row || {};
-        if (offlineLookupMode === 'site') {
+        if (offlineLookupMode === 'material') {
+          const unitPrice = String(row.unitPrice || '').trim();
+          addEditorMaterialRow({
+            qty: '1',
+            description: row.description || row.material || row.code || '',
+            unitPrice: unitPrice,
+            totalPrice: unitPrice
+          });
+        } else if (offlineLookupMode === 'site') {
           setEditValue('editSite', row.siteAddress || row.address || row.customerAddress || '');
           setVisibleSageAccount(row.sageAccountNo || '', false);
         } else {
@@ -5453,7 +5478,7 @@ function applyOfflineLookupSelection(row) {
           }
         } catch (err) {}
 
-        setEditorStatus((offlineLookupMode === 'site' ? 'Site address' : 'Invoice customer') + ' selected from the iPad list. Press Save on iPad before leaving.');
+        setEditorStatus((offlineLookupMode === 'material' ? 'Material' : (offlineLookupMode === 'site' ? 'Site address' : 'Invoice customer')) + ' selected from the iPad list. Press Save on iPad before leaving.');
         showOfflineLookupPickedFeedback(offlineLookupMode, row || {});
         closeOfflineLookupPickerAfterSelection();
         try { autoNameOfflineW(); } catch (err) {}
@@ -6455,9 +6480,11 @@ function applyOfflineLookupSelection(row) {
         const titleEl = document.getElementById('offlineEditorTitle');
         const noteEl = document.getElementById('offlineEditorNote');
         const syncBtn = document.getElementById('offlineEditorSyncBtn');
-        if (titleEl) titleEl.textContent = 'Edit ' + report.code + ' Draft';
+        if (titleEl) titleEl.textContent = report.code === 'W' ? 'Fire Safety Direct Certificate' : ('Edit ' + report.code + ' Draft');
         if (noteEl) {
-          noteEl.textContent = 'This iPad working copy uses the same Add Page combinations as the online ' + report.code + ' form. Save here anytime, then upload and complete the PDF when signal returns.';
+          noteEl.textContent = report.code === 'W'
+            ? 'Engineer Service Report · Offline working copy. This follows the online ESR order and uses the same Report Pack Add Pages.'
+            : 'This iPad working copy uses the same Add Page combinations as the online ' + report.code + ' form. Save here anytime, then upload and complete the PDF when signal returns.';
         }
         if (syncBtn) {
           syncBtn.disabled = !report.syncableOffline;
@@ -8411,7 +8438,7 @@ function applyOfflineLookupSelection(row) {
 
     }());
   </script>
-  <div class="fixed-version-badge">FSD Certs · Minimal Home C95v</div>
+  <div class="fixed-version-badge">FSD Certs · Minimal Home C95w</div>
 
 
   <!-- C93p Premium Home clock -->
