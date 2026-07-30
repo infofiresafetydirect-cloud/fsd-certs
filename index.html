@@ -334,9 +334,22 @@
     .sfa-payload-preview textarea { width: 100%; min-height: 220px; border: 1px solid #93c5fd; border-radius: 12px; padding: 10px; font: 12px/1.45 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; color: #0f172a; background: #fff; }
     .sfa-payload-preview-note { margin: 0; color: #1e3a8a; font-size: 13px; font-weight: 850; line-height: 1.35; }
     .hidden-report-fields { display: none !important; }
-    /* C89k: keep FAC/FAM/PSC Add Page controls at the bottom of the offline editor, not between address and W/SFA/SEL details. */
+    /* Keep Add Page controls at the bottom of the offline editor, after the parent report fields. */
     #offlineAddCertControls { order: 900; }
-    #facOfflineFields, #famOfflineFields, #pscOfflineFields { order: 910; }
+    #facOfflineFields, #famOfflineFields, #pscOfflineFields, #sltOfflineFields { order: 910; }
+    .offline-photo-preview {
+      display: none; max-width: 100%; max-height: 260px; object-fit: contain; margin-top: 8px;
+      border: 1px solid #94a3b8; border-radius: 12px; background: #ffffff;
+    }
+    .offline-signature-canvas {
+      display: block; width: 100%; height: 150px; border: 2px solid #111827; border-radius: 12px; background: #ffffff;
+    }
+    .offline-slt-readings { grid-column: 1 / -1; display: grid; gap: 8px; }
+    .offline-slt-reading {
+      display: grid; grid-template-columns: 48px minmax(130px, 2fr) 90px 110px minmax(130px, 2fr) 90px;
+      gap: 8px; align-items: end; padding: 9px; border-radius: 12px; background: #f8fafc; border: 1px solid #e2e8f0;
+    }
+    .offline-slt-reading .editor-field:first-child { align-self: center; font-weight: 950; text-align: center; }
 
     .editor-material-row { display: grid; grid-template-columns: 74px minmax(0, 1fr) 96px 96px 44px; gap: 8px; align-items: end; padding: 10px; border-radius: 14px; background: #f8fafc; border: 1px solid #e2e8f0; }
     .editor-actions { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-top: 14px; }
@@ -373,10 +386,12 @@
     }
     .editor-material-row .remove-material { min-height:42px;font-size:18px;padding:6px; }
 
-    @media (max-width: 720px) {
+      @media (max-width: 720px) {
       .editor-grid { grid-template-columns: 1fr; }
       .editor-material-row { grid-template-columns: 1fr; }
-      .nested-editor-grid { grid-template-columns: 1fr; }
+        .nested-editor-grid { grid-template-columns: 1fr; }
+        .offline-slt-reading { grid-template-columns: 42px 1fr 1fr; }
+        .offline-slt-reading .slt-comments { grid-column: 1 / -1; }
       .editor-actions { grid-template-columns: 1fr; }
     }
 
@@ -2574,7 +2589,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
           <button data-fsd-fasttap class="minimal-app tone-navy" type="button" onclick="openCerts(event)"><span class="minimal-app-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3.5h12v17H6z"/><path d="m9 12 2 2 4-4M9 17h6M9 7h6"/></svg></span><strong>Submitted Reports</strong><small>Review completed paperwork.</small><span class="minimal-app-arrow" aria-hidden="true">→</span></button>
         </div></section>
       </main>
-      <footer class="minimal-footer"><span><strong>FSD Certs</strong> · Built for Fire Safety Direct</span><span class="minimal-labs">Designed &amp; engineered by Jared720 Labs · C95q</span></footer>
+      <footer class="minimal-footer"><span><strong>FSD Certs</strong> · Built for Fire Safety Direct</span><span class="minimal-labs">Designed &amp; engineered by Jared720 Labs · C95r</span></footer>
     </div>
   </section>
   <section id="offlineDrafts" class="screen offline-screen" aria-label="Jobs and Drafts">
@@ -2582,7 +2597,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
       <h2 class="offline-title">Jobs / Drafts</h2>
       <p class="offline-help">One Jobs &amp; Drafts list for this iPad: cloud drafts you have synced down, offline-only drafts, and drafts with local changes waiting to sync.</p>
       <p class="offline-help"><strong>How it works:</strong> press Sync Now while online before going out. The iPad downloads Cloud Drafts plus the full customer/site/equipment lookup. When there is no signal, you can only open what has already been synced to this iPad.</p>
-      <p class="offline-help"><strong>Full form:</strong> when online, Continue Draft opens the normal certificate form with its normal Add Pages. With no signal, Edit Offline opens the local working copy; its Add Pages are limited to those shown in that editor.</p>
+      <p class="offline-help"><strong>Same report pack:</strong> Add Pages, photos and signatures saved offline travel with the draft. When signal returns, sync it and continue in the normal online form to complete the PDF.</p>
       <div class="actions">
         <button class="button" type="button" onclick="syncUnifiedDrafts(event)"><span class="tile-icon">🔁</span><span>Sync Now - Drafts + Full Lookup</span></button>
         <button class="button secondary" type="button" onclick="refreshOfflineDrafts(event)"><span class="tile-icon">🔄</span><span>Refresh Jobs / Drafts</span></button>
@@ -2604,7 +2619,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
       </div>
       <div id="offlineStatus" class="offline-status"></div>
       <div id="offlineLookupStatus" class="offline-status"></div>
-      <div class="maker-mark">Jared720 Labs · C95q Jobs &amp; Drafts</div>
+      <div class="maker-mark">Jared720 Labs · C95r Offline Parity</div>
     </main>
   </section>
 
@@ -2632,7 +2647,6 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
             <button class="editor-mini-btn" type="button" onclick="setCustomerDateToday(event)">Set customer date today</button>
             <button id="editorMaterialQuickBtn" class="editor-mini-btn" type="button" onclick="addThreeMaterialRows(event)">Add 3 material rows</button>
             <button id="editorSfaEquipmentQuickBtn" class="editor-mini-btn" type="button" onclick="addCommonSfaEquipmentRows(event)">Add SFA equipment checked rows</button>
-            <button id="editorSfaPayloadPreviewBtn" class="editor-mini-btn" type="button" onclick="previewSfaCloudPayload(event)">Preview SFA Cloud Payload</button>
           </div>
           <div class="editor-field"><label>Engineer</label><input id="editEngineer"></div>
           <div class="editor-field"><label>Service date</label><input id="editServiceDate" type="date"></div>
@@ -2646,17 +2660,25 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
           <div id="offlineEditorLookupStatus" class="sfa-local-note editor-wide">Offline customer picker uses the last synced customer/site list saved on this device.</div>
 
           <div id="offlineAddCertControls" class="nested-editor-grid">
-            <div class="editor-section-title">Add Page / Add Cert options</div>
-            <div class="sfa-local-note">These Add Certs sit inside the offline parent report you are editing now — W, SFA or SEL. They save with that offline draft and reopen from Cloud Drafts with the added pages switched on.</div>
+            <div class="editor-section-title">Add Pages</div>
+            <div id="offlineAddPageRuleNote" class="sfa-local-note">The available pages below match the normal online parent report. Every added page saves inside the offline draft and reopens in the online combined report pack.</div>
+            <input type="hidden" id="editIncludeServiceReport" value="NO">
+            <input type="hidden" id="editIncludeFireAlarmReport" value="NO">
+            <input type="hidden" id="editIncludeEmergencyLightingReport" value="NO">
             <input type="hidden" id="editIncludeFireAlarmCommissioningReport" value="NO">
             <input type="hidden" id="editIncludeFireAlarmModificationReport" value="NO">
             <input type="hidden" id="editIncludePowerSupplyCertificate" value="NO">
+            <input type="hidden" id="editIncludeSoundLevelTestReport" value="NO">
             <div class="editor-quick-row editor-wide">
-              <button class="editor-mini-btn" type="button" onclick="addOfflineInlineCert(event,'FAC')">Add FAC page</button>
-              <button class="editor-mini-btn" type="button" onclick="addOfflineInlineCert(event,'FAM')">Add FAM page</button>
-              <button class="editor-mini-btn" type="button" onclick="addOfflineInlineCert(event,'PSC')">Add PSC page</button>
+              <button id="offlineAddWBtn" class="editor-mini-btn" type="button" onclick="addOfflineInlineCert(event,'W')">Add Engineer Service Report</button>
+              <button id="offlineAddSfaBtn" class="editor-mini-btn" type="button" onclick="addOfflineInlineCert(event,'SFA')">Add Fire Alarm Report</button>
+              <button id="offlineAddSelBtn" class="editor-mini-btn" type="button" onclick="addOfflineInlineCert(event,'SEL')">Add Emergency Lighting Report</button>
+              <button id="offlineAddFacBtn" class="editor-mini-btn" type="button" onclick="addOfflineInlineCert(event,'FAC')">Add FAC page</button>
+              <button id="offlineAddFamBtn" class="editor-mini-btn" type="button" onclick="addOfflineInlineCert(event,'FAM')">Add FAM page</button>
+              <button id="offlineAddPscBtn" class="editor-mini-btn" type="button" onclick="addOfflineInlineCert(event,'PSC')">Add PSC page</button>
+              <button id="offlineAddSltBtn" class="editor-mini-btn" type="button" onclick="addOfflineInlineCert(event,'SLT')">Add Sound Level Test</button>
             </div>
-            <div id="offlineInlineCertSummary" class="sfa-local-note editor-wide">No extra cert pages added yet.</div>
+            <div id="offlineInlineCertSummary" class="sfa-local-note editor-wide">No extra pages added yet.</div>
           </div>
 
           <div id="facOfflineFields" class="nested-editor-grid hidden-report-fields">
@@ -2769,9 +2791,27 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
             <div class="editor-field editor-wide"><label>Notes</label><textarea id="editPscNotes" rows="4"></textarea></div>
             <div class="editor-summary editor-wide"><div><span>Power Supply battery calculation</span><strong id="editPscCalcStatus">Enter readings to calculate required batteries.</strong></div></div>
           </div>
+
+          <div id="sltOfflineFields" class="nested-editor-grid hidden-report-fields">
+            <div class="editor-section-title">Sound Level Test Certificate</div>
+            <div class="sfa-local-note">Sound Level Test remains Add Page-only and inherits this report’s customer, site, engineer and signatures.</div>
+            <button class="editor-mini-btn" type="button" onclick="removeOfflineInlineCert(event,'SLT')">Remove Sound Level Test</button>
+            <div class="editor-field"><label>Test Type</label><select id="editSltTestType"><option value=""></option><option value="New Commission">New Commission</option><option value="Additions">Additions</option><option value="Alterations">Alterations</option><option value="Tests on existing systems">Tests on existing systems</option><option value="Other">Other</option></select></div>
+            <div class="editor-field"><label>Other System Detail</label><input id="editSltSystemDetails"></div>
+            <div class="editor-field"><label>Meter Type</label><input id="editSltMeterType"></div>
+            <div class="editor-field"><label>TER / Serial No.</label><input id="editSltMeterSerial"></div>
+            <div class="editor-field"><label>Calibration Date</label><input id="editSltCalibrationDate" type="date"></div>
+            <div class="editor-field"><label>Meter Response</label><select id="editSltMeterResponse"><option value=""></option><option value="Slow response">Slow response</option><option value="Fast response">Fast response</option></select></div>
+            <div class="editor-field"><label>Weighting</label><select id="editSltMeterWeighting"><option value=""></option><option value="A weighting">A weighting</option><option value="C weighting">C weighting</option></select></div>
+            <div class="editor-section-title">Sound Level Readings</div>
+            <div id="offlineSltReadings" class="offline-slt-readings"></div>
+            <div class="editor-field editor-wide"><label>Notes</label><textarea id="editSltNotes" rows="4"></textarea></div>
+          </div>
+
           <div id="sfaOfflineFields" class="nested-editor-grid hidden-report-fields">
             <div class="editor-section-title">SFA fire alarm report details</div>
-            <div class="sfa-local-note">SFA offline follows the online Fire Alarm Service Report shape. Save locally, sync to Cloud Drafts, then open from Cloud Drafts and use the normal online Complete Certificate button.</div>
+            <div class="sfa-local-note">This is the same Fire Alarm Report module used by the online combined report pack.</div>
+            <button id="offlineRemoveSfaPageBtn" class="editor-mini-btn hidden-report-fields" type="button" onclick="removeOfflineInlineCert(event,'SFA')">Remove Fire Alarm Report</button>
             <div class="editor-field"><label>Sage account no.</label><input id="editSfaSageAccountNo"></div>
             <div class="editor-field"><label>Contract ID No.</label><input id="editSfaContractId"></div>
             <div class="editor-field"><label>Order No.</label><input id="editSfaOrderNo"></div>
@@ -2830,7 +2870,8 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
 
           <div id="selOfflineFields" class="nested-editor-grid hidden-report-fields">
             <div class="editor-section-title">SEL emergency lighting report details</div>
-            <div class="sfa-local-note">SEL offline follows the online Emergency Lighting Report shape. Save locally, sync to Cloud Drafts, then open from Cloud Drafts and use the normal online SEL PDF button.</div>
+            <div class="sfa-local-note">This is the same Emergency Lighting Report module used by the online combined report pack.</div>
+            <button id="offlineRemoveSelPageBtn" class="editor-mini-btn hidden-report-fields" type="button" onclick="removeOfflineInlineCert(event,'SEL')">Remove Emergency Lighting Report</button>
             <div class="editor-field"><label>Sage Account No.</label><input id="editSelSageAccountNo"></div>
             <div class="editor-field"><label>Contract ID No.</label><input id="editSelContractId"></div>
             <div class="editor-field"><label>Asbestos Report Available</label><select id="editSelAsbestosAvailable"><option value="NO">NO</option><option value="YES">YES</option></select></div>
@@ -2888,6 +2929,17 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
             <div class="editor-field"><label>Cost Display</label><select id="editElCostDisplayMode"><option value="SEPARATE">Show costs on SEL report</option><option value="SEE_ATTACHED_SFA">Show tick / see attached report</option></select></div>
             <div class="editor-field"><label>Tick Box if Non-Compliant</label><select id="editElNonCompliantHeader"><option value="NO">NO</option><option value="YES">YES - show red Non-Compliant header</option></select></div>
           </div>
+          <div id="offlineWAddedHeader" class="nested-editor-grid hidden-report-fields">
+            <div class="editor-section-title">Engineer Service Report</div>
+            <div class="sfa-local-note">This is the full Engineer Service Report module used by the online combined report pack.</div>
+            <button class="editor-mini-btn" type="button" onclick="removeOfflineInlineCert(event,'W')">Remove Engineer Service Report</button>
+            <div id="offlineAddedWSfaCosts" class="nested-editor-grid hidden-report-fields">
+              <div class="editor-section-title">Engineer Service Report Costs</div>
+              <div class="editor-field"><label>Service Cost</label><input id="editServiceReportServiceCost" type="number" step="0.01" value="0.00"></div>
+              <div class="editor-field"><label>Material Cost</label><input id="editServiceReportMaterialCost" type="number" step="0.01" value="0.00"></div>
+              <div class="editor-field"><label>Labour Cost</label><input id="editServiceReportLabourCost" type="number" step="0.01" value="0.00"></div>
+            </div>
+          </div>
           <div id="wOfflineAdminFields" class="nested-editor-grid">
             <div class="editor-field"><label>Sage account no.</label><input id="editSageAccountNo"></div>
             <div class="editor-field"><label>Customer order no.</label><input id="editCustomerOrderNo"></div>
@@ -2904,6 +2956,14 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
           <div class="editor-section-title">Materials / work rows</div>
           <div id="editorMaterials" class="editor-materials"></div>
           <div class="editor-wide"><button class="button secondary" style="min-height:48px;font-size:16px;" type="button" onclick="addEditorMaterialRow()">+ Add material/work row</button></div>
+          <div class="editor-section-title">Mandatory panel photo</div>
+          <div class="editor-field editor-wide">
+            <label>Panel photo at time of leaving site</label>
+            <input id="editPanelPhotoFile" type="file" accept="image/*" onchange="handleOfflinePanelPhoto(event)">
+            <div id="editPanelPhotoStatus" class="sfa-local-note">No panel photo selected.</div>
+            <img id="editPanelPhotoPreview" class="offline-photo-preview" alt="Offline ESR panel photo preview">
+            <button id="editPanelPhotoRemoveBtn" class="editor-mini-btn hidden-report-fields" type="button" onclick="clearOfflinePanelPhoto(event)">Remove / Replace Panel Photo</button>
+          </div>
           <div class="editor-section-title">Comments and time</div>
           <div class="editor-field editor-wide"><label>Comments</label><textarea id="editComments" rows="4"></textarea></div>
           <div class="editor-field"><label>Travel time</label><input id="editTravelTime"></div>
@@ -2922,9 +2982,33 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
             <div><span>Total</span><strong id="calcTotal">£0.00</strong></div>
           </div>
           </div>
-          <div class="editor-section-title">Customer sign-off text</div>
+          <div class="editor-section-title">Signatures</div>
+          <div class="editor-field">
+            <label>Engineer Signature</label>
+            <canvas id="editEngineerSignature" class="offline-signature-canvas"></canvas>
+            <div class="editor-quick-row">
+              <button class="editor-mini-btn" type="button" onclick="openOfflineSignaturePad(event,'engineer')">Fast Signature Pad</button>
+              <button class="editor-mini-btn" type="button" onclick="clearOfflineSignature(event,'engineer')">Clear</button>
+            </div>
+          </div>
+          <div class="editor-field">
+            <label>Customer Signature</label>
+            <canvas id="editCustomerSignature" class="offline-signature-canvas"></canvas>
+            <div class="editor-quick-row">
+              <button class="editor-mini-btn" type="button" onclick="openOfflineSignaturePad(event,'customer')">Fast Signature Pad</button>
+              <button class="editor-mini-btn" type="button" onclick="clearOfflineSignature(event,'customer')">Clear</button>
+            </div>
+          </div>
+          <div class="editor-section-title">Customer sign-off</div>
           <div class="editor-field"><label>Customer name</label><input id="editCustomerName"></div>
           <div class="editor-field"><label>Customer date</label><input id="editCustomerDate" type="date"></div>
+          <div class="editor-field editor-wide">
+            <label>Customer Signature Status</label>
+            <select id="editCustomerSignatureStatus">
+              <option value="SIGNATURE_REQUIRED">Customer available - signature required</option>
+              <option value="NO_CUSTOMER_ON_SITE">No customer available on site</option>
+            </select>
+          </div>
         </div>
         <div class="editor-actions">
           <button class="button" type="submit">Save Offline</button>
@@ -3061,7 +3145,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
     (function () {
       'use strict';
 
-      const SHELL_VER = 'V6.3c95q';
+      const SHELL_VER = 'V6.3c95r';
       const APP_URL = 'https://script.google.com/macros/s/AKfycbzq9FTETNZwUJWHMGnMHECbu3sJ3jy3FFvGYyeaRXtkoK1GHBtqOu-GLBle_WGfoFtI/exec';
       const SCHEDULE_URL = 'https://infofiresafetydirect-cloud.github.io/fsd-schedule-2026/';
       const CALLOUTS_PAGE = APP_URL + '?page=callouts&shell=ipad';
@@ -3218,6 +3302,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
         if (sigHelper) sigHelper.classList.remove('active');
         if (sigHelper) sigHelper.setAttribute('aria-hidden', 'true');
         sigHelperDrawing = false;
+        sigHelperLocalTarget = '';
       };
 
       window.clearSignatureHelper = function(event) {
@@ -3232,6 +3317,13 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
           return;
         }
         const dataUrl = getCroppedSignatureHelperDataUrl();
+        if (sigHelperLocalTarget) {
+          setOfflineSignatureData(sigHelperLocalTarget, dataUrl);
+          setEditorDirty(true);
+          setEditorStatus((sigHelperLocalTarget === 'engineer' ? 'Engineer' : 'Customer') + ' signature added. Press Save Offline before leaving.');
+          window.closeSignatureHelper();
+          return;
+        }
         const payload = {
           type: 'FSD_SIGNATURE_PAD_RESULT',
           source: 'fsd-certs-shell',
@@ -3245,6 +3337,59 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
           if (frame && frame.contentWindow && frame.contentWindow !== sigHelperReturnWindow) frame.contentWindow.postMessage(payload, '*');
         } catch (err) {}
         window.closeSignatureHelper();
+      };
+
+      function drawOfflineSignatureCanvas(canvasId, dataUrl) {
+        const canvas = document.getElementById(canvasId);
+        if (!canvas) return;
+        const rect = canvas.getBoundingClientRect();
+        const width = Math.max(1, Math.round(rect.width || 420));
+        const height = Math.max(1, Math.round(rect.height || 150));
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d', { alpha: true });
+        ctx.clearRect(0, 0, width, height);
+        if (!dataUrl) return;
+        const img = new Image();
+        img.onload = function() {
+          const scale = Math.min((width - 16) / Math.max(1, img.width), (height - 16) / Math.max(1, img.height), 1);
+          const drawWidth = Math.max(1, img.width * scale);
+          const drawHeight = Math.max(1, img.height * scale);
+          ctx.clearRect(0, 0, width, height);
+          ctx.drawImage(img, (width - drawWidth) / 2, (height - drawHeight) / 2, drawWidth, drawHeight);
+        };
+        img.src = dataUrl;
+      }
+
+      function setOfflineSignatureData(type, dataUrl) {
+        if (type === 'engineer') {
+          offlineEngineerSignatureData = dataUrl || '';
+          drawOfflineSignatureCanvas('editEngineerSignature', offlineEngineerSignatureData);
+        } else {
+          offlineCustomerSignatureData = dataUrl || '';
+          drawOfflineSignatureCanvas('editCustomerSignature', offlineCustomerSignatureData);
+        }
+      }
+
+      window.openOfflineSignaturePad = function openOfflineSignaturePad(event, type) {
+        stopTap(event);
+        sigHelperLocalTarget = type === 'engineer' ? 'engineer' : 'customer';
+        sigHelperReturnWindow = null;
+        sigHelperReturnOrigin = '*';
+        sigHelperTargetCanvasId = '';
+        if (sigHelperTarget) sigHelperTarget.textContent = sigHelperLocalTarget === 'engineer' ? 'Engineer Signature' : 'Customer Signature';
+        if (sigHelper) sigHelper.classList.add('active');
+        if (sigHelper) sigHelper.setAttribute('aria-hidden', 'false');
+        setTimeout(function() { clearSignatureHelper(); }, 40);
+        return false;
+      };
+
+      window.clearOfflineSignature = function clearOfflineSignature(event, type) {
+        stopTap(event);
+        setOfflineSignatureData(type === 'engineer' ? 'engineer' : 'customer', '');
+        setEditorDirty(true);
+        setEditorStatus((type === 'engineer' ? 'Engineer' : 'Customer') + ' signature cleared. Press Save Offline before leaving.');
+        return false;
       };
 
       const loader = document.getElementById('loader');
@@ -3594,7 +3739,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
       let offlineLookupData = loadOfflineLookupData();
       setTimeout(function() { refreshOfflineLookupDataFromIndexedDb(); }, 300);
 
-      // C95q: W/ESR, SFA and SEL use the existing offline editor and can sync
+      // C95r: W/ESR, SFA and SEL use the same valid Add Page combinations as online.
       // into the same cloud Drafts records. QQ/FAC stay cloud-only.
       const OFFLINE_REPORT_TYPES = {
         W:   { code: 'W',   label: 'Engineer Service Report',             page: 'esr', editableOffline: true,  syncableOffline: true },
@@ -3603,6 +3748,17 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
         QQ:  { code: 'QQ',  label: 'Quick Quote',                          page: 'qq',   editableOffline: false, syncableOffline: false },
         FAC: { code: 'FAC', label: 'Fire Alarm Commissioning Certificate', page: 'fac', editableOffline: false, syncableOffline: false }
       };
+      const OFFLINE_ADD_PAGE_RULES = {
+        W: ['SFA', 'SEL', 'FAC', 'FAM', 'PSC', 'SLT'],
+        SFA: ['W', 'SEL'],
+        SEL: ['W', 'SFA']
+      };
+      const SLT_OFFLINE_READING_COUNT = 19;
+      let activeOfflineReportCode = 'W';
+      let offlinePanelPhotoData = '';
+      let offlineEngineerSignatureData = '';
+      let offlineCustomerSignatureData = '';
+      let sigHelperLocalTarget = '';
 
       const SFA_EQUIPMENT_DEFAULT_ROWS = [
         ['Control Panels (Function Led’s)', 'Equipment List'],
@@ -3619,6 +3775,16 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
         ['All Door Holder Units & Power Supplies', 'All Detectors Visually Inspected'],
         ['Disconnection of A.C. Supply', 'All Call Points Visually Inspected'],
         ['Link to manned Centre', 'Design Category Cert. Available']
+      ];
+      const SFA_ADDED_EQUIPMENT_DEFAULT_ROWS = [
+        ['Detectors', ''],
+        ['Call Points', ''],
+        ['Sounders', ''],
+        ['Beacons', ''],
+        ['Interfaces', ''],
+        ['Panels / Repeaters', ''],
+        ['Door Retainers', ''],
+        ['Other', '']
       ];
 
       const FAC_OFFLINE_CHECK_KEYS = ["audibleVisualAlarms", "manualCallPoints", "smokeBeamDetectors", "heatDetectors", "controlIndicating", "fireFaultSignal", "causeEffectsSpec", "audibilityLevels", "equipmentLabelling", "zoneIndicated", "dedicatedMains", "cableRecords", "cableInstallSatisfactory", "batteryLabels", "ancillaryEquipment", "causeEffectsTested", "powerSupplyBatteries", "designSpecPresent", "mcpSitingCorrect", "audibleSitingCorrect", "remoteIndicatorSiting", "controlSitingCorrect", "powerSupplyInspection", "designCertification", "installationCertification", "commissioningCertification", "manualsIssued", "logBookAvailable", "falseAlarmPotential", "asFittedDrawings", "userInstructed"];
@@ -5280,9 +5446,13 @@ function applyOfflineLookupSelection(row) {
           const saved = row.savedAt ? new Date(row.savedAt).toLocaleString() : (row.cloudLastUpdated ? new Date(row.cloudLastUpdated).toLocaleString() : 'not known');
           const addedInline = [];
           const draftForMeta = row.draft || {};
+          if (String(draftForMeta.includeServiceReport || '').toUpperCase() === 'YES') addedInline.push('ESR');
+          if (String(draftForMeta.includeFireAlarmReport || '').toUpperCase() === 'YES') addedInline.push('SFA');
+          if (String(draftForMeta.includeEmergencyLightingReport || '').toUpperCase() === 'YES') addedInline.push('SEL');
           if (String(draftForMeta.includeFireAlarmCommissioningReport || '').toUpperCase() === 'YES') addedInline.push('FAC');
           if (String(draftForMeta.includeFireAlarmModificationReport || '').toUpperCase() === 'YES') addedInline.push('FAM');
           if (String(draftForMeta.includePowerSupplyCertificate || '').toUpperCase() === 'YES') addedInline.push('PSC');
+          if (String(draftForMeta.includeSoundLevelTestReport || '').toUpperCase() === 'YES') addedInline.push('SLT');
           const state = normaliseDraftSyncState(row);
           const stateLabel = draftStateLabel(state);
           const engineer = offlineItemEngineer(row) || 'Not selected';
@@ -5382,53 +5552,243 @@ function applyOfflineLookupSelection(row) {
 
       function setOfflineInlineFlag(type, value) {
         const yes = value ? 'YES' : 'NO';
+        if (type === 'W') setEditValue('editIncludeServiceReport', yes);
+        if (type === 'SFA') setEditValue('editIncludeFireAlarmReport', yes);
+        if (type === 'SEL') setEditValue('editIncludeEmergencyLightingReport', yes);
         if (type === 'FAC') setEditValue('editIncludeFireAlarmCommissioningReport', yes);
         if (type === 'FAM') setEditValue('editIncludeFireAlarmModificationReport', yes);
         if (type === 'PSC') setEditValue('editIncludePowerSupplyCertificate', yes);
+        if (type === 'SLT') setEditValue('editIncludeSoundLevelTestReport', yes);
       }
 
       function getOfflineInlineFlag(type) {
+        if (type === 'W') return offlineBoolYes(getEditValue('editIncludeServiceReport'));
+        if (type === 'SFA') return offlineBoolYes(getEditValue('editIncludeFireAlarmReport'));
+        if (type === 'SEL') return offlineBoolYes(getEditValue('editIncludeEmergencyLightingReport'));
         if (type === 'FAC') return offlineBoolYes(getEditValue('editIncludeFireAlarmCommissioningReport'));
         if (type === 'FAM') return offlineBoolYes(getEditValue('editIncludeFireAlarmModificationReport'));
         if (type === 'PSC') return offlineBoolYes(getEditValue('editIncludePowerSupplyCertificate'));
+        if (type === 'SLT') return offlineBoolYes(getEditValue('editIncludeSoundLevelTestReport'));
         return false;
       }
 
+      function offlineModuleIncluded(type) {
+        return activeOfflineReportCode === type || getOfflineInlineFlag(type);
+      }
+
+      function toggleOfflineAddButton(type, allowed) {
+        const ids = {
+          W: 'offlineAddWBtn',
+          SFA: 'offlineAddSfaBtn',
+          SEL: 'offlineAddSelBtn',
+          FAC: 'offlineAddFacBtn',
+          FAM: 'offlineAddFamBtn',
+          PSC: 'offlineAddPscBtn',
+          SLT: 'offlineAddSltBtn'
+        };
+        const button = document.getElementById(ids[type] || '');
+        if (button) button.classList.toggle('hidden-report-fields', !allowed || offlineModuleIncluded(type));
+      }
+
       function updateOfflineInlineCertUi() {
+        const allowed = OFFLINE_ADD_PAGE_RULES[activeOfflineReportCode] || [];
+        ['W', 'SFA', 'SEL', 'FAC', 'FAM', 'PSC', 'SLT'].forEach(function(type) {
+          if (type !== activeOfflineReportCode && allowed.indexOf(type) === -1 && getOfflineInlineFlag(type)) {
+            setOfflineInlineFlag(type, false);
+          }
+        });
+        const w = offlineModuleIncluded('W');
+        const sfa = offlineModuleIncluded('SFA');
+        const sel = offlineModuleIncluded('SEL');
         const fac = getOfflineInlineFlag('FAC');
         const fam = getOfflineInlineFlag('FAM');
         const psc = getOfflineInlineFlag('PSC');
+        const slt = getOfflineInlineFlag('SLT');
+        const wHeader = document.getElementById('offlineWAddedHeader');
+        const wSfaCosts = document.getElementById('offlineAddedWSfaCosts');
+        const wAdmin = document.getElementById('wOfflineAdminFields');
+        const wWork = document.getElementById('wOfflineWorkCostFields');
+        const sfaBox = document.getElementById('sfaOfflineFields');
+        const selBox = document.getElementById('selOfflineFields');
         const facBox = document.getElementById('facOfflineFields');
         const famBox = document.getElementById('famOfflineFields');
         const pscBox = document.getElementById('pscOfflineFields');
+        const sltBox = document.getElementById('sltOfflineFields');
+        const removeSfa = document.getElementById('offlineRemoveSfaPageBtn');
+        const removeSel = document.getElementById('offlineRemoveSelPageBtn');
+        const materialQuick = document.getElementById('editorMaterialQuickBtn');
+        const sfaQuick = document.getElementById('editorSfaEquipmentQuickBtn');
+        const sfaPayloadBtn = document.getElementById('editorSfaPayloadPreviewBtn');
+        const note = document.getElementById('offlineAddPageRuleNote');
         const summary = document.getElementById('offlineInlineCertSummary');
+        if (wHeader) wHeader.classList.toggle('hidden-report-fields', !w || activeOfflineReportCode === 'W');
+        if (wSfaCosts) wSfaCosts.classList.toggle('hidden-report-fields', !(w && activeOfflineReportCode === 'SFA'));
+        if (wAdmin) wAdmin.classList.toggle('hidden-report-fields', !w);
+        if (wWork) wWork.classList.toggle('hidden-report-fields', !w);
+        if (sfaBox) sfaBox.classList.toggle('hidden-report-fields', !sfa);
+        if (selBox) selBox.classList.toggle('hidden-report-fields', !sel);
         if (facBox) facBox.classList.toggle('hidden-report-fields', !fac);
         if (famBox) famBox.classList.toggle('hidden-report-fields', !fam);
         if (pscBox) pscBox.classList.toggle('hidden-report-fields', !psc);
+        if (sltBox) sltBox.classList.toggle('hidden-report-fields', !slt);
+        if (removeSfa) removeSfa.classList.toggle('hidden-report-fields', activeOfflineReportCode === 'SFA');
+        if (removeSel) removeSel.classList.toggle('hidden-report-fields', activeOfflineReportCode === 'SEL');
+        if (materialQuick) materialQuick.classList.toggle('hidden-report-fields', !w);
+        if (sfaQuick) sfaQuick.classList.toggle('hidden-report-fields', !sfa);
+        if (sfaPayloadBtn) sfaPayloadBtn.classList.toggle('hidden-report-fields', !sfa);
+        ['W', 'SFA', 'SEL', 'FAC', 'FAM', 'PSC', 'SLT'].forEach(function(type) {
+          toggleOfflineAddButton(type, allowed.indexOf(type) !== -1);
+        });
+        if (note) {
+          const labels = {
+            W: 'ESR can add Fire Alarm, Emergency Lighting, FAC, FAM, PSC and Sound Level Test pages.',
+            SFA: 'SFA can add Engineer Service Report and Emergency Lighting pages.',
+            SEL: 'SEL can add Engineer Service Report and Fire Alarm pages.'
+          };
+          note.textContent = labels[activeOfflineReportCode] || 'Available pages match the online parent report.';
+        }
         if (summary) {
           const names = [];
+          if (getOfflineInlineFlag('W')) names.push('Engineer Service Report');
+          if (getOfflineInlineFlag('SFA')) names.push('Fire Alarm Report');
+          if (getOfflineInlineFlag('SEL')) names.push('Emergency Lighting Report');
           if (fac) names.push('FAC Commissioning');
           if (fam) names.push('FAM Modification');
           if (psc) names.push('PSC Power Supply');
-          summary.textContent = names.length ? ('Added pages: ' + names.join(', ')) : 'No extra cert pages added yet.';
+          if (slt) names.push('Sound Level Test');
+          summary.textContent = names.length ? ('Added pages: ' + names.join(', ')) : 'No extra pages added yet.';
         }
+        if (slt && !document.querySelector('#offlineSltReadings .offline-slt-reading')) renderOfflineSltReadings([]);
         calculateOfflinePsc();
       }
 
       window.addOfflineInlineCert = function addOfflineInlineCert(event, type) {
         stopTap(event);
+        const allowed = OFFLINE_ADD_PAGE_RULES[activeOfflineReportCode] || [];
+        if (allowed.indexOf(type) === -1) {
+          setEditorStatus((type || 'This') + ' page is not available on the normal online ' + activeOfflineReportCode + ' parent report.');
+          return false;
+        }
         setOfflineInlineFlag(type, true);
         updateOfflineInlineCertUi();
         setEditorDirty(true);
-        setEditorStatus((type || 'Cert') + ' page added to this offline parent draft. Press Save Offline before leaving.');
+        setEditorStatus((type || 'Report') + ' page added to this offline report pack. Press Save Offline before leaving.');
+        return false;
       };
 
       window.removeOfflineInlineCert = function removeOfflineInlineCert(event, type) {
         stopTap(event);
+        if (activeOfflineReportCode === type) {
+          setEditorStatus('The parent ' + type + ' report cannot be removed from its own pack.');
+          return false;
+        }
         setOfflineInlineFlag(type, false);
         updateOfflineInlineCertUi();
         setEditorDirty(true);
-        setEditorStatus((type || 'Cert') + ' page removed from this offline parent draft.');
+        setEditorStatus((type || 'Report') + ' page removed from this offline report pack.');
+        return false;
+      };
+
+      function offlineSltSelect(value) {
+        const selected = String(value || '').toUpperCase();
+        return '<option value="">Select</option>' +
+          '<option value="YES"' + (selected === 'YES' ? ' selected' : '') + '>YES</option>' +
+          '<option value="NO"' + (selected === 'NO' ? ' selected' : '') + '>NO</option>';
+      }
+
+      function renderOfflineSltReadings(readings) {
+        const box = document.getElementById('offlineSltReadings');
+        if (!box) return;
+        const rows = Array.isArray(readings) ? readings : [];
+        const html = [];
+        for (let index = 0; index < SLT_OFFLINE_READING_COUNT; index += 1) {
+          const row = rows[index] || {};
+          const rowNo = index + 1;
+          html.push(
+            '<div class="offline-slt-reading" data-slt-row="' + rowNo + '">' +
+              '<div class="editor-field"><span>' + rowNo + '</span></div>' +
+              '<div class="editor-field"><label>Location of Test</label><input class="offlineSltLocation" value="' + escapeHtml(row.location || '') + '"></div>' +
+              '<div class="editor-field"><label>dB Level</label><input class="offlineSltDbLevel" inputmode="decimal" value="' + escapeHtml(row.dbLevel || '') + '"></div>' +
+              '<div class="editor-field"><label>Area Furnished</label><select class="offlineSltFurnished">' + offlineSltSelect(row.furnished) + '</select></div>' +
+              '<div class="editor-field slt-comments"><label>Comments</label><input class="offlineSltComments" value="' + escapeHtml(row.comments || '') + '"></div>' +
+              '<div class="editor-field"><label>Pass</label><select class="offlineSltPass">' + offlineSltSelect(row.pass) + '</select></div>' +
+            '</div>'
+          );
+        }
+        box.innerHTML = html.join('');
+      }
+
+      function collectOfflineSltReadings() {
+        return Array.from(document.querySelectorAll('#offlineSltReadings .offline-slt-reading')).map(function(row) {
+          return {
+            location: (row.querySelector('.offlineSltLocation') || {}).value || '',
+            dbLevel: (row.querySelector('.offlineSltDbLevel') || {}).value || '',
+            furnished: (row.querySelector('.offlineSltFurnished') || {}).value || '',
+            comments: (row.querySelector('.offlineSltComments') || {}).value || '',
+            pass: (row.querySelector('.offlineSltPass') || {}).value || ''
+          };
+        });
+      }
+
+      function updateOfflinePanelPhotoUi() {
+        const preview = document.getElementById('editPanelPhotoPreview');
+        const status = document.getElementById('editPanelPhotoStatus');
+        const removeBtn = document.getElementById('editPanelPhotoRemoveBtn');
+        if (preview) {
+          preview.src = offlinePanelPhotoData || '';
+          preview.style.display = offlinePanelPhotoData ? 'block' : 'none';
+        }
+        if (status) status.textContent = offlinePanelPhotoData ? 'Panel photo saved in this offline draft.' : 'No panel photo selected.';
+        if (removeBtn) removeBtn.classList.toggle('hidden-report-fields', !offlinePanelPhotoData);
+      }
+
+      window.handleOfflinePanelPhoto = function handleOfflinePanelPhoto(event) {
+        const input = event && event.target;
+        const file = input && input.files && input.files[0];
+        if (!file) return false;
+        const status = document.getElementById('editPanelPhotoStatus');
+        if (status) status.textContent = 'Preparing panel photo for offline saving...';
+        const reader = new FileReader();
+        reader.onerror = function() {
+          if (status) status.textContent = 'Could not read that photo. Please try again.';
+        };
+        reader.onload = function(loadEvent) {
+          const img = new Image();
+          img.onerror = function() {
+            if (status) status.textContent = 'Could not prepare that photo. Please try another image.';
+          };
+          img.onload = function() {
+            try {
+              const maxSide = 1280;
+              const scale = Math.min(1, maxSide / Math.max(img.width || 1, img.height || 1));
+              const canvas = document.createElement('canvas');
+              canvas.width = Math.max(1, Math.round((img.width || 1) * scale));
+              canvas.height = Math.max(1, Math.round((img.height || 1) * scale));
+              const ctx = canvas.getContext('2d');
+              ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+              offlinePanelPhotoData = canvas.toDataURL('image/jpeg', 0.72);
+              updateOfflinePanelPhotoUi();
+              setEditorDirty(true);
+              setEditorStatus('Panel photo added. Press Save Offline before leaving.');
+            } catch (err) {
+              if (status) status.textContent = 'Could not compress that photo: ' + (err && err.message ? err.message : err);
+            }
+          };
+          img.src = loadEvent && loadEvent.target ? loadEvent.target.result : '';
+        };
+        reader.readAsDataURL(file);
+        return false;
+      };
+
+      window.clearOfflinePanelPhoto = function clearOfflinePanelPhoto(event) {
+        stopTap(event);
+        offlinePanelPhotoData = '';
+        const input = document.getElementById('editPanelPhotoFile');
+        if (input) input.value = '';
+        updateOfflinePanelPhotoUi();
+        setEditorDirty(true);
+        setEditorStatus('Panel photo removed. Press Save Offline before leaving.');
+        return false;
       };
 
       function offlinePscNum(id) {
@@ -5468,6 +5828,25 @@ function applyOfflineLookupSelection(row) {
         let subtotal = 0;
         let vat = 0;
         let total = 0;
+
+        if (offlineModuleIncluded('SEL')) {
+          const elSubtotal = parseMoney(getEditValue('editElServiceCost')) +
+            parseMoney(getEditValue('editElMaterialCost')) +
+            parseMoney(getEditValue('editElLabourCost'));
+          const elVat = elSubtotal * 0.20;
+          setEditValue('editSelSubTotal', elSubtotal.toFixed(2));
+          setEditValue('editSelVat', elVat.toFixed(2));
+          setEditValue('editSelTotal', (elSubtotal + elVat).toFixed(2));
+        }
+        if (offlineModuleIncluded('SFA')) {
+          const faSubtotal = parseMoney(getEditValue('editFaServiceCost')) +
+            parseMoney(getEditValue('editFaMaterialCost')) +
+            parseMoney(getEditValue('editFaLabourCost'));
+          const faVat = faSubtotal * 0.20;
+          setEditValue('editSfaSubTotal', faSubtotal.toFixed(2));
+          setEditValue('editSfaVat', faVat.toFixed(2));
+          setEditValue('editSfaTotal', (faSubtotal + faVat).toFixed(2));
+        }
 
         if (reportCode === 'SEL') {
           const serviceCost = parseMoney(getEditValue('editElServiceCost'));
@@ -5602,22 +5981,62 @@ function applyOfflineLookupSelection(row) {
         }).filter(function(item) { return item.qty || item.description || item.unitPrice || item.totalPrice; });
       }
 
-      function normalizeSfaEquipmentRows(items) {
-        const source = Array.isArray(items) && items.length ? items : SFA_EQUIPMENT_DEFAULT_ROWS.map(function(pair) {
+      function sfaEquipmentDefaults(reportCode) {
+        return String(reportCode || activeOfflineReportCode || '').toUpperCase() === 'SFA'
+          ? SFA_EQUIPMENT_DEFAULT_ROWS
+          : SFA_ADDED_EQUIPMENT_DEFAULT_ROWS;
+      }
+
+      function normalizeSfaEquipmentRows(items, reportCode) {
+        const defaults = sfaEquipmentDefaults(reportCode);
+        const source = Array.isArray(items) && items.length ? items : defaults.map(function(pair) {
           return { equipment: pair[0], checkedOnInspection: pair[1], total: '', tested: '', passed: '', failed: '', result: '' };
         });
         return source.map(function(item, idx) {
-          const fallback = SFA_EQUIPMENT_DEFAULT_ROWS[idx] || ['', ''];
+          const fallback = defaults[idx] || ['', ''];
           return {
-            equipment: item.equipment || item.type || fallback[0] || '',
+            equipment: item.equipment || item.item || item.type || fallback[0] || '',
             total: item.total || item.qty || '',
             tested: item.tested || '',
             passed: item.passed || '',
             failed: item.failed || '',
-            checkedOnInspection: item.checkedOnInspection || item.checked || fallback[1] || '',
+            checkedOnInspection: item.checkedOnInspection || item.checked || item.check || fallback[1] || '',
             result: item.result || item.notes || ''
           };
         });
+      }
+
+      function offlineSfaRowsFromDraft(draft) {
+        draft = draft || {};
+        const storedRows = Array.isArray(draft.faEquipmentRows) && draft.faEquipmentRows.length
+          ? draft.faEquipmentRows
+          : (Array.isArray(draft.sfaEquipmentList) ? draft.sfaEquipmentList : []);
+        const storedHasResults = storedRows.some(function(row) {
+          row = row || {};
+          return row.total || row.tested || row.passed || row.failed ||
+            row.checkedOnInspection || row.checked || row.check || row.result || row.notes;
+        });
+        const defaults = sfaEquipmentDefaults(activeOfflineReportCode);
+        let individualHasResults = false;
+        const individualRows = defaults.map(function(pair, idx) {
+          const total = draft['faEqTotal' + idx] || '';
+          const tested = draft['faEqTested' + idx] || '';
+          const passed = draft['faEqPassed' + idx] || '';
+          const failed = draft['faEqFailed' + idx] || '';
+          const checked = draft['faEqCheck' + idx] || '';
+          if (total || tested || passed || failed || checked) individualHasResults = true;
+          return {
+            equipment: pair[0],
+            total: total,
+            tested: tested,
+            passed: passed,
+            failed: failed,
+            checkedOnInspection: checked,
+            result: ''
+          };
+        });
+        if (individualHasResults && !storedHasResults) return individualRows;
+        return storedRows.length ? storedRows : individualRows;
       }
 
       function normalizeSfaCheckedTick(value) {
@@ -5626,6 +6045,14 @@ function applyOfflineLookupSelection(row) {
         if (v === 'NO' || v === 'N' || v === 'FALSE' || v === '✗' || v === 'X' || v === 'CROSS') return '✗';
         if (v === 'NA' || v === 'N/A' || v === '-' || v === '—') return '—';
         return value || '';
+      }
+
+      function sfaCheckedForAddedOnlineForm(value) {
+        const tick = normalizeSfaCheckedTick(value);
+        if (tick === '✓') return 'YES';
+        if (tick === '✗') return 'NO';
+        if (tick === '—') return 'N/A';
+        return '';
       }
 
       function sfaTickOption(value, current, label) {
@@ -5676,6 +6103,7 @@ function applyOfflineLookupSelection(row) {
       }
 
       function applyEditorReportLayout(report) {
+        activeOfflineReportCode = report && report.code ? report.code : 'W';
         const isSfa = report && report.code === 'SFA';
         const isSel = report && report.code === 'SEL';
         const sfaFields = document.getElementById('sfaOfflineFields');
@@ -5707,9 +6135,13 @@ function applyOfflineLookupSelection(row) {
 
       function setOfflineInlineValuesFromDraft(d) {
         d = d || {};
+        setEditValue('editIncludeServiceReport', d.includeServiceReport || 'NO');
+        setEditValue('editIncludeFireAlarmReport', d.includeFireAlarmReport || 'NO');
+        setEditValue('editIncludeEmergencyLightingReport', d.includeEmergencyLightingReport || 'NO');
         setEditValue('editIncludeFireAlarmCommissioningReport', d.includeFireAlarmCommissioningReport || 'NO');
         setEditValue('editIncludeFireAlarmModificationReport', d.includeFireAlarmModificationReport || 'NO');
         setEditValue('editIncludePowerSupplyCertificate', d.includePowerSupplyCertificate || 'NO');
+        setEditValue('editIncludeSoundLevelTestReport', d.includeSoundLevelTestReport || 'NO');
 
         setEditValue('editFacCategory', d.facCategory || 'L1');
         setEditValue('editFacOtherCategory', d.facOtherCategory || '');
@@ -5752,6 +6184,15 @@ function applyOfflineLookupSelection(row) {
           if (key === 'pscDeRatingFactor') fallback = '1.75';
           setEditValue(editId, readDraftValue(d, key, fallback));
         });
+        setEditValue('editSltTestType', d.sltTestType || '');
+        setEditValue('editSltSystemDetails', d.sltSystemDetails || '');
+        setEditValue('editSltMeterType', d.sltMeterType || '');
+        setEditValue('editSltMeterSerial', d.sltMeterSerial || '');
+        setEditValue('editSltCalibrationDate', d.sltCalibrationDate || '');
+        setEditValue('editSltMeterResponse', d.sltMeterResponse || '');
+        setEditValue('editSltMeterWeighting', d.sltMeterWeighting || '');
+        setEditValue('editSltNotes', d.sltNotes || '');
+        renderOfflineSltReadings(d.sltReadings || []);
         updateOfflineInlineCertUi();
       }
 
@@ -5763,11 +6204,7 @@ function applyOfflineLookupSelection(row) {
         const syncBtn = document.getElementById('offlineEditorSyncBtn');
         if (titleEl) titleEl.textContent = 'Edit Offline ' + report.code + ' Draft';
         if (noteEl) {
-          noteEl.textContent = report.code === 'W'
-            ? 'This is the local iPad editor. Engineer Service Reports can save offline and sync to Cloud Drafts when signal returns.'
-            : (report.code === 'SEL'
-              ? 'This is the local SEL cloud-draft bridge editor. Save locally, then Sync to Cloud. Open from Cloud Drafts to use the normal online SEL PDF button.'
-              : 'This is the local SFA cloud-draft bridge editor. Save locally, then Sync to Cloud. Open from Cloud Drafts to use the normal online PDF button.');
+          noteEl.textContent = 'This local iPad editor uses the same Add Page combinations as the online ' + report.code + ' form. Save offline now, then sync and complete the PDF when signal returns.';
         }
         if (syncBtn) {
           syncBtn.disabled = !report.syncableOffline;
@@ -5779,6 +6216,7 @@ function applyOfflineLookupSelection(row) {
         if (sfaPayloadPreview) sfaPayloadPreview.classList.add('hidden-report-fields');
         if (sfaPayloadJson) sfaPayloadJson.value = '';
         const d = item.draft || {};
+        const restoringAddedW = report.code !== 'W' && offlineBoolYes(d.includeServiceReport);
         document.getElementById('editOfflineId').value = item.offlineId || '';
         setEditValue('editDraftName', item.draftName || d.draftName || buildEditorDraftName(d));
         setEditValue('editEngineer', d.engineer || item.engineer || '');
@@ -5790,11 +6228,11 @@ function applyOfflineLookupSelection(row) {
         setEditValue('editSfaContractId', d.contractId || d.sfaContractId || '');
         setEditValue('editSfaOrderNo', d.orderNo || d.sfaOrderNo || d.customerOrderNo || '');
         setEditValue('editSfaAsbestosAvailable', d.asbestosAvailable || 'NO');
-        setEditValue('editSfaLastServiceVisit', d.lastServiceVisit || d.sfaLastServiceVisit || '');
-        setEditValue('editSfaNextServiceVisit', d.nextServiceVisit || d.sfaNextServiceVisit || '');
+        setEditValue('editSfaLastServiceVisit', d.faLastServiceVisit || d.lastServiceVisit || d.sfaLastServiceVisit || '');
+        setEditValue('editSfaNextServiceVisit', d.faNextServiceVisit || d.nextServiceVisit || d.sfaNextServiceVisit || '');
         setEditValue('editSfaServiceVisit', d.faServiceVisit || d.sfaServiceVisit || 'Annual');
-        setEditValue('editSfaBafeCompliance', d.bafeCompliance || d.sfaBafeCompliance || 'NO');
-        setEditValue('editSaveFaEquipmentTotals', d.saveFaEquipmentTotals || 'NO');
+        setEditValue('editSfaBafeCompliance', d.faBafeCompliance || d.bafeCompliance || d.sfaBafeCompliance || 'NO');
+        setEditValue('editSaveFaEquipmentTotals', d.faSaveEquipmentTotals || d.saveFaEquipmentTotals || 'NO');
         setEditValue('editFaExistingBatterySize', d.faExistingBatterySize || d.sfaBatteries || '');
         setEditValue('editFaBatteryDate', d.faBatteryDate || '');
         setEditValue('editFaFalseAlarms12Months', d.faFalseAlarms12Months || '');
@@ -5813,9 +6251,12 @@ function applyOfflineLookupSelection(row) {
         setEditValue('editFaServiceCost', d.faServiceCost || '0.00');
         setEditValue('editFaMaterialCost', d.faMaterialCost || '0.00');
         setEditValue('editFaLabourCost', d.faLabourCost || '0.00');
-        setEditValue('editSfaSubTotal', d.subTotal || '0.00');
-        setEditValue('editSfaVat', d.vat || '0.00');
-        setEditValue('editSfaTotal', d.total || '0.00');
+        const restoredSfaSubTotal = report.code === 'SFA'
+          ? parseMoney(d.subTotal || 0)
+          : parseMoney(d.faServiceCost || 0) + parseMoney(d.faMaterialCost || 0) + parseMoney(d.faLabourCost || 0);
+        setEditValue('editSfaSubTotal', restoredSfaSubTotal.toFixed(2));
+        setEditValue('editSfaVat', (report.code === 'SFA' ? parseMoney(d.vat || restoredSfaSubTotal * 0.2) : restoredSfaSubTotal * 0.2).toFixed(2));
+        setEditValue('editSfaTotal', (report.code === 'SFA' ? parseMoney(d.total || restoredSfaSubTotal * 1.2) : restoredSfaSubTotal * 1.2).toFixed(2));
         setEditValue('editFaQuickQuoteRequired', d.faQuickQuoteRequired || '');
         setEditValue('editFaRiskAssessmentRecommended', d.faRiskAssessmentRecommended || 'NO');
         setEditValue('editFaChangesToReport', d.faChangesToReport || 'NO');
@@ -5831,13 +6272,13 @@ function applyOfflineLookupSelection(row) {
         setEditValue('editSfaBatteries', d.sfaBatteries || '');
         setEditValue('editSfaFaults', d.sfaFaults || '');
         setEditValue('editSfaRecommendations', d.sfaRecommendations || '');
-        renderSfaEquipmentList(d.faEquipmentRows || d.sfaEquipmentList || []);
+        renderSfaEquipmentList(offlineSfaRowsFromDraft(d));
         setEditValue('editSelSageAccountNo', d.sageAccountNo || '');
         setEditValue('editSelContractId', d.contractId || '');
         setEditValue('editSelAsbestosAvailable', d.asbestosAvailable || 'NO');
         setEditValue('editSelServiceVisit', d.elServiceVisit || '12 MONTHLY/3 HOUR');
-        setEditValue('editSelLastServiceVisit', d.lastServiceVisit || '');
-        setEditValue('editSelNextServiceVisit', d.nextServiceVisit || '');
+        setEditValue('editSelLastServiceVisit', d.elLastServiceVisit || d.lastServiceVisit || '');
+        setEditValue('editSelNextServiceVisit', d.elNextServiceVisit || d.nextServiceVisit || '');
         setEditValue('editElTotalFittings', d.elTotalFittings || '');
         setEditValue('editElTested', d.elTested || '');
         setEditValue('editElPassed', d.elPassed || '');
@@ -5878,38 +6319,53 @@ function applyOfflineLookupSelection(row) {
         setEditValue('editElServiceCost', d.elServiceCost || '0.00');
         setEditValue('editElMaterialCost', d.elMaterialCost || '0.00');
         setEditValue('editElLabourCost', d.elLabourCost || '0.00');
-        setEditValue('editSelSubTotal', d.elSubTotal || d.subTotal || '0.00');
-        setEditValue('editSelVat', d.elVat || d.vat || '0.00');
-        setEditValue('editSelTotal', d.elTotal || d.total || '0.00');
+        const restoredSelSubTotal = d.elSubTotal != null && d.elSubTotal !== ''
+          ? parseMoney(d.elSubTotal)
+          : (parseMoney(d.elServiceCost || 0) + parseMoney(d.elMaterialCost || 0) + parseMoney(d.elLabourCost || 0));
+        setEditValue('editSelSubTotal', restoredSelSubTotal.toFixed(2));
+        setEditValue('editSelVat', parseMoney(d.elVat || restoredSelSubTotal * 0.2).toFixed(2));
+        setEditValue('editSelTotal', parseMoney(d.elTotal || restoredSelSubTotal * 1.2).toFixed(2));
         setEditValue('editElCostDisplayMode', d.elCostDisplayMode || 'SEPARATE');
         setEditValue('editElNonCompliantHeader', d.elNonCompliantHeader || 'NO');
         setEditValue('editSageAccountNo', d.sageAccountNo || '');
-        setEditValue('editCustomerOrderNo', d.customerOrderNo || '');
-        setEditValue('editOurRefNo', d.ourRefNo || '');
+        setEditValue('editCustomerOrderNo', restoringAddedW ? (d.serviceReportCustomerOrderNo || '') : (d.customerOrderNo || ''));
+        setEditValue('editOurRefNo', restoringAddedW ? (d.serviceReportOurRefNo || '') : (d.ourRefNo || ''));
         setEditValue('editAsbestosAvailable', d.asbestosAvailable || '');
-        setEditValue('editWorkDescription', d.workDescription || '');
-        setEditValue('editWorkDescriptionQty', d.workDescriptionQty || '');
-        setEditValue('editWorkDescriptionUnitPrice', d.workDescriptionUnitPrice || '');
-        setEditValue('editWorkDescriptionTotalPrice', d.workDescriptionTotalPrice || '');
-        setEditValue('editWorkDescriptionChargeNote', d.workDescriptionChargeNote || '');
-        renderEditorMaterials(d.materials || []);
-        setEditValue('editComments', d.comments || '');
-        setEditValue('editTravelTime', d.travelTime || '');
-        setEditValue('editArrivalTime', d.arrivalTime || '');
-        setEditValue('editTimeOnSite', d.timeOnSite || '');
-        setEditValue('editCarriage', d.carriage || '');
-        setEditValue('editManualSubtotalOverride', d.manualSubtotalOverride || '');
-        setEditValue('editManualSubtotal', d.manualSubtotal || '');
-        setEditValue('editSubTotal', d.subTotal || '');
-        setEditValue('editVat', d.vat || '');
-        setEditValue('editTotal', d.total || '');
+        setEditValue('editWorkDescription', restoringAddedW ? (d.serviceReportWorkDescription || '') : (d.workDescription || ''));
+        setEditValue('editWorkDescriptionQty', restoringAddedW ? (d.serviceReportWorkDescriptionQty || '') : (d.workDescriptionQty || ''));
+        setEditValue('editWorkDescriptionUnitPrice', restoringAddedW ? (d.serviceReportWorkDescriptionUnitPrice || '') : (d.workDescriptionUnitPrice || ''));
+        setEditValue('editWorkDescriptionTotalPrice', restoringAddedW ? (d.serviceReportWorkDescriptionTotalPrice || '') : (d.workDescriptionTotalPrice || ''));
+        setEditValue('editWorkDescriptionChargeNote', restoringAddedW ? (d.serviceReportWorkDescriptionChargeNote || '') : (d.workDescriptionChargeNote || ''));
+        renderEditorMaterials(restoringAddedW ? (d.serviceReportMaterials || []) : (d.materials || []));
+        setEditValue('editComments', restoringAddedW ? (d.serviceReportComments || '') : (d.comments || ''));
+        setEditValue('editTravelTime', restoringAddedW ? (d.serviceReportTravelTime || '') : (d.travelTime || ''));
+        setEditValue('editArrivalTime', restoringAddedW ? (d.serviceReportArrivalTime || '') : (d.arrivalTime || ''));
+        setEditValue('editTimeOnSite', restoringAddedW ? (d.serviceReportTimeOnSite || '') : (d.timeOnSite || ''));
+        setEditValue('editCarriage', restoringAddedW ? (d.serviceReportCarriage || '') : (d.carriage || ''));
+        setEditValue('editManualSubtotalOverride', restoringAddedW ? (d.serviceReportManualSubtotalOverride || 'NO') : (d.manualSubtotalOverride || ''));
+        setEditValue('editManualSubtotal', restoringAddedW ? (d.serviceReportManualSubtotal || '') : (d.manualSubtotal || ''));
+        setEditValue('editSubTotal', restoringAddedW ? (d.serviceReportSubTotal || '') : (d.subTotal || ''));
+        setEditValue('editVat', restoringAddedW ? (d.serviceReportVat || '') : (d.vat || ''));
+        setEditValue('editTotal', restoringAddedW ? (d.serviceReportTotal || '') : (d.total || ''));
+        setEditValue('editServiceReportServiceCost', d.serviceReportServiceCost || '0.00');
+        setEditValue('editServiceReportMaterialCost', d.serviceReportMaterialCost || '0.00');
+        setEditValue('editServiceReportLabourCost', d.serviceReportLabourCost || '0.00');
+        offlinePanelPhotoData = restoringAddedW ? (d.serviceReportPanelPhoto || '') : (d.panelPhoto || '');
+        const panelInput = document.getElementById('editPanelPhotoFile');
+        if (panelInput) panelInput.value = '';
+        updateOfflinePanelPhotoUi();
+        setOfflineSignatureData('engineer', d.engineerSignature || '');
+        setOfflineSignatureData('customer', d.customerSignature || '');
         setEditValue('editCustomerName', d.customerName || '');
         setEditValue('editCustomerDate', d.customerDate || '');
+        setEditValue('editCustomerSignatureStatus', d.customerSignatureStatus || 'SIGNATURE_REQUIRED');
         home.classList.add('hidden');
         offlineDrafts.classList.remove('active');
         loader.classList.add('hidden');
         fallback.classList.add('hidden');
         offlineEditor.classList.add('active');
+        drawOfflineSignatureCanvas('editEngineerSignature', offlineEngineerSignatureData);
+        drawOfflineSignatureCanvas('editCustomerSignature', offlineCustomerSignatureData);
         updateOfflineLookupStatus();
         updateEditorNetworkBadge();
         bindEditorChangeTracking();
@@ -5946,12 +6402,16 @@ function applyOfflineLookupSelection(row) {
           offlineId: offlineId,
           reportType: 'Engineer Service Report',
           reportTypeCode: 'W',
+          includeServiceReport: 'NO',
+          includeFireAlarmReport: 'NO',
+          includeEmergencyLightingReport: 'NO',
           includeFireAlarmCommissioningReport: 'NO',
           includeFireAlarmModificationReport: 'NO',
           includePowerSupplyCertificate: 'NO',
+          includeSoundLevelTestReport: 'NO',
           draftName: 'Offline Engineer Service Report - ' + today,
           serviceDate: today,
-          engineer: '',
+          engineer: getDefaultEngineerProfile() || '',
           customer: '',
           site: '',
           sageAccountNo: '',
@@ -5964,6 +6424,8 @@ function applyOfflineLookupSelection(row) {
           workDescriptionTotalPrice: '',
           workDescriptionChargeNote: '',
           materials: [],
+          panelPhoto: '',
+          panelPhotoPresent: 'NO',
           comments: '',
           travelTime: '',
           arrivalTime: '',
@@ -5976,6 +6438,9 @@ function applyOfflineLookupSelection(row) {
           total: '',
           customerName: '',
           customerDate: '',
+          customerSignatureStatus: 'SIGNATURE_REQUIRED',
+          engineerSignature: '',
+          customerSignature: '',
           savedAt: now.toISOString()
         };
         return {
@@ -5983,7 +6448,7 @@ function applyOfflineLookupSelection(row) {
           reportType: 'W',
           draftId: '',
           draftName: draft.draftName,
-          engineer: '',
+          engineer: draft.engineer,
           customer: '',
           site: '',
           savedAt: draft.savedAt,
@@ -6001,16 +6466,16 @@ function applyOfflineLookupSelection(row) {
           offlineId: offlineId,
           reportType: 'Fire Alarm Service Report',
           reportTypeCode: 'SFA',
-          includeFireAlarmCommissioningReport: 'NO',
-          includeFireAlarmModificationReport: 'NO',
-          includePowerSupplyCertificate: 'NO',
+          includeServiceReport: 'NO',
+          includeFireAlarmReport: 'NO',
+          includeEmergencyLightingReport: 'NO',
           draftName: 'Offline SFA - ' + today,
           serviceDate: today,
-          engineer: '',
+          engineer: getDefaultEngineerProfile() || '',
           customer: '',
           site: '',
-          stage: 'sfa-cloud-draft-bridge-route-fix',
-          note: 'V6.3c71a SFA offline can sync to Cloud Drafts via the fael backend route. PDF creation is not enabled yet.',
+          stage: 'c95r-offline-parity',
+          note: 'Offline SFA uses the same valid Add Page combinations as the online SFA form.',
           sageAccountNo: '',
           contractId: '',
           orderNo: '',
@@ -6019,7 +6484,7 @@ function applyOfflineLookupSelection(row) {
           nextServiceVisit: '',
           faServiceVisit: 'Annual',
           bafeCompliance: 'NO',
-          faEquipmentRows: normalizeSfaEquipmentRows([]),
+          faEquipmentRows: normalizeSfaEquipmentRows([], 'SFA'),
           saveFaEquipmentTotals: 'NO',
           faExistingBatterySize: '',
           faBatteryDate: '',
@@ -6048,6 +6513,9 @@ function applyOfflineLookupSelection(row) {
           total: '',
           customerName: '',
           customerDate: '',
+          customerSignatureStatus: 'SIGNATURE_REQUIRED',
+          engineerSignature: '',
+          customerSignature: '',
           savedAt: now.toISOString()
         };
         return {
@@ -6055,7 +6523,7 @@ function applyOfflineLookupSelection(row) {
           reportType: 'SFA',
           draftId: '',
           draftName: draft.draftName,
-          engineer: '',
+          engineer: draft.engineer,
           customer: '',
           site: '',
           savedAt: draft.savedAt,
@@ -6075,17 +6543,17 @@ function applyOfflineLookupSelection(row) {
           offlineId: offlineId,
           reportType: 'Emergency Lighting Report',
           reportTypeCode: 'SEL',
-          includeFireAlarmCommissioningReport: 'NO',
-          includeFireAlarmModificationReport: 'NO',
-          includePowerSupplyCertificate: 'NO',
+          includeServiceReport: 'NO',
+          includeFireAlarmReport: 'NO',
+          includeEmergencyLightingReport: 'NO',
           draftName: 'Offline SEL - ' + today,
           serviceDate: today,
           customerDate: today,
-          engineer: '',
+          engineer: getDefaultEngineerProfile() || '',
           customer: '',
           site: '',
-          stage: 'sel-cloud-draft-bridge',
-          note: 'V6.3c73d keeps SEL loader timing and uses tick-style SFA Checked on Inspection choices.',
+          stage: 'c95r-offline-parity',
+          note: 'Offline SEL uses the same valid Add Page combinations as the online SEL form.',
           sageAccountNo: '',
           contractId: '',
           asbestosAvailable: 'NO',
@@ -6141,6 +6609,9 @@ function applyOfflineLookupSelection(row) {
           vat: '0.00',
           total: '0.00',
           customerName: '',
+          customerSignatureStatus: 'SIGNATURE_REQUIRED',
+          engineerSignature: '',
+          customerSignature: '',
           savedAt: now.toISOString()
         };
         return {
@@ -6148,7 +6619,7 @@ function applyOfflineLookupSelection(row) {
           reportType: 'SEL',
           draftId: '',
           draftName: draft.draftName,
-          engineer: '',
+          engineer: draft.engineer,
           customer: '',
           site: '',
           savedAt: draft.savedAt,
@@ -6192,10 +6663,6 @@ function applyOfflineLookupSelection(row) {
 
       window.startNewOfflineW = function startNewOfflineW(event) {
         stopTap(event);
-        if (navigator.onLine) {
-          openAppUrlInShell(APP_URL + '?page=esr');
-          return false;
-        }
         const item = createBlankOfflineWItem();
         upsertOfflineItem(item);
         openEditorForItem(item);
@@ -6205,10 +6672,6 @@ function applyOfflineLookupSelection(row) {
 
       window.startNewOfflineSfaTrial = function startNewOfflineSfaTrial(event) {
         stopTap(event);
-        if (navigator.onLine) {
-          openAppUrlInShell(APP_URL + '?page=fael');
-          return false;
-        }
         const item = createBlankOfflineSfaTrialItem();
         upsertOfflineItem(item);
         renderOfflineDrafts();
@@ -6219,10 +6682,6 @@ function applyOfflineLookupSelection(row) {
 
       window.startNewOfflineSelTrial = function startNewOfflineSelTrial(event) {
         stopTap(event);
-        if (navigator.onLine) {
-          openAppUrlInShell(APP_URL + '?page=sel');
-          return false;
-        }
         const item = createBlankOfflineSelTrialItem();
         upsertOfflineItem(item);
         renderOfflineDrafts();
@@ -6234,9 +6693,13 @@ function applyOfflineLookupSelection(row) {
 
       function collectOfflineInlineCertFields(d) {
         d = d || {};
+        d.includeServiceReport = getEditValue('editIncludeServiceReport') || 'NO';
+        d.includeFireAlarmReport = getEditValue('editIncludeFireAlarmReport') || 'NO';
+        d.includeEmergencyLightingReport = getEditValue('editIncludeEmergencyLightingReport') || 'NO';
         d.includeFireAlarmCommissioningReport = getEditValue('editIncludeFireAlarmCommissioningReport') || 'NO';
         d.includeFireAlarmModificationReport = getEditValue('editIncludeFireAlarmModificationReport') || 'NO';
         d.includePowerSupplyCertificate = getEditValue('editIncludePowerSupplyCertificate') || 'NO';
+        d.includeSoundLevelTestReport = getEditValue('editIncludeSoundLevelTestReport') || 'NO';
 
         d.facCategory = getEditValue('editFacCategory');
         d.facOtherCategory = getEditValue('editFacOtherCategory');
@@ -6282,6 +6745,15 @@ function applyOfflineLookupSelection(row) {
           const editId = 'edit' + key.charAt(0).toUpperCase() + key.slice(1);
           d[key] = getEditValue(editId);
         });
+        d.sltTestType = getEditValue('editSltTestType');
+        d.sltSystemDetails = getEditValue('editSltSystemDetails');
+        d.sltMeterType = getEditValue('editSltMeterType');
+        d.sltMeterSerial = getEditValue('editSltMeterSerial');
+        d.sltCalibrationDate = getEditValue('editSltCalibrationDate');
+        d.sltMeterResponse = getEditValue('editSltMeterResponse');
+        d.sltMeterWeighting = getEditValue('editSltMeterWeighting');
+        d.sltNotes = getEditValue('editSltNotes');
+        d.sltReadings = collectOfflineSltReadings();
         return d;
       }
 
@@ -6300,19 +6772,63 @@ function applyOfflineLookupSelection(row) {
         d.customer = getEditValue('editCustomer');
         d.site = getEditValue('editSite');
         const reportCodeForSave = String(d.reportTypeCode || item.reportType || '').toUpperCase();
+        const savingW = reportCodeForSave === 'W';
         const savingSfa = reportCodeForSave === 'SFA';
         const savingSel = reportCodeForSave === 'SEL';
-        if (savingSfa) {
-          d.sageAccountNo = getEditValue('editSfaSageAccountNo');
-          d.contractId = getEditValue('editSfaContractId');
-          d.orderNo = getEditValue('editSfaOrderNo');
-          d.asbestosAvailable = getEditValue('editSfaAsbestosAvailable');
-          d.lastServiceVisit = getEditValue('editSfaLastServiceVisit');
-          d.nextServiceVisit = getEditValue('editSfaNextServiceVisit');
+        const savingWModule = savingW || getOfflineInlineFlag('W');
+        const savingSfaModule = savingSfa || getOfflineInlineFlag('SFA');
+        const savingSelModule = savingSel || getOfflineInlineFlag('SEL');
+        if (savingSfaModule) {
+          if (savingSfa) {
+            d.sageAccountNo = getEditValue('editSfaSageAccountNo');
+            d.contractId = getEditValue('editSfaContractId');
+            d.orderNo = getEditValue('editSfaOrderNo');
+            d.asbestosAvailable = getEditValue('editSfaAsbestosAvailable');
+          }
+          d.faLastServiceVisit = getEditValue('editSfaLastServiceVisit');
+          d.faNextServiceVisit = getEditValue('editSfaNextServiceVisit');
+          if (savingSfa) {
+            d.lastServiceVisit = d.faLastServiceVisit;
+            d.nextServiceVisit = d.faNextServiceVisit;
+          }
           d.faServiceVisit = getEditValue('editSfaServiceVisit');
           d.bafeCompliance = getEditValue('editSfaBafeCompliance');
-          d.faEquipmentRows = collectSfaEquipmentList();
+          d.faBafeCompliance = d.bafeCompliance;
+          const collectedFaRows = collectSfaEquipmentList();
+          d.faEquipmentRows = collectedFaRows.map(function(row) {
+            const checkedTick = normalizeSfaCheckedTick(row.checkedOnInspection || '');
+            const onlineCheck = savingSfa ? checkedTick : sfaCheckedForAddedOnlineForm(checkedTick);
+            return Object.assign({}, row, {
+              item: row.equipment || '',
+              checkedOnInspection: checkedTick,
+              checked: onlineCheck,
+              check: onlineCheck
+            });
+          });
+          d.faEquipmentRows.forEach(function(row, idx) {
+            d['faEqTotal' + idx] = row.total || '';
+            d['faEqTested' + idx] = row.tested || '';
+            d['faEqPassed' + idx] = row.passed || '';
+            d['faEqFailed' + idx] = row.failed || '';
+            d['faEqCheck' + idx] = savingSfa
+              ? normalizeSfaCheckedTick(row.checkedOnInspection || row.checked || row.check || '')
+              : sfaCheckedForAddedOnlineForm(row.checkedOnInspection || row.checked || row.check || '');
+          });
+          if (savingSfa) {
+            const firstFaRow = d.faEquipmentRows[0] || {};
+            d.faTotal = firstFaRow.total || '';
+            d.faTested = firstFaRow.tested || '';
+            d.faPassed = firstFaRow.passed || '';
+            d.faFailed = firstFaRow.failed || '';
+          } else {
+            ['total', 'tested', 'passed', 'failed'].forEach(function(key) {
+              d['fa' + key.charAt(0).toUpperCase() + key.slice(1)] = d.faEquipmentRows.reduce(function(sum, row) {
+                return sum + (parseFloat(row[key]) || 0);
+              }, 0).toString();
+            });
+          }
           d.saveFaEquipmentTotals = getEditValue('editSaveFaEquipmentTotals');
+          d.faSaveEquipmentTotals = d.saveFaEquipmentTotals;
           d.faExistingBatterySize = getEditValue('editFaExistingBatterySize');
           d.faBatteryDate = getEditValue('editFaBatteryDate');
           d.faFalseAlarms12Months = getEditValue('editFaFalseAlarms12Months');
@@ -6339,13 +6855,19 @@ function applyOfflineLookupSelection(row) {
           d.faChangesToReport = getEditValue('editFaChangesToReport');
           d.faNonCompliantHeader = getEditValue('editFaNonCompliantHeader');
         }
-        if (savingSel) {
-          d.sageAccountNo = getEditValue('editSelSageAccountNo');
-          d.contractId = getEditValue('editSelContractId');
-          d.asbestosAvailable = getEditValue('editSelAsbestosAvailable');
+        if (savingSelModule) {
+          if (savingSel) {
+            d.sageAccountNo = getEditValue('editSelSageAccountNo');
+            d.contractId = getEditValue('editSelContractId');
+            d.asbestosAvailable = getEditValue('editSelAsbestosAvailable');
+          }
           d.elServiceVisit = getEditValue('editSelServiceVisit');
-          d.lastServiceVisit = getEditValue('editSelLastServiceVisit');
-          d.nextServiceVisit = getEditValue('editSelNextServiceVisit');
+          d.elLastServiceVisit = getEditValue('editSelLastServiceVisit');
+          d.elNextServiceVisit = getEditValue('editSelNextServiceVisit');
+          if (savingSel) {
+            d.lastServiceVisit = d.elLastServiceVisit;
+            d.nextServiceVisit = d.elNextServiceVisit;
+          }
           d.elTotalFittings = getEditValue('editElTotalFittings');
           d.elTested = getEditValue('editElTested');
           d.elPassed = getEditValue('editElPassed');
@@ -6406,26 +6928,54 @@ function applyOfflineLookupSelection(row) {
         d.sfaBatteries = getEditValue('editSfaBatteries');
         d.sfaFaults = getEditValue('editSfaFaults');
         d.sfaRecommendations = getEditValue('editSfaRecommendations');
-        d.sfaEquipmentList = collectSfaEquipmentList();
+        d.sfaEquipmentList = d.faEquipmentRows || collectSfaEquipmentList();
         collectOfflineInlineCertFields(d);
-        if (!savingSfa && !savingSel) {
-          d.sageAccountNo = getEditValue('editSageAccountNo');
-          d.customerOrderNo = getEditValue('editCustomerOrderNo');
-          d.ourRefNo = getEditValue('editOurRefNo');
-          d.asbestosAvailable = getEditValue('editAsbestosAvailable');
-          d.workDescription = getEditValue('editWorkDescription');
-          d.workDescriptionQty = getEditValue('editWorkDescriptionQty');
-          d.workDescriptionUnitPrice = getEditValue('editWorkDescriptionUnitPrice');
-          d.workDescriptionTotalPrice = getEditValue('editWorkDescriptionTotalPrice');
-          d.workDescriptionChargeNote = getEditValue('editWorkDescriptionChargeNote');
-          d.materials = collectEditorMaterials();
-          d.comments = getEditValue('editComments');
-          d.travelTime = getEditValue('editTravelTime');
-          d.arrivalTime = getEditValue('editArrivalTime');
-          d.timeOnSite = getEditValue('editTimeOnSite');
-          d.carriage = getEditValue('editCarriage');
-          d.manualSubtotalOverride = getEditValue('editManualSubtotalOverride');
-          d.manualSubtotal = getEditValue('editManualSubtotal');
+        if (savingWModule) {
+          const wMaterials = collectEditorMaterials();
+          if (savingW) {
+            d.sageAccountNo = getEditValue('editSageAccountNo');
+            d.customerOrderNo = getEditValue('editCustomerOrderNo');
+            d.ourRefNo = getEditValue('editOurRefNo');
+            d.asbestosAvailable = getEditValue('editAsbestosAvailable');
+            d.workDescription = getEditValue('editWorkDescription');
+            d.workDescriptionQty = getEditValue('editWorkDescriptionQty');
+            d.workDescriptionUnitPrice = getEditValue('editWorkDescriptionUnitPrice');
+            d.workDescriptionTotalPrice = getEditValue('editWorkDescriptionTotalPrice');
+            d.workDescriptionChargeNote = getEditValue('editWorkDescriptionChargeNote');
+            d.materials = wMaterials;
+            d.comments = getEditValue('editComments');
+            d.travelTime = getEditValue('editTravelTime');
+            d.arrivalTime = getEditValue('editArrivalTime');
+            d.timeOnSite = getEditValue('editTimeOnSite');
+            d.carriage = getEditValue('editCarriage');
+            d.manualSubtotalOverride = getEditValue('editManualSubtotalOverride');
+            d.manualSubtotal = getEditValue('editManualSubtotal');
+            d.panelPhoto = offlinePanelPhotoData || '';
+            d.panelPhotoPresent = offlinePanelPhotoData ? 'YES' : 'NO';
+          } else {
+            d.serviceReportCustomerOrderNo = getEditValue('editCustomerOrderNo');
+            d.serviceReportOurRefNo = getEditValue('editOurRefNo');
+            d.serviceReportWorkDescription = getEditValue('editWorkDescription');
+            d.serviceReportWorkDescriptionQty = getEditValue('editWorkDescriptionQty');
+            d.serviceReportWorkDescriptionUnitPrice = getEditValue('editWorkDescriptionUnitPrice');
+            d.serviceReportWorkDescriptionTotalPrice = getEditValue('editWorkDescriptionTotalPrice');
+            d.serviceReportWorkDescriptionChargeNote = getEditValue('editWorkDescriptionChargeNote');
+            d.serviceReportMaterials = wMaterials;
+            d.serviceReportComments = getEditValue('editComments');
+            d.serviceReportTravelTime = getEditValue('editTravelTime');
+            d.serviceReportArrivalTime = getEditValue('editArrivalTime');
+            d.serviceReportTimeOnSite = getEditValue('editTimeOnSite');
+            d.serviceReportCarriage = getEditValue('editCarriage');
+            d.serviceReportManualSubtotalOverride = getEditValue('editManualSubtotalOverride') || 'NO';
+            d.serviceReportManualSubtotal = getEditValue('editManualSubtotal');
+            d.serviceReportSubTotal = getEditValue('editSubTotal');
+            d.serviceReportVat = getEditValue('editVat');
+            d.serviceReportTotal = getEditValue('editTotal');
+            d.serviceReportPanelPhoto = offlinePanelPhotoData || '';
+            d.serviceReportServiceCost = getEditValue('editServiceReportServiceCost') || '0.00';
+            d.serviceReportMaterialCost = getEditValue('editServiceReportMaterialCost') || '0.00';
+            d.serviceReportLabourCost = getEditValue('editServiceReportLabourCost') || '0.00';
+          }
         }
         if (savingSfa) {
           // V6.3c72: keep SFA totals from the SFA cost fields. Do not overwrite them with the hidden Engineer Service Report/W total fields.
@@ -6439,6 +6989,9 @@ function applyOfflineLookupSelection(row) {
         }
         d.customerName = getEditValue('editCustomerName');
         d.customerDate = getEditValue('editCustomerDate');
+        d.customerSignatureStatus = getEditValue('editCustomerSignatureStatus') || 'SIGNATURE_REQUIRED';
+        d.engineerSignature = offlineEngineerSignatureData || '';
+        d.customerSignature = offlineCustomerSignatureData || '';
         const draftName = getEditValue('editDraftName') || item.draftName || buildEditorDraftName(d);
         const updated = Object.assign({}, item, {
           draft: d,
@@ -6459,7 +7012,7 @@ function applyOfflineLookupSelection(row) {
       function buildSfaCloudPayload(item) {
         item = item || {};
         const d = item.draft || {};
-        const equipmentRows = normalizeSfaEquipmentRows(d.faEquipmentRows || d.sfaEquipmentList || []);
+        const equipmentRows = normalizeSfaEquipmentRows(d.faEquipmentRows || d.sfaEquipmentList || [], 'SFA');
         const draftName = item.draftName || d.draftName || buildEditorDraftName(d);
         const selSubtotal = (parseMoney(d.elServiceCost) + parseMoney(d.elMaterialCost) + parseMoney(d.elLabourCost)).toFixed(2);
         const selVat = (Number(selSubtotal) * 0.20).toFixed(2);
@@ -7496,7 +8049,7 @@ function applyOfflineLookupSelection(row) {
 
     }());
   </script>
-  <div class="fixed-version-badge">FSD Certs · Minimal Home C95q</div>
+  <div class="fixed-version-badge">FSD Certs · Minimal Home C95r</div>
 
 
   <!-- C93p Premium Home clock -->
