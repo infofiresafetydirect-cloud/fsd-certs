@@ -2566,7 +2566,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
           <button data-fsd-fasttap class="minimal-app tone-navy" type="button" onclick="openCerts(event)"><span class="minimal-app-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3.5h12v17H6z"/><path d="m9 12 2 2 4-4M9 17h6M9 7h6"/></svg></span><strong>Submitted Reports</strong><small>Review completed paperwork.</small><span class="minimal-app-arrow" aria-hidden="true">→</span></button>
         </div></section>
       </main>
-      <footer class="minimal-footer"><span><strong>FSD Certs</strong> · Built for Fire Safety Direct</span><span class="minimal-labs">Designed &amp; engineered by Jared720 Labs · C95m</span></footer>
+      <footer class="minimal-footer"><span><strong>FSD Certs</strong> · Built for Fire Safety Direct</span><span class="minimal-labs">Designed &amp; engineered by Jared720 Labs · C95p</span></footer>
     </div>
   </section>
   <section id="offlineDrafts" class="screen offline-screen" aria-label="Jobs and Drafts">
@@ -2589,7 +2589,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
       </div>
       <div id="offlineStatus" class="offline-status"></div>
       <div id="offlineLookupStatus" class="offline-status"></div>
-      <div class="maker-mark">Jared720 Labs · C95m Unified Drafts</div>
+      <div class="maker-mark">Jared720 Labs · C95p Unified Drafts</div>
     </main>
   </section>
 
@@ -3046,7 +3046,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
     (function () {
       'use strict';
 
-      const SHELL_VER = 'V6.3c95m';
+      const SHELL_VER = 'V6.3c95p';
       const APP_URL = 'https://script.google.com/macros/s/AKfycbzq9FTETNZwUJWHMGnMHECbu3sJ3jy3FFvGYyeaRXtkoK1GHBtqOu-GLBle_WGfoFtI/exec';
       const SCHEDULE_URL = 'https://infofiresafetydirect-cloud.github.io/fsd-schedule-2026/';
       const CALLOUTS_PAGE = APP_URL + '?page=callouts&shell=ipad';
@@ -3573,9 +3573,8 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
       let offlineLookupData = loadOfflineLookupData();
       setTimeout(function() { refreshOfflineLookupDataFromIndexedDb(); }, 300);
 
-      // V6.3c69b - Offline SFA online field-shape fix.
-      // W remains the only offline report that can sync to Cloud Drafts.
-      // SFA now mirrors the online Fire Alarm Service Report structure more closely: equipment checked table + service/remedial costs, no W material rows.
+      // C95p: W/ESR, SFA and SEL use the existing offline editor and can sync
+      // into the same cloud Drafts records. QQ/FAC stay cloud-only.
       const OFFLINE_REPORT_TYPES = {
         W:   { code: 'W',   label: 'Engineer Service Report',             page: 'esr', editableOffline: true,  syncableOffline: true },
         SFA: { code: 'SFA', label: 'Fire Alarm Service Report',           page: 'fael', editableOffline: true,  syncableOffline: true },
@@ -6663,14 +6662,41 @@ function applyOfflineLookupSelection(row) {
         return 'W';
       }
 
-      function mergeCloudDraftRows(rows) {
+      function mergeCloudDraftRows(rows, options) {
         const incoming = Array.isArray(rows) ? rows : [];
+        options = options || {};
+        const syncEngineer = String(options.engineer || '').trim().toLowerCase();
+        const authoritative = options.authoritative === true;
+        const incomingIds = {};
+        incoming.forEach(function(row) {
+          if (row && row.draftId) incomingIds[String(row.draftId)] = true;
+        });
         let queue = readOfflineQueue();
         let added = 0;
         let updated = 0;
         let skippedLocalChanges = 0;
+        let skippedBrokenDrafts = 0;
+        let removedStale = 0;
+
+        if (authoritative) {
+          queue = queue.filter(function(item) {
+            if (!item || !item.draftId) return true;
+            const state = normaliseDraftSyncState(item);
+            if (state === 'needs_sync' || state === 'offline_only') return true;
+            const itemEngineer = String(item.engineer || (item.draft && item.draft.engineer) || '').trim().toLowerCase();
+            if (syncEngineer && itemEngineer !== syncEngineer) return true;
+            if (incomingIds[String(item.draftId)]) return true;
+            removedStale += 1;
+            return false;
+          });
+        }
+
         incoming.forEach(function(row) {
           if (!row || !row.draftId) return;
+          if (row.draftLoadError || !row.draft || typeof row.draft !== 'object') {
+            skippedBrokenDrafts += 1;
+            return;
+          }
           const draft = row.draft && typeof row.draft === 'object' ? row.draft : {};
           const code = inferOfflineReportCodeFromCloud(row, draft);
           const existingIndex = queue.findIndex(function(item) { return item && String(item.draftId || '') === String(row.draftId); });
@@ -6703,7 +6729,14 @@ function applyOfflineLookupSelection(row) {
           else { queue.push(item); added += 1; }
         });
         writeOfflineQueue(queue);
-        return { added: added, updated: updated, skippedLocalChanges: skippedLocalChanges, total: incoming.length };
+        return {
+          added: added,
+          updated: updated,
+          removedStale: removedStale,
+          skippedLocalChanges: skippedLocalChanges,
+          skippedBrokenDrafts: skippedBrokenDrafts,
+          total: incoming.length
+        };
       }
 
       window.fsdReceiveOfflineDraftsData = function fsdReceiveOfflineDraftsData(payload) {
@@ -6713,12 +6746,22 @@ function applyOfflineLookupSelection(row) {
             renderOfflineDrafts();
             return;
           }
-          const result = mergeCloudDraftRows(payload.drafts || []);
+          const result = mergeCloudDraftRows(payload.drafts || [], {
+            engineer: payload.engineer || '',
+            authoritative: payload.authoritative === true
+          });
           const stamp = new Date().toLocaleString();
           safeStorageSet(localStorage, OFFLINE_CLOUD_DRAFT_SYNC_KEY, stamp);
           renderOfflineDrafts();
           updateOfflineLookupStatus();
-          setOfflineStatus('Cloud drafts synced to this iPad: ' + result.added + ' added, ' + result.updated + ' updated' + (result.skippedLocalChanges ? ', ' + result.skippedLocalChanges + ' kept as local changes' : '') + '.');
+          setOfflineStatus(
+            'Cloud drafts synced to this iPad: ' + result.added + ' added, ' +
+            result.updated + ' updated' +
+            (result.removedStale ? ', ' + result.removedStale + ' completed/deleted copy removed' : '') +
+            (result.skippedLocalChanges ? ', ' + result.skippedLocalChanges + ' kept as local changes' : '') +
+            (result.skippedBrokenDrafts ? ', ' + result.skippedBrokenDrafts + ' cloud draft needs office checking' : '') +
+            '.'
+          );
         } catch (err) {
           setOfflineStatus('Cloud draft sync failed locally: ' + (err && err.message ? err.message : err));
         }
@@ -6737,6 +6780,10 @@ function applyOfflineLookupSelection(row) {
           const script = document.createElement('script');
           script.id = 'fsdOfflineDraftsJsonpScript';
           const engineer = getDefaultEngineerProfile();
+          if (!engineer) {
+            setOfflineStatus('Choose the default engineer on this iPad before syncing Jobs & Drafts.');
+            return false;
+          }
           script.src = APP_URL + '?page=offlineDraftsApi&callback=fsdReceiveOfflineDraftsData&includeJson=1&engineer=' + encodeURIComponent(engineer || '') + '&ts=' + Date.now();
           script.onerror = function() {
             setOfflineStatus('Cloud draft sync failed. Check signal and Apps Script deployment.');
@@ -7353,7 +7400,7 @@ function applyOfflineLookupSelection(row) {
 
     }());
   </script>
-  <div class="fixed-version-badge">FSD Certs · Minimal Home C95m</div>
+  <div class="fixed-version-badge">FSD Certs · Minimal Home C95p</div>
 
 
   <!-- C93p Premium Home clock -->
