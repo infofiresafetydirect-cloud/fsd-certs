@@ -2706,7 +2706,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
           <button data-fsd-fasttap class="minimal-app tone-navy" type="button" onclick="openCerts(event)"><span class="minimal-app-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3.5h12v17H6z"/><path d="m9 12 2 2 4-4M9 17h6M9 7h6"/></svg></span><strong>Submitted Reports</strong><small>Review completed paperwork.</small><span class="minimal-app-arrow" aria-hidden="true">→</span></button>
         </div></section>
       </main>
-      <footer class="minimal-footer"><span><strong>FSD Certs</strong> · Built for Fire Safety Direct</span><span class="minimal-labs">Designed &amp; engineered by Jared720 Labs · C96o</span></footer>
+      <footer class="minimal-footer"><span><strong>FSD Certs</strong> · Built for Fire Safety Direct</span><span class="minimal-labs">Designed &amp; engineered by Jared720 Labs · C96p</span></footer>
     </div>
   </section>
   <section id="offlineDrafts" class="screen offline-screen" aria-label="Jobs and Drafts">
@@ -2750,7 +2750,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
 
       <div id="offlineList" class="offline-list"></div>
 
-      <div class="maker-mark">Jared720 Labs · C96o Report Chooser</div>
+      <div class="maker-mark">Jared720 Labs · C96p Report Chooser</div>
     </main>
   </section>
 
@@ -2777,7 +2777,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
           </button>
         </div>
       </section>
-      <div class="maker-mark">Jared720 Labs · C96o Report Chooser</div>
+      <div class="maker-mark">Jared720 Labs · C96p Report Chooser</div>
     </main>
   </section>
 
@@ -3308,7 +3308,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
     (function () {
       'use strict';
 
-      const SHELL_VER = 'V6.3c96o';
+      const SHELL_VER = 'V6.3c96p';
       const APP_URL = 'https://script.google.com/macros/s/AKfycbzq9FTETNZwUJWHMGnMHECbu3sJ3jy3FFvGYyeaRXtkoK1GHBtqOu-GLBle_WGfoFtI/exec';
       const SCHEDULE_URL = 'https://infofiresafetydirect-cloud.github.io/fsd-schedule-2026/';
       const CALLOUTS_PAGE = APP_URL + '?page=callouts&shell=ipad';
@@ -8645,6 +8645,12 @@ function applyOfflineLookupSelection(row) {
           return;
         }
 
+        if (msg.type === 'FSD_OFFLINE_W_SAVE_AND_OPEN' && msg.item) {
+          upsertOfflineItem(msg.item);
+          openJobsAndDraftsAfterOfflineDraftSave({ draftName: msg.item.draftName || '' });
+          return;
+        }
+
         if (msg.type === 'FSD_OFFLINE_W_SAVE' && msg.item) {
           upsertOfflineItem(msg.item);
           return;
@@ -8770,7 +8776,7 @@ function applyOfflineLookupSelection(row) {
 
     }());
   </script>
-  <div class="fixed-version-badge">FSD Certs · Minimal Home C96o</div>
+  <div class="fixed-version-badge">FSD Certs · Minimal Home C96p</div>
 
 
   <!-- C93p Premium Home clock -->
