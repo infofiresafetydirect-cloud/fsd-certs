@@ -286,6 +286,20 @@
       box-shadow: 0 8px 22px rgba(0,0,0,.08);
     }
     .offline-new-card { margin-top: 14px; }
+    .offline-report-choice-list { display: grid; gap: 12px; margin-top: 18px; }
+    .offline-report-choice {
+      display: grid; grid-template-columns: 48px minmax(0,1fr) auto; gap: 12px; align-items: center; width: 100%;
+      min-height: 82px; padding: 14px 16px; border: 2px solid #dbe3ed; border-radius: 18px; background: #ffffff;
+      color: #111827; text-align: left; font: inherit; box-shadow: 0 7px 18px rgba(15,23,42,.08);
+    }
+    .offline-report-choice:active { transform: scale(.99); }
+    .offline-report-choice-icon { display:grid; place-items:center; width:48px; height:48px; border-radius:14px; background:#eff6ff; font-size:25px; }
+    .offline-report-choice strong, .offline-report-choice small { display:block; }
+    .offline-report-choice strong { color:#111827; font-size:17px; font-weight:950; }
+    .offline-report-choice small { margin-top:3px; color:#64748b; font-size:13px; line-height:1.3; font-weight:650; }
+    .offline-report-choice-arrow { color:#1d4ed8; font-size:27px; font-weight:950; }
+    .offline-report-choice.sfa .offline-report-choice-icon { background:#fff1f2; }
+    .offline-report-choice.sel .offline-report-choice-icon { background:#fffbeb; }
     .offline-section-title { margin: 0; color: #111827; font-size: 16px; font-weight: 900; }
     .offline-section-note { margin: 6px 0 0; color: #4b5563; font-size: 14px; line-height: 1.4; }
     .offline-folder-grid {
@@ -2692,7 +2706,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
           <button data-fsd-fasttap class="minimal-app tone-navy" type="button" onclick="openCerts(event)"><span class="minimal-app-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3.5h12v17H6z"/><path d="m9 12 2 2 4-4M9 17h6M9 7h6"/></svg></span><strong>Submitted Reports</strong><small>Review completed paperwork.</small><span class="minimal-app-arrow" aria-hidden="true">→</span></button>
         </div></section>
       </main>
-      <footer class="minimal-footer"><span><strong>FSD Certs</strong> · Built for Fire Safety Direct</span><span class="minimal-labs">Designed &amp; engineered by Jared720 Labs · C95z</span></footer>
+      <footer class="minimal-footer"><span><strong>FSD Certs</strong> · Built for Fire Safety Direct</span><span class="minimal-labs">Designed &amp; engineered by Jared720 Labs · C96a</span></footer>
     </div>
   </section>
   <section id="offlineDrafts" class="screen offline-screen" aria-label="Jobs and Drafts">
@@ -2731,13 +2745,38 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
       <section class="offline-new-card">
         <h3 class="offline-section-title">Start New Report</h3>
         <p class="offline-section-note">These use the same report-pack Add Pages whether you have signal or not.</p>
-        <div class="offline-footer-actions">
-          <button class="button" type="button" onclick="startNewOfflineW(event)">+ New Engineer Service Report</button>
-          <button class="button secondary" type="button" onclick="startNewOfflineSfaTrial(event)">+ New SFA</button>
-          <button class="button secondary" type="button" onclick="startNewOfflineSelTrial(event)">+ New SEL</button>
+        <div class="offline-toolbar">
+          <button class="button" type="button" onclick="openOfflineReportChooser(event)">+ Start New Report</button>
         </div>
       </section>
-      <div class="maker-mark">Jared720 Labs · C95z Direct Save Binding</div>
+      <div class="maker-mark">Jared720 Labs · C96a Report Chooser</div>
+    </main>
+  </section>
+
+  <section id="offlineReportChooser" class="screen offline-screen" aria-label="Choose New Report">
+    <main class="offline-card">
+      <div class="offline-manager-head">
+        <div>
+          <h2 class="offline-title">Start New Report</h2>
+          <p class="offline-help">Choose the certificate you need. It will start as an iPad working copy and can be uploaded when signal returns.</p>
+        </div>
+        <button class="offline-home-button" type="button" onclick="closeOfflineReportChooser(event)">← Jobs &amp; Drafts</button>
+      </div>
+      <section class="offline-new-card">
+        <h3 class="offline-section-title">Choose report type</h3>
+        <div class="offline-report-choice-list">
+          <button class="offline-report-choice" type="button" onclick="chooseOfflineNewReport(event,'W')">
+            <span class="offline-report-choice-icon">📝</span><span><strong>Engineer Service Report</strong><small>ESR with its full Report Pack Add Pages.</small></span><span class="offline-report-choice-arrow">→</span>
+          </button>
+          <button class="offline-report-choice sfa" type="button" onclick="chooseOfflineNewReport(event,'SFA')">
+            <span class="offline-report-choice-icon">🔥</span><span><strong>Fire Alarm Service Report</strong><small>SFA with ESR and SEL Add Pages.</small></span><span class="offline-report-choice-arrow">→</span>
+          </button>
+          <button class="offline-report-choice sel" type="button" onclick="chooseOfflineNewReport(event,'SEL')">
+            <span class="offline-report-choice-icon">💡</span><span><strong>Emergency Lighting Report</strong><small>SEL with ESR and SFA Add Pages.</small></span><span class="offline-report-choice-arrow">→</span>
+          </button>
+        </div>
+      </section>
+      <div class="maker-mark">Jared720 Labs · C96a Report Chooser</div>
     </main>
   </section>
 
@@ -3268,7 +3307,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
     (function () {
       'use strict';
 
-      const SHELL_VER = 'V6.3c95z';
+      const SHELL_VER = 'V6.3c96a';
       const APP_URL = 'https://script.google.com/macros/s/AKfycbzq9FTETNZwUJWHMGnMHECbu3sJ3jy3FFvGYyeaRXtkoK1GHBtqOu-GLBle_WGfoFtI/exec';
       const SCHEDULE_URL = 'https://infofiresafetydirect-cloud.github.io/fsd-schedule-2026/';
       const CALLOUTS_PAGE = APP_URL + '?page=callouts&shell=ipad';
@@ -3520,6 +3559,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
       const draftFlash = document.getElementById('draftFlash');
       const fallback = document.getElementById('fallback');
       const offlineDrafts = document.getElementById('offlineDrafts');
+      const offlineReportChooser = document.getElementById('offlineReportChooser');
       const offlineList = document.getElementById('offlineList');
       const offlineStatus = document.getElementById('offlineStatus');
       const offlineEngineerFilter = document.getElementById('offlineEngineerFilter');
@@ -3864,7 +3904,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
       let offlineLookupData = loadOfflineLookupData();
       setTimeout(function() { refreshOfflineLookupDataFromIndexedDb(); }, 300);
 
-      // C95z: W/ESR, SFA and SEL use the same valid Add Page combinations as online.
+      // C96a: W/ESR, SFA and SEL use the same valid Add Page combinations as online.
       // into the same cloud Drafts records. QQ/FAC stay cloud-only.
       const OFFLINE_REPORT_TYPES = {
         W:   { code: 'W',   label: 'Engineer Service Report',             page: 'esr', editableOffline: true,  syncableOffline: true },
@@ -7856,6 +7896,7 @@ function applyOfflineLookupSelection(row) {
         fallback.classList.add('hidden');
         home.classList.add('hidden');
         offlineDrafts.classList.add('active');
+        if (offlineReportChooser) offlineReportChooser.classList.remove('active');
         renderOfflineDrafts();
         if (navigator.onLine) {
           loadLiveEngineerProfileList();
@@ -7868,8 +7909,32 @@ function applyOfflineLookupSelection(row) {
       window.closeOfflineDrafts = function closeOfflineDrafts(event) {
         stopTap(event);
         offlineDrafts.classList.remove('active');
+        if (offlineReportChooser) offlineReportChooser.classList.remove('active');
         if (offlineEditor) offlineEditor.classList.remove('active');
         home.classList.remove('hidden');
+      };
+
+      window.openOfflineReportChooser = function openOfflineReportChooser(event) {
+        stopTap(event);
+        offlineDrafts.classList.remove('active');
+        if (offlineReportChooser) offlineReportChooser.classList.add('active');
+        return false;
+      };
+
+      window.closeOfflineReportChooser = function closeOfflineReportChooser(event) {
+        stopTap(event);
+        if (offlineReportChooser) offlineReportChooser.classList.remove('active');
+        offlineDrafts.classList.add('active');
+        renderOfflineDrafts();
+        return false;
+      };
+
+      window.chooseOfflineNewReport = function chooseOfflineNewReport(event, code) {
+        stopTap(event);
+        if (offlineReportChooser) offlineReportChooser.classList.remove('active');
+        if (code === 'SFA') return window.startNewOfflineSfaTrial(event);
+        if (code === 'SEL') return window.startNewOfflineSelTrial(event);
+        return window.startNewOfflineW(event);
       };
 
       window.refreshOfflineDrafts = function refreshOfflineDrafts(event) {
@@ -8471,7 +8536,7 @@ function applyOfflineLookupSelection(row) {
 
     }());
   </script>
-  <div class="fixed-version-badge">FSD Certs · Minimal Home C95z</div>
+  <div class="fixed-version-badge">FSD Certs · Minimal Home C96a</div>
 
 
   <!-- C93p Premium Home clock -->
