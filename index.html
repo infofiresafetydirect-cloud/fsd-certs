@@ -2706,7 +2706,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
           <button data-fsd-fasttap class="minimal-app tone-navy" type="button" onclick="openCerts(event)"><span class="minimal-app-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3.5h12v17H6z"/><path d="m9 12 2 2 4-4M9 17h6M9 7h6"/></svg></span><strong>Submitted Reports</strong><small>Review completed paperwork.</small><span class="minimal-app-arrow" aria-hidden="true">→</span></button>
         </div></section>
       </main>
-      <footer class="minimal-footer"><span><strong>FSD Certs</strong> · Built for Fire Safety Direct</span><span class="minimal-labs">Designed &amp; engineered by Jared720 Labs · C96e</span></footer>
+      <footer class="minimal-footer"><span><strong>FSD Certs</strong> · Built for Fire Safety Direct</span><span class="minimal-labs">Designed &amp; engineered by Jared720 Labs · C96f</span></footer>
     </div>
   </section>
   <section id="offlineDrafts" class="screen offline-screen" aria-label="Jobs and Drafts">
@@ -2750,7 +2750,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
 
       <div id="offlineList" class="offline-list"></div>
 
-      <div class="maker-mark">Jared720 Labs · C96e Report Chooser</div>
+      <div class="maker-mark">Jared720 Labs · C96f Report Chooser</div>
     </main>
   </section>
 
@@ -2777,7 +2777,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
           </button>
         </div>
       </section>
-      <div class="maker-mark">Jared720 Labs · C96e Report Chooser</div>
+      <div class="maker-mark">Jared720 Labs · C96f Report Chooser</div>
     </main>
   </section>
 
@@ -3308,7 +3308,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
     (function () {
       'use strict';
 
-      const SHELL_VER = 'V6.3c96e';
+      const SHELL_VER = 'V6.3c96f';
       const APP_URL = 'https://script.google.com/macros/s/AKfycbzq9FTETNZwUJWHMGnMHECbu3sJ3jy3FFvGYyeaRXtkoK1GHBtqOu-GLBle_WGfoFtI/exec';
       const SCHEDULE_URL = 'https://infofiresafetydirect-cloud.github.io/fsd-schedule-2026/';
       const CALLOUTS_PAGE = APP_URL + '?page=callouts&shell=ipad';
@@ -3895,17 +3895,28 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
       const OFFLINE_LOOKUP_STORAGE_CHUNK_COUNT_KEY = OFFLINE_LOOKUP_STORAGE_KEY + '_customer_chunk_count';
       const OFFLINE_LOOKUP_IDB_NAME = 'fsd_offline_lookup_db_v1';
       const OFFLINE_LOOKUP_IDB_STORE = 'customer_chunks';
+      // C96f planned migration: preserve the existing IndexedDB name and lookup
+      // keys, while adding a separate store for full offline draft payloads.
+      const OFFLINE_IDB_VERSION = 2;
+      const OFFLINE_DRAFTS_IDB_STORE = 'draft_queue';
+      const OFFLINE_DRAFTS_IDB_KEY = '__draft_queue_v1__';
+      const OFFLINE_DRAFTS_IDB_MIGRATION_KEY = '__draft_queue_migration_v1__';
       const OFFLINE_LOOKUP_IDB_META_KEY = '__meta__';
       const OFFLINE_LOOKUP_PENDING_KEY = 'fsd_offline_lookup_pending_customer_site_v1';
       const OFFLINE_LOOKUP_IDB_CHUNK_SIZE = 500;
       const OFFLINE_LOOKUP_MAX_RESULTS = 80;
       const OFFLINE_CLOUD_DRAFT_SYNC_KEY = 'fsd_unified_cloud_drafts_last_sync_v1';
       let liveEngineerProfileNames = [];
+      let offlineDraftQueueCache = null;
+      let offlineDraftQueueReady = false;
+      let offlineDraftQueueInitPromise = null;
+      let offlineDraftQueueWriteChain = Promise.resolve();
+      let offlineDraftQueueStorageError = '';
       let offlineLookupMode = 'invoice';
       let offlineLookupData = loadOfflineLookupData();
       setTimeout(function() { refreshOfflineLookupDataFromIndexedDb(); }, 300);
 
-      // C96e: W/ESR, SFA and SEL use the same valid Add Page combinations as online.
+      // C96f: W/ESR, SFA and SEL use the same valid Add Page combinations as online.
       // into the same cloud Drafts records. QQ/FAC stay cloud-only.
       const OFFLINE_REPORT_TYPES = {
         W:   { code: 'W',   label: 'Engineer Service Report',             page: 'esr', editableOffline: true,  syncableOffline: true },
@@ -4427,11 +4438,14 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
             reject(new Error('IndexedDB is not available on this browser.'));
             return;
           }
-          const req = indexedDB.open(OFFLINE_LOOKUP_IDB_NAME, 1);
+          const req = indexedDB.open(OFFLINE_LOOKUP_IDB_NAME, OFFLINE_IDB_VERSION);
           req.onupgradeneeded = function(event) {
             const db = event.target.result;
             if (!db.objectStoreNames.contains(OFFLINE_LOOKUP_IDB_STORE)) {
               db.createObjectStore(OFFLINE_LOOKUP_IDB_STORE, { keyPath: 'key' });
+            }
+            if (!db.objectStoreNames.contains(OFFLINE_DRAFTS_IDB_STORE)) {
+              db.createObjectStore(OFFLINE_DRAFTS_IDB_STORE, { keyPath: 'key' });
             }
           };
           req.onsuccess = function() { resolve(req.result); };
@@ -4454,6 +4468,24 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
           const req = tx.objectStore(OFFLINE_LOOKUP_IDB_STORE).get(key);
           req.onsuccess = function() { resolve(req.result || null); };
           req.onerror = function() { reject(req.error || new Error('IndexedDB read failed.')); };
+        });
+      }
+
+      function idbPutOfflineDraftRecord(db, record) {
+        return new Promise(function(resolve, reject) {
+          const tx = db.transaction(OFFLINE_DRAFTS_IDB_STORE, 'readwrite');
+          tx.objectStore(OFFLINE_DRAFTS_IDB_STORE).put(record);
+          tx.oncomplete = function() { resolve(); };
+          tx.onerror = function() { reject(tx.error || new Error('Offline draft storage write failed.')); };
+        });
+      }
+
+      function idbGetOfflineDraftRecord(db, key) {
+        return new Promise(function(resolve, reject) {
+          const tx = db.transaction(OFFLINE_DRAFTS_IDB_STORE, 'readonly');
+          const req = tx.objectStore(OFFLINE_DRAFTS_IDB_STORE).get(key);
+          req.onsuccess = function() { resolve(req.result || null); };
+          req.onerror = function() { reject(req.error || new Error('Offline draft storage read failed.')); };
         });
       }
 
@@ -5557,23 +5589,7 @@ function applyOfflineLookupSelection(row) {
         return OFFLINE_REPORT_TYPES[getOfflineReportType(item)] || OFFLINE_REPORT_TYPES.W;
       }
 
-      function readOfflineQueue() {
-        let rows = [];
-        try {
-          rows = JSON.parse(localStorage.getItem(OFFLINE_W_QUEUE_KEY) || '[]') || [];
-        } catch (err) {
-          rows = [];
-        }
-        try {
-          const oldRows = JSON.parse(localStorage.getItem(OFFLINE_W_OLD_QUEUE_KEY) || '[]') || [];
-          if (Array.isArray(oldRows) && oldRows.length) {
-            const seen = new Set(rows.map(function(row) { return row && row.offlineId; }));
-            oldRows.forEach(function(row) {
-              if (row && row.offlineId && !seen.has(row.offlineId)) rows.push(row);
-            });
-            localStorage.setItem(OFFLINE_W_QUEUE_KEY, JSON.stringify(rows));
-          }
-        } catch (err) {}
+      function cleanOfflineQueueRows(rows) {
         return Array.isArray(rows) ? rows.filter(function(row) { return row && row.offlineId && row.draft; }).map(function(row) {
           const type = getOfflineReportType(row);
           if (!row.reportType) row.reportType = type;
@@ -5582,8 +5598,127 @@ function applyOfflineLookupSelection(row) {
         }) : [];
       }
 
+      function readLegacyOfflineQueueRows() {
+        let rows = [];
+        try { rows = JSON.parse(localStorage.getItem(OFFLINE_W_QUEUE_KEY) || '[]') || []; } catch (err) {}
+        try {
+          const oldRows = JSON.parse(localStorage.getItem(OFFLINE_W_OLD_QUEUE_KEY) || '[]') || [];
+          const seen = {};
+          rows.forEach(function(row) { if (row && row.offlineId) seen[row.offlineId] = true; });
+          oldRows.forEach(function(row) {
+            if (row && row.offlineId && !seen[row.offlineId]) { rows.push(row); seen[row.offlineId] = true; }
+          });
+        } catch (err) {}
+        return cleanOfflineQueueRows(rows);
+      }
+
+      function mergeOfflineQueueRows(primaryRows, secondaryRows) {
+        const merged = cleanOfflineQueueRows(primaryRows).slice();
+        const seen = {};
+        merged.forEach(function(row) { seen[row.offlineId] = true; });
+        cleanOfflineQueueRows(secondaryRows).forEach(function(row) {
+          if (!seen[row.offlineId]) { merged.push(row); seen[row.offlineId] = true; }
+        });
+        return merged;
+      }
+
+      function sameOfflineQueueIdentity(left, right) {
+        const a = cleanOfflineQueueRows(left);
+        const b = cleanOfflineQueueRows(right);
+        if (a.length !== b.length) return false;
+        const ids = {};
+        a.forEach(function(row) { ids[row.offlineId] = true; });
+        return b.every(function(row) { return !!ids[row.offlineId]; });
+      }
+
+      function persistOfflineDraftQueue(rows) {
+        const snapshot = cleanOfflineQueueRows(rows);
+        offlineDraftQueueCache = snapshot;
+        offlineDraftQueueWriteChain = offlineDraftQueueWriteChain.catch(function() {}).then(function() {
+          return openOfflineLookupIdb().then(function(db) {
+            return idbPutOfflineDraftRecord(db, {
+              key: OFFLINE_DRAFTS_IDB_KEY,
+              rows: snapshot,
+              savedAt: new Date().toISOString(),
+              format: 'C96f-indexeddb-drafts'
+            }).then(function() { try { db.close(); } catch (ignore) {} });
+          });
+        }).then(function() {
+          offlineDraftQueueStorageError = '';
+          return snapshot;
+        }).catch(function(err) {
+          offlineDraftQueueStorageError = String(err && err.message || err || 'IndexedDB draft storage failed.');
+          throw err;
+        });
+        return offlineDraftQueueWriteChain;
+      }
+
+      function ensureOfflineDraftQueueReady() {
+        if (offlineDraftQueueReady) return Promise.resolve(readOfflineQueue());
+        if (offlineDraftQueueInitPromise) return offlineDraftQueueInitPromise;
+        const legacyRows = readLegacyOfflineQueueRows();
+        offlineDraftQueueInitPromise = openOfflineLookupIdb().then(function(db) {
+          return idbGetOfflineDraftRecord(db, OFFLINE_DRAFTS_IDB_KEY).then(function(record) {
+            const rows = mergeOfflineQueueRows(record && record.rows, legacyRows);
+            return idbPutOfflineDraftRecord(db, {
+              key: OFFLINE_DRAFTS_IDB_KEY,
+              rows: rows,
+              savedAt: new Date().toISOString(),
+              format: 'C96f-indexeddb-drafts'
+            }).then(function() {
+              return idbPutOfflineDraftRecord(db, {
+                key: OFFLINE_DRAFTS_IDB_MIGRATION_KEY,
+                migratedAt: new Date().toISOString(),
+                legacyDraftCount: legacyRows.length,
+                indexedDbDraftCount: rows.length,
+                source: 'localStorage-to-indexeddb'
+              });
+            }).then(function() {
+              return idbGetOfflineDraftRecord(db, OFFLINE_DRAFTS_IDB_KEY);
+            }).then(function(verified) {
+              if (!verified || !sameOfflineQueueIdentity(verified.rows, rows)) {
+                throw new Error('Offline draft migration verification failed. The original local drafts were kept.');
+              }
+              offlineDraftQueueCache = cleanOfflineQueueRows(verified.rows);
+              offlineDraftQueueReady = true;
+              offlineDraftQueueStorageError = '';
+              // Only free Safari localStorage after the IndexedDB copy has been read
+              // back and verified. Cloud drafts and iPad-only drafts are both retained.
+              try { localStorage.removeItem(OFFLINE_W_QUEUE_KEY); } catch (ignore) {}
+              try { localStorage.removeItem(OFFLINE_W_OLD_QUEUE_KEY); } catch (ignore) {}
+              try { db.close(); } catch (ignore) {}
+              return offlineDraftQueueCache;
+            });
+          });
+        }).catch(function(err) {
+          offlineDraftQueueCache = legacyRows;
+          offlineDraftQueueReady = false;
+          offlineDraftQueueStorageError = String(err && err.message || err || 'Offline draft migration failed.');
+          throw err;
+        });
+        return offlineDraftQueueInitPromise;
+      }
+
+      function readOfflineQueue() {
+        return cleanOfflineQueueRows(offlineDraftQueueCache !== null ? offlineDraftQueueCache : readLegacyOfflineQueueRows());
+      }
+
       function writeOfflineQueue(rows) {
-        localStorage.setItem(OFFLINE_W_QUEUE_KEY, JSON.stringify(rows || []));
+        const cleanRows = cleanOfflineQueueRows(rows);
+        if (offlineDraftQueueReady) {
+          const saving = persistOfflineDraftQueue(cleanRows);
+          saving.catch(function(err) {
+            console.error('Offline draft IndexedDB save failed', err);
+          });
+          return saving;
+        }
+        offlineDraftQueueCache = cleanRows;
+        localStorage.setItem(OFFLINE_W_QUEUE_KEY, JSON.stringify(cleanRows));
+        return Promise.resolve(cleanRows);
+      }
+
+      function waitForOfflineDraftQueueSave() {
+        return offlineDraftQueueReady ? offlineDraftQueueWriteChain : Promise.resolve();
       }
 
       function upsertOfflineItem(item) {
@@ -5591,12 +5726,12 @@ function applyOfflineLookupSelection(row) {
         const rows = readOfflineQueue();
         const idx = rows.findIndex(function(row) { return row && row.offlineId === item.offlineId; });
         if (idx >= 0) rows[idx] = item; else rows.push(item);
-        writeOfflineQueue(rows);
+        return writeOfflineQueue(rows);
       }
 
       function removeOfflineItem(offlineId) {
         if (!offlineId) return;
-        writeOfflineQueue(readOfflineQueue().filter(function(row) { return row && row.offlineId !== offlineId; }));
+        return writeOfflineQueue(readOfflineQueue().filter(function(row) { return row && row.offlineId !== offlineId; }));
       }
 
       const ESC_MAP = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
@@ -6995,30 +7130,33 @@ function applyOfflineLookupSelection(row) {
       window.startNewOfflineW = function startNewOfflineW(event) {
         stopTap(event);
         const item = createBlankOfflineWItem();
-        upsertOfflineItem(item);
-        openEditorForItem(item);
-        setEditorStatus('New Engineer Service Report started on this iPad. Save here anytime, then upload when signal returns.');
-        return false;
+        return Promise.resolve(upsertOfflineItem(item)).then(function() {
+          openEditorForItem(item);
+          setEditorStatus('New Engineer Service Report started on this iPad. Save here anytime, then upload when signal returns.');
+          return false;
+        });
       };
 
       window.startNewOfflineSfaTrial = function startNewOfflineSfaTrial(event) {
         stopTap(event);
         const item = createBlankOfflineSfaTrialItem();
-        upsertOfflineItem(item);
-        renderOfflineDrafts();
-        openEditorForItem(item);
-        setEditorStatus('New SFA started on this iPad. Save here anytime, then upload when signal returns.');
-        return false;
+        return Promise.resolve(upsertOfflineItem(item)).then(function() {
+          renderOfflineDrafts();
+          openEditorForItem(item);
+          setEditorStatus('New SFA started on this iPad. Save here anytime, then upload when signal returns.');
+          return false;
+        });
       };
 
       window.startNewOfflineSelTrial = function startNewOfflineSelTrial(event) {
         stopTap(event);
         const item = createBlankOfflineSelTrialItem();
-        upsertOfflineItem(item);
-        renderOfflineDrafts();
-        openEditorForItem(item);
-        setEditorStatus('New SEL started on this iPad. Save here anytime, then upload when signal returns.');
-        return false;
+        return Promise.resolve(upsertOfflineItem(item)).then(function() {
+          renderOfflineDrafts();
+          openEditorForItem(item);
+          setEditorStatus('New SEL started on this iPad. Save here anytime, then upload when signal returns.');
+          return false;
+        });
       };
 
 
@@ -7580,7 +7718,14 @@ function applyOfflineLookupSelection(row) {
         stopTap(event);
         const updated = saveEditorToQueue();
         if (!updated) return false;
-        returnToOfflineDraftsAfterSave('Draft saved on this iPad.');
+        showDraftSaveLoader();
+        waitForOfflineDraftQueueSave().then(function() {
+          returnToOfflineDraftsAfterSave('Draft saved on this iPad.');
+        }).catch(function(err) {
+          hideLoader();
+          offlineEditor.classList.add('active');
+          setEditorStatus('Could not save this draft safely on the iPad. Nothing was removed. ' + String(err && err.message || ''));
+        });
         return false;
       };
 
@@ -7589,17 +7734,24 @@ function applyOfflineLookupSelection(row) {
         const updated = saveEditorToQueue();
         if (!updated) return;
         const report = getOfflineReportConfig(updated);
-        if (!report.syncableOffline) {
-          returnToOfflineDraftsAfterSave('Draft saved on this iPad. ' + report.code + ' upload is not available yet.');
-          return false;
-        }
-        if (!navigator.onLine) {
-          returnToOfflineDraftsAfterSave('Draft saved on this iPad. No signal, so upload is waiting.');
-          return false;
-        }
-        offlineEditor.classList.remove('active');
-        setOfflineStatus('Saved on the iPad. Uploading the changes to Cloud Drafts...');
-        loadOfflineBridgeForShellAction('sync', updated);
+        showDraftSaveLoader();
+        waitForOfflineDraftQueueSave().then(function() {
+          if (!report.syncableOffline) {
+            returnToOfflineDraftsAfterSave('Draft saved on this iPad. ' + report.code + ' upload is not available yet.');
+            return;
+          }
+          if (!navigator.onLine) {
+            returnToOfflineDraftsAfterSave('Draft saved on this iPad. No signal, so upload is waiting.');
+            return;
+          }
+          offlineEditor.classList.remove('active');
+          setOfflineStatus('Saved on the iPad. Uploading the changes to Cloud Drafts...');
+          loadOfflineBridgeForShellAction('sync', updated);
+        }).catch(function(err) {
+          hideLoader();
+          offlineEditor.classList.add('active');
+          setEditorStatus('Could not save this draft safely on the iPad. Nothing was removed. ' + String(err && err.message || ''));
+        });
         return false;
       };
 
@@ -7902,12 +8054,18 @@ function applyOfflineLookupSelection(row) {
         offlineDrafts.classList.add('active');
         if (offlineReportChooser) offlineReportChooser.classList.remove('active');
         renderOfflineDrafts();
-        if (navigator.onLine) {
-          loadLiveEngineerProfileList();
-          // C95v: opening Jobs & Drafts checks Cloud Drafts automatically.
-          // This deliberately does not run the larger lookup customer/site/material sync.
-          window.syncCloudDraftCache({ preventDefault:function(){}, stopPropagation:function(){} });
-        }
+        ensureOfflineDraftQueueReady().then(function() {
+          renderOfflineDrafts();
+          setOfflineStatus('Offline drafts are safely stored on this iPad.');
+          if (navigator.onLine) {
+            loadLiveEngineerProfileList();
+            // C95v: opening Jobs & Drafts checks Cloud Drafts automatically.
+            // This deliberately does not run the larger lookup customer/site/material sync.
+            window.syncCloudDraftCache({ preventDefault:function(){}, stopPropagation:function(){} });
+          }
+        }).catch(function(err) {
+          setOfflineStatus('Could not move offline drafts into iPad storage. Existing drafts have been kept. ' + String(err && err.message || ''));
+        });
       };
 
       window.closeOfflineDrafts = function closeOfflineDrafts(event) {
@@ -7935,7 +8093,7 @@ function applyOfflineLookupSelection(row) {
 
       window.chooseOfflineNewReport = function chooseOfflineNewReport(event, code) {
         stopTap(event);
-        // C96e: older iPads need a paint between closing the chooser and building
+        // C96f: older iPads need a paint between closing the chooser and building
         // the large shared report editor. Showing the normal loader first avoids
         // a blank-looking transition while ESR/SFA/SEL fields are prepared.
         const selectedCode = code === 'SFA' || code === 'SEL' ? code : 'W';
@@ -7948,27 +8106,29 @@ function applyOfflineLookupSelection(row) {
         loader.classList.remove('hidden');
         loaded = false;
         startFallbackTimer();
-        window.setTimeout(function() {
+        ensureOfflineDraftQueueReady().then(function() {
+          return new Promise(function(resolve) { window.setTimeout(resolve, 60); });
+        }).then(function() {
           try {
-            if (selectedCode === 'SFA') window.startNewOfflineSfaTrial();
-            else if (selectedCode === 'SEL') window.startNewOfflineSelTrial();
-            else window.startNewOfflineW();
-            hideLoader();
+            if (selectedCode === 'SFA') return window.startNewOfflineSfaTrial();
+            if (selectedCode === 'SEL') return window.startNewOfflineSelTrial();
+            return window.startNewOfflineW();
           } catch (err) {
-            console.error('Offline report start failed', err);
-            hideLoader();
-            offlineDrafts.classList.add('active');
-            renderOfflineDrafts();
-            const errorName = String(err && err.name || 'Error');
-            const errorDetail = String(err && err.message || err || 'No browser detail was supplied.');
-            const storageFull = /quota|storage/i.test(errorName + ' ' + errorDetail);
-            const safeMessage = storageFull
-              ? 'This iPad has run out of space for local drafts. Nothing has been deleted. Upload or remove an old iPad-only draft, then try again.\n\nBrowser detail: ' + errorName + ': ' + errorDetail
-              : 'Could not open the selected report. Nothing has been deleted.\n\nBrowser detail: ' + errorName + ': ' + errorDetail;
-            setOfflineStatus(safeMessage);
-            alert(safeMessage);
+            return Promise.reject(err);
           }
-        }, 60);
+        }).then(function() {
+          hideLoader();
+        }).catch(function(err) {
+          console.error('Offline report start failed', err);
+          hideLoader();
+          offlineDrafts.classList.add('active');
+          renderOfflineDrafts();
+          const errorName = String(err && err.name || 'Error');
+          const errorDetail = String(err && err.message || err || 'No browser detail was supplied.');
+          const safeMessage = 'Could not prepare local draft storage. Nothing has been deleted.\n\nBrowser detail: ' + errorName + ': ' + errorDetail;
+          setOfflineStatus(safeMessage);
+          alert(safeMessage);
+        });
         return false;
       };
 
@@ -8571,7 +8731,7 @@ function applyOfflineLookupSelection(row) {
 
     }());
   </script>
-  <div class="fixed-version-badge">FSD Certs · Minimal Home C96e</div>
+  <div class="fixed-version-badge">FSD Certs · Minimal Home C96f</div>
 
 
   <!-- C93p Premium Home clock -->
