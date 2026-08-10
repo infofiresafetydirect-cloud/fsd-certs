@@ -2707,7 +2707,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
           <button data-fsd-fasttap class="minimal-app tone-navy" type="button" onclick="openCerts(event)"><span class="minimal-app-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3.5h12v17H6z"/><path d="m9 12 2 2 4-4M9 17h6M9 7h6"/></svg></span><strong>Submitted Reports</strong><small>Review completed paperwork.</small><span class="minimal-app-arrow" aria-hidden="true">→</span></button>
         </div></section>
       </main>
-      <footer class="minimal-footer"><span><strong>FSD Certs</strong> · Built for Fire Safety Direct</span><span class="minimal-labs">Designed &amp; engineered by Jared720 Labs · C97g</span></footer>
+      <footer class="minimal-footer"><span><strong>FSD Certs</strong> · Built for Fire Safety Direct</span><span class="minimal-labs">Designed &amp; engineered by Jared720 Labs · C97h</span></footer>
     </div>
   </section>
   <section id="offlineDrafts" class="screen offline-screen" aria-label="Jobs and Drafts">
@@ -2751,7 +2751,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
 
       <div id="offlineList" class="offline-list"></div>
 
-      <div class="maker-mark">Jared720 Labs · C97g Report Chooser</div>
+      <div class="maker-mark">Jared720 Labs · C97h Report Chooser</div>
     </main>
   </section>
 
@@ -2784,7 +2784,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
           </button>
         </div>
       </section>
-      <div class="maker-mark">Jared720 Labs · C97g Report Chooser</div>
+      <div class="maker-mark">Jared720 Labs · C97h Report Chooser</div>
     </main>
   </section>
 
@@ -2858,7 +2858,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
             <div id="portableOfflineRows" class="editor-wide"></div>
             <div class="editor-quick-row editor-wide">
               <button class="editor-mini-btn portable-pws-only" type="button" onclick="addPortableOfflineRows(event)">+ Add another page of rows</button>
-              <button id="portableOfflineMaterialBtn" class="editor-mini-btn" type="button" onclick="openOfflineCustomerPicker(event,'portableMaterial')">Search Selected Price List</button>
+              <div class="sfa-local-note portable-mo-only">Choose the price list above, then use Pick Material on the required order row.</div>
             </div>
             <div class="editor-section-title portable-pws-only">Fire Door Safety Check</div>
             <div class="editor-field portable-pws-only"><label>No. of Fire Doors checked</label><input id="editPortableFireDoorsChecked"></div>
@@ -3984,6 +3984,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
       let offlineDraftQueueWriteChain = Promise.resolve();
       let offlineDraftQueueStorageError = '';
       let offlineLookupMode = 'invoice';
+      let portableOfflineMaterialTargetRow = null;
       let offlineLookupData = loadOfflineLookupData();
       setTimeout(function() { refreshOfflineLookupDataFromIndexedDb(); }, 300);
 
@@ -4003,43 +4004,6 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
         SFA: ['W', 'SEL'],
         SEL: ['W', 'SFA']
       };
-      const PORTABLE_PRICE_LIST_CSV_BASE64 = {
-        Swansea: 'S2V5LFNhbGVzIFByaWNlDQoxa2cgRHJ5IFBvd2RlciBFeHRpbmd1aXNoZXIsMTIuNTANCjFsdHIgRm9hbSBFeHRpbmd1aXNoZXIsMjEuMDANCjJrZyBDbzIgRXh0aW5ndWlzaGVyLDI5Ljk4DQoya2cgRHJ5IFBvd2RlciBFeHRpbmd1aXNoZXIsMTQuOTgNCjJsdHIgRm9hbSBFeHRpbmd1aXNoZXIsMjkuMDANCjNsdHIgRm9hbSBFeHRpbmd1aXNoZXIsMjkuOTgNCjNsdHIgV2F0ZXIgRXh0aW5ndWlzaGVyLDI5Ljk4DQo0a2cgRHJ5IFBvd2RlciBFeHRpbmd1aXNoZXIsMjYuNTANCjU1IEdyYW1tZSBDYXJ0cmlkZ2VzLDQuNTANCjVrZyBDbzIgRXh0aW5ndWlzaGVyLDM4LjAwDQo2a2cgRHJ5IFBvd2RlciBFeHRpbmd1aXNoZXIsMzMuOTgNCjZsdHIgRm9hbSBFeHRpbmd1aXNoZXIsMjkuODANCjZsdHIgV2F0ZXIgRXh0aW5ndWlzaGVyLDI4LjUwDQo2bHRyIFdldCBDaGVtaWNhbCBFeHRpbmd1aXNoZXIsNzguMDANCjlrZyBEcnkgUG93ZGVyIEV4dGluZ3Vpc2hlciwzOS45OA0KOWx0ciBGb2FtIEV4dGluZ3Vpc2hlciwyOC4wMA0KOWx0ciBXYXRlciBFeHRpbmd1aXNoZXIsMjMuNTANCkFsbCBJbmNsdXNpdmUgc2VydmljZSBwbGFuLA0KQmFjayBCb2FyZCw4Ljk1DQpCYXNpYyBGaXJlIEF3YXJlbmVzcyBUcmFpbmluZyw0ODUuMDANCkJhdHRlcnkgUmVwbGFjZW1lbnQsNS45NQ0KU2VydmljZSBDYWxsb3V0IENoYXJnZSwxMi45OA0KRGkgQm9uZCBXYXJuaW5nIFNpZ25zLDE1LjAwDQpEaXJlY3Rpb25hbCBBcnJvdyBTaWducyw3LjgwDQpBdXRvbWF0aWMgQmF0dGVyeSBvcGVyYXRlZCBEb29yIEd1YXJkLDk5LjAwDQpEb29yIEd1YXJkIEJhdHRlcnksNS45NQ0KUnViYmVyIEZlcnJlbHMsNS45NQ0KRG9vciBHdWFyZHMgU2VydmljZWQsNS45NQ0KRG91YmxlIEJhY2sgQm9hcmQsMTkuMDANCkRvdWJsZSBCb3gsODcuOTgNCkRvdWJsZSBFeHRpbmd1aXNoZXIgQm94LDg5Ljk4DQpEb3VibGUgRXh0aW5ndWlzaGVyIFN0YW5kLDU4LjAwDQpFdmFjdWF0aW9uIENoYWlyLDMwMC4wMA0KRXhpdCBTaWduIChQTC9CTCksOC45MA0KRXh0aW5ndWlzaGVycyBTZXJ2aWNlZCwxLjM4DQpGaXJlIEFjdGlvbiBOb3RpY2UgKFBML0JMKSw2Ljk4DQpGaXJlIEFzc2VtYmx5IFBvaW50IFNpZ24sOS45MA0KRmlyZSBCb3ggSGluZ2UgQ2xpcHMsMTUuMDANCkZpcmUgRG9vciBLZWVwIFNodXQgU2lnbnMsNi45OQ0KRmlyZSBFeGl0IEtlZXAgQ2xlYXIgU2lnbiw1Ljk4DQpGaXJlIEV4aXQgU2lnbiAoUEwvQkwpLDcuODANCkZpcmUgTG9nIEJvb2ssOS45OA0KRmxvb3IgUGxhdGUsMTEuMDANCkhvbWUgU2FmZXR5IFBhY2tzLDUwLjAwDQpIb3JuLDguMjANCkhvc2UgQXNzZW1ibHksOS44NQ0KSW5zdGFsbGF0aW9uIENoYXJnZSwxNS4wMA0KSW50dW1lc2NlbnQgU3RyaXBzLDguMDANCk11bHRpLWNoZW0gRXh0aW5ndWlzaGVyLDc4LjAwDQpObyBBZG1pdHRhbmNlIFNpZ25zIFMvQSwxMS45NQ0KTm8gU21va2luZyBTaWduLDIuOTgNClB1c2ggQmFyIFNpZ24sNi45NQ0KUFZDIEphY2tldHMgLSBMYXJnZSwxNi4wMA0KUFZDIEphY2tldCAtIE1lZGl1bSwxMy45OA0KUFZDIEphY2tldCAtIFNtYWxsLDkuNTANClJlY2hhcmdlZCw2LjUwDQpFeHRpbmd1aXNoZXIgUmVmaWxsLDEuMzgNClJlLUZpeC8gUmVwbGFjZSBCcmFja2V0cywyLjU4DQpSZWZ1c2UgUG9pbnQgU2lnbiw5Ljk1DQpSZXNpdGUgRXh0aW5ndWlzaGVyLDIuNTgNClJ1YmJlciBTaG9lLDEuOTkNClNhZmV0eSBQaW4sMi4yMA0KU2VhdCBCZWx0IFNpZ25zLDIuOTgNClNpbmdsZSBCb3gsNTguOTgNClNpbmdsZSBTdGFuZCw0OC4wMA0KU3BlY2lhbCBTaWducyw2Ljk1DQpTdXBwcmVzc2lvbiBTeXN0ZW0gU2VydmljZSw2MTQuMDANClR1cm4gTGF0Y2ggdG8gT3BlbiAoUlApLDUuOTUNCldhbGwgRml4L1JlLUZpeCBTZWN1cmUsMi43OA0KV2FsbCBGaXggKFJlLUZpeCBTZWN1cmUpLDMuNTANCkZpcmUgQmxhbmtldCwxMi45OA0KSUQgU2lnbnMgUEwvQkwsMy45OA0KM2x0ciBGbG91cmluZSBGb2FtIEV4dGluZ3Vpc2hlcizCozUyLjE2DQo2bHRyIEZsb3VyaW5lIEZvYW0gRXh0aW5ndWlzaGVyLMKjNTguOTgNClN3aXZlbCBIb3JuLDIuOTgNCkhUIFRlc3QsMi45OA0KUmVtb3ZhbCAmIFNhZmUgRGlzcG9zYWwgb2YgT2xkIEVxdWlwbWVudCw0LjUwDQo=',
-        Pembroke: 'S2V5LENvc3QNCkZpcmUgQWN0aW9uIE5vdGljZSzCozcuOTgNCjJrZyBDbzIgRXh0aW5ndWlzaGVyLMKjMzMuODgNCjZsdHIgRm9hbSBFeHRpbmd1aXNoZXIswqMzNS44OA0KNmx0ciBXYXRlciBFeHRpbmd1aXNoZXIswqMzNS44OA0KSWQgU2lnbizCozMuOTgNCjVrZyBDbzIgRXh0aW5ndWlzaGVyLMKjNDQuMDANCiIybHRyIEZvYW0gRXh0aW5ndWlzaGVyICIswqMyOC4wMA0KM2x0ciBGb2FtIEV4dGluZ3Vpc2hlcizCozMzLjg4DQozbHRyIFdhdGVyIEV4dGluZ3Vpc2hlcizCozMzLjg4DQo2a2cgRHJ5IFBvd2RlcizCozI5Ljk4DQo2bHRyIFdldCBDaGVtaWNhbCBFeHRpbmd1aXNoZXIswqM4OC45OA0KRmlyZSBCbGFua2V0LMKjMTcuMDgNCldhbGwgRml4IEFuZCBCcmFja2V0LMKjMi41OA0KU2luZ2xlIFN0YW5kIFR1YnVsYXIswqMyOC4wMA0KRG91YmxlIFN0YW5kIFR1YnVsYXIswqMzMi4wMA0KUmlnaWQgUGxhc3RpYyBTaW5nbGUgU3RhbmQswqMyMS4wMA0KUmlnaWQgUGxhc3RpYyBEb3VibGUgU3RhbmQswqMyOC4wMA0KMmtnIERyeSBQb3dkZXIswqMxOS45OA0KIjlrZyBEcnkgUG93ZGVyICIswqMyNC45OA0KQ28yIFJlZmlsbCAmIEhULMKjMS45OA0KRm9hbSBSZWZpbGwswqMxLjA4DQpDYWxsb3V0LDEyLjk4DQpBbGwgaW5jbHVzaXZlIHNlcnZpY2UswqMxLjg4DQpCYXNpYyBTZXJ2aWNlLDEuODgNCnN1cGVyIGNhcizCozEwDQpBdHRlbmRhbmNlIEZlZSzCozEyLjk4DQpEb3VibGUgRXh0aW5ndWlzaGVyIEJveGVzLMKjODguOTgNCkRheXMgTGFib3VyLMKjMTUwDQpGaXJlIEV4aXQgS2VlcCBDbGVhciBTaWduLMKjNS45NQ0KM2x0ciBGbG91cmluZSBGb2FtIEV4dGluZ3Vpc2hlcizCozUyLjE2DQpMaXRoaXVtIEJhdHRlcnkgRXh0aW5ndWlzaGVyLMKjMjQ5DQoiUHZjIENvdmVycyAiLMKjMTYuMDANCkZpcmUgTG9nIEJvb2ssNi45NQ0KNmx0ciBGbG91cmluZSBGb2FtIEV4dGluZ3Vpc2hlcizCozU4Ljk4DQpUZXN0IERpc2NoYXJnZSwyLjA4DQpXYXRlciBSZWZpbGwswqMxLjA4DQpSZW1vdmFsICYgRGlzcG9zYWwgb2YgRXF1aXBtZW50LMKjNC41MA0KMmx0ciBGbG91cmluZSBGb2FtIEV4dGluZ3Vpc2hlcizCozUyLjE2DQo='
-      };
-      let portableOfflinePriceCache = {};
-      function portableOfflinePriceRows(name) {
-        name = String(name || '').trim();
-        if (!name || !PORTABLE_PRICE_LIST_CSV_BASE64[name]) return [];
-        if (portableOfflinePriceCache[name]) return portableOfflinePriceCache[name];
-        try {
-          const binary = atob(PORTABLE_PRICE_LIST_CSV_BASE64[name]);
-          const bytes = new Uint8Array(binary.length);
-          for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
-          const csv = window.TextDecoder ? new TextDecoder('utf-8').decode(bytes) : decodeURIComponent(escape(binary));
-          const rows = csv.replace(/\r/g, '').split('\n').slice(1).map(function(line, index) {
-            line = String(line || '').trim();
-            if (!line) return null;
-            const comma = line.lastIndexOf(',');
-            if (comma < 0) return null;
-            const description = line.slice(0, comma).replace(/^"|"$/g, '').trim();
-            const rawPrice = line.slice(comma + 1).replace(/[^0-9.\-]/g, '');
-            return {
-              priceList: name,
-              material: description,
-              description: description,
-              code: name.slice(0, 3).toUpperCase() + '-' + String(index + 1).padStart(3, '0'),
-              unitPrice: rawPrice,
-              supplier: name + ' Council'
-            };
-          }).filter(Boolean);
-          portableOfflinePriceCache[name] = rows;
-          return rows;
-        } catch (err) {
-          console.error('Portable price list decode failed', err);
-          return [];
-        }
-      }
       const SLT_OFFLINE_READING_COUNT = 19;
       let activeOfflineReportCode = 'W';
       let offlinePanelPhotoData = '';
@@ -4396,7 +4360,8 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
             String(row.description || row.material || ''),
             String(row.code || ''),
             String(row.unitPrice || ''),
-            String(row.supplier || '')
+            String(row.supplier || ''),
+            String(row.priceList || '')
           ];
         });
       }
@@ -4409,7 +4374,8 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
             description: row[1] || row[0] || '',
             code: row[2] || '',
             unitPrice: row[3] || '',
-            supplier: row[4] || ''
+            supplier: row[4] || '',
+            priceList: row[5] || ''
           };
         });
       }
@@ -4918,7 +4884,7 @@ function clearOfflineLookupCustomerChunks() {
         const when = data.savedAt || data.generatedAt || '';
         const dateText = when ? (' Last updated: ' + new Date(when).toLocaleString()) : '';
         return c || s || m
-          ? ('Offline lookup ready: ' + c + ' invoice customers, ' + s + ' site addresses and ' + m + ' materials.' + dateText)
+          ? ('Offline lookup ready: ' + c + ' invoice customers, ' + s + ' site addresses and ' + m + ' material / price-list rows.' + dateText)
           : 'No offline customer list saved yet. Connect to the internet and press Run Full Lookup Sync.';
       }
 
@@ -4951,10 +4917,11 @@ function clearOfflineLookupCustomerChunks() {
         const customers = Array.isArray(data.customers) ? data.customers : [];
 
         if (mode === 'material') {
-          return Array.isArray(data.materials) ? data.materials : [];
+          return (Array.isArray(data.materials) ? data.materials : []).filter(function(row) { return !String((row || {}).priceList || '').trim(); });
         }
         if (mode === 'portableMaterial') {
-          return portableOfflinePriceRows(getEditValue('editPortablePriceList'));
+          const selectedList = getEditValue('editPortablePriceList');
+          return (Array.isArray(data.materials) ? data.materials : []).filter(function(row) { return String((row || {}).priceList || '') === selectedList; });
         }
         if (mode === 'site') {
           const sites = Array.isArray(data.sites) ? data.sites : [];
@@ -5359,10 +5326,10 @@ function clearOfflineLookupCustomerChunks() {
           fsdOfflineLookupChunkData.materials = [];
           fsdOfflineLookupAllMaterials = [];
           fsdOfflineLookupNextOffset = 0;
-          setOfflineStatus('Site list received: ' + fsdOfflineLookupAllSites.length + ' sites. Now downloading the ESR material list...');
-          setOfflinePickerStatus('Site list received. Downloading ESR materials...');
+          setOfflineStatus('Site list received: ' + fsdOfflineLookupAllSites.length + ' sites. Now downloading ESR materials and Portables price lists...');
+          setOfflinePickerStatus('Site list received. Downloading materials and Portables prices...');
           setTimeout(function() {
-            startOfflineLookupJsonpStage('materials', 'Downloading offline ESR materials', 75, 0);
+            startOfflineLookupJsonpStage('materials', 'Downloading offline materials and Portables prices', 75, 0);
           }, 400);
           return;
         }
@@ -5379,10 +5346,10 @@ function clearOfflineLookupCustomerChunks() {
 
           if (payload.hasMore && Number(payload.nextOffset || 0) > Number(payload.offset || 0)) {
             fsdOfflineLookupNextOffset = Number(payload.nextOffset || fsdOfflineLookupAllMaterials.length || 0);
-            setOfflineStatus('Downloaded ' + fsdOfflineLookupAllMaterials.length + totalText + ' ESR materials...');
-            setOfflinePickerStatus('Downloaded ' + fsdOfflineLookupAllMaterials.length + totalText + ' ESR materials...');
+            setOfflineStatus('Downloaded ' + fsdOfflineLookupAllMaterials.length + totalText + ' material / price-list rows...');
+            setOfflinePickerStatus('Downloaded ' + fsdOfflineLookupAllMaterials.length + totalText + ' material / price-list rows...');
             setTimeout(function() {
-              startOfflineLookupJsonpStage('materials', 'Downloading offline ESR materials ' + fsdOfflineLookupAllMaterials.length + totalText, 75, fsdOfflineLookupNextOffset);
+              startOfflineLookupJsonpStage('materials', 'Downloading offline materials and Portables prices ' + fsdOfflineLookupAllMaterials.length + totalText, 75, fsdOfflineLookupNextOffset);
             }, 700);
             return;
           }
@@ -5399,7 +5366,7 @@ function clearOfflineLookupCustomerChunks() {
                 'Offline lookup updated: ' +
                 ((saved.customers || []).length || Number(saved.customerCount || 0)) + ' customers, ' +
                 ((saved.sites || []).length || Number(saved.siteCount || 0)) + ' sites and ' +
-                ((saved.materials || []).length || Number(saved.materialCount || 0)) + ' ESR materials saved on this iPad.'
+                ((saved.materials || []).length || Number(saved.materialCount || 0)) + ' material / price-list rows saved on this iPad.'
               );
               setOfflinePickerStatus(offlineLookupCountText());
             })
@@ -5509,6 +5476,10 @@ function clearOfflineLookupCustomerChunks() {
 
       window.openOfflineCustomerPicker = function openOfflineCustomerPicker(event, mode) {
         stopTap(event);
+        if (mode === 'portableMaterial' && !getEditValue('editPortablePriceList')) {
+          setEditorStatus('Select the Manual Order price list first.');
+          return false;
+        }
         offlineLookupMode = mode === 'material' ? 'material' : (mode === 'portableMaterial' ? 'portableMaterial' : (mode === 'site' ? 'site' : 'invoice'));
         offlineLookupData = loadOfflineLookupData();
         const modal = document.getElementById('offlineLookupModal');
@@ -5521,7 +5492,7 @@ function clearOfflineLookupCustomerChunks() {
           ? 'Add Offline Material'
           : (offlineLookupMode === 'site' ? 'Pick Offline Site Address' : 'Pick Offline Invoice Customer');
         if (help) help.textContent = offlineLookupMode === 'portableMaterial'
-          ? 'Search the selected council price list saved inside this iPad app. Selecting one adds it to the Manual Order.'
+          ? 'Search the selected Google Sheet price-list tab saved on this iPad by Full Lookup Sync. Selecting one fills this Manual Order row.'
           : offlineLookupMode === 'material'
           ? 'Search the materials saved on this iPad. Selecting one adds it to the ESR material rows.'
           : (offlineLookupMode === 'site'
@@ -5547,6 +5518,16 @@ function clearOfflineLookupCustomerChunks() {
         }
         setTimeout(function(){ if (search) search.focus(); }, 40);
         return false;
+      };
+
+      window.openOfflinePortableMaterialPicker = function openOfflinePortableMaterialPicker(event, button) {
+        stopTap(event);
+        portableOfflineMaterialTargetRow = button && button.closest ? button.closest('.portable-offline-row') : null;
+        if (!portableOfflineMaterialTargetRow) {
+          setEditorStatus('Could not identify this Manual Order row.');
+          return false;
+        }
+        return window.openOfflineCustomerPicker(null, 'portableMaterial');
       };
 
       window.closeOfflineCustomerPicker = function closeOfflineCustomerPicker(event) {
@@ -5656,25 +5637,21 @@ function clearOfflineLookupCustomerChunks() {
         } catch (err) {}
       }
 
-function applyOfflineLookupSelection(row) {
+      function applyOfflineLookupSelection(row) {
         row = row || {};
         if (offlineLookupMode === 'portableMaterial') {
-          const manualRows = Array.from(document.querySelectorAll('#portableOfflineRows .portable-offline-row'));
-          const target = manualRows.find(function(line) {
-            return !Array.from(line.querySelectorAll('input')).some(function(el) { return String(el.value || '').trim(); });
-          });
-          if (!target) {
-            setOfflinePickerStatus('All 12 Manual Order rows are already in use.');
+          const target = portableOfflineMaterialTargetRow;
+          if (!target || !document.documentElement.contains(target)) {
+            setOfflinePickerStatus('That Manual Order row is no longer available. Close the picker and try the row again.');
             return;
           }
-          const req = target.querySelector('.porReq');
-          const product = target.querySelector('.porProduct');
+          const qty = target.querySelector('.porQty');
           const description = target.querySelector('.porDescription');
           const price = target.querySelector('.porPrice');
-          if (req) req.value = '1';
-          if (product) product.value = row.code || '';
+          if (qty && !qty.value) qty.value = '1';
           if (description) description.value = row.description || row.material || '';
           if (price) price.value = row.unitPrice || '';
+          portableOfflineMaterialTargetRow = null;
         } else if (offlineLookupMode === 'material') {
           const unitPrice = String(row.unitPrice || '').trim();
           addEditorMaterialRow({
@@ -6627,12 +6604,10 @@ function applyOfflineLookupSelection(row) {
         } else {
           row.innerHTML =
             '<div class="editor-grid">' +
-            '<div class="editor-field"><label>Qty Sent</label><input class="porSent" value="' + escapeHtml(item.sent || '') + '"></div>' +
-            '<div class="editor-field"><label>Qty Required</label><input class="porReq" value="' + escapeHtml(item.req || '') + '"></div>' +
-            '<div class="editor-field"><label>Product Code</label><input class="porProduct" value="' + escapeHtml(item.product || '') + '"></div>' +
-            '<div class="editor-field"><label>Description</label><input class="porDescription" value="' + escapeHtml(item.description || '') + '"></div>' +
+            '<div class="editor-field"><label>Qty</label><input class="porQty" inputmode="decimal" value="' + escapeHtml(item.qty || item.req || item.sent || '') + '"></div>' +
+            '<div class="editor-field editor-wide"><label>Description</label><input class="porDescription" value="' + escapeHtml(item.description || '') + '"></div>' +
             '<div class="editor-field"><label>Unit Price</label><input class="porPrice" inputmode="decimal" value="' + escapeHtml(item.price || '') + '"></div>' +
-            '</div><button class="button third" type="button" onclick="this.closest(\'.portable-offline-row\').remove()">Remove Row</button>';
+            '</div><div class="editor-quick-row"><button class="button third" type="button" onclick="openOfflinePortableMaterialPicker(event,this)">Pick Material</button><button class="button third" type="button" onclick="this.closest(\'.portable-offline-row\').remove()">Remove Row</button></div>';
         }
         wrap.appendChild(row);
         if (service) {
@@ -6663,8 +6638,7 @@ function applyOfflineLookupSelection(row) {
             gross:(row.querySelector('.porGross')||{}).value||'', spca:(row.querySelector('.porSpca')||{}).value||''
           };
           return {
-            sent:(row.querySelector('.porSent')||{}).value||'', req:(row.querySelector('.porReq')||{}).value||'',
-            product:(row.querySelector('.porProduct')||{}).value||'',
+            qty:(row.querySelector('.porQty')||{}).value||'',
             description:(row.querySelector('.porDescription')||{}).value||'', price:(row.querySelector('.porPrice')||{}).value||''
           };
         }).filter(function(item) { return Object.keys(item).some(function(key){ return String(item[key]||'').trim(); }); });
@@ -6825,12 +6799,10 @@ function applyOfflineLookupSelection(row) {
         const addCertControls = document.getElementById('offlineAddCertControls');
         const portableFields = document.getElementById('portableOfflineFields');
         const portableHeading = document.getElementById('portableOfflineHeading');
-        const portableMaterialBtn = document.getElementById('portableOfflineMaterialBtn');
         const signatureLabel = document.getElementById('editEngineerSignatureLabel');
         if (addCertControls) addCertControls.classList.toggle('hidden-report-fields', isPortable);
         if (portableFields) portableFields.classList.toggle('hidden-report-fields', !isPortable);
         if (portableHeading) portableHeading.textContent = report && report.code === 'MO' ? 'Manual Order' : 'Portable Service Worksheet';
-        if (portableMaterialBtn) portableMaterialBtn.classList.toggle('hidden-report-fields', !(report && report.code === 'MO'));
         Array.prototype.forEach.call(document.querySelectorAll('.portable-pws-only'), function(el) {
           el.classList.toggle('hidden-report-fields', !(report && report.code === 'PWS'));
         });
@@ -9221,7 +9193,7 @@ function applyOfflineLookupSelection(row) {
 
     }());
   </script>
-  <div class="fixed-version-badge">FSD Certs · Minimal Home C97g</div>
+  <div class="fixed-version-badge">FSD Certs · Minimal Home C97h</div>
 
 
   <!-- C93p Premium Home clock -->
