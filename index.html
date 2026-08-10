@@ -2697,8 +2697,8 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
         <section class="minimal-intro"><div class="minimal-intro-copy"><div class="minimal-kicker">Fire Safety Direct × Jared720 Labs</div><h1>Your work.<br>One place.</h1><p>Certificates, jobs, callouts, quotes and scheduling — clear, fast and ready whenever you are.</p></div><div class="minimal-clock"><strong id="homeClock">--:--</strong><small id="homeDate">Loading date</small></div></section>
         <div class="minimal-divider"></div>
         <section><div class="minimal-apps-head"><h2>Applications</h2><span>Choose where to go</span></div><div class="minimal-app-grid">
-          <button data-fsd-fasttap class="minimal-app tone-red" type="button" onclick="openCerts(event)"><span class="minimal-app-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3.5h9l3 3V20.5H6z"/><path d="M15 3.5v4h4"/><path d="M9 11h6M9 14.5h6M9 18h4"/></svg></span><strong>Systems</strong><small>Create certificates and report packs.</small><span class="minimal-app-arrow" aria-hidden="true">→</span></button>
-          <button data-fsd-fasttap class="minimal-app tone-green" type="button" onclick="openPortables(event)"><span class="minimal-app-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 5h14v15H5z"/><path d="M8 3v4M16 3v4M8 11h8M8 15h5"/></svg></span><strong>Portables</strong><small>Service worksheets and manual orders.</small><span class="minimal-app-arrow" aria-hidden="true">→</span></button>
+          <button data-fsd-fasttap class="minimal-app tone-red" type="button" onclick="openCerts(event)"><span class="minimal-app-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3.5h9l3 3V20.5H6z"/><path d="M15 3.5v4h4"/><path d="M9 11h6M9 14.5h6M9 18h4"/></svg></span><strong>Certificate Portal</strong><small>Create certificates and report packs.</small><span class="minimal-app-arrow" aria-hidden="true">→</span></button>
+          <button data-fsd-fasttap class="minimal-app tone-green" type="button" onclick="openPortables(event)"><span class="minimal-app-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 4h12v16H6z"/><path d="M9 8h6M9 12h6M9 16h4"/></svg></span><strong>Portables</strong><small>Service worksheets and manual orders.</small><span class="minimal-app-arrow" aria-hidden="true">→</span></button>
           <button data-fsd-fasttap class="minimal-app tone-blue" type="button" onclick="openOfflineDrafts(event)"><span class="minimal-app-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 6.5h5l1.6 2H20v10.5H4z"/><path d="M8 13h8M8 16h5"/></svg></span><strong>Jobs &amp; Drafts</strong><small>One list, online or without signal.</small><span class="minimal-app-arrow" aria-hidden="true">→</span></button>
           <button data-fsd-fasttap class="minimal-app tone-amber" type="button" onclick="openCallouts(event)"><span class="minimal-app-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 3.5h8l4 4v9l-4 4H8l-4-4v-9z"/><path d="M12 7.5v5M12 16.5h.01"/></svg></span><strong>Callouts</strong><small>Manage live and accepted jobs.</small><span class="minimal-app-arrow" aria-hidden="true">→</span></button>
           <button data-fsd-fasttap class="minimal-app tone-violet" type="button" onclick="openQuickQuote(event)"><span class="minimal-app-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 4.5h14v15H5z"/><path d="M8 8h8M8 12h5M8 16h4"/><path d="M16 13.5v4M14.5 15h3"/></svg></span><strong>Quick Quote</strong><small>Create and manage a professional site quote.</small><span class="minimal-app-arrow" aria-hidden="true">→</span></button>
@@ -2707,7 +2707,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
           <button data-fsd-fasttap class="minimal-app tone-navy" type="button" onclick="openCerts(event)"><span class="minimal-app-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3.5h12v17H6z"/><path d="m9 12 2 2 4-4M9 17h6M9 7h6"/></svg></span><strong>Submitted Reports</strong><small>Review completed paperwork.</small><span class="minimal-app-arrow" aria-hidden="true">→</span></button>
         </div></section>
       </main>
-      <footer class="minimal-footer"><span><strong>FSD Certs</strong> · Built for Fire Safety Direct</span><span class="minimal-labs">Designed &amp; engineered by Jared720 Labs · C96s</span></footer>
+      <footer class="minimal-footer"><span><strong>FSD Certs</strong> · Built for Fire Safety Direct</span><span class="minimal-labs">Designed &amp; engineered by Jared720 Labs · C97g</span></footer>
     </div>
   </section>
   <section id="offlineDrafts" class="screen offline-screen" aria-label="Jobs and Drafts">
@@ -2751,7 +2751,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
 
       <div id="offlineList" class="offline-list"></div>
 
-      <div class="maker-mark">Jared720 Labs · C96s Report Chooser</div>
+      <div class="maker-mark">Jared720 Labs · C97g Report Chooser</div>
     </main>
   </section>
 
@@ -2776,9 +2776,15 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
           <button class="offline-report-choice sel" type="button" onclick="chooseOfflineNewReport(event,'SEL')">
             <span class="offline-report-choice-icon">💡</span><span><strong>Emergency Lighting Report</strong><small>SEL with ESR and SFA Add Pages.</small></span><span class="offline-report-choice-arrow">→</span>
           </button>
+          <button class="offline-report-choice" type="button" onclick="chooseOfflineNewReport(event,'PWS')">
+            <span class="offline-report-choice-icon">🧯</span><span><strong>Portable Service Worksheet</strong><small>Full portable-equipment worksheet with extra pages.</small></span><span class="offline-report-choice-arrow">→</span>
+          </button>
+          <button class="offline-report-choice" type="button" onclick="chooseOfflineNewReport(event,'MO')">
+            <span class="offline-report-choice-icon">📝</span><span><strong>Manual Order</strong><small>Order materials using a separate council price schedule.</small></span><span class="offline-report-choice-arrow">→</span>
+          </button>
         </div>
       </section>
-      <div class="maker-mark">Jared720 Labs · C96s Report Chooser</div>
+      <div class="maker-mark">Jared720 Labs · C97g Report Chooser</div>
     </main>
   </section>
 
@@ -2818,6 +2824,70 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
             <button class="editor-mini-btn" type="button" onclick="copyOfflineInvoiceToSite(event)">Same as Invoice</button>
           </div>
           <div id="offlineEditorLookupStatus" class="sfa-local-note editor-wide">Offline customer picker uses the last synced customer/site list saved on this device.</div>
+
+          <div id="portableOfflineFields" class="nested-editor-grid hidden-report-fields">
+            <div class="editor-section-title" id="portableOfflineHeading">Portables</div>
+            <div class="editor-field portable-mo-only"><label>Price List</label><select id="editPortablePriceList"><option value="">Select price list</option><option value="Swansea">Swansea</option><option value="Pembroke">Pembroke</option></select></div>
+            <div class="editor-field portable-mo-only"><label>Manual Order No.</label><input id="editPortableReportNo"></div>
+            <div class="editor-field portable-mo-only"><label>Customer Order No.</label><input id="editPortableCustomerOrderNo"></div>
+            <div class="editor-field portable-mo-only"><label>Agreement No.</label><input id="editPortableAgreementNo"></div>
+            <div class="editor-field portable-mo-only"><label>Account No.</label><input id="editPortableAccountNo"></div>
+            <div class="editor-field portable-mo-only"><label>New Account</label><select id="editPortableNewAccount"><option value=""></option><option value="YES">YES</option><option value="NO">NO</option></select></div>
+            <div class="editor-field portable-mo-only"><label>Group</label><select id="editPortableGroupAccount"><option value=""></option><option value="YES">YES</option><option value="NO">NO</option></select></div>
+            <div class="editor-field portable-mo-only"><label>Delivery Date Required</label><input id="editPortableDeliveryDate" type="date"></div>
+            <div class="editor-field portable-mo-only"><label>Contact Name</label><input id="editPortableContactName"></div>
+            <div class="editor-field portable-mo-only"><label>Telephone</label><input id="editPortableTelephone"></div>
+            <div class="editor-field portable-mo-only"><label>Representative</label><input id="editPortableRepresentative"></div>
+            <div class="editor-field portable-mo-only"><label>Service</label><select id="editPortableOrderService"><option value=""></option><option value="YES">YES</option><option value="NO">NO</option></select></div>
+            <div class="editor-field portable-mo-only"><label>Installation</label><select id="editPortableOrderInstallation"><option value=""></option><option value="YES">YES</option><option value="NO">NO</option></select></div>
+            <div class="editor-field portable-mo-only"><label>Delivery</label><select id="editPortableOrderDelivery"><option value=""></option><option value="YES">YES</option><option value="NO">NO</option></select></div>
+            <div class="editor-field portable-mo-only"><label>Inspection</label><select id="editPortableOrderInspection"><option value=""></option><option value="YES">YES</option><option value="NO">NO</option></select></div>
+            <div class="editor-field portable-mo-only"><label>Training</label><select id="editPortableOrderTraining"><option value=""></option><option value="YES">YES</option><option value="NO">NO</option></select></div>
+            <div class="editor-field portable-pws-only"><label>Ext. ID</label><input id="editPortableExtId"></div>
+            <div class="editor-field portable-pws-only"><label>F Action</label><input id="editPortableFAction"></div>
+            <div class="editor-field portable-pws-only"><label>F Exit</label><input id="editPortableFExit"></div>
+            <div class="editor-field portable-pws-only"><label>Exit</label><input id="editPortableExitCount"></div>
+            <div class="editor-field portable-pws-only"><label>FEKC</label><input id="editPortableFekc"></div>
+            <div class="editor-field portable-pws-only"><label>P Bar</label><input id="editPortablePBar"></div>
+            <div class="editor-field portable-pws-only"><label>Left Arrow</label><input id="editPortableLeftArrowCount"></div>
+            <div class="editor-field portable-pws-only"><label>Right Arrow</label><input id="editPortableRightArrowCount"></div>
+            <div class="editor-field portable-pws-only"><label>Risk Assessment Available</label><select id="editPortableRiskAssessment"><option value=""></option><option value="YES">YES</option><option value="NO">NO</option></select></div>
+            <div class="editor-field"><label>ASB Report Available</label><select id="editPortableAsbestosReport"><option value=""></option><option value="YES">YES</option><option value="NO">NO</option></select></div>
+            <div class="editor-field portable-pws-only"><label>Staff Training Required</label><select id="editPortableStaffTraining"><option value=""></option><option value="YES">YES</option><option value="NO">NO</option></select></div>
+            <div class="editor-section-title">Worksheet / Order Rows</div>
+            <div id="portableOfflineRows" class="editor-wide"></div>
+            <div class="editor-quick-row editor-wide">
+              <button class="editor-mini-btn portable-pws-only" type="button" onclick="addPortableOfflineRows(event)">+ Add another page of rows</button>
+              <button id="portableOfflineMaterialBtn" class="editor-mini-btn" type="button" onclick="openOfflineCustomerPicker(event,'portableMaterial')">Search Selected Price List</button>
+            </div>
+            <div class="editor-section-title portable-pws-only">Fire Door Safety Check</div>
+            <div class="editor-field portable-pws-only"><label>No. of Fire Doors checked</label><input id="editPortableFireDoorsChecked"></div>
+            <div class="editor-field portable-pws-only"><label>No. of Intumescent Strips missing/damaged</label><input id="editPortableIntumescentStrips"></div>
+            <div class="editor-field portable-pws-only"><label>Cost for updating</label><input id="editPortableFireDoorCost" inputmode="decimal"></div>
+            <div class="editor-field portable-pws-only"><label>No. of Doors not closing properly</label><input id="editPortableDoorsNotClosing"></div>
+            <div class="editor-field portable-pws-only"><label>No. of Door Closures not working properly</label><input id="editPortableDoorClosuresFaulty"></div>
+            <div class="editor-section-title portable-pws-only">Site Equipment Summary</div>
+            <div class="editor-field portable-pws-only"><label>Hose Reels</label><input id="editPortableHoseReels"></div>
+            <div class="editor-field portable-pws-only"><label>Fire Blankets</label><input id="editPortableFireBlankets"></div>
+            <div class="editor-field portable-pws-only"><label>Wet Chem.</label><input id="editPortableWetChem"></div>
+            <div class="editor-field portable-pws-only"><label>Water Ext.</label><input id="editPortableWaterExt"></div>
+            <div class="editor-field portable-pws-only"><label>Foam Ext.</label><input id="editPortableFoamExt"></div>
+            <div class="editor-field portable-pws-only"><label>Powder Ext.</label><input id="editPortablePowderExt"></div>
+            <div class="editor-field portable-pws-only"><label>CO2 Ext.</label><input id="editPortableCo2Ext"></div>
+            <div class="editor-field portable-pws-only"><label>Equipment Total</label><input id="editPortableEquipmentTotal"></div>
+            <div class="editor-field portable-pws-only"><label>Log Book Completed</label><select id="editPortableLogBookCompleted"><option value=""></option><option value="YES">YES</option><option value="NO">NO</option></select></div>
+            <div class="editor-field editor-wide portable-pws-only"><label>Equipment Changed / Replaced</label><textarea id="editPortableChangedEquipment"></textarea></div>
+            <div class="editor-field editor-wide"><label>Engineer Comments / Special Instructions</label><textarea id="editPortableComments"></textarea></div>
+            <div class="editor-field portable-pws-only"><label>Service Cost</label><input id="editPortableServiceCost" inputmode="decimal"></div>
+            <div class="editor-field portable-pws-only"><label>Equipment Cost</label><input id="editPortableEquipmentCost" inputmode="decimal"></div>
+            <div class="editor-field portable-pws-only"><label>Customer Satisfaction</label><select id="editPortableSatisfaction"><option value=""></option><option value="YES">YES</option><option value="NO">NO</option></select></div>
+            <div class="editor-field portable-mo-only"><label>Manual Order Raised</label><select id="editPortableManualOrderRaised"><option value=""></option><option value="YES">YES</option><option value="NO">NO</option></select></div>
+            <div class="editor-field portable-mo-only"><label>Supply Instruction</label><input id="editPortableSupplyInstruction"></div>
+            <div class="editor-field portable-mo-only"><label>Supplied</label><input id="editPortableSupplied"></div>
+            <div class="editor-field portable-mo-only"><label>Customer Position</label><input id="editPortableCustomerPosition"></div>
+            <div class="editor-field portable-mo-only"><label>Received Name</label><input id="editPortableReceivedName"></div>
+            <div class="editor-field portable-mo-only"><label>Date Received</label><input id="editPortableReceivedDate" type="date"></div>
+          </div>
 
           <div id="offlineAddCertControls" class="nested-editor-grid">
             <div class="editor-section-title">Add Pages</div>
@@ -3148,7 +3218,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
           </div>
           <div class="editor-section-title">Signatures</div>
           <div class="editor-field">
-            <label>Engineer Signature</label>
+            <label id="editEngineerSignatureLabel">Engineer Signature</label>
             <canvas id="editEngineerSignature" class="offline-signature-canvas"></canvas>
             <div class="editor-quick-row">
               <button class="editor-mini-btn" type="button" onclick="openOfflineSignaturePad(event,'engineer')">Fast Signature Pad</button>
@@ -3309,7 +3379,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
     (function () {
       'use strict';
 
-      const SHELL_VER = 'V6.3c96s';
+      const SHELL_VER = 'V6.3c97g';
       const APP_URL = 'https://script.google.com/macros/s/AKfycbzq9FTETNZwUJWHMGnMHECbu3sJ3jy3FFvGYyeaRXtkoK1GHBtqOu-GLBle_WGfoFtI/exec';
       const SCHEDULE_URL = 'https://infofiresafetydirect-cloud.github.io/fsd-schedule-2026/';
       const CALLOUTS_PAGE = APP_URL + '?page=callouts&shell=ipad';
@@ -3923,6 +3993,8 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
         W:   { code: 'W',   label: 'Engineer Service Report',             page: 'esr', editableOffline: true,  syncableOffline: true },
         SFA: { code: 'SFA', label: 'Fire Alarm Service Report',           page: 'fael', editableOffline: true,  syncableOffline: true },
         SEL: { code: 'SEL', label: 'Emergency Lighting Report',           page: 'sel',  editableOffline: true,  syncableOffline: true },
+        PWS: { code: 'PWS', label: 'Portable Service Worksheet',           page: 'portableService', editableOffline: true, syncableOffline: true },
+        MO:  { code: 'MO',  label: 'Manual Order Worksheet',               page: 'manualOrder', editableOffline: true, syncableOffline: true },
         QQ:  { code: 'QQ',  label: 'Quick Quote',                          page: 'qq',   editableOffline: false, syncableOffline: false },
         FAC: { code: 'FAC', label: 'Fire Alarm Commissioning Certificate', page: 'fac', editableOffline: false, syncableOffline: false }
       };
@@ -3931,6 +4003,43 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
         SFA: ['W', 'SEL'],
         SEL: ['W', 'SFA']
       };
+      const PORTABLE_PRICE_LIST_CSV_BASE64 = {
+        Swansea: 'S2V5LFNhbGVzIFByaWNlDQoxa2cgRHJ5IFBvd2RlciBFeHRpbmd1aXNoZXIsMTIuNTANCjFsdHIgRm9hbSBFeHRpbmd1aXNoZXIsMjEuMDANCjJrZyBDbzIgRXh0aW5ndWlzaGVyLDI5Ljk4DQoya2cgRHJ5IFBvd2RlciBFeHRpbmd1aXNoZXIsMTQuOTgNCjJsdHIgRm9hbSBFeHRpbmd1aXNoZXIsMjkuMDANCjNsdHIgRm9hbSBFeHRpbmd1aXNoZXIsMjkuOTgNCjNsdHIgV2F0ZXIgRXh0aW5ndWlzaGVyLDI5Ljk4DQo0a2cgRHJ5IFBvd2RlciBFeHRpbmd1aXNoZXIsMjYuNTANCjU1IEdyYW1tZSBDYXJ0cmlkZ2VzLDQuNTANCjVrZyBDbzIgRXh0aW5ndWlzaGVyLDM4LjAwDQo2a2cgRHJ5IFBvd2RlciBFeHRpbmd1aXNoZXIsMzMuOTgNCjZsdHIgRm9hbSBFeHRpbmd1aXNoZXIsMjkuODANCjZsdHIgV2F0ZXIgRXh0aW5ndWlzaGVyLDI4LjUwDQo2bHRyIFdldCBDaGVtaWNhbCBFeHRpbmd1aXNoZXIsNzguMDANCjlrZyBEcnkgUG93ZGVyIEV4dGluZ3Vpc2hlciwzOS45OA0KOWx0ciBGb2FtIEV4dGluZ3Vpc2hlciwyOC4wMA0KOWx0ciBXYXRlciBFeHRpbmd1aXNoZXIsMjMuNTANCkFsbCBJbmNsdXNpdmUgc2VydmljZSBwbGFuLA0KQmFjayBCb2FyZCw4Ljk1DQpCYXNpYyBGaXJlIEF3YXJlbmVzcyBUcmFpbmluZyw0ODUuMDANCkJhdHRlcnkgUmVwbGFjZW1lbnQsNS45NQ0KU2VydmljZSBDYWxsb3V0IENoYXJnZSwxMi45OA0KRGkgQm9uZCBXYXJuaW5nIFNpZ25zLDE1LjAwDQpEaXJlY3Rpb25hbCBBcnJvdyBTaWducyw3LjgwDQpBdXRvbWF0aWMgQmF0dGVyeSBvcGVyYXRlZCBEb29yIEd1YXJkLDk5LjAwDQpEb29yIEd1YXJkIEJhdHRlcnksNS45NQ0KUnViYmVyIEZlcnJlbHMsNS45NQ0KRG9vciBHdWFyZHMgU2VydmljZWQsNS45NQ0KRG91YmxlIEJhY2sgQm9hcmQsMTkuMDANCkRvdWJsZSBCb3gsODcuOTgNCkRvdWJsZSBFeHRpbmd1aXNoZXIgQm94LDg5Ljk4DQpEb3VibGUgRXh0aW5ndWlzaGVyIFN0YW5kLDU4LjAwDQpFdmFjdWF0aW9uIENoYWlyLDMwMC4wMA0KRXhpdCBTaWduIChQTC9CTCksOC45MA0KRXh0aW5ndWlzaGVycyBTZXJ2aWNlZCwxLjM4DQpGaXJlIEFjdGlvbiBOb3RpY2UgKFBML0JMKSw2Ljk4DQpGaXJlIEFzc2VtYmx5IFBvaW50IFNpZ24sOS45MA0KRmlyZSBCb3ggSGluZ2UgQ2xpcHMsMTUuMDANCkZpcmUgRG9vciBLZWVwIFNodXQgU2lnbnMsNi45OQ0KRmlyZSBFeGl0IEtlZXAgQ2xlYXIgU2lnbiw1Ljk4DQpGaXJlIEV4aXQgU2lnbiAoUEwvQkwpLDcuODANCkZpcmUgTG9nIEJvb2ssOS45OA0KRmxvb3IgUGxhdGUsMTEuMDANCkhvbWUgU2FmZXR5IFBhY2tzLDUwLjAwDQpIb3JuLDguMjANCkhvc2UgQXNzZW1ibHksOS44NQ0KSW5zdGFsbGF0aW9uIENoYXJnZSwxNS4wMA0KSW50dW1lc2NlbnQgU3RyaXBzLDguMDANCk11bHRpLWNoZW0gRXh0aW5ndWlzaGVyLDc4LjAwDQpObyBBZG1pdHRhbmNlIFNpZ25zIFMvQSwxMS45NQ0KTm8gU21va2luZyBTaWduLDIuOTgNClB1c2ggQmFyIFNpZ24sNi45NQ0KUFZDIEphY2tldHMgLSBMYXJnZSwxNi4wMA0KUFZDIEphY2tldCAtIE1lZGl1bSwxMy45OA0KUFZDIEphY2tldCAtIFNtYWxsLDkuNTANClJlY2hhcmdlZCw2LjUwDQpFeHRpbmd1aXNoZXIgUmVmaWxsLDEuMzgNClJlLUZpeC8gUmVwbGFjZSBCcmFja2V0cywyLjU4DQpSZWZ1c2UgUG9pbnQgU2lnbiw5Ljk1DQpSZXNpdGUgRXh0aW5ndWlzaGVyLDIuNTgNClJ1YmJlciBTaG9lLDEuOTkNClNhZmV0eSBQaW4sMi4yMA0KU2VhdCBCZWx0IFNpZ25zLDIuOTgNClNpbmdsZSBCb3gsNTguOTgNClNpbmdsZSBTdGFuZCw0OC4wMA0KU3BlY2lhbCBTaWducyw2Ljk1DQpTdXBwcmVzc2lvbiBTeXN0ZW0gU2VydmljZSw2MTQuMDANClR1cm4gTGF0Y2ggdG8gT3BlbiAoUlApLDUuOTUNCldhbGwgRml4L1JlLUZpeCBTZWN1cmUsMi43OA0KV2FsbCBGaXggKFJlLUZpeCBTZWN1cmUpLDMuNTANCkZpcmUgQmxhbmtldCwxMi45OA0KSUQgU2lnbnMgUEwvQkwsMy45OA0KM2x0ciBGbG91cmluZSBGb2FtIEV4dGluZ3Vpc2hlcizCozUyLjE2DQo2bHRyIEZsb3VyaW5lIEZvYW0gRXh0aW5ndWlzaGVyLMKjNTguOTgNClN3aXZlbCBIb3JuLDIuOTgNCkhUIFRlc3QsMi45OA0KUmVtb3ZhbCAmIFNhZmUgRGlzcG9zYWwgb2YgT2xkIEVxdWlwbWVudCw0LjUwDQo=',
+        Pembroke: 'S2V5LENvc3QNCkZpcmUgQWN0aW9uIE5vdGljZSzCozcuOTgNCjJrZyBDbzIgRXh0aW5ndWlzaGVyLMKjMzMuODgNCjZsdHIgRm9hbSBFeHRpbmd1aXNoZXIswqMzNS44OA0KNmx0ciBXYXRlciBFeHRpbmd1aXNoZXIswqMzNS44OA0KSWQgU2lnbizCozMuOTgNCjVrZyBDbzIgRXh0aW5ndWlzaGVyLMKjNDQuMDANCiIybHRyIEZvYW0gRXh0aW5ndWlzaGVyICIswqMyOC4wMA0KM2x0ciBGb2FtIEV4dGluZ3Vpc2hlcizCozMzLjg4DQozbHRyIFdhdGVyIEV4dGluZ3Vpc2hlcizCozMzLjg4DQo2a2cgRHJ5IFBvd2RlcizCozI5Ljk4DQo2bHRyIFdldCBDaGVtaWNhbCBFeHRpbmd1aXNoZXIswqM4OC45OA0KRmlyZSBCbGFua2V0LMKjMTcuMDgNCldhbGwgRml4IEFuZCBCcmFja2V0LMKjMi41OA0KU2luZ2xlIFN0YW5kIFR1YnVsYXIswqMyOC4wMA0KRG91YmxlIFN0YW5kIFR1YnVsYXIswqMzMi4wMA0KUmlnaWQgUGxhc3RpYyBTaW5nbGUgU3RhbmQswqMyMS4wMA0KUmlnaWQgUGxhc3RpYyBEb3VibGUgU3RhbmQswqMyOC4wMA0KMmtnIERyeSBQb3dkZXIswqMxOS45OA0KIjlrZyBEcnkgUG93ZGVyICIswqMyNC45OA0KQ28yIFJlZmlsbCAmIEhULMKjMS45OA0KRm9hbSBSZWZpbGwswqMxLjA4DQpDYWxsb3V0LDEyLjk4DQpBbGwgaW5jbHVzaXZlIHNlcnZpY2UswqMxLjg4DQpCYXNpYyBTZXJ2aWNlLDEuODgNCnN1cGVyIGNhcizCozEwDQpBdHRlbmRhbmNlIEZlZSzCozEyLjk4DQpEb3VibGUgRXh0aW5ndWlzaGVyIEJveGVzLMKjODguOTgNCkRheXMgTGFib3VyLMKjMTUwDQpGaXJlIEV4aXQgS2VlcCBDbGVhciBTaWduLMKjNS45NQ0KM2x0ciBGbG91cmluZSBGb2FtIEV4dGluZ3Vpc2hlcizCozUyLjE2DQpMaXRoaXVtIEJhdHRlcnkgRXh0aW5ndWlzaGVyLMKjMjQ5DQoiUHZjIENvdmVycyAiLMKjMTYuMDANCkZpcmUgTG9nIEJvb2ssNi45NQ0KNmx0ciBGbG91cmluZSBGb2FtIEV4dGluZ3Vpc2hlcizCozU4Ljk4DQpUZXN0IERpc2NoYXJnZSwyLjA4DQpXYXRlciBSZWZpbGwswqMxLjA4DQpSZW1vdmFsICYgRGlzcG9zYWwgb2YgRXF1aXBtZW50LMKjNC41MA0KMmx0ciBGbG91cmluZSBGb2FtIEV4dGluZ3Vpc2hlcizCozUyLjE2DQo='
+      };
+      let portableOfflinePriceCache = {};
+      function portableOfflinePriceRows(name) {
+        name = String(name || '').trim();
+        if (!name || !PORTABLE_PRICE_LIST_CSV_BASE64[name]) return [];
+        if (portableOfflinePriceCache[name]) return portableOfflinePriceCache[name];
+        try {
+          const binary = atob(PORTABLE_PRICE_LIST_CSV_BASE64[name]);
+          const bytes = new Uint8Array(binary.length);
+          for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+          const csv = window.TextDecoder ? new TextDecoder('utf-8').decode(bytes) : decodeURIComponent(escape(binary));
+          const rows = csv.replace(/\r/g, '').split('\n').slice(1).map(function(line, index) {
+            line = String(line || '').trim();
+            if (!line) return null;
+            const comma = line.lastIndexOf(',');
+            if (comma < 0) return null;
+            const description = line.slice(0, comma).replace(/^"|"$/g, '').trim();
+            const rawPrice = line.slice(comma + 1).replace(/[^0-9.\-]/g, '');
+            return {
+              priceList: name,
+              material: description,
+              description: description,
+              code: name.slice(0, 3).toUpperCase() + '-' + String(index + 1).padStart(3, '0'),
+              unitPrice: rawPrice,
+              supplier: name + ' Council'
+            };
+          }).filter(Boolean);
+          portableOfflinePriceCache[name] = rows;
+          return rows;
+        } catch (err) {
+          console.error('Portable price list decode failed', err);
+          return [];
+        }
+      }
       const SLT_OFFLINE_READING_COUNT = 19;
       let activeOfflineReportCode = 'W';
       let offlinePanelPhotoData = '';
@@ -4044,11 +4153,13 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
 
       function openCertificatePortalAfterDraftSave(message) {
         const name = String(message && message.draftName || '').trim();
+        const reportType = String(message && message.reportType || '').toLowerCase();
+        const isPortable = reportType.indexOf('portable') !== -1 || reportType.indexOf('service worksheet') !== -1 || reportType.indexOf('manual order') !== -1;
         rememberPendingPortalFlash(name
           ? 'Draft saved successfully: ' + name
           : 'Draft saved successfully.');
-        openAppUrlInShell(APP_URL);
-        setLoaderMessage('Opening Certificate Portal…');
+        openAppUrlInShell(addEngineerProfileToUrl(APP_URL + (isPortable ? '?page=portables' : '')));
+        setLoaderMessage(isPortable ? 'Opening Portables…' : 'Opening Certificate Portal…');
       }
 
       function openJobsAndDraftsAfterOfflineDraftSave(message) {
@@ -4107,8 +4218,9 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
           ? 'Combined Report Pack'
           : reportType;
         rememberPendingPortalFlash(label + ' completed successfully' + (reportNo ? ': ' + reportNo : '.'));
-        openAppUrlInShell(APP_URL);
-        setLoaderMessage('Opening Certificate Portal…');
+        const isPortable = reportType.toLowerCase().indexOf('portable') !== -1 || reportType.toLowerCase().indexOf('service worksheet') !== -1 || reportType.toLowerCase().indexOf('manual order') !== -1;
+        openAppUrlInShell(addEngineerProfileToUrl(APP_URL + (isPortable ? '?page=portables' : '')));
+        setLoaderMessage(isPortable ? 'Opening Portables…' : 'Opening Certificate Portal…');
       }
 
       function releaseReportCompletionLoaderWithError(message) {
@@ -4824,7 +4936,7 @@ function clearOfflineLookupCustomerChunks() {
 
       function offlineLookupSearchHay(row, mode) {
         row = row || {};
-        if (mode === 'material') {
+        if (mode === 'material' || mode === 'portableMaterial') {
           return normaliseOfflineLookupText([row.material, row.description, row.code, row.supplier, row.unitPrice].join(' '));
         }
         if (mode === 'site') {
@@ -4840,6 +4952,9 @@ function clearOfflineLookupCustomerChunks() {
 
         if (mode === 'material') {
           return Array.isArray(data.materials) ? data.materials : [];
+        }
+        if (mode === 'portableMaterial') {
+          return portableOfflinePriceRows(getEditValue('editPortablePriceList'));
         }
         if (mode === 'site') {
           const sites = Array.isArray(data.sites) ? data.sites : [];
@@ -5394,23 +5509,29 @@ function clearOfflineLookupCustomerChunks() {
 
       window.openOfflineCustomerPicker = function openOfflineCustomerPicker(event, mode) {
         stopTap(event);
-        offlineLookupMode = mode === 'material' ? 'material' : (mode === 'site' ? 'site' : 'invoice');
+        offlineLookupMode = mode === 'material' ? 'material' : (mode === 'portableMaterial' ? 'portableMaterial' : (mode === 'site' ? 'site' : 'invoice'));
         offlineLookupData = loadOfflineLookupData();
         const modal = document.getElementById('offlineLookupModal');
         const title = document.getElementById('offlineLookupTitle');
         const help = document.getElementById('offlineLookupHelp');
         const search = document.getElementById('offlineLookupSearch');
-        if (title) title.textContent = offlineLookupMode === 'material'
+        if (title) title.textContent = offlineLookupMode === 'portableMaterial'
+          ? 'Add ' + (getEditValue('editPortablePriceList') || 'Price List') + ' Material'
+          : offlineLookupMode === 'material'
           ? 'Add Offline Material'
           : (offlineLookupMode === 'site' ? 'Pick Offline Site Address' : 'Pick Offline Invoice Customer');
-        if (help) help.textContent = offlineLookupMode === 'material'
+        if (help) help.textContent = offlineLookupMode === 'portableMaterial'
+          ? 'Search the selected council price list saved inside this iPad app. Selecting one adds it to the Manual Order.'
+          : offlineLookupMode === 'material'
           ? 'Search the materials saved on this iPad. Selecting one adds it to the ESR material rows.'
           : (offlineLookupMode === 'site'
             ? 'Search the site addresses saved on this iPad. This works without signal after you update the list once.'
             : 'Search invoice customers saved on this iPad. This works without signal after you update the list once.');
         if (search) {
           search.value = '';
-          search.placeholder = offlineLookupMode === 'material'
+          search.placeholder = offlineLookupMode === 'portableMaterial'
+            ? 'Search selected price list...'
+            : offlineLookupMode === 'material'
             ? 'Search material, code or supplier...'
             : (offlineLookupMode === 'site' ? 'Search site, postcode or account...' : 'Search customer, postcode or Sage account...');
         }
@@ -5448,12 +5569,12 @@ function clearOfflineLookupCustomerChunks() {
           return;
         }
         wrap.innerHTML = rows.map(function(row, idx) {
-          const title = offlineLookupMode === 'material'
+          const title = (offlineLookupMode === 'material' || offlineLookupMode === 'portableMaterial')
             ? (row.material || row.description || row.code || 'Material')
             : (offlineLookupMode === 'site'
               ? (row.lookupName || firstLookupLine(row.siteAddress) || 'Site address')
               : (row.lookupName || firstLookupLine(row.customerAddress) || 'Invoice customer'));
-          const body = offlineLookupMode === 'material'
+          const body = (offlineLookupMode === 'material' || offlineLookupMode === 'portableMaterial')
             ? [row.description && row.description !== title ? row.description : '', row.code ? ('Code: ' + row.code) : '', row.supplier ? ('Supplier: ' + row.supplier) : '', row.unitPrice ? ('Unit: £' + row.unitPrice) : ''].filter(Boolean).join('\n')
             : (offlineLookupMode === 'site'
               ? [row.siteAddress, row.customerName ? ('Customer: ' + row.customerName) : '', row.sageAccountNo ? ('A/C: ' + row.sageAccountNo) : ''].filter(Boolean).join('\n')
@@ -5522,10 +5643,11 @@ function clearOfflineLookupCustomerChunks() {
       
       function showOfflineLookupPickedFeedback(mode, row) {
         try {
-          const name = row && (mode === 'material'
+          const isMaterial = mode === 'material' || mode === 'portableMaterial';
+          const name = row && (isMaterial
             ? (row.material || row.description || row.code)
             : (row.lookupName || row.customerName || firstLookupLine(row.customerAddress) || firstLookupLine(row.siteAddress))) || 'Selected';
-          const msg = (mode === 'material' ? 'Material added: ' : (mode === 'site' ? 'Site picked: ' : 'Customer picked: ')) + name;
+          const msg = (isMaterial ? 'Material added: ' : (mode === 'site' ? 'Site picked: ' : 'Customer picked: ')) + name;
           setOfflinePickerStatus(msg);
           setOfflineStatus(msg);
           setTimeout(function() {
@@ -5536,7 +5658,24 @@ function clearOfflineLookupCustomerChunks() {
 
 function applyOfflineLookupSelection(row) {
         row = row || {};
-        if (offlineLookupMode === 'material') {
+        if (offlineLookupMode === 'portableMaterial') {
+          const manualRows = Array.from(document.querySelectorAll('#portableOfflineRows .portable-offline-row'));
+          const target = manualRows.find(function(line) {
+            return !Array.from(line.querySelectorAll('input')).some(function(el) { return String(el.value || '').trim(); });
+          });
+          if (!target) {
+            setOfflinePickerStatus('All 12 Manual Order rows are already in use.');
+            return;
+          }
+          const req = target.querySelector('.porReq');
+          const product = target.querySelector('.porProduct');
+          const description = target.querySelector('.porDescription');
+          const price = target.querySelector('.porPrice');
+          if (req) req.value = '1';
+          if (product) product.value = row.code || '';
+          if (description) description.value = row.description || row.material || '';
+          if (price) price.value = row.unitPrice || '';
+        } else if (offlineLookupMode === 'material') {
           const unitPrice = String(row.unitPrice || '').trim();
           addEditorMaterialRow({
             qty: '1',
@@ -5570,7 +5709,7 @@ function applyOfflineLookupSelection(row) {
           }
         } catch (err) {}
 
-        setEditorStatus((offlineLookupMode === 'material' ? 'Material' : (offlineLookupMode === 'site' ? 'Site address' : 'Invoice customer')) + ' selected from the iPad list. Press Save on iPad before leaving.');
+        setEditorStatus(((offlineLookupMode === 'material' || offlineLookupMode === 'portableMaterial') ? 'Material' : (offlineLookupMode === 'site' ? 'Site address' : 'Invoice customer')) + ' selected from the iPad list. Press Save on iPad before leaving.');
         showOfflineLookupPickedFeedback(offlineLookupMode, row || {});
         closeOfflineLookupPickerAfterSelection();
         try { autoNameOfflineW(); } catch (err) {}
@@ -5598,6 +5737,8 @@ function applyOfflineLookupSelection(row) {
         if (normalized.indexOf('FIRE ALARM TEST REPORT') >= 0 || normalized.indexOf('FIRE ALARM SERVICE') >= 0 || /(^|\s)SFA(\s|$)/.test(normalized)) return 'SFA';
         if (normalized.indexOf('EMERGENCY LIGHTING') >= 0 || /(^|\s)SEL(\s|$)/.test(normalized)) return 'SEL';
         if (normalized.indexOf('QUICK QUOTE') >= 0 || /(^|\s)QQ(\s|$)/.test(normalized)) return 'QQ';
+        if (normalized.indexOf('PORTABLE SERVICE') >= 0 || normalized.indexOf('SERVICE WORKSHEET') >= 0 || /(^|\s)PWS(\s|$)/.test(normalized)) return 'PWS';
+        if (normalized.indexOf('MANUAL ORDER') >= 0 || /(^|\s)MO(\s|$)/.test(normalized)) return 'MO';
         if (normalized.indexOf('FIRE ALARM COMMISSIONING') >= 0 || /(^|\s)FAC(\s|$)/.test(normalized)) return 'FAC';
         // Older W drafts stored the long report name rather than the short code.
         if (normalized.indexOf('ENGINEER SERVICE') >= 0 || /(^|\s)W(\s|$)/.test(normalized)) return 'W';
@@ -6461,6 +6602,92 @@ function applyOfflineLookupSelection(row) {
         }).filter(function(item) { return item.qty || item.description || item.unitPrice || item.totalPrice; });
       }
 
+      function addPortableOfflineRow(item) {
+        const wrap = document.getElementById('portableOfflineRows');
+        if (!wrap) return;
+        item = item || {};
+        const service = activeOfflineReportCode === 'PWS';
+        const row = document.createElement('div');
+        row.className = 'card portable-offline-row';
+        if (service) {
+          row.innerHTML =
+            '<div class="editor-grid">' +
+            '<div class="editor-field"><label class="portableWalkLabel">Walk</label><input class="porWalk" readonly></div>' +
+            '<div class="editor-field"><label>Comment</label><input class="porComment" value="' + escapeHtml(item.comment || '') + '"></div>' +
+            '<div class="editor-field"><label>Mfr.</label><input class="porMfr" value="' + escapeHtml(item.mfr || '') + '"></div>' +
+            '<div class="editor-field"><label>Type</label><input class="porType" value="' + escapeHtml(item.type || '') + '"></div>' +
+            '<div class="editor-field"><label>Size</label><input class="porSize" value="' + escapeHtml(item.size || '') + '"></div>' +
+            '<div class="editor-field"><label>Location</label><input class="porLocation" value="' + escapeHtml(item.location || '') + '"></div>' +
+            '<div class="editor-field"><label>DC/T</label><input class="porDct" value="' + escapeHtml(item.dct || '') + '"></div>' +
+            '<div class="editor-field"><label>Frq.</label><input class="porFrq" value="' + escapeHtml(item.frq || '') + '"></div>' +
+            '<div class="editor-field"><label>Ym</label><input class="porYm" value="' + escapeHtml(item.ym || '') + '"></div>' +
+            '<div class="editor-field"><label>Gross</label><input class="porGross" value="' + escapeHtml(item.gross || '') + '"></div>' +
+            '<div class="editor-field"><label>Sp/Ca</label><input class="porSpca" value="' + escapeHtml(item.spca || '') + '"></div>' +
+            '</div><button class="button third" type="button" onclick="this.closest(\'.portable-offline-row\').remove();updatePortableOfflineWalkNumbers()">Remove Row</button>';
+        } else {
+          row.innerHTML =
+            '<div class="editor-grid">' +
+            '<div class="editor-field"><label>Qty Sent</label><input class="porSent" value="' + escapeHtml(item.sent || '') + '"></div>' +
+            '<div class="editor-field"><label>Qty Required</label><input class="porReq" value="' + escapeHtml(item.req || '') + '"></div>' +
+            '<div class="editor-field"><label>Product Code</label><input class="porProduct" value="' + escapeHtml(item.product || '') + '"></div>' +
+            '<div class="editor-field"><label>Description</label><input class="porDescription" value="' + escapeHtml(item.description || '') + '"></div>' +
+            '<div class="editor-field"><label>Unit Price</label><input class="porPrice" inputmode="decimal" value="' + escapeHtml(item.price || '') + '"></div>' +
+            '</div><button class="button third" type="button" onclick="this.closest(\'.portable-offline-row\').remove()">Remove Row</button>';
+        }
+        wrap.appendChild(row);
+        if (service) {
+          Array.prototype.forEach.call(row.querySelectorAll('input:not(.porWalk)'), function(input) {
+            input.addEventListener('input', updatePortableOfflineWalkNumbers);
+          });
+        }
+        updatePortableOfflineWalkNumbers();
+      }
+
+      function renderPortableOfflineRows(lines) {
+        const wrap = document.getElementById('portableOfflineRows');
+        if (!wrap) return;
+        wrap.innerHTML = '';
+        const perPage = activeOfflineReportCode === 'PWS' ? 15 : 12;
+        const source = Array.isArray(lines) && lines.length ? lines : Array.from({length:perPage}, function(){ return {}; });
+        source.forEach(addPortableOfflineRow);
+      }
+
+      function collectPortableOfflineRows() {
+        const service = activeOfflineReportCode === 'PWS';
+        return Array.from(document.querySelectorAll('#portableOfflineRows .portable-offline-row')).map(function(row) {
+          if (service) return {
+            comment:(row.querySelector('.porComment')||{}).value||'', mfr:(row.querySelector('.porMfr')||{}).value||'',
+            type:(row.querySelector('.porType')||{}).value||'', size:(row.querySelector('.porSize')||{}).value||'',
+            location:(row.querySelector('.porLocation')||{}).value||'', dct:(row.querySelector('.porDct')||{}).value||'',
+            frq:(row.querySelector('.porFrq')||{}).value||'', ym:(row.querySelector('.porYm')||{}).value||'',
+            gross:(row.querySelector('.porGross')||{}).value||'', spca:(row.querySelector('.porSpca')||{}).value||''
+          };
+          return {
+            sent:(row.querySelector('.porSent')||{}).value||'', req:(row.querySelector('.porReq')||{}).value||'',
+            product:(row.querySelector('.porProduct')||{}).value||'',
+            description:(row.querySelector('.porDescription')||{}).value||'', price:(row.querySelector('.porPrice')||{}).value||''
+          };
+        }).filter(function(item) { return Object.keys(item).some(function(key){ return String(item[key]||'').trim(); }); });
+      }
+
+      function updatePortableOfflineWalkNumbers() {
+        if (activeOfflineReportCode !== 'PWS') return;
+        let next = 1;
+        Array.from(document.querySelectorAll('#portableOfflineRows .portable-offline-row')).forEach(function(row) {
+          const used = Array.from(row.querySelectorAll('input:not(.porWalk)')).some(function(el){ return String(el.value||'').trim(); });
+          const walk = row.querySelector('.porWalk');
+          if (walk) walk.value = used ? String(next++) : '';
+        });
+      }
+
+      window.addPortableOfflineRows = function addPortableOfflineRows(event) {
+        stopTap(event);
+        const count = activeOfflineReportCode === 'PWS' ? 15 : 12;
+        for (let i = 0; i < count; i++) addPortableOfflineRow({});
+        setEditorDirty(true);
+        setEditorStatus('Added another page of ' + count + ' rows.');
+      };
+
       function sfaEquipmentDefaults(reportCode) {
         return String(reportCode || activeOfflineReportCode || '').toUpperCase() === 'SFA'
           ? SFA_EQUIPMENT_DEFAULT_ROWS
@@ -6586,6 +6813,7 @@ function applyOfflineLookupSelection(row) {
         activeOfflineReportCode = report && report.code ? report.code : 'W';
         const isSfa = report && report.code === 'SFA';
         const isSel = report && report.code === 'SEL';
+        const isPortable = report && (report.code === 'PWS' || report.code === 'MO');
         const sfaFields = document.getElementById('sfaOfflineFields');
         const selFields = document.getElementById('selOfflineFields');
         const wAdmin = document.getElementById('wOfflineAdminFields');
@@ -6595,12 +6823,26 @@ function applyOfflineLookupSelection(row) {
         const sfaPayloadBtn = document.getElementById('editorSfaPayloadPreviewBtn');
         const sfaPayloadPreview = document.getElementById('sfaCloudPayloadPreview');
         const addCertControls = document.getElementById('offlineAddCertControls');
-        if (addCertControls) addCertControls.classList.remove('hidden-report-fields');
+        const portableFields = document.getElementById('portableOfflineFields');
+        const portableHeading = document.getElementById('portableOfflineHeading');
+        const portableMaterialBtn = document.getElementById('portableOfflineMaterialBtn');
+        const signatureLabel = document.getElementById('editEngineerSignatureLabel');
+        if (addCertControls) addCertControls.classList.toggle('hidden-report-fields', isPortable);
+        if (portableFields) portableFields.classList.toggle('hidden-report-fields', !isPortable);
+        if (portableHeading) portableHeading.textContent = report && report.code === 'MO' ? 'Manual Order' : 'Portable Service Worksheet';
+        if (portableMaterialBtn) portableMaterialBtn.classList.toggle('hidden-report-fields', !(report && report.code === 'MO'));
+        Array.prototype.forEach.call(document.querySelectorAll('.portable-pws-only'), function(el) {
+          el.classList.toggle('hidden-report-fields', !(report && report.code === 'PWS'));
+        });
+        Array.prototype.forEach.call(document.querySelectorAll('.portable-mo-only'), function(el) {
+          el.classList.toggle('hidden-report-fields', !(report && report.code === 'MO'));
+        });
+        if (signatureLabel) signatureLabel.textContent = report && report.code === 'MO' ? 'Received Equipment Signature' : 'Engineer Signature';
         if (sfaFields) sfaFields.classList.toggle('hidden-report-fields', !isSfa);
         if (selFields) selFields.classList.toggle('hidden-report-fields', !isSel);
-        if (wAdmin) wAdmin.classList.toggle('hidden-report-fields', isSfa || isSel);
-        if (wWork) wWork.classList.toggle('hidden-report-fields', isSfa || isSel);
-        if (materialQuick) materialQuick.classList.toggle('hidden-report-fields', isSfa || isSel);
+        if (wAdmin) wAdmin.classList.toggle('hidden-report-fields', isSfa || isSel || isPortable);
+        if (wWork) wWork.classList.toggle('hidden-report-fields', isSfa || isSel || isPortable);
+        if (materialQuick) materialQuick.classList.toggle('hidden-report-fields', isSfa || isSel || isPortable);
         if (sfaQuick) sfaQuick.classList.toggle('hidden-report-fields', !isSfa);
         if (sfaPayloadBtn) sfaPayloadBtn.classList.toggle('hidden-report-fields', !isSfa);
         if (!isSfa && sfaPayloadPreview) sfaPayloadPreview.classList.add('hidden-report-fields');
@@ -6689,7 +6931,9 @@ function applyOfflineLookupSelection(row) {
         if (noteEl) {
           noteEl.textContent = report.code === 'W'
             ? 'Engineer Service Report · Offline working copy. This follows the online ESR order and uses the same Report Pack Add Pages.'
-            : 'This iPad working copy uses the same Add Page combinations as the online ' + report.code + ' form. Save here anytime, then upload and complete the PDF when signal returns.';
+            : ((report.code === 'PWS' || report.code === 'MO')
+              ? 'This iPad working copy uses the same Portables fields, address lookup and Fast Signature Pad. Save here anytime, then upload and complete the PDF when signal returns.'
+              : 'This iPad working copy uses the same Add Page combinations as the online ' + report.code + ' form. Save here anytime, then upload and complete the PDF when signal returns.');
         }
         if (syncBtn) {
           syncBtn.disabled = !report.syncableOffline;
@@ -6708,6 +6952,59 @@ function applyOfflineLookupSelection(row) {
         setEditValue('editServiceDate', d.serviceDate || '');
         setEditValue('editCustomer', d.customer || item.customer || '');
         setEditValue('editSite', d.site || item.site || '');
+        setEditValue('editPortablePriceList', d.priceList || '');
+        setEditValue('editPortableReportNo', d.reportNo || '');
+        setEditValue('editPortableCustomerOrderNo', d.customerOrderNo || '');
+        setEditValue('editPortableAgreementNo', d.agreementNo || '');
+        setEditValue('editPortableAccountNo', d.accountNo || '');
+        setEditValue('editPortableNewAccount', d.newAccount || '');
+        setEditValue('editPortableGroupAccount', d.groupAccount || '');
+        setEditValue('editPortableDeliveryDate', d.deliveryDate || '');
+        setEditValue('editPortableContactName', d.contactName || '');
+        setEditValue('editPortableTelephone', d.telephone || '');
+        setEditValue('editPortableRepresentative', d.representative || '');
+        setEditValue('editPortableOrderService', d.orderService || '');
+        setEditValue('editPortableOrderInstallation', d.orderInstallation || '');
+        setEditValue('editPortableOrderDelivery', d.orderDelivery || '');
+        setEditValue('editPortableOrderInspection', d.orderInspection || '');
+        setEditValue('editPortableOrderTraining', d.orderTraining || '');
+        setEditValue('editPortableExtId', d.extId || '');
+        setEditValue('editPortableFAction', d.fAction || '');
+        setEditValue('editPortableFExit', d.fExit || '');
+        setEditValue('editPortableExitCount', d.exitCount || '');
+        setEditValue('editPortableFekc', d.fekc || '');
+        setEditValue('editPortablePBar', d.pBar || '');
+        setEditValue('editPortableLeftArrowCount', d.leftArrowCount || '');
+        setEditValue('editPortableRightArrowCount', d.rightArrowCount || '');
+        setEditValue('editPortableRiskAssessment', d.riskAssessment || '');
+        setEditValue('editPortableAsbestosReport', d.asbestosReport || '');
+        setEditValue('editPortableStaffTraining', d.staffTraining || '');
+        setEditValue('editPortableFireDoorsChecked', d.fireDoorsChecked || '');
+        setEditValue('editPortableIntumescentStrips', d.intumescentStrips || '');
+        setEditValue('editPortableFireDoorCost', d.fireDoorCost || '');
+        setEditValue('editPortableDoorsNotClosing', d.doorsNotClosing || '');
+        setEditValue('editPortableDoorClosuresFaulty', d.doorClosuresFaulty || '');
+        setEditValue('editPortableHoseReels', d.hoseReels || '');
+        setEditValue('editPortableFireBlankets', d.fireBlankets || '');
+        setEditValue('editPortableWetChem', d.wetChem || '');
+        setEditValue('editPortableWaterExt', d.waterExt || '');
+        setEditValue('editPortableFoamExt', d.foamExt || '');
+        setEditValue('editPortablePowderExt', d.powderExt || '');
+        setEditValue('editPortableCo2Ext', d.co2Ext || '');
+        setEditValue('editPortableEquipmentTotal', d.equipmentTotal || '');
+        setEditValue('editPortableLogBookCompleted', d.logBookCompleted || '');
+        setEditValue('editPortableChangedEquipment', d.changedEquipment || '');
+        setEditValue('editPortableComments', d.engineerComments || d.specialInstructions || '');
+        setEditValue('editPortableServiceCost', d.serviceCost || '');
+        setEditValue('editPortableEquipmentCost', d.equipmentCost || '');
+        setEditValue('editPortableSatisfaction', d.satisfaction || '');
+        setEditValue('editPortableManualOrderRaised', d.manualOrderRaised || '');
+        setEditValue('editPortableSupplyInstruction', d.supplyInstruction || '');
+        setEditValue('editPortableSupplied', d.supplied || '');
+        setEditValue('editPortableCustomerPosition', d.customerPosition || '');
+        setEditValue('editPortableReceivedName', d.receivedName || '');
+        setEditValue('editPortableReceivedDate', d.receivedDate || '');
+        if (report.code === 'PWS' || report.code === 'MO') renderPortableOfflineRows(d.lines || []);
         setOfflineInlineValuesFromDraft(d);
         setEditValue('editSfaSageAccountNo', d.sageAccountNo || d.sfaSageAccountNo || '');
         setEditValue('editSfaContractId', d.contractId || d.sfaContractId || '');
@@ -7113,6 +7410,39 @@ function applyOfflineLookupSelection(row) {
         };
       }
 
+      function createBlankOfflinePortableItem(code) {
+        code = String(code || '').toUpperCase() === 'MO' ? 'MO' : 'PWS';
+        const now = new Date();
+        const today = now.toISOString().slice(0, 10);
+        const label = code === 'MO' ? 'Manual Order Worksheet' : 'Portable Service Worksheet';
+        const offlineId = makeOfflineId(code);
+        const draft = {
+          offlineCreated: true,
+          offlineId: offlineId,
+          reportType: label,
+          reportTypeCode: code,
+          draftName: label + ' - ' + today,
+          serviceDate: today,
+          engineer: getDefaultEngineerProfile() || '',
+          customer: '', site: '', reportNo: '', priceList: '', customerOrderNo: '', agreementNo: '', accountNo: '',
+          newAccount: '', groupAccount: '', deliveryDate: '', contactName: '', telephone: '', representative: '',
+          orderService: '', orderInstallation: '', orderDelivery: '', orderInspection: '', orderTraining: '',
+          extId: '', fAction: '', fExit: '', exitCount: '', fekc: '', pBar: '', leftArrowCount: '', rightArrowCount: '',
+          riskAssessment: '', asbestosReport: '', staffTraining: '', lines: [], fireDoorsChecked: '',
+          intumescentStrips: '', fireDoorCost: '', doorsNotClosing: '', doorClosuresFaulty: '', hoseReels: '',
+          fireBlankets: '', wetChem: '', waterExt: '', foamExt: '', powderExt: '', co2Ext: '', equipmentTotal: '',
+          logBookCompleted: '', changedEquipment: '', engineerComments: '', specialInstructions: '', serviceCost: '',
+          equipmentCost: '', satisfaction: '', manualOrderRaised: '', supplyInstruction: '', supplied: '',
+          customerName: '', customerPosition: '', customerDate: '', receivedName: '', receivedDate: '',
+          engineerSignature: '', customerSignature: '', savedAt: now.toISOString()
+        };
+        return {
+          offlineId: offlineId, reportType: code, reportTypeCode: code, draftId: '', draftName: draft.draftName,
+          engineer: draft.engineer, customer: '', site: '', savedAt: draft.savedAt,
+          source: 'github-shell-start-offline-portables-c97g', draft: draft, syncState: 'offline_only'
+        };
+      }
+
       window.autoNameOfflineW = function autoNameOfflineW(event) {
         stopTap(event);
         const draft = {
@@ -7174,6 +7504,17 @@ function applyOfflineLookupSelection(row) {
           renderOfflineDrafts();
           openEditorForItem(item);
           setEditorStatus('New SEL started on this iPad. Save here anytime, then upload when signal returns.');
+          return false;
+        });
+      };
+
+      window.startNewOfflinePortable = function startNewOfflinePortable(event, code) {
+        stopTap(event);
+        const item = createBlankOfflinePortableItem(code);
+        return Promise.resolve(upsertOfflineItem(item)).then(function() {
+          renderOfflineDrafts();
+          openEditorForItem(item);
+          setEditorStatus('New ' + getOfflineReportConfig(item).label + ' started on this iPad. Save anytime, then upload when signal returns.');
           return false;
         });
       };
@@ -7263,9 +7604,66 @@ function applyOfflineLookupSelection(row) {
         const savingW = reportCodeForSave === 'W';
         const savingSfa = reportCodeForSave === 'SFA';
         const savingSel = reportCodeForSave === 'SEL';
+        const savingPortable = reportCodeForSave === 'PWS' || reportCodeForSave === 'MO';
         const savingWModule = savingW || getOfflineInlineFlag('W');
         const savingSfaModule = savingSfa || getOfflineInlineFlag('SFA');
         const savingSelModule = savingSel || getOfflineInlineFlag('SEL');
+        if (savingPortable) {
+          d.priceList = getEditValue('editPortablePriceList');
+          d.reportNo = getEditValue('editPortableReportNo');
+          d.customerOrderNo = getEditValue('editPortableCustomerOrderNo');
+          d.agreementNo = getEditValue('editPortableAgreementNo');
+          d.accountNo = getEditValue('editPortableAccountNo');
+          d.newAccount = getEditValue('editPortableNewAccount');
+          d.groupAccount = getEditValue('editPortableGroupAccount');
+          d.deliveryDate = getEditValue('editPortableDeliveryDate');
+          d.contactName = getEditValue('editPortableContactName');
+          d.telephone = getEditValue('editPortableTelephone');
+          d.representative = getEditValue('editPortableRepresentative');
+          d.orderService = getEditValue('editPortableOrderService');
+          d.orderInstallation = getEditValue('editPortableOrderInstallation');
+          d.orderDelivery = getEditValue('editPortableOrderDelivery');
+          d.orderInspection = getEditValue('editPortableOrderInspection');
+          d.orderTraining = getEditValue('editPortableOrderTraining');
+          d.extId = getEditValue('editPortableExtId');
+          d.fAction = getEditValue('editPortableFAction');
+          d.fExit = getEditValue('editPortableFExit');
+          d.exitCount = getEditValue('editPortableExitCount');
+          d.fekc = getEditValue('editPortableFekc');
+          d.pBar = getEditValue('editPortablePBar');
+          d.leftArrowCount = getEditValue('editPortableLeftArrowCount');
+          d.rightArrowCount = getEditValue('editPortableRightArrowCount');
+          d.riskAssessment = getEditValue('editPortableRiskAssessment');
+          d.asbestosReport = getEditValue('editPortableAsbestosReport');
+          d.staffTraining = getEditValue('editPortableStaffTraining');
+          d.lines = collectPortableOfflineRows();
+          d.fireDoorsChecked = getEditValue('editPortableFireDoorsChecked');
+          d.intumescentStrips = getEditValue('editPortableIntumescentStrips');
+          d.fireDoorCost = getEditValue('editPortableFireDoorCost');
+          d.doorsNotClosing = getEditValue('editPortableDoorsNotClosing');
+          d.doorClosuresFaulty = getEditValue('editPortableDoorClosuresFaulty');
+          d.hoseReels = getEditValue('editPortableHoseReels');
+          d.fireBlankets = getEditValue('editPortableFireBlankets');
+          d.wetChem = getEditValue('editPortableWetChem');
+          d.waterExt = getEditValue('editPortableWaterExt');
+          d.foamExt = getEditValue('editPortableFoamExt');
+          d.powderExt = getEditValue('editPortablePowderExt');
+          d.co2Ext = getEditValue('editPortableCo2Ext');
+          d.equipmentTotal = getEditValue('editPortableEquipmentTotal');
+          d.logBookCompleted = getEditValue('editPortableLogBookCompleted');
+          d.changedEquipment = getEditValue('editPortableChangedEquipment');
+          d.engineerComments = reportCodeForSave === 'PWS' ? getEditValue('editPortableComments') : '';
+          d.specialInstructions = reportCodeForSave === 'MO' ? getEditValue('editPortableComments') : '';
+          d.serviceCost = getEditValue('editPortableServiceCost');
+          d.equipmentCost = getEditValue('editPortableEquipmentCost');
+          d.satisfaction = getEditValue('editPortableSatisfaction');
+          d.manualOrderRaised = getEditValue('editPortableManualOrderRaised');
+          d.supplyInstruction = getEditValue('editPortableSupplyInstruction');
+          d.supplied = getEditValue('editPortableSupplied');
+          d.customerPosition = getEditValue('editPortableCustomerPosition');
+          d.receivedName = getEditValue('editPortableReceivedName');
+          d.receivedDate = getEditValue('editPortableReceivedDate');
+        }
         if (savingSfaModule) {
           if (savingSfa) {
             d.sageAccountNo = getEditValue('editSfaSageAccountNo');
@@ -7470,7 +7868,7 @@ function applyOfflineLookupSelection(row) {
           d.subTotal = getEditValue('editSfaSubTotal');
           d.vat = getEditValue('editSfaVat');
           d.total = getEditValue('editSfaTotal');
-        } else if (!savingSel) {
+        } else if (!savingSel && !savingPortable) {
           d.subTotal = getEditValue('editSubTotal');
           d.vat = getEditValue('editVat');
           d.total = getEditValue('editTotal');
@@ -8115,7 +8513,8 @@ function applyOfflineLookupSelection(row) {
         // C96l: older iPads need a paint between closing the chooser and building
         // the large shared report editor. Showing the normal loader first avoids
         // a blank-looking transition while ESR/SFA/SEL fields are prepared.
-        const selectedCode = code === 'SFA' || code === 'SEL' ? code : 'W';
+        const requestedCode = String(code || '').toUpperCase();
+        const selectedCode = ['W','SFA','SEL','PWS','MO'].indexOf(requestedCode) !== -1 ? requestedCode : 'W';
         home.classList.add('hidden');
         offlineDrafts.classList.remove('active');
         if (offlineReportChooser) offlineReportChooser.classList.remove('active');
@@ -8131,6 +8530,7 @@ function applyOfflineLookupSelection(row) {
           try {
             if (selectedCode === 'SFA') return window.startNewOfflineSfaTrial();
             if (selectedCode === 'SEL') return window.startNewOfflineSelTrial();
+            if (selectedCode === 'PWS' || selectedCode === 'MO') return window.startNewOfflinePortable(null, selectedCode);
             return window.startNewOfflineW();
           } catch (err) {
             return Promise.reject(err);
@@ -8393,11 +8793,6 @@ function applyOfflineLookupSelection(row) {
         openAppUrlInShell(APP_URL + '?page=qq');
       };
 
-      window.openPortables = function openPortables(event) {
-        stopTap(event);
-        openAppUrlInShell(APP_URL + '?page=portables');
-      };
-
       window.openCerts = function openCerts(event) {
         stopTap(event);
         // V6.3c48: always load a fresh portal when the home button is pressed.
@@ -8416,6 +8811,11 @@ function applyOfflineLookupSelection(row) {
         frame.src = addEngineerProfileToUrl(APP_URL + '?shell=ipad&v=' + encodeURIComponent(SHELL_VER) + '&ts=' + Date.now());
         hasStarted = true;
         startFallbackTimer();
+      };
+
+      window.openPortables = function openPortables(event) {
+        stopTap(event);
+        openAppUrlInShell(addEngineerProfileToUrl(APP_URL + '?page=portables&shell=ipad&v=' + encodeURIComponent(SHELL_VER) + '&ts=' + Date.now()));
       };
 
 
@@ -8563,10 +8963,16 @@ function applyOfflineLookupSelection(row) {
         if (msg.source === 'fsd-cloud-draft-client-c95f' && msg.type === 'FSD_DRAFT_SAVE_OFFLINE') {
           acknowledgeDraftSaveMessage(event, msg);
           const code = String(msg.reportTypeCode || '').toUpperCase();
-          if (code === 'SFA' || code === 'SEL') {
+          if (code === 'SFA' || code === 'SEL' || code === 'PWS' || code === 'MO') {
+            const reportNames = {
+              SFA: 'Fire Alarm Service Report',
+              SEL: 'Emergency Lighting Report',
+              PWS: 'Portable Service Worksheet',
+              MO: 'Manual Order Worksheet'
+            };
             const rawDraft = Object.assign({}, msg.draft || {}, {
               reportTypeCode: code,
-              reportType: code === 'SFA' ? 'Fire Alarm Service Report' : 'Emergency Lighting Report',
+              reportType: reportNames[code] || 'Report',
               offlineCreated: true,
               offlineId: code + '-OFFLINE-' + Date.now() + '-' + Math.random().toString(36).slice(2, 7).toUpperCase(),
               draftName: msg.draftName || ''
@@ -8654,9 +9060,9 @@ function applyOfflineLookupSelection(row) {
           return;
         }
 
-        if (msg.source !== 'fsd-certs-esr' && msg.source !== 'fsd-certs-sfa' && msg.source !== 'fsd-certs-sel') return;
+        if (msg.source !== 'fsd-certs-esr' && msg.source !== 'fsd-certs-sfa' && msg.source !== 'fsd-certs-sel' && msg.source !== 'fsd-certs-portables') return;
 
-        if ((msg.type === 'FSD_OFFLINE_W_REQUEST' || msg.type === 'FSD_OFFLINE_SFA_REQUEST' || msg.type === 'FSD_OFFLINE_SEL_REQUEST') && pendingShellAction) {
+        if ((msg.type === 'FSD_OFFLINE_W_REQUEST' || msg.type === 'FSD_OFFLINE_SFA_REQUEST' || msg.type === 'FSD_OFFLINE_SEL_REQUEST' || msg.type === 'FSD_OFFLINE_PWS_REQUEST' || msg.type === 'FSD_OFFLINE_MO_REQUEST') && pendingShellAction) {
           // V6.3c37y: Apps Script may put the real W page inside a Google
           // wrapper frame. Sending to frame.contentWindow can hit the wrapper
           // instead of the report. Reply directly to the requesting window so
@@ -8702,10 +9108,13 @@ function applyOfflineLookupSelection(row) {
           return;
         }
 
-        if (msg.type === 'FSD_OFFLINE_W_SYNC_RESULT' || msg.type === 'FSD_OFFLINE_SFA_SYNC_RESULT' || msg.type === 'FSD_OFFLINE_SEL_SYNC_RESULT') {
+        if (msg.type === 'FSD_OFFLINE_W_SYNC_RESULT' || msg.type === 'FSD_OFFLINE_SFA_SYNC_RESULT' || msg.type === 'FSD_OFFLINE_SEL_SYNC_RESULT' || msg.type === 'FSD_OFFLINE_PWS_SYNC_RESULT' || msg.type === 'FSD_OFFLINE_MO_SYNC_RESULT') {
           clearTimeout(shellActionTimer);
           const result = msg.item || {};
-          const resultCode = msg.type === 'FSD_OFFLINE_SFA_SYNC_RESULT' ? 'SFA' : (msg.type === 'FSD_OFFLINE_SEL_SYNC_RESULT' ? 'SEL' : 'W');
+          const resultCode = msg.type === 'FSD_OFFLINE_SFA_SYNC_RESULT' ? 'SFA' :
+            (msg.type === 'FSD_OFFLINE_SEL_SYNC_RESULT' ? 'SEL' :
+            (msg.type === 'FSD_OFFLINE_PWS_SYNC_RESULT' ? 'PWS' :
+            (msg.type === 'FSD_OFFLINE_MO_SYNC_RESULT' ? 'MO' : 'W')));
           if (result.ok && result.offlineId) {
             const sourceItem = (pendingShellAction && pendingShellAction.item) || getOfflineItemById(result.offlineId);
             if (sourceItem && sourceItem.draft) {
@@ -8812,7 +9221,7 @@ function applyOfflineLookupSelection(row) {
 
     }());
   </script>
-  <div class="fixed-version-badge">FSD Certs · Minimal Home C96s</div>
+  <div class="fixed-version-badge">FSD Certs · Minimal Home C97g</div>
 
 
   <!-- C93p Premium Home clock -->
