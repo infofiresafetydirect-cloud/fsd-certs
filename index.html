@@ -3217,7 +3217,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
             <div><span>Total</span><strong id="calcTotal">£0.00</strong></div>
           </div>
           </div>
-          <div class="editor-section-title">Signatures</div>
+          <div id="offlineSignatureSectionStart" class="editor-section-title">Signatures</div>
           <div class="editor-field">
             <label id="editEngineerSignatureLabel">Engineer Signature</label>
             <canvas id="editEngineerSignature" class="offline-signature-canvas"></canvas>
@@ -4011,14 +4011,26 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
       let offlineEngineerSignatureData = '';
       let offlineCustomerSignatureData = '';
       let sigHelperLocalTarget = '';
-      // C97ap: repeatable ESR Add Pages. One editor stays mounted for iPad
-      // performance; independent snapshots are switched with the page controls.
+      // C97ap/C97aq: repeatable ESR Add Pages. One editor stays mounted for iPad
+      // performance; independent snapshots retain their actual add order.
       const OFFLINE_REPEAT_TYPE_MAP = { SFA:'FIRE_ALARM', SEL:'EMERGENCY_LIGHTING', FAC:'FIRE_ALARM_COMMISSIONING', FAM:'FIRE_ALARM_MODIFICATION', PSC:'POWER_SUPPLY', SLT:'SOUND_LEVEL_TEST' };
       const OFFLINE_REPEAT_CODE_MAP = { FIRE_ALARM:'SFA', EMERGENCY_LIGHTING:'SEL', FIRE_ALARM_COMMISSIONING:'FAC', FIRE_ALARM_MODIFICATION:'FAM', POWER_SUPPLY:'PSC', SOUND_LEVEL_TEST:'SLT' };
       const OFFLINE_REPEAT_SECTION_MAP = { SFA:'sfaOfflineFields', SEL:'selOfflineFields', FAC:'facOfflineFields', FAM:'famOfflineFields', PSC:'pscOfflineFields', SLT:'sltOfflineFields' };
       let offlineRepeatPages = {};
       let offlineRepeatCurrent = {};
       let offlineRepeatDefaults = {};
+      let offlineRepeatSequence = [];
+      let offlineRepeatInstanceCounter = 0;
+
+      function offlineRepeatNewPage(code, data) {
+        offlineRepeatInstanceCounter += 1;
+        return {
+          type:OFFLINE_REPEAT_TYPE_MAP[code],
+          code:code,
+          data:data || {},
+          instanceId:'OFFLINE-PAGE-' + offlineRepeatInstanceCounter
+        };
+      }
 
       function offlineRepeatFilterDraft(code, draft) {
         const out = {};
@@ -4125,13 +4137,29 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
 
       function offlineRepeatRestoreDraft(draft) {
         const supplied = Array.isArray(draft && draft.addedReportInstances) ? draft.addedReportInstances : null;
+        offlineRepeatSequence = [];
         Object.keys(OFFLINE_REPEAT_TYPE_MAP).forEach(function(code) {
-          const type = OFFLINE_REPEAT_TYPE_MAP[code];
-          let rows = supplied ? supplied.filter(function(row){ return row && row.type === type; }) : [];
-          if (!supplied && getOfflineInlineFlag(code)) rows = [{ type:type, data:offlineRepeatFilterDraft(code, draft) }];
-          offlineRepeatPages[code] = rows.map(function(row){ return { type:type, data:row.data || {} }; });
+          offlineRepeatPages[code] = [];
           offlineRepeatCurrent[code] = 0;
-          setOfflineInlineFlag(code, offlineRepeatPages[code].length > 0);
+        });
+        if (supplied) {
+          supplied.forEach(function(row) {
+            const code = OFFLINE_REPEAT_CODE_MAP[String(row && row.type || '').toUpperCase()];
+            if (!code) return;
+            const page = offlineRepeatNewPage(code, row.data || {});
+            offlineRepeatPages[code].push(page);
+            offlineRepeatSequence.push(page);
+          });
+        } else {
+          Object.keys(OFFLINE_REPEAT_TYPE_MAP).forEach(function(code) {
+            if (!getOfflineInlineFlag(code)) return;
+            const page = offlineRepeatNewPage(code, offlineRepeatFilterDraft(code, draft));
+            offlineRepeatPages[code].push(page);
+            offlineRepeatSequence.push(page);
+          });
+        }
+        Object.keys(OFFLINE_REPEAT_TYPE_MAP).forEach(function(code) {
+          setOfflineInlineFlag(code, (offlineRepeatPages[code] || []).length > 0);
           if (offlineRepeatPages[code].length) offlineRepeatRestoreDom(code, offlineRepeatPages[code][0].data);
           else offlineRepeatRestoreDom(code, offlineRepeatDefaults[code] || {});
           offlineRepeatRenderPager(code);
@@ -4141,13 +4169,33 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
 
       function offlineRepeatAttachToDraft(draft) {
         if (activeOfflineReportCode !== 'W') return draft;
-        const out = [];
         Object.keys(OFFLINE_REPEAT_TYPE_MAP).forEach(function(code) {
           offlineRepeatSyncCode(code);
-          (offlineRepeatPages[code] || []).forEach(function(page){ out.push({ type:OFFLINE_REPEAT_TYPE_MAP[code], data:page.data || {} }); });
         });
-        draft.addedReportInstances = out;
+        draft.addedReportInstances = offlineRepeatSequence.map(function(page) {
+          return { type:page.type, data:page.data || {} };
+        });
         return draft;
+      }
+
+      function arrangeOfflineAddedPagesAtBottom() {
+        if (['W', 'SFA', 'SEL'].indexOf(activeOfflineReportCode) === -1) return;
+        const signatureStart = document.getElementById('offlineSignatureSectionStart');
+        const controls = document.getElementById('offlineAddCertControls');
+        if (!signatureStart || !signatureStart.parentNode || !controls) return;
+        if (activeOfflineReportCode === 'W') {
+          const typeOrder = [];
+          offlineRepeatSequence.forEach(function(page) {
+            const existing = typeOrder.indexOf(page.code);
+            if (existing !== -1) typeOrder.splice(existing, 1);
+            typeOrder.push(page.code);
+          });
+          typeOrder.forEach(function(code) {
+            const section = document.getElementById(OFFLINE_REPEAT_SECTION_MAP[code] || '');
+            if (section && (offlineRepeatPages[code] || []).length) signatureStart.parentNode.insertBefore(section, signatureStart);
+          });
+        }
+        signatureStart.parentNode.insertBefore(controls, signatureStart);
       }
 
       function offlineRepeatEnsureDefaults() {
@@ -6413,6 +6461,7 @@ function clearOfflineLookupCustomerChunks() {
         }
         if (slt && !document.querySelector('#offlineSltReadings .offline-slt-reading')) renderOfflineSltReadings([]);
         calculateOfflinePsc();
+        arrangeOfflineAddedPagesAtBottom();
       }
 
       window.addOfflineInlineCert = function addOfflineInlineCert(event, type) {
@@ -6426,7 +6475,9 @@ function clearOfflineLookupCustomerChunks() {
           const pages = offlineRepeatPages[type] || (offlineRepeatPages[type] = []);
           if (pages.length) offlineRepeatSyncCode(type);
           const blank = JSON.parse(JSON.stringify(offlineRepeatDefaults[type] || {}));
-          pages.push({ type:OFFLINE_REPEAT_TYPE_MAP[type], data:blank });
+          const page = offlineRepeatNewPage(type, blank);
+          pages.push(page);
+          offlineRepeatSequence.push(page);
           offlineRepeatCurrent[type] = pages.length - 1;
           setOfflineInlineFlag(type, true);
           updateOfflineInlineCertUi();
@@ -6453,7 +6504,8 @@ function clearOfflineLookupCustomerChunks() {
           const pages = offlineRepeatPages[type] || [];
           if (pages.length) {
             const index = offlineRepeatCurrent[type] || 0;
-            pages.splice(index, 1);
+            const removed = pages.splice(index, 1)[0];
+            offlineRepeatSequence = offlineRepeatSequence.filter(function(page) { return page !== removed; });
             offlineRepeatCurrent[type] = Math.max(0, Math.min(index, pages.length - 1));
             setOfflineInlineFlag(type, pages.length > 0);
             if (pages.length) offlineRepeatRestoreDom(type, pages[offlineRepeatCurrent[type]].data || {});
