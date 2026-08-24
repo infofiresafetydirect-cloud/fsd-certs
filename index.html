@@ -4011,6 +4011,150 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
       let offlineEngineerSignatureData = '';
       let offlineCustomerSignatureData = '';
       let sigHelperLocalTarget = '';
+      // C97ap: repeatable ESR Add Pages. One editor stays mounted for iPad
+      // performance; independent snapshots are switched with the page controls.
+      const OFFLINE_REPEAT_TYPE_MAP = { SFA:'FIRE_ALARM', SEL:'EMERGENCY_LIGHTING', FAC:'FIRE_ALARM_COMMISSIONING', FAM:'FIRE_ALARM_MODIFICATION', PSC:'POWER_SUPPLY', SLT:'SOUND_LEVEL_TEST' };
+      const OFFLINE_REPEAT_CODE_MAP = { FIRE_ALARM:'SFA', EMERGENCY_LIGHTING:'SEL', FIRE_ALARM_COMMISSIONING:'FAC', FIRE_ALARM_MODIFICATION:'FAM', POWER_SUPPLY:'PSC', SOUND_LEVEL_TEST:'SLT' };
+      const OFFLINE_REPEAT_SECTION_MAP = { SFA:'sfaOfflineFields', SEL:'selOfflineFields', FAC:'facOfflineFields', FAM:'famOfflineFields', PSC:'pscOfflineFields', SLT:'sltOfflineFields' };
+      let offlineRepeatPages = {};
+      let offlineRepeatCurrent = {};
+      let offlineRepeatDefaults = {};
+
+      function offlineRepeatFilterDraft(code, draft) {
+        const out = {};
+        const tests = {
+          SFA: function(key){ return key.indexOf('fa') === 0 || ['bafeCompliance','saveFaEquipmentTotals'].indexOf(key) !== -1; },
+          SEL: function(key){ return key.indexOf('el') === 0; },
+          FAC: function(key){ return key.indexOf('fac') === 0; },
+          FAM: function(key){ return key.indexOf('fam') === 0; },
+          PSC: function(key){ return key.indexOf('psc') === 0; },
+          SLT: function(key){ return key.indexOf('slt') === 0; }
+        };
+        Object.keys(draft || {}).forEach(function(key) { if (tests[code] && tests[code](key)) out[key] = draft[key]; });
+        return out;
+      }
+
+      function offlineRepeatKeyForElement(code, id) {
+        const raw = String(id || '').replace(/^edit/, '');
+        const exact = {
+          SfaLastServiceVisit:'faLastServiceVisit', SfaNextServiceVisit:'faNextServiceVisit', SfaServiceVisit:'faServiceVisit',
+          SfaBafeCompliance:'faBafeCompliance', SaveFaEquipmentTotals:'faSaveEquipmentTotals',
+          SelServiceVisit:'elServiceVisit', SelLastServiceVisit:'elLastServiceVisit', SelNextServiceVisit:'elNextServiceVisit',
+          SelSubTotal:'elSubTotal', SelVat:'elVat', SelTotal:'elTotal'
+        };
+        if (exact[raw]) return exact[raw];
+        return raw ? raw.charAt(0).toLowerCase() + raw.slice(1) : '';
+      }
+
+      function offlineRepeatCaptureDom(code) {
+        const section = document.getElementById(OFFLINE_REPEAT_SECTION_MAP[code] || '');
+        const out = {};
+        if (!section) return out;
+        section.querySelectorAll('input[id],textarea[id],select[id]').forEach(function(el) {
+          const key = offlineRepeatKeyForElement(code, el.id);
+          if (key) out[key] = el.type === 'checkbox' ? (el.checked ? 'YES' : 'NO') : el.value;
+        });
+        if (code === 'SFA') out.faEquipmentRows = collectSfaEquipmentList();
+        if (code === 'SLT') out.sltReadings = collectOfflineSltReadings();
+        if (code === 'FAC') {
+          out.facCheckResults = {};
+          FAC_OFFLINE_OPERATIONAL_KEYS.forEach(function(key){ out.facCheckResults[key + 'Total'] = getEditValue('editFacCheck_' + key + 'Total'); });
+          FAC_OFFLINE_CHECK_KEYS.forEach(function(key){ out.facCheckResults[key] = getEditValue('editFacCheck_' + key) || 'NA'; });
+        }
+        if (code === 'FAM') {
+          out.famCheckResults = {};
+          FAM_OFFLINE_CHECK_KEYS.forEach(function(key){ out.famCheckResults[key + 'Total'] = getEditValue('editFamCheck_' + key + 'Total'); out.famCheckResults[key] = getEditValue('editFamCheck_' + key) || 'NA'; });
+          FAM_OFFLINE_DOC_KEYS.forEach(function(key){ out.famCheckResults[key] = getEditValue('editFamCheck_' + key) || 'NA'; });
+        }
+        return out;
+      }
+
+      function offlineRepeatRestoreDom(code, data) {
+        const section = document.getElementById(OFFLINE_REPEAT_SECTION_MAP[code] || '');
+        data = data || {};
+        if (!section) return;
+        section.querySelectorAll('input[id],textarea[id],select[id]').forEach(function(el) {
+          const key = offlineRepeatKeyForElement(code, el.id);
+          const value = Object.prototype.hasOwnProperty.call(data, key) ? data[key] : '';
+          if (el.type === 'checkbox') el.checked = String(value).toUpperCase() === 'YES';
+          else el.value = value == null ? '' : value;
+        });
+        if (code === 'SFA') renderSfaEquipmentList(data.faEquipmentRows || []);
+        if (code === 'SLT') renderOfflineSltReadings(data.sltReadings || []);
+        if (code === 'PSC') calculateOfflinePsc();
+      }
+
+      function offlineRepeatSyncCode(code) {
+        const pages = offlineRepeatPages[code] || [];
+        const index = offlineRepeatCurrent[code] || 0;
+        if (pages[index]) pages[index].data = offlineRepeatCaptureDom(code);
+      }
+
+      function offlineRepeatRenderPager(code) {
+        const pages = offlineRepeatPages[code] || [];
+        const summary = document.getElementById('offlineInlineCertSummary');
+        let pager = document.getElementById('offlineRepeatPager_' + code);
+        if (!summary || !pages.length || activeOfflineReportCode !== 'W') {
+          if (pager) pager.remove();
+          return;
+        }
+        if (!pager) {
+          pager = document.createElement('div');
+          pager.id = 'offlineRepeatPager_' + code;
+          pager.className = 'editor-quick-row';
+          summary.parentNode.insertBefore(pager, summary.nextSibling);
+        }
+        const index = Math.max(0, Math.min(offlineRepeatCurrent[code] || 0, pages.length - 1));
+        offlineRepeatCurrent[code] = index;
+        pager.innerHTML = '<strong>' + code + ' ' + (index + 1) + ' of ' + pages.length + '</strong>' +
+          '<button class="editor-mini-btn" type="button" onclick="return selectOfflineRepeatPage(event,\'' + code + '\',' + (index - 1) + ')"' + (index <= 0 ? ' disabled' : '') + '>Previous</button>' +
+          '<button class="editor-mini-btn" type="button" onclick="return selectOfflineRepeatPage(event,\'' + code + '\',' + (index + 1) + ')"' + (index >= pages.length - 1 ? ' disabled' : '') + '>Next</button>';
+      }
+
+      window.selectOfflineRepeatPage = function selectOfflineRepeatPage(event, code, index) {
+        stopTap(event);
+        const pages = offlineRepeatPages[code] || [];
+        if (index < 0 || index >= pages.length) return false;
+        offlineRepeatSyncCode(code);
+        offlineRepeatCurrent[code] = index;
+        offlineRepeatRestoreDom(code, pages[index].data || {});
+        offlineRepeatRenderPager(code);
+        setEditorDirty(true);
+        return false;
+      };
+
+      function offlineRepeatRestoreDraft(draft) {
+        const supplied = Array.isArray(draft && draft.addedReportInstances) ? draft.addedReportInstances : null;
+        Object.keys(OFFLINE_REPEAT_TYPE_MAP).forEach(function(code) {
+          const type = OFFLINE_REPEAT_TYPE_MAP[code];
+          let rows = supplied ? supplied.filter(function(row){ return row && row.type === type; }) : [];
+          if (!supplied && getOfflineInlineFlag(code)) rows = [{ type:type, data:offlineRepeatFilterDraft(code, draft) }];
+          offlineRepeatPages[code] = rows.map(function(row){ return { type:type, data:row.data || {} }; });
+          offlineRepeatCurrent[code] = 0;
+          setOfflineInlineFlag(code, offlineRepeatPages[code].length > 0);
+          if (offlineRepeatPages[code].length) offlineRepeatRestoreDom(code, offlineRepeatPages[code][0].data);
+          else offlineRepeatRestoreDom(code, offlineRepeatDefaults[code] || {});
+          offlineRepeatRenderPager(code);
+        });
+        updateOfflineInlineCertUi();
+      }
+
+      function offlineRepeatAttachToDraft(draft) {
+        if (activeOfflineReportCode !== 'W') return draft;
+        const out = [];
+        Object.keys(OFFLINE_REPEAT_TYPE_MAP).forEach(function(code) {
+          offlineRepeatSyncCode(code);
+          (offlineRepeatPages[code] || []).forEach(function(page){ out.push({ type:OFFLINE_REPEAT_TYPE_MAP[code], data:page.data || {} }); });
+        });
+        draft.addedReportInstances = out;
+        return draft;
+      }
+
+      function offlineRepeatEnsureDefaults() {
+        Object.keys(OFFLINE_REPEAT_TYPE_MAP).forEach(function(code) {
+          if (!offlineRepeatDefaults[code]) offlineRepeatDefaults[code] = offlineRepeatCaptureDom(code);
+        });
+      }
 
       const SFA_EQUIPMENT_DEFAULT_ROWS = [
         ['Control Panels (Function Led’s)', 'Equipment List'],
@@ -6196,7 +6340,7 @@ function clearOfflineLookupCustomerChunks() {
           SLT: 'offlineAddSltBtn'
         };
         const button = document.getElementById(ids[type] || '');
-        if (button) button.classList.toggle('hidden-report-fields', !allowed || offlineModuleIncluded(type));
+        if (button) button.classList.toggle('hidden-report-fields', !allowed || (activeOfflineReportCode !== 'W' && offlineModuleIncluded(type)));
       }
 
       function updateOfflineInlineCertUi() {
@@ -6261,10 +6405,10 @@ function clearOfflineLookupCustomerChunks() {
           if (getOfflineInlineFlag('W')) names.push('Engineer Service Report');
           if (getOfflineInlineFlag('SFA')) names.push('Fire Alarm Report');
           if (getOfflineInlineFlag('SEL')) names.push('Emergency Lighting Report');
-          if (fac) names.push('FAC Commissioning');
-          if (fam) names.push('FAM Modification');
-          if (psc) names.push('PSC Power Supply');
-          if (slt) names.push('Sound Level Test');
+          if (fac) names.push('FAC Commissioning' + (activeOfflineReportCode === 'W' && (offlineRepeatPages.FAC || []).length > 1 ? ' × ' + offlineRepeatPages.FAC.length : ''));
+          if (fam) names.push('FAM Modification' + (activeOfflineReportCode === 'W' && (offlineRepeatPages.FAM || []).length > 1 ? ' × ' + offlineRepeatPages.FAM.length : ''));
+          if (psc) names.push('PSC Power Supply' + (activeOfflineReportCode === 'W' && (offlineRepeatPages.PSC || []).length > 1 ? ' × ' + offlineRepeatPages.PSC.length : ''));
+          if (slt) names.push('Sound Level Test' + (activeOfflineReportCode === 'W' && (offlineRepeatPages.SLT || []).length > 1 ? ' × ' + offlineRepeatPages.SLT.length : ''));
           summary.textContent = names.length ? ('Added pages: ' + names.join(', ')) : 'No extra pages added yet.';
         }
         if (slt && !document.querySelector('#offlineSltReadings .offline-slt-reading')) renderOfflineSltReadings([]);
@@ -6276,6 +6420,20 @@ function clearOfflineLookupCustomerChunks() {
         const allowed = OFFLINE_ADD_PAGE_RULES[activeOfflineReportCode] || [];
         if (allowed.indexOf(type) === -1) {
           setEditorStatus((type || 'This') + ' page is not available on the normal online ' + activeOfflineReportCode + ' parent report.');
+          return false;
+        }
+        if (activeOfflineReportCode === 'W' && OFFLINE_REPEAT_TYPE_MAP[type]) {
+          const pages = offlineRepeatPages[type] || (offlineRepeatPages[type] = []);
+          if (pages.length) offlineRepeatSyncCode(type);
+          const blank = JSON.parse(JSON.stringify(offlineRepeatDefaults[type] || {}));
+          pages.push({ type:OFFLINE_REPEAT_TYPE_MAP[type], data:blank });
+          offlineRepeatCurrent[type] = pages.length - 1;
+          setOfflineInlineFlag(type, true);
+          updateOfflineInlineCertUi();
+          offlineRepeatRestoreDom(type, blank);
+          offlineRepeatRenderPager(type);
+          setEditorDirty(true);
+          setEditorStatus(type + ' page ' + pages.length + ' added. It has its own independent fields.');
           return false;
         }
         setOfflineInlineFlag(type, true);
@@ -6290,6 +6448,24 @@ function clearOfflineLookupCustomerChunks() {
         if (activeOfflineReportCode === type) {
           setEditorStatus('The parent ' + type + ' report cannot be removed from its own pack.');
           return false;
+        }
+        if (activeOfflineReportCode === 'W' && OFFLINE_REPEAT_TYPE_MAP[type]) {
+          const pages = offlineRepeatPages[type] || [];
+          if (pages.length) {
+            const index = offlineRepeatCurrent[type] || 0;
+            pages.splice(index, 1);
+            offlineRepeatCurrent[type] = Math.max(0, Math.min(index, pages.length - 1));
+            setOfflineInlineFlag(type, pages.length > 0);
+            if (pages.length) offlineRepeatRestoreDom(type, pages[offlineRepeatCurrent[type]].data || {});
+            else offlineRepeatRestoreDom(type, offlineRepeatDefaults[type] || {});
+            const pager = document.getElementById('offlineRepeatPager_' + type);
+            if (pager && !pages.length) pager.remove();
+            updateOfflineInlineCertUi();
+            offlineRepeatRenderPager(type);
+            setEditorDirty(true);
+            setEditorStatus(type + ' page removed.');
+            return false;
+          }
         }
         setOfflineInlineFlag(type, false);
         updateOfflineInlineCertUi();
@@ -6914,6 +7090,7 @@ function clearOfflineLookupCustomerChunks() {
 
       function openEditorForItem(item) {
         if (!item || !item.draft) return;
+        offlineRepeatEnsureDefaults();
         // C96c: the report chooser is a separate screen, so always close it
         // before bringing any offline working copy into the shared editor.
         if (offlineReportChooser) offlineReportChooser.classList.remove('active');
@@ -7147,6 +7324,7 @@ function clearOfflineLookupCustomerChunks() {
         bindEditorChangeTracking();
         calculateEditorTotals();
         updateOfflineInlineCertUi();
+        if (report.code === 'W') offlineRepeatRestoreDraft(d);
         setEditorDirty(false);
         setEditorStatus('Editing the ' + report.code + ' working copy on this iPad. Press Save on iPad before leaving, or Save & Upload while online.');
       }
@@ -7877,6 +8055,7 @@ function clearOfflineLookupCustomerChunks() {
         d.customerSignatureStatus = getEditValue('editCustomerSignatureStatus') || 'SIGNATURE_REQUIRED';
         d.engineerSignature = offlineEngineerSignatureData || '';
         d.customerSignature = offlineCustomerSignatureData || '';
+        offlineRepeatAttachToDraft(d);
         const draftName = getEditValue('editDraftName') || item.draftName || buildEditorDraftName(d);
         const updated = Object.assign({}, item, {
           draft: d,
