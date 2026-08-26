@@ -442,6 +442,73 @@
     .sfa-local-note { grid-column: 1 / -1; padding: 10px 12px; border-radius: 14px; background: #fff7ed; color: #7c2d12; border: 1px solid #fed7aa; font-weight: 850; font-size: 13px; line-height: 1.35; }
     .editor-materials { grid-column: 1 / -1; display: grid; gap: 8px; }
     .nested-editor-grid { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+
+    /* C97au: make offline Portables follow the normal online worksheet layout. */
+    .offline-editor-screen.portable-online-look-screen { align-items: flex-start; background: #f8fafc; }
+    .editor-card.portable-online-look {
+      width: min(1120px, 100%); max-height: none; overflow: visible; border-radius: 0;
+      background: #f8fafc; border: 0; box-shadow: none; padding: 4px 0 28px;
+    }
+    .portable-online-look .editor-head,
+    .portable-online-look .offline-portable-panel,
+    .portable-online-look .offline-job-panel {
+      background: #ffffff; border: 1px solid #e2e8f0; box-shadow: 0 7px 22px rgba(15,23,42,.07);
+    }
+    .portable-online-look .editor-head { padding: 16px; border-radius: 18px; }
+    .portable-online-look .editor-head h2 { color: #991b1b; }
+    .portable-online-look #portableOfflineHeading { display: none; }
+    .offline-job-panel { display: contents; }
+    .portable-online-look .offline-job-panel {
+      grid-column: 1 / -1; display: grid; grid-template-columns: repeat(2,minmax(0,1fr));
+      gap: 12px; padding: 16px; border-radius: 18px;
+    }
+    .portable-online-look .offline-esr-job-heading {
+      margin: 0 0 2px; padding: 0 0 7px; border-radius: 0; color: #991b1b;
+      background: transparent; border: 0; border-bottom: 2px solid #991b1b; box-shadow: none;
+    }
+    .offline-portable-panel {
+      grid-column: 1 / -1; display: grid; grid-template-columns: repeat(3,minmax(0,1fr));
+      gap: 12px; padding: 16px; border-radius: 18px;
+    }
+    .offline-portable-panel-title {
+      grid-column: 1 / -1; margin: 0 0 2px; padding-bottom: 7px; color: #991b1b;
+      border-bottom: 2px solid #991b1b; font-size: 18px; font-weight: 950;
+    }
+    .offline-portable-panel .editor-field label { color: #334155; text-transform: none; font-size: 13px; }
+    .offline-portable-panel .editor-field input,
+    .offline-portable-panel .editor-field select,
+    .offline-portable-panel .editor-field textarea { border-radius: 10px; }
+    .offline-portable-equipment { grid-template-columns: 1fr; }
+    .portable-offline-table-wrap {
+      width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch;
+    }
+    .portable-offline-table-head,
+    .portable-offline-row.portable-service-row {
+      display: grid;
+      grid-template-columns: 46px minmax(145px,1.45fr) minmax(76px,.72fr) minmax(76px,.72fr) minmax(76px,.72fr) minmax(145px,1.45fr) 40px;
+      gap: 5px; align-items: center; min-width: 650px;
+    }
+    .portable-offline-table-head {
+      padding: 8px 6px; border-radius: 10px 10px 0 0; background: #172033; color: #ffffff;
+      font-size: 11px; font-weight: 950;
+    }
+    #portableOfflineRows { display: grid; gap: 4px; }
+    .portable-offline-row.portable-service-row {
+      margin: 0; padding: 4px 6px; border: 1px solid #e2e8f0; border-radius: 7px;
+      background: #ffffff; box-shadow: none;
+    }
+    .portable-service-cell { min-width: 0; }
+    .portable-service-cell label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); }
+    .portable-service-cell input {
+      width: 100%; min-width: 0; min-height: 40px; margin: 0; padding: 7px; border: 1px solid #cbd5e1;
+      border-radius: 6px; background: #ffffff; color: #111827; font: inherit; font-size: 16px;
+    }
+    .portable-service-cell .porWalk { text-align: center; font-weight: 950; background: #f8fafc; }
+    .portable-service-remove {
+      width: 38px; min-height: 40px; padding: 4px; border: 0; border-radius: 8px;
+      background: #475569; color: #ffffff; font-size: 20px; font-weight: 950;
+    }
+    .portable-legacy-field { display: none !important; }
     .sfa-table-wrap { grid-column: 1 / -1; overflow-x: auto; border: 1px solid #e2e8f0; border-radius: 14px; background: #fff; }
     table.sfa-equip-table { width: 100%; min-width: 920px; border-collapse: collapse; font-size: 13px; }
     table.sfa-equip-table th { background: #b91c1c; color: #111827; padding: 8px; text-align: left; }
@@ -507,6 +574,8 @@
       .editor-grid { grid-template-columns: 1fr; }
       .editor-material-row { grid-template-columns: 1fr; }
         .nested-editor-grid { grid-template-columns: 1fr; }
+        .offline-portable-panel { grid-template-columns: 1fr; }
+        .portable-online-look .offline-job-panel { grid-template-columns: 1fr; }
         .offline-slt-reading { grid-template-columns: 42px 1fr 1fr; }
         .offline-slt-reading .slt-comments { grid-column: 1 / -1; }
       .editor-actions { grid-template-columns: 1fr; }
@@ -2806,7 +2875,8 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
       <form id="offlineWEditorForm" onsubmit="return saveOfflineEditor(event)">
         <div class="editor-grid">
           <input type="hidden" id="editOfflineId">
-          <div class="editor-section-title offline-esr-job-heading">Job Details</div>
+          <div class="offline-job-panel">
+          <div id="offlineJobDetailsHeading" class="editor-section-title offline-esr-job-heading">Job Details</div>
           <div class="editor-field editor-wide"><label>Draft name</label><input id="editDraftName"></div>
           <div class="editor-quick-row">
             <button class="editor-mini-btn" type="button" onclick="autoNameOfflineW(event)">Auto-name from customer/site</button>
@@ -2824,9 +2894,12 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
             <button class="editor-mini-btn" type="button" onclick="copyOfflineInvoiceToSite(event)">Same as Invoice</button>
           </div>
           <div id="offlineEditorLookupStatus" class="sfa-local-note editor-wide">Offline customer picker uses the last synced customer/site list saved on this device.</div>
+          </div>
 
           <div id="portableOfflineFields" class="nested-editor-grid hidden-report-fields">
             <div class="editor-section-title" id="portableOfflineHeading">Portables</div>
+            <div class="offline-portable-panel portable-mo-only">
+              <div class="offline-portable-panel-title">Order details</div>
             <div class="editor-field portable-mo-only"><label>Price List</label><select id="editPortablePriceList"><option value="">Select price list</option><option value="Swansea">Swansea</option><option value="Pembroke">Pembroke</option></select></div>
             <div class="editor-field portable-mo-only"><label>Manual Order No.</label><input id="editPortableReportNo"></div>
             <div class="editor-field portable-mo-only"><label>Customer Order No.</label><input id="editPortableCustomerOrderNo"></div>
@@ -2843,6 +2916,10 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
             <div class="editor-field portable-mo-only"><label>Delivery</label><select id="editPortableOrderDelivery"><option value=""></option><option value="YES">YES</option><option value="NO">NO</option></select></div>
             <div class="editor-field portable-mo-only"><label>Inspection</label><select id="editPortableOrderInspection"><option value=""></option><option value="YES">YES</option><option value="NO">NO</option></select></div>
             <div class="editor-field portable-mo-only"><label>Training</label><select id="editPortableOrderTraining"><option value=""></option><option value="YES">YES</option><option value="NO">NO</option></select></div>
+              <div class="editor-field portable-mo-only"><label>ASB Report Available</label><select id="editPortableAsbestosReportMo"><option value=""></option><option value="YES">YES</option><option value="NO">NO</option></select></div>
+            </div>
+            <div class="offline-portable-panel portable-pws-only">
+              <div class="offline-portable-panel-title">Service details</div>
             <div class="editor-field portable-pws-only"><label>Ext. ID</label><input id="editPortableExtId"></div>
             <div class="editor-field portable-pws-only"><label>F Action</label><input id="editPortableFAction"></div>
             <div class="editor-field portable-pws-only"><label>F Exit</label><input id="editPortableFExit"></div>
@@ -2854,19 +2931,28 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
             <div class="editor-field portable-pws-only"><label>Risk Assessment Available</label><select id="editPortableRiskAssessment"><option value=""></option><option value="YES">YES</option><option value="NO">NO</option></select></div>
             <div class="editor-field"><label>ASB Report Available</label><select id="editPortableAsbestosReport"><option value=""></option><option value="YES">YES</option><option value="NO">NO</option></select></div>
             <div class="editor-field portable-pws-only"><label>Staff Training Required</label><select id="editPortableStaffTraining"><option value=""></option><option value="YES">YES</option><option value="NO">NO</option></select></div>
-            <div class="editor-section-title">Worksheet / Order Rows</div>
-            <div id="portableOfflineRows" class="editor-wide"></div>
+            </div>
+            <div class="offline-portable-panel offline-portable-equipment">
+            <div id="portableOfflineRowsHeading" class="offline-portable-panel-title">Equipment inspected</div>
+            <div class="portable-offline-table-wrap">
+              <div class="portable-offline-table-head portable-pws-only"><span>Walk</span><span>Comments</span><span>Mfr.</span><span>Type</span><span>Size</span><span>Location</span><span></span></div>
+              <div id="portableOfflineRows" class="editor-wide"></div>
+            </div>
             <div class="editor-quick-row editor-wide">
               <button class="editor-mini-btn portable-pws-only" type="button" onclick="addPortableOfflineRows(event)">+ Add another page of rows</button>
               <div class="sfa-local-note portable-mo-only">Choose the price list above, then use Pick Material on the required order row.</div>
             </div>
-            <div class="editor-section-title portable-pws-only">Fire Door Safety Check</div>
+            </div>
+            <div class="offline-portable-panel portable-pws-only">
+            <div class="offline-portable-panel-title">Fire Door Safety Check</div>
             <div class="editor-field portable-pws-only"><label>No. of Fire Doors checked</label><input id="editPortableFireDoorsChecked"></div>
             <div class="editor-field portable-pws-only"><label>No. of Intumescent Strips missing/damaged</label><input id="editPortableIntumescentStrips"></div>
             <div class="editor-field portable-pws-only"><label>Cost for updating</label><input id="editPortableFireDoorCost" inputmode="decimal"></div>
             <div class="editor-field portable-pws-only"><label>No. of Doors not closing properly</label><input id="editPortableDoorsNotClosing"></div>
             <div class="editor-field portable-pws-only"><label>No. of Door Closures not working properly</label><input id="editPortableDoorClosuresFaulty"></div>
-            <div class="editor-section-title portable-pws-only">Site Equipment Summary</div>
+            </div>
+            <div class="offline-portable-panel portable-pws-only">
+            <div class="offline-portable-panel-title">Site Equipment Summary</div>
             <div class="editor-field portable-pws-only"><label>Hose Reels</label><input id="editPortableHoseReels"></div>
             <div class="editor-field portable-pws-only"><label>Fire Blankets</label><input id="editPortableFireBlankets"></div>
             <div class="editor-field portable-pws-only"><label>Wet Chem.</label><input id="editPortableWetChem"></div>
@@ -2876,6 +2962,9 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
             <div class="editor-field portable-pws-only"><label>CO2 Ext.</label><input id="editPortableCo2Ext"></div>
             <div class="editor-field portable-pws-only"><label>Equipment Total</label><input id="editPortableEquipmentTotal"></div>
             <div class="editor-field portable-pws-only"><label>Log Book Completed</label><select id="editPortableLogBookCompleted"><option value=""></option><option value="YES">YES</option><option value="NO">NO</option></select></div>
+            </div>
+            <div class="offline-portable-panel">
+            <div class="offline-portable-panel-title">Completion</div>
             <div class="editor-field editor-wide portable-pws-only"><label>Equipment Changed / Replaced</label><textarea id="editPortableChangedEquipment"></textarea></div>
             <div class="editor-field editor-wide"><label>Engineer Comments / Special Instructions</label><textarea id="editPortableComments"></textarea></div>
             <div class="editor-field portable-pws-only"><label>Service Cost</label><input id="editPortableServiceCost" inputmode="decimal"></div>
@@ -2887,6 +2976,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
             <div class="editor-field portable-mo-only"><label>Customer Position</label><input id="editPortableCustomerPosition"></div>
             <div class="editor-field portable-mo-only"><label>Received Name</label><input id="editPortableReceivedName"></div>
             <div class="editor-field portable-mo-only"><label>Date Received</label><input id="editPortableReceivedDate" type="date"></div>
+            </div>
           </div>
 
           <div id="offlineAddCertControls" class="nested-editor-grid">
@@ -6923,22 +7013,21 @@ function clearOfflineLookupCustomerChunks() {
         item = item || {};
         const service = activeOfflineReportCode === 'PWS';
         const row = document.createElement('div');
-        row.className = 'card portable-offline-row';
+        row.className = service ? 'portable-offline-row portable-service-row' : 'card portable-offline-row';
         if (service) {
           row.innerHTML =
-            '<div class="editor-grid">' +
-            '<div class="editor-field"><label class="portableWalkLabel">Walk</label><input class="porWalk" readonly></div>' +
-            '<div class="editor-field"><label>Comment</label><input class="porComment" value="' + escapeHtml(item.comment || '') + '"></div>' +
-            '<div class="editor-field"><label>Mfr.</label><input class="porMfr" value="' + escapeHtml(item.mfr || '') + '"></div>' +
-            '<div class="editor-field"><label>Type</label><input class="porType" value="' + escapeHtml(item.type || '') + '"></div>' +
-            '<div class="editor-field"><label>Size</label><input class="porSize" value="' + escapeHtml(item.size || '') + '"></div>' +
-            '<div class="editor-field"><label>Location</label><input class="porLocation" value="' + escapeHtml(item.location || '') + '"></div>' +
-            '<div class="editor-field"><label>DC/T</label><input class="porDct" value="' + escapeHtml(item.dct || '') + '"></div>' +
-            '<div class="editor-field"><label>Frq.</label><input class="porFrq" value="' + escapeHtml(item.frq || '') + '"></div>' +
-            '<div class="editor-field"><label>Ym</label><input class="porYm" value="' + escapeHtml(item.ym || '') + '"></div>' +
-            '<div class="editor-field"><label>Gross</label><input class="porGross" value="' + escapeHtml(item.gross || '') + '"></div>' +
-            '<div class="editor-field"><label>Sp/Ca</label><input class="porSpca" value="' + escapeHtml(item.spca || '') + '"></div>' +
-            '</div><button class="button third" type="button" onclick="this.closest(\'.portable-offline-row\').remove();updatePortableOfflineWalkNumbers()">Remove Row</button>';
+            '<div class="portable-service-cell"><label class="portableWalkLabel">Walk</label><input class="porWalk" readonly></div>' +
+            '<div class="portable-service-cell"><label>Comments</label><input class="porComment" value="' + escapeHtml(item.comment || '') + '"></div>' +
+            '<div class="portable-service-cell"><label>Mfr.</label><input class="porMfr" value="' + escapeHtml(item.mfr || '') + '"></div>' +
+            '<div class="portable-service-cell"><label>Type</label><input class="porType" value="' + escapeHtml(item.type || '') + '"></div>' +
+            '<div class="portable-service-cell"><label>Size</label><input class="porSize" value="' + escapeHtml(item.size || '') + '"></div>' +
+            '<div class="portable-service-cell"><label>Location</label><input class="porLocation" value="' + escapeHtml(item.location || '') + '"></div>' +
+            '<input class="porDct portable-legacy-field" value="' + escapeHtml(item.dct || '') + '">' +
+            '<input class="porFrq portable-legacy-field" value="' + escapeHtml(item.frq || '') + '">' +
+            '<input class="porYm portable-legacy-field" value="' + escapeHtml(item.ym || '') + '">' +
+            '<input class="porGross portable-legacy-field" value="' + escapeHtml(item.gross || '') + '">' +
+            '<input class="porSpca portable-legacy-field" value="' + escapeHtml(item.spca || '') + '">' +
+            '<button class="portable-service-remove" type="button" aria-label="Remove row" onclick="this.closest(\'.portable-offline-row\').remove();updatePortableOfflineWalkNumbers()">×</button>';
         } else {
           row.innerHTML =
             '<div class="editor-grid">' +
@@ -7138,6 +7227,13 @@ function clearOfflineLookupCustomerChunks() {
         const portableFields = document.getElementById('portableOfflineFields');
         const portableHeading = document.getElementById('portableOfflineHeading');
         const signatureLabel = document.getElementById('editEngineerSignatureLabel');
+        const editorCard = offlineEditor && offlineEditor.querySelector ? offlineEditor.querySelector('.editor-card') : null;
+        const jobHeading = document.getElementById('offlineJobDetailsHeading');
+        const portableRowsHeading = document.getElementById('portableOfflineRowsHeading');
+        if (offlineEditor) offlineEditor.classList.toggle('portable-online-look-screen', isPortable);
+        if (editorCard) editorCard.classList.toggle('portable-online-look', isPortable);
+        if (jobHeading) jobHeading.textContent = isPortable ? 'Customer and job' : 'Job Details';
+        if (portableRowsHeading) portableRowsHeading.textContent = report && report.code === 'MO' ? 'Order lines' : 'Equipment inspected';
         if (addCertControls) addCertControls.classList.toggle('hidden-report-fields', isPortable);
         if (portableFields) portableFields.classList.toggle('hidden-report-fields', !isPortable);
         if (portableHeading) portableHeading.textContent = report && report.code === 'MO' ? 'Manual Order' : 'Portable Service Worksheet';
@@ -7242,7 +7338,8 @@ function clearOfflineLookupCustomerChunks() {
         const titleEl = document.getElementById('offlineEditorTitle');
         const noteEl = document.getElementById('offlineEditorNote');
         const syncBtn = document.getElementById('offlineEditorSyncBtn');
-        if (titleEl) titleEl.textContent = report.code === 'W' ? 'Fire Safety Direct Certificate' : ('Edit ' + report.code + ' Draft');
+        if (titleEl) titleEl.textContent = report.code === 'W' ? 'Fire Safety Direct Certificate' :
+          (report.code === 'PWS' ? 'Service Worksheet' : (report.code === 'MO' ? 'Manual Order' : ('Edit ' + report.code + ' Draft')));
         if (noteEl) {
           noteEl.textContent = report.code === 'W'
             ? 'Engineer Service Report · Offline working copy. This follows the online ESR order and uses the same Report Pack Add Pages.'
@@ -7293,6 +7390,7 @@ function clearOfflineLookupCustomerChunks() {
         setEditValue('editPortableRightArrowCount', d.rightArrowCount || '');
         setEditValue('editPortableRiskAssessment', d.riskAssessment || '');
         setEditValue('editPortableAsbestosReport', d.asbestosReport || '');
+        setEditValue('editPortableAsbestosReportMo', d.asbestosReport || '');
         setEditValue('editPortableStaffTraining', d.staffTraining || '');
         setEditValue('editPortableFireDoorsChecked', d.fireDoorsChecked || '');
         setEditValue('editPortableIntumescentStrips', d.intumescentStrips || '');
@@ -7955,7 +8053,9 @@ function clearOfflineLookupCustomerChunks() {
           d.leftArrowCount = getEditValue('editPortableLeftArrowCount');
           d.rightArrowCount = getEditValue('editPortableRightArrowCount');
           d.riskAssessment = getEditValue('editPortableRiskAssessment');
-          d.asbestosReport = getEditValue('editPortableAsbestosReport');
+          d.asbestosReport = reportCodeForSave === 'MO'
+            ? getEditValue('editPortableAsbestosReportMo')
+            : getEditValue('editPortableAsbestosReport');
           d.staffTraining = getEditValue('editPortableStaffTraining');
           d.lines = collectPortableOfflineRows();
           d.fireDoorsChecked = getEditValue('editPortableFireDoorsChecked');
