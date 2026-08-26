@@ -3652,6 +3652,11 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
       ];
       const FSD_ENGINEER_COOKIE = 'fsdEngineerProfile';
 
+      function canonicalEngineerProfileName(name) {
+        const clean = String(name || '').trim();
+        return clean.toLowerCase() === 'samuel scanlan' ? 'Sam Scanlan' : clean;
+      }
+
       function safeStorageGet(store, key) {
         try { return String(store.getItem(key) || '').trim(); } catch (err) { return ''; }
       }
@@ -3726,7 +3731,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
       function getEngineerProfileFromUrl() {
         try {
           const params = new URLSearchParams(window.location.search || '');
-          return String(
+          return canonicalEngineerProfileName(
             params.get('engineer') ||
             params.get('fsdEngineer') ||
             params.get('profileEngineer') ||
@@ -3739,7 +3744,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
       }
 
       function currentShellProfileUrl(engineer) {
-        engineer = String(engineer || getDefaultEngineerProfile() || '').trim();
+        engineer = canonicalEngineerProfileName(engineer || getDefaultEngineerProfile() || '');
         const url = new URL(window.location.href);
         url.search = '';
         url.hash = '';
@@ -3755,20 +3760,24 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
         }
 
         let engineer = safeStorageGet(localStorage, FSD_DEFAULT_ENGINEER_KEY);
-        if (engineer) return engineer;
+        if (engineer) {
+          engineer = canonicalEngineerProfileName(engineer);
+          setDefaultEngineerProfile(engineer, true);
+          return engineer;
+        }
 
         for (let i = 0; i < FSD_OLD_DEFAULT_ENGINEER_KEYS.length; i++) {
           engineer = safeStorageGet(localStorage, FSD_OLD_DEFAULT_ENGINEER_KEYS[i]);
           if (engineer) {
             setDefaultEngineerProfile(engineer, true);
-            return engineer;
+            return canonicalEngineerProfileName(engineer);
           }
         }
 
         engineer = safeStorageGet(sessionStorage, FSD_DEFAULT_ENGINEER_KEY);
-        if (engineer) return engineer;
+        if (engineer) return canonicalEngineerProfileName(engineer);
 
-        engineer = String(getCookieValue(FSD_ENGINEER_COOKIE) || '').trim();
+        engineer = canonicalEngineerProfileName(getCookieValue(FSD_ENGINEER_COOKIE) || '');
         if (engineer) {
           setDefaultEngineerProfile(engineer, true);
           return engineer;
@@ -3778,7 +3787,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
       }
 
       function setDefaultEngineerProfile(name, skipUrlUpdate) {
-        const engineer = String(name || '').trim();
+        const engineer = canonicalEngineerProfileName(name);
 
         safeStorageSet(localStorage, FSD_DEFAULT_ENGINEER_KEY, engineer);
         safeStorageSet(sessionStorage, FSD_DEFAULT_ENGINEER_KEY, engineer);
@@ -6205,7 +6214,7 @@ function clearOfflineLookupCustomerChunks() {
 
       function offlineItemEngineer(row) {
         row = row || {};
-        return String(row.engineer || (row.draft && row.draft.engineer) || '').trim();
+        return canonicalEngineerProfileName(row.engineer || (row.draft && row.draft.engineer) || '');
       }
 
       function offlineEngineerIsUnassigned(value) {
@@ -8549,7 +8558,7 @@ function clearOfflineLookupCustomerChunks() {
       function mergeCloudDraftRows(rows, options) {
         const incoming = Array.isArray(rows) ? rows : [];
         options = options || {};
-        const syncEngineer = String(options.engineer || '').trim().toLowerCase();
+        const syncEngineer = canonicalEngineerProfileName(options.engineer || '').toLowerCase();
         const authoritative = options.authoritative === true;
         const incomingIds = {};
         incoming.forEach(function(row) {
