@@ -4479,6 +4479,8 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
       const PSC_OFFLINE_FIELD_IDS = ["pscPanelLocation", "pscPanelType", "pscPowerSupply", "pscBatteriesAh", "pscBatteryDate", "pscMeterType", "pscMeterNo", "pscSystemType", "pscPowerSupplyUnitCorrect", "pscStandbyHours", "pscAlarmTimeT2", "pscOtherAlarmTime", "pscExistingPsuSize", "pscQuiescentCurrentL1", "pscAlarmCurrentL2", "pscZonesUsed", "pscAllow50maPerZoneL3", "pscAgeingFactor", "pscDeRatingFactor", "pscCalculatedBatteryAh", "pscBatteriesInstalled", "pscExistingBatteryAh", "pscNotes"];
       let pendingShellAction = null;
       let shellActionTimer = null;
+      let pendingCloudDraftDelete = null;
+      let cloudDraftDeleteTimer = null;
       let pendingCompletionDraftIdentity = null;
       let unifiedDraftSyncQueue = [];
       let unifiedDraftSyncActiveId = '';
@@ -6514,6 +6516,9 @@ function clearOfflineLookupCustomerChunks() {
           const onlineButton = row.draftId && (state === 'synced' || state === 'cloud_cached')
             ? '<button class="button" type="button" data-offline-id="' + id + '" data-offline-action="online">Open Full Form</button>'
             : '';
+          const cloudDeleteButton = row.draftId
+            ? '<button class="button third" type="button" data-offline-id="' + id + '" data-offline-action="deleteCloud">Delete from Cloud &amp; iPad</button>'
+            : '';
           const offlineButton = report.editableOffline
             ? '<button class="button secondary" type="button" data-offline-id="' + id + '" data-offline-action="edit">' +
                 'Edit on iPad' +
@@ -6546,6 +6551,7 @@ function clearOfflineLookupCustomerChunks() {
                 offlineButton,
                 syncButton,
                 '<button class="button third" type="button" data-offline-id="', id, '" data-offline-action="delete">Remove from iPad</button>',
+                cloudDeleteButton,
               '</div>',
             '</article>'
           );
@@ -9057,6 +9063,7 @@ function clearOfflineLookupCustomerChunks() {
         if (action === 'edit') return window.editOfflineItemById(offlineId);
         if (action === 'sync') return window.syncOfflineItemById(offlineId);
         if (action === 'online') return window.openOnlineDraftById(offlineId);
+        if (action === 'deleteCloud') return window.deleteCloudDraftById(offlineId);
         if (action === 'delete') return window.deleteOfflineItemById(offlineId);
       }
 
@@ -9117,6 +9124,71 @@ function clearOfflineLookupCustomerChunks() {
       };
 
       window.deleteOfflineWById = window.deleteOfflineItemById;
+
+      function finishCloudDraftDelete(message, isError) {
+        clearTimeout(cloudDraftDeleteTimer);
+        pendingCloudDraftDelete = null;
+        hasStarted = false;
+        try { frame.name = ''; frame.src = 'about:blank'; } catch (err) {}
+        loader.classList.add('hidden');
+        fallback.classList.add('hidden');
+        home.classList.add('hidden');
+        offlineDrafts.classList.add('active');
+        renderOfflineDrafts();
+        setOfflineStatus(message || (isError ? 'Cloud Draft deletion failed.' : 'Cloud Draft deleted.'));
+        showDraftFlash(message || (isError ? 'Cloud Draft deletion failed.' : 'Cloud Draft deleted.'), !!isError);
+      }
+
+      function sendCloudDraftDeleteRequest(targetWindow) {
+        const pending = pendingCloudDraftDelete;
+        if (!pending || !targetWindow || !targetWindow.postMessage) return;
+        try {
+          targetWindow.postMessage({
+            type: 'FSD_CLOUD_DRAFT_DELETE',
+            source: 'fsd-certs-shell',
+            requestId: pending.requestId,
+            draftId: pending.draftId,
+            offlineId: pending.offlineId,
+            ts: Date.now()
+          }, '*');
+        } catch (err) {}
+      }
+
+      window.deleteCloudDraftById = function deleteCloudDraftById(offlineId) {
+        const item = getOfflineItemById(offlineId);
+        if (!item || !item.draftId) {
+          setOfflineStatus('This copy is only on the iPad. Use Remove from iPad instead.');
+          return;
+        }
+        if (!navigator.onLine) {
+          setOfflineStatus('No signal. The Cloud Draft and iPad copy have both been kept.');
+          return;
+        }
+        const report = getOfflineReportConfig(item);
+        const draftName = String(item.draftName || (item.draft && item.draft.draftName) || item.draftId);
+        if (!confirm('Permanently delete "' + draftName + '" from Cloud Drafts and remove its ' + report.code + ' copy from this iPad?\n\nCompleted reports are not affected.')) return;
+
+        pendingCloudDraftDelete = {
+          requestId: 'cloud-delete-' + Date.now() + '-' + Math.random().toString(36).slice(2, 9),
+          draftId: String(item.draftId),
+          offlineId: String(item.offlineId),
+          draftName: draftName
+        };
+        setOfflineStatus('Deleting this exact draft from Cloud Drafts. Keep this screen open...');
+        setLoaderMessage('Deleting Cloud Draft safely...');
+        offlineDrafts.classList.remove('active');
+        loader.classList.remove('hidden');
+        fallback.classList.add('hidden');
+        loaded = false;
+        hasStarted = true;
+        try { frame.name = ''; } catch (err) {}
+        frame.src = APP_URL + '?page=drafts&cloudDeleteBridge=1&shell=ipad&v=' + encodeURIComponent(SHELL_VER) + '&ts=' + Date.now();
+        clearTimeout(cloudDraftDeleteTimer);
+        cloudDraftDeleteTimer = setTimeout(function() {
+          if (!pendingCloudDraftDelete) return;
+          finishCloudDraftDelete('Cloud Draft deletion did not confirm, so the iPad copy has been kept.', true);
+        }, 90000);
+      };
 
       window.resumeOfflineW = function resumeOfflineW(index) {
         const item = readOfflineQueue()[index];
@@ -9389,7 +9461,9 @@ function clearOfflineLookupCustomerChunks() {
 
       frame.addEventListener('load', function () {
         if (!hasStarted) return;
-        if (pendingShellAction && pendingShellAction.action === 'sync') {
+        if (pendingCloudDraftDelete) {
+          loader.classList.remove('hidden');
+        } else if (pendingShellAction && pendingShellAction.action === 'sync') {
           // V6.3c39: keep the blank W sync bridge covered.
           // The screen returns to Offline Drafts when sync confirms or fails.
           loader.classList.remove('hidden');
@@ -9411,6 +9485,29 @@ function clearOfflineLookupCustomerChunks() {
       window.addEventListener('message', function(event) {
         const msg = event && event.data ? event.data : null;
         if (!msg || typeof msg !== 'object') return;
+
+        if (msg.source === 'fsd-cloud-draft-delete-bridge' && msg.type === 'FSD_CLOUD_DRAFT_DELETE_READY') {
+          if (pendingCloudDraftDelete) sendCloudDraftDeleteRequest(event.source);
+          return;
+        }
+
+        if (msg.source === 'fsd-cloud-draft-delete-bridge' && msg.type === 'FSD_CLOUD_DRAFT_DELETE_RESULT') {
+          const pending = pendingCloudDraftDelete;
+          if (!pending || msg.requestId !== pending.requestId || String(msg.draftId || '') !== pending.draftId || String(msg.offlineId || '') !== pending.offlineId) return;
+          if (msg.ok === true) {
+            Promise.resolve(removeOfflineItem(pending.offlineId))
+              .then(waitForOfflineDraftQueueSave)
+              .then(function() {
+                finishCloudDraftDelete('“' + pending.draftName + '” was deleted from Cloud Drafts and this iPad.', false);
+              })
+              .catch(function(err) {
+                finishCloudDraftDelete('The Cloud Draft was deleted, but this iPad could not remove its cached copy. Refresh Cloud Drafts to clear it. ' + String(err && err.message || ''), true);
+              });
+          } else {
+            finishCloudDraftDelete('Cloud Draft deletion failed, so the iPad copy has been kept: ' + String(msg.error || 'Google did not confirm deletion.'), true);
+          }
+          return;
+        }
 
         if (msg.type === 'FSD_LOCAL_LOOKUP_SEARCH_REQUEST') {
           handleLocalLookupSearchRequest(event, msg);
