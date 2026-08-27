@@ -6516,7 +6516,7 @@ function clearOfflineLookupCustomerChunks() {
           const onlineButton = row.draftId && (state === 'synced' || state === 'cloud_cached')
             ? '<button class="button" type="button" data-offline-id="' + id + '" data-offline-action="online">Open Full Form</button>'
             : '';
-          const cloudDeleteButton = row.draftId
+          const cloudDeleteButton = row.draftId && row.cloudDeleteToken
             ? '<button class="button third" type="button" data-offline-id="' + id + '" data-offline-action="deleteCloud">Delete from Cloud &amp; iPad</button>'
             : '';
           const offlineButton = report.editableOffline
@@ -8777,6 +8777,7 @@ function clearOfflineLookupCustomerChunks() {
           const item = {
             offlineId: existing && existing.offlineId ? existing.offlineId : ('cloud-' + String(row.draftId)),
             draftId: row.draftId,
+            cloudDeleteToken: String(row.deleteToken || ''),
             reportType: code,
             draftName: row.draftName || draft.draftName || (code + ' Cloud Draft'),
             engineer: row.engineer || draft.engineer || '',
@@ -9127,9 +9128,9 @@ function clearOfflineLookupCustomerChunks() {
 
       function finishCloudDraftDelete(message, isError) {
         clearTimeout(cloudDraftDeleteTimer);
+        const script = document.getElementById('fsdCloudDraftDeleteJsonpScript');
+        if (script && script.parentNode) script.parentNode.removeChild(script);
         pendingCloudDraftDelete = null;
-        hasStarted = false;
-        try { frame.name = ''; frame.src = 'about:blank'; } catch (err) {}
         loader.classList.add('hidden');
         fallback.classList.add('hidden');
         home.classList.add('hidden');
@@ -9139,20 +9140,25 @@ function clearOfflineLookupCustomerChunks() {
         showDraftFlash(message || (isError ? 'Cloud Draft deletion failed.' : 'Cloud Draft deleted.'), !!isError);
       }
 
-      function sendCloudDraftDeleteRequest(targetWindow) {
+      window.fsdReceiveCloudDraftDelete = function fsdReceiveCloudDraftDelete(payload) {
         const pending = pendingCloudDraftDelete;
-        if (!pending || !targetWindow || !targetWindow.postMessage) return;
-        try {
-          targetWindow.postMessage({
-            type: 'FSD_CLOUD_DRAFT_DELETE',
-            source: 'fsd-certs-shell',
-            requestId: pending.requestId,
-            draftId: pending.draftId,
-            offlineId: pending.offlineId,
-            ts: Date.now()
-          }, '*');
-        } catch (err) {}
-      }
+        if (!pending || !payload ||
+            String(payload.requestId || '') !== pending.requestId ||
+            String(payload.draftId || '') !== pending.draftId ||
+            String(payload.offlineId || '') !== pending.offlineId) return;
+        if (payload.ok === true) {
+          Promise.resolve(removeOfflineItem(pending.offlineId))
+            .then(waitForOfflineDraftQueueSave)
+            .then(function() {
+              finishCloudDraftDelete('“' + pending.draftName + '” was deleted from Cloud Drafts and this iPad.', false);
+            })
+            .catch(function(err) {
+              finishCloudDraftDelete('The Cloud Draft was deleted, but this iPad could not remove its cached copy. Refresh Cloud Drafts to clear it. ' + String(err && err.message || ''), true);
+            });
+        } else {
+          finishCloudDraftDelete('Cloud Draft deletion failed, so the iPad copy has been kept: ' + String(payload.error || 'Google did not confirm deletion.'), true);
+        }
+      };
 
       window.deleteCloudDraftById = function deleteCloudDraftById(offlineId) {
         const item = getOfflineItemById(offlineId);
@@ -9162,6 +9168,11 @@ function clearOfflineLookupCustomerChunks() {
         }
         if (!navigator.onLine) {
           setOfflineStatus('No signal. The Cloud Draft and iPad copy have both been kept.');
+          return;
+        }
+        if (!item.cloudDeleteToken) {
+          setOfflineStatus('Refresh Cloud Drafts once, then try Delete from Cloud & iPad again. Nothing has been deleted.');
+          window.syncCloudDraftCache({ preventDefault:function(){}, stopPropagation:function(){} });
           return;
         }
         const report = getOfflineReportConfig(item);
@@ -9176,18 +9187,29 @@ function clearOfflineLookupCustomerChunks() {
         };
         setOfflineStatus('Deleting this exact draft from Cloud Drafts. Keep this screen open...');
         setLoaderMessage('Deleting Cloud Draft safely...');
-        offlineDrafts.classList.remove('active');
         loader.classList.remove('hidden');
         fallback.classList.add('hidden');
-        loaded = false;
-        hasStarted = true;
-        try { frame.name = ''; } catch (err) {}
-        frame.src = APP_URL + '?page=drafts&cloudDeleteBridge=1&shell=ipad&v=' + encodeURIComponent(SHELL_VER) + '&ts=' + Date.now();
+        const oldScript = document.getElementById('fsdCloudDraftDeleteJsonpScript');
+        if (oldScript && oldScript.parentNode) oldScript.parentNode.removeChild(oldScript);
+        const script = document.createElement('script');
+        script.id = 'fsdCloudDraftDeleteJsonpScript';
+        script.src = APP_URL + '?page=offlineDraftDeleteApi' +
+          '&callback=fsdReceiveCloudDraftDelete' +
+          '&requestId=' + encodeURIComponent(pendingCloudDraftDelete.requestId) +
+          '&draftId=' + encodeURIComponent(pendingCloudDraftDelete.draftId) +
+          '&offlineId=' + encodeURIComponent(pendingCloudDraftDelete.offlineId) +
+          '&token=' + encodeURIComponent(String(item.cloudDeleteToken || '')) +
+          '&ts=' + Date.now();
+        script.onerror = function() {
+          if (!pendingCloudDraftDelete) return;
+          finishCloudDraftDelete('Cloud Draft deletion could not reach Google, so the iPad copy has been kept.', true);
+        };
+        document.body.appendChild(script);
         clearTimeout(cloudDraftDeleteTimer);
         cloudDraftDeleteTimer = setTimeout(function() {
           if (!pendingCloudDraftDelete) return;
           finishCloudDraftDelete('Cloud Draft deletion did not confirm, so the iPad copy has been kept.', true);
-        }, 90000);
+        }, 30000);
       };
 
       window.resumeOfflineW = function resumeOfflineW(index) {
@@ -9461,9 +9483,7 @@ function clearOfflineLookupCustomerChunks() {
 
       frame.addEventListener('load', function () {
         if (!hasStarted) return;
-        if (pendingCloudDraftDelete) {
-          loader.classList.remove('hidden');
-        } else if (pendingShellAction && pendingShellAction.action === 'sync') {
+        if (pendingShellAction && pendingShellAction.action === 'sync') {
           // V6.3c39: keep the blank W sync bridge covered.
           // The screen returns to Offline Drafts when sync confirms or fails.
           loader.classList.remove('hidden');
@@ -9485,29 +9505,6 @@ function clearOfflineLookupCustomerChunks() {
       window.addEventListener('message', function(event) {
         const msg = event && event.data ? event.data : null;
         if (!msg || typeof msg !== 'object') return;
-
-        if (msg.source === 'fsd-cloud-draft-delete-bridge' && msg.type === 'FSD_CLOUD_DRAFT_DELETE_READY') {
-          if (pendingCloudDraftDelete) sendCloudDraftDeleteRequest(event.source);
-          return;
-        }
-
-        if (msg.source === 'fsd-cloud-draft-delete-bridge' && msg.type === 'FSD_CLOUD_DRAFT_DELETE_RESULT') {
-          const pending = pendingCloudDraftDelete;
-          if (!pending || msg.requestId !== pending.requestId || String(msg.draftId || '') !== pending.draftId || String(msg.offlineId || '') !== pending.offlineId) return;
-          if (msg.ok === true) {
-            Promise.resolve(removeOfflineItem(pending.offlineId))
-              .then(waitForOfflineDraftQueueSave)
-              .then(function() {
-                finishCloudDraftDelete('“' + pending.draftName + '” was deleted from Cloud Drafts and this iPad.', false);
-              })
-              .catch(function(err) {
-                finishCloudDraftDelete('The Cloud Draft was deleted, but this iPad could not remove its cached copy. Refresh Cloud Drafts to clear it. ' + String(err && err.message || ''), true);
-              });
-          } else {
-            finishCloudDraftDelete('Cloud Draft deletion failed, so the iPad copy has been kept: ' + String(msg.error || 'Google did not confirm deletion.'), true);
-          }
-          return;
-        }
 
         if (msg.type === 'FSD_LOCAL_LOOKUP_SEARCH_REQUEST') {
           handleLocalLookupSearchRequest(event, msg);
