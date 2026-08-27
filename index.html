@@ -4482,6 +4482,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
       let pendingCloudDraftDelete = null;
       let cloudDraftDeleteTimer = null;
       let pendingCloudDeleteTokenRefreshId = '';
+      let cloudDeleteTokenRefreshAttemptedId = '';
       let pendingCompletionDraftIdentity = null;
       let unifiedDraftSyncQueue = [];
       let unifiedDraftSyncActiveId = '';
@@ -8772,6 +8773,9 @@ function clearOfflineLookupCustomerChunks() {
           const existing = existingIndex >= 0 ? queue[existingIndex] : null;
           const existingState = normaliseDraftSyncState(existing || {});
           if (existing && (existingState === 'needs_sync' || existingState === 'offline_only')) {
+            // C97ba: preserve every local edit, but still attach the server-issued
+            // delete token so a protected/changed draft can be deleted on request.
+            if (row.deleteToken) existing.cloudDeleteToken = String(row.deleteToken);
             skippedLocalChanges += 1;
             return;
           }
@@ -9179,11 +9183,18 @@ function clearOfflineLookupCustomerChunks() {
           return;
         }
         if (!item.cloudDeleteToken) {
+          if (cloudDeleteTokenRefreshAttemptedId === String(item.offlineId || offlineId)) {
+            pendingCloudDeleteTokenRefreshId = '';
+            setOfflineStatus('The secure delete information was not returned. Check that the C97ay Apps Script files were deployed as a new web-app version. Nothing has been deleted.');
+            return;
+          }
+          cloudDeleteTokenRefreshAttemptedId = String(item.offlineId || offlineId);
           pendingCloudDeleteTokenRefreshId = String(item.offlineId || offlineId);
           setOfflineStatus('Preparing secure Cloud Draft deletion. Nothing has been deleted yet...');
           window.syncCloudDraftCache({ preventDefault:function(){}, stopPropagation:function(){} });
           return;
         }
+        cloudDeleteTokenRefreshAttemptedId = '';
         const report = getOfflineReportConfig(item);
         const draftName = String(item.draftName || (item.draft && item.draft.draftName) || item.draftId);
         if (!confirm('Permanently delete "' + draftName + '" from Cloud Drafts and remove its ' + report.code + ' copy from this iPad?\n\nCompleted reports are not affected.')) return;
