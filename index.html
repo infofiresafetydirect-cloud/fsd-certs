@@ -4481,6 +4481,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
       let shellActionTimer = null;
       let pendingCloudDraftDelete = null;
       let cloudDraftDeleteTimer = null;
+      let pendingCloudDeleteTokenRefreshId = '';
       let pendingCompletionDraftIdentity = null;
       let unifiedDraftSyncQueue = [];
       let unifiedDraftSyncActiveId = '';
@@ -6516,7 +6517,7 @@ function clearOfflineLookupCustomerChunks() {
           const onlineButton = row.draftId && (state === 'synced' || state === 'cloud_cached')
             ? '<button class="button" type="button" data-offline-id="' + id + '" data-offline-action="online">Open Full Form</button>'
             : '';
-          const cloudDeleteButton = row.draftId && row.cloudDeleteToken
+          const cloudDeleteButton = row.draftId
             ? '<button class="button third" type="button" data-offline-id="' + id + '" data-offline-action="deleteCloud">Delete from Cloud &amp; iPad</button>'
             : '';
           const offlineButton = report.editableOffline
@@ -8833,6 +8834,13 @@ function clearOfflineLookupCustomerChunks() {
             (result.skippedBrokenDrafts ? ', ' + result.skippedBrokenDrafts + ' cloud draft needs office checking' : '') +
             '.'
           );
+          if (pendingCloudDeleteTokenRefreshId) {
+            const retryOfflineId = pendingCloudDeleteTokenRefreshId;
+            pendingCloudDeleteTokenRefreshId = '';
+            window.setTimeout(function() {
+              window.deleteCloudDraftById(retryOfflineId);
+            }, 50);
+          }
         } catch (err) {
           setOfflineStatus('Cloud draft sync failed locally: ' + (err && err.message ? err.message : err));
         }
@@ -9171,7 +9179,8 @@ function clearOfflineLookupCustomerChunks() {
           return;
         }
         if (!item.cloudDeleteToken) {
-          setOfflineStatus('Refresh Cloud Drafts once, then try Delete from Cloud & iPad again. Nothing has been deleted.');
+          pendingCloudDeleteTokenRefreshId = String(item.offlineId || offlineId);
+          setOfflineStatus('Preparing secure Cloud Draft deletion. Nothing has been deleted yet...');
           window.syncCloudDraftCache({ preventDefault:function(){}, stopPropagation:function(){} });
           return;
         }
