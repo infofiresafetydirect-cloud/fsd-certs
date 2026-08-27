@@ -483,10 +483,18 @@
       width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch;
     }
     .portable-offline-table-head,
-    .portable-offline-row.portable-service-row {
+    .portable-offline-row.portable-service-row,
+    .portable-offline-row.portable-order-row {
       display: grid;
-      grid-template-columns: 46px minmax(145px,1.45fr) minmax(76px,.72fr) minmax(76px,.72fr) minmax(76px,.72fr) minmax(145px,1.45fr) 40px;
       gap: 5px; align-items: center; min-width: 650px;
+    }
+    .portable-offline-table-head.portable-pws-only,
+    .portable-offline-row.portable-service-row {
+      grid-template-columns: 46px minmax(145px,1.45fr) minmax(76px,.72fr) minmax(76px,.72fr) minmax(76px,.72fr) minmax(145px,1.45fr) 40px;
+    }
+    .portable-offline-table-head.portable-mo-only,
+    .portable-offline-row.portable-order-row {
+      grid-template-columns: 68px minmax(260px,1fr) 105px 120px 40px;
     }
     .portable-offline-table-head {
       padding: 8px 6px; border-radius: 10px 10px 0 0; background: #172033; color: #ffffff;
@@ -494,6 +502,10 @@
     }
     #portableOfflineRows { display: grid; gap: 4px; }
     .portable-offline-row.portable-service-row {
+      margin: 0; padding: 4px 6px; border: 1px solid #e2e8f0; border-radius: 7px;
+      background: #ffffff; box-shadow: none;
+    }
+    .portable-offline-row.portable-order-row {
       margin: 0; padding: 4px 6px; border: 1px solid #e2e8f0; border-radius: 7px;
       background: #ffffff; box-shadow: none;
     }
@@ -507,6 +519,21 @@
     .portable-service-remove {
       width: 38px; min-height: 40px; padding: 4px; border: 0; border-radius: 8px;
       background: #475569; color: #ffffff; font-size: 20px; font-weight: 950;
+    }
+    .portable-order-picker {
+      width: 100%; min-height: 40px; padding: 6px; border: 0; border-radius: 7px;
+      background: linear-gradient(135deg,#475569,#1e293b); color: #ffffff;
+      font: inherit; font-size: 12px; font-weight: 900;
+    }
+    .offline-signature-panel { display: contents; }
+    .portable-online-look .offline-signature-panel {
+      grid-column: 1 / -1; display: grid; grid-template-columns: repeat(2,minmax(0,1fr));
+      gap: 12px; padding: 16px; border-radius: 18px; background: #ffffff;
+      border: 1px solid #e2e8f0; box-shadow: 0 7px 22px rgba(15,23,42,.07);
+    }
+    .portable-online-look .offline-signature-panel .editor-section-title {
+      grid-column: 1 / -1; margin: 0 0 2px; padding: 0 0 7px; border-radius: 0;
+      color: #991b1b; background: transparent; border-bottom: 2px solid #991b1b;
     }
     .portable-legacy-field { display: none !important; }
     .sfa-table-wrap { grid-column: 1 / -1; overflow-x: auto; border: 1px solid #e2e8f0; border-radius: 14px; background: #fff; }
@@ -576,6 +603,7 @@
         .nested-editor-grid { grid-template-columns: 1fr; }
         .offline-portable-panel { grid-template-columns: 1fr; }
         .portable-online-look .offline-job-panel { grid-template-columns: 1fr; }
+        .portable-online-look .offline-signature-panel { grid-template-columns: 1fr; }
         .offline-slt-reading { grid-template-columns: 42px 1fr 1fr; }
         .offline-slt-reading .slt-comments { grid-column: 1 / -1; }
       .editor-actions { grid-template-columns: 1fr; }
@@ -2900,23 +2928,23 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
             <div class="editor-section-title" id="portableOfflineHeading">Portables</div>
             <div class="offline-portable-panel portable-mo-only">
               <div class="offline-portable-panel-title">Order details</div>
-            <div class="editor-field portable-mo-only"><label>Price List</label><select id="editPortablePriceList"><option value="">Select price list</option><option value="Swansea">Swansea</option><option value="Pembroke">Pembroke</option></select></div>
             <div class="editor-field portable-mo-only"><label>Manual Order No.</label><input id="editPortableReportNo"></div>
             <div class="editor-field portable-mo-only"><label>Customer Order No.</label><input id="editPortableCustomerOrderNo"></div>
             <div class="editor-field portable-mo-only"><label>Agreement No.</label><input id="editPortableAgreementNo"></div>
             <div class="editor-field portable-mo-only"><label>Account No.</label><input id="editPortableAccountNo"></div>
-            <div class="editor-field portable-mo-only"><label>New Account</label><select id="editPortableNewAccount"><option value=""></option><option value="YES">YES</option><option value="NO">NO</option></select></div>
-            <div class="editor-field portable-mo-only"><label>Group</label><select id="editPortableGroupAccount"><option value=""></option><option value="YES">YES</option><option value="NO">NO</option></select></div>
+            <div class="editor-field portable-mo-only"><label>Price List</label><select id="editPortablePriceList"><option value="">Select price list</option><option value="Swansea">Swansea</option><option value="Pembroke">Pembroke</option></select></div>
             <div class="editor-field portable-mo-only"><label>Delivery Date Required</label><input id="editPortableDeliveryDate" type="date"></div>
             <div class="editor-field portable-mo-only"><label>Contact Name</label><input id="editPortableContactName"></div>
             <div class="editor-field portable-mo-only"><label>Telephone</label><input id="editPortableTelephone"></div>
             <div class="editor-field portable-mo-only"><label>Representative</label><input id="editPortableRepresentative"></div>
+            <div class="editor-field portable-mo-only"><label>ASB Report Available</label><select id="editPortableAsbestosReportMo"><option value=""></option><option value="YES">YES</option><option value="NO">NO</option></select></div>
+            <div class="editor-field portable-mo-only"><label>New Account</label><select id="editPortableNewAccount"><option value=""></option><option value="YES">YES</option><option value="NO">NO</option></select></div>
+            <div class="editor-field portable-mo-only"><label>Group</label><select id="editPortableGroupAccount"><option value=""></option><option value="YES">YES</option><option value="NO">NO</option></select></div>
             <div class="editor-field portable-mo-only"><label>Service</label><select id="editPortableOrderService"><option value=""></option><option value="YES">YES</option><option value="NO">NO</option></select></div>
             <div class="editor-field portable-mo-only"><label>Installation</label><select id="editPortableOrderInstallation"><option value=""></option><option value="YES">YES</option><option value="NO">NO</option></select></div>
             <div class="editor-field portable-mo-only"><label>Delivery</label><select id="editPortableOrderDelivery"><option value=""></option><option value="YES">YES</option><option value="NO">NO</option></select></div>
             <div class="editor-field portable-mo-only"><label>Inspection</label><select id="editPortableOrderInspection"><option value=""></option><option value="YES">YES</option><option value="NO">NO</option></select></div>
             <div class="editor-field portable-mo-only"><label>Training</label><select id="editPortableOrderTraining"><option value=""></option><option value="YES">YES</option><option value="NO">NO</option></select></div>
-              <div class="editor-field portable-mo-only"><label>ASB Report Available</label><select id="editPortableAsbestosReportMo"><option value=""></option><option value="YES">YES</option><option value="NO">NO</option></select></div>
             </div>
             <div class="offline-portable-panel portable-pws-only">
               <div class="offline-portable-panel-title">Service details</div>
@@ -2936,6 +2964,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
             <div id="portableOfflineRowsHeading" class="offline-portable-panel-title">Equipment inspected</div>
             <div class="portable-offline-table-wrap">
               <div class="portable-offline-table-head portable-pws-only"><span>Walk</span><span>Comments</span><span>Mfr.</span><span>Type</span><span>Size</span><span>Location</span><span></span></div>
+              <div class="portable-offline-table-head portable-mo-only"><span>Qty</span><span>Description</span><span>Unit Price</span><span>Material Picker</span><span></span></div>
               <div id="portableOfflineRows" class="editor-wide"></div>
             </div>
             <div class="editor-quick-row editor-wide">
@@ -2964,9 +2993,9 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
             <div class="editor-field portable-pws-only"><label>Log Book Completed</label><select id="editPortableLogBookCompleted"><option value=""></option><option value="YES">YES</option><option value="NO">NO</option></select></div>
             </div>
             <div class="offline-portable-panel">
-            <div class="offline-portable-panel-title">Completion</div>
+            <div id="portableOfflineCompletionHeading" class="offline-portable-panel-title">Completion</div>
             <div class="editor-field editor-wide portable-pws-only"><label>Equipment Changed / Replaced</label><textarea id="editPortableChangedEquipment"></textarea></div>
-            <div class="editor-field editor-wide"><label>Engineer Comments / Special Instructions</label><textarea id="editPortableComments"></textarea></div>
+            <div class="editor-field editor-wide"><label id="portableOfflineCommentsLabel">Engineer Comments / Special Instructions</label><textarea id="editPortableComments"></textarea></div>
             <div class="editor-field portable-pws-only"><label>Service Cost</label><input id="editPortableServiceCost" inputmode="decimal"></div>
             <div class="editor-field portable-pws-only"><label>Equipment Cost</label><input id="editPortableEquipmentCost" inputmode="decimal"></div>
             <div class="editor-field portable-pws-only"><label>Customer Satisfaction</label><select id="editPortableSatisfaction"><option value=""></option><option value="YES">YES</option><option value="NO">NO</option></select></div>
@@ -3307,6 +3336,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
             <div><span>Total</span><strong id="calcTotal">£0.00</strong></div>
           </div>
           </div>
+          <div id="offlineSignaturePanel" class="offline-signature-panel">
           <div id="offlineSignatureSectionStart" class="editor-section-title">Signatures</div>
           <div class="editor-field">
             <label id="editEngineerSignatureLabel">Engineer Signature</label>
@@ -3333,6 +3363,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
               <option value="SIGNATURE_REQUIRED">Customer available - signature required</option>
               <option value="NO_CUSTOMER_ON_SITE">No customer available on site</option>
             </select>
+          </div>
           </div>
         </div>
         <div class="editor-actions">
@@ -4448,6 +4479,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
       const PSC_OFFLINE_FIELD_IDS = ["pscPanelLocation", "pscPanelType", "pscPowerSupply", "pscBatteriesAh", "pscBatteryDate", "pscMeterType", "pscMeterNo", "pscSystemType", "pscPowerSupplyUnitCorrect", "pscStandbyHours", "pscAlarmTimeT2", "pscOtherAlarmTime", "pscExistingPsuSize", "pscQuiescentCurrentL1", "pscAlarmCurrentL2", "pscZonesUsed", "pscAllow50maPerZoneL3", "pscAgeingFactor", "pscDeRatingFactor", "pscCalculatedBatteryAh", "pscBatteriesInstalled", "pscExistingBatteryAh", "pscNotes"];
       let pendingShellAction = null;
       let shellActionTimer = null;
+      let pendingCompletionDraftIdentity = null;
       let unifiedDraftSyncQueue = [];
       let unifiedDraftSyncActiveId = '';
       let unifiedDraftSyncRunning = false;
@@ -4585,6 +4617,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
         const label = message && message.combinedPack === true
           ? 'Combined Report Pack'
           : reportType;
+        removeCompletedDraftFromIpadQueue();
         rememberPendingPortalFlash(label + ' completed successfully' + (reportNo ? ': ' + reportNo : '.'));
         const isPortable = reportType.toLowerCase().indexOf('portable') !== -1 || reportType.toLowerCase().indexOf('service worksheet') !== -1 || reportType.toLowerCase().indexOf('manual order') !== -1;
         openAppUrlInShell(addEngineerProfileToUrl(APP_URL + (isPortable ? '?page=portables' : '')));
@@ -4594,6 +4627,37 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
       function releaseReportCompletionLoaderWithError(message) {
         hideLoader();
         showDraftFlash(String(message || 'Report creation failed. Please try again.'), true);
+      }
+
+      function rememberCompletionDraftIdentityFromUrl(url) {
+        const match = String(url || '').match(/[?&]draftId=([^&#]+)/i);
+        if (!match) {
+          pendingCompletionDraftIdentity = null;
+          return;
+        }
+        let draftId = '';
+        try { draftId = decodeURIComponent(match[1]); } catch (err) { draftId = match[1]; }
+        const item = readOfflineQueue().find(function(row) {
+          return row && String(row.draftId || '') === String(draftId || '');
+        });
+        pendingCompletionDraftIdentity = item ? {
+          offlineId: String(item.offlineId || ''),
+          draftId: String(item.draftId || '')
+        } : null;
+      }
+
+      function removeCompletedDraftFromIpadQueue() {
+        const identity = pendingCompletionDraftIdentity;
+        pendingCompletionDraftIdentity = null;
+        if (!identity || (!identity.offlineId && !identity.draftId)) return;
+        const rows = readOfflineQueue();
+        const remaining = rows.filter(function(row) {
+          if (!row) return false;
+          if (identity.offlineId && String(row.offlineId || '') === identity.offlineId) return false;
+          if (identity.draftId && String(row.draftId || '') === identity.draftId) return false;
+          return true;
+        });
+        if (remaining.length !== rows.length) writeOfflineQueue(remaining);
       }
 
 
@@ -7030,11 +7094,12 @@ function clearOfflineLookupCustomerChunks() {
             '<button class="portable-service-remove" type="button" aria-label="Remove row" onclick="this.closest(\'.portable-offline-row\').remove();updatePortableOfflineWalkNumbers()">×</button>';
         } else {
           row.innerHTML =
-            '<div class="editor-grid">' +
-            '<div class="editor-field"><label>Qty</label><input class="porQty" inputmode="decimal" value="' + escapeHtml(item.qty || item.req || item.sent || '') + '"></div>' +
-            '<div class="editor-field editor-wide"><label>Description</label><input class="porDescription" value="' + escapeHtml(item.description || '') + '"></div>' +
-            '<div class="editor-field"><label>Unit Price</label><input class="porPrice" inputmode="decimal" value="' + escapeHtml(item.price || '') + '"></div>' +
-            '</div><div class="editor-quick-row"><button class="button third" type="button" onclick="openOfflinePortableMaterialPicker(event,this)">Pick Material</button><button class="button third" type="button" onclick="this.closest(\'.portable-offline-row\').remove()">Remove Row</button></div>';
+            '<div class="portable-service-cell"><label>Qty</label><input class="porQty" inputmode="decimal" value="' + escapeHtml(item.qty || item.req || item.sent || '') + '"></div>' +
+            '<div class="portable-service-cell"><label>Description</label><input class="porDescription" value="' + escapeHtml(item.description || '') + '"></div>' +
+            '<div class="portable-service-cell"><label>Unit Price</label><input class="porPrice" inputmode="decimal" value="' + escapeHtml(item.price || '') + '"></div>' +
+            '<button class="portable-order-picker" type="button" onclick="openOfflinePortableMaterialPicker(event,this)">Pick Material</button>' +
+            '<button class="portable-service-remove" type="button" aria-label="Remove order row" onclick="this.closest(\'.portable-offline-row\').remove()">×</button>';
+          row.className = 'portable-offline-row portable-order-row';
         }
         wrap.appendChild(row);
         if (service) {
@@ -7230,10 +7295,14 @@ function clearOfflineLookupCustomerChunks() {
         const editorCard = offlineEditor && offlineEditor.querySelector ? offlineEditor.querySelector('.editor-card') : null;
         const jobHeading = document.getElementById('offlineJobDetailsHeading');
         const portableRowsHeading = document.getElementById('portableOfflineRowsHeading');
+        const portableCompletionHeading = document.getElementById('portableOfflineCompletionHeading');
+        const portableCommentsLabel = document.getElementById('portableOfflineCommentsLabel');
         if (offlineEditor) offlineEditor.classList.toggle('portable-online-look-screen', isPortable);
         if (editorCard) editorCard.classList.toggle('portable-online-look', isPortable);
         if (jobHeading) jobHeading.textContent = isPortable ? 'Customer and job' : 'Job Details';
         if (portableRowsHeading) portableRowsHeading.textContent = report && report.code === 'MO' ? 'Order lines' : 'Equipment inspected';
+        if (portableCompletionHeading) portableCompletionHeading.textContent = report && report.code === 'MO' ? 'Instructions' : 'Completion';
+        if (portableCommentsLabel) portableCommentsLabel.textContent = report && report.code === 'MO' ? 'Special Instructions' : 'Engineer Comments';
         if (addCertControls) addCertControls.classList.toggle('hidden-report-fields', isPortable);
         if (portableFields) portableFields.classList.toggle('hidden-report-fields', !isPortable);
         if (portableHeading) portableHeading.textContent = report && report.code === 'MO' ? 'Manual Order' : 'Portable Service Worksheet';
@@ -9162,6 +9231,7 @@ function clearOfflineLookupCustomerChunks() {
       function openAppUrlInShell(url) {
         var targetUrl = addEngineerProfileToUrl(String(url || APP_URL));
         if (targetUrl.indexOf(APP_URL) !== 0) return;
+        rememberCompletionDraftIdentityFromUrl(targetUrl);
         // Make sure resumed cloud drafts load inside the iPad app iframe, not Safari/top window.
         if (targetUrl.indexOf('shell=') === -1) {
           targetUrl += (targetUrl.indexOf('?') === -1 ? '?' : '&') + 'shell=ipad';
