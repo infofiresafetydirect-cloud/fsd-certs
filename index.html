@@ -9576,16 +9576,21 @@ function clearOfflineLookupCustomerChunks() {
               PWS: 'Portable Service Worksheet',
               MO: 'Manual Order Worksheet'
             };
+            const stableDraftId = String(
+              (msg.draft && (msg.draft.cloudDraftId || msg.draft.draftId)) || ''
+            ).trim();
             const rawDraft = Object.assign({}, msg.draft || {}, {
               reportTypeCode: code,
               reportType: reportNames[code] || 'Report',
+              draftId: stableDraftId,
+              cloudDraftId: stableDraftId,
               offlineCreated: true,
               offlineId: code + '-OFFLINE-' + Date.now() + '-' + Math.random().toString(36).slice(2, 7).toUpperCase(),
               draftName: msg.draftName || ''
             });
             upsertOfflineItem({
               offlineId: rawDraft.offlineId,
-              draftId: '',
+              draftId: stableDraftId,
               reportType: rawDraft.reportType,
               reportTypeCode: code,
               draftName: msg.draftName || rawDraft.reportType,
@@ -9595,7 +9600,7 @@ function clearOfflineLookupCustomerChunks() {
               savedAt: new Date().toISOString(),
               reason: 'Saved after cloud connection loss',
               draft: rawDraft,
-              syncState: 'offline_only'
+              syncState: stableDraftId ? 'needs_sync' : 'offline_only'
             });
           }
           openJobsAndDraftsAfterOfflineDraftSave(msg);
