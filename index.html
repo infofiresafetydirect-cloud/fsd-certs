@@ -3501,7 +3501,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
     (function () {
       'use strict';
 
-      const SHELL_VER = 'V6.3c97bj';
+      const SHELL_VER = 'V6.3c97bk';
       const APP_URL = 'https://script.google.com/macros/s/AKfycbzq9FTETNZwUJWHMGnMHECbu3sJ3jy3FFvGYyeaRXtkoK1GHBtqOu-GLBle_WGfoFtI/exec';
       const SCHEDULE_URL = 'https://fsd-scheduling-2026.infofiresafetydirect.chatgpt.site/';
       const CALLOUTS_PAGE = APP_URL + '?page=callouts&shell=ipad';
@@ -4239,6 +4239,34 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
           if (el.type === 'checkbox') el.checked = String(value).toUpperCase() === 'YES';
           else el.value = value == null ? '' : value;
         });
+        // C97bk: Online FAM drafts use both the historic *Result properties and
+        // the nested famCheckResults object. Restore those values into the
+        // offline MOD/FAM controls, including Documents / Compliance.
+        if (code === 'FAM') {
+          const checks = data.famCheckResults || {};
+          const firstSaved = function(values, fallback) {
+            for (let index = 0; index < values.length; index += 1) {
+              if (values[index] !== undefined && values[index] !== null && String(values[index]) !== '') return values[index];
+            }
+            return fallback;
+          };
+          FAM_OFFLINE_CHECK_KEYS.forEach(function(key) {
+            const totalField = offlineRepeatField(section, 'editFamCheck_' + key + 'Total');
+            const resultField = offlineRepeatField(section, 'editFamCheck_' + key);
+            if (totalField) totalField.value = firstSaved([
+              data['famCheck_' + key + 'Total'], checks[key + 'Total']
+            ], '');
+            if (resultField) resultField.value = firstSaved([
+              data['famCheck_' + key], data['famCheck_' + key + 'Result'], checks[key]
+            ], 'NA');
+          });
+          FAM_OFFLINE_DOC_KEYS.forEach(function(key) {
+            const resultField = offlineRepeatField(section, 'editFamCheck_' + key);
+            if (resultField) resultField.value = firstSaved([
+              data['famCheck_' + key], data['famCheck_' + key + 'Result'], checks[key]
+            ], 'NA');
+          });
+        }
         if (code === 'SFA') offlineRepeatRenderSfaRows(section, data.faEquipmentRows || []);
         if (code === 'SLT') offlineRepeatRenderSltRows(section, data.sltReadings || []);
         if (code === 'PSC') offlineRepeatCalculatePsc(section);
@@ -9576,16 +9604,21 @@ function clearOfflineLookupCustomerChunks() {
               PWS: 'Portable Service Worksheet',
               MO: 'Manual Order Worksheet'
             };
+            const stableDraftId = String(
+              (msg.draft && (msg.draft.cloudDraftId || msg.draft.draftId)) || ''
+            ).trim();
             const rawDraft = Object.assign({}, msg.draft || {}, {
               reportTypeCode: code,
               reportType: reportNames[code] || 'Report',
+              draftId: stableDraftId,
+              cloudDraftId: stableDraftId,
               offlineCreated: true,
               offlineId: code + '-OFFLINE-' + Date.now() + '-' + Math.random().toString(36).slice(2, 7).toUpperCase(),
               draftName: msg.draftName || ''
             });
             upsertOfflineItem({
               offlineId: rawDraft.offlineId,
-              draftId: '',
+              draftId: stableDraftId,
               reportType: rawDraft.reportType,
               reportTypeCode: code,
               draftName: msg.draftName || rawDraft.reportType,
@@ -9595,7 +9628,7 @@ function clearOfflineLookupCustomerChunks() {
               savedAt: new Date().toISOString(),
               reason: 'Saved after cloud connection loss',
               draft: rawDraft,
-              syncState: 'offline_only'
+              syncState: stableDraftId ? 'needs_sync' : 'offline_only'
             });
           }
           openJobsAndDraftsAfterOfflineDraftSave(msg);
