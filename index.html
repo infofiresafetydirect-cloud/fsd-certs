@@ -2801,10 +2801,10 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
           <button data-fsd-fasttap class="minimal-app tone-violet" type="button" onclick="openQuickQuote(event)"><span class="minimal-app-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 4.5h14v15H5z"/><path d="M8 8h8M8 12h5M8 16h4"/><path d="M16 13.5v4M14.5 15h3"/></svg></span><strong>Quick Quote</strong><small>Create and manage a professional site quote.</small><span class="minimal-app-arrow" aria-hidden="true">→</span></button>
           <button data-fsd-fasttap class="minimal-app tone-slate" type="button" onclick="openEngineerProfile(event)"><span class="minimal-app-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.5"/><path d="M5.5 20c.7-4 3-6 6.5-6s5.8 2 6.5 6"/></svg></span><strong>Engineer Profile</strong><small>Set the active engineer identity.</small><span class="minimal-app-arrow" aria-hidden="true">→</span></button>
           <button data-fsd-fasttap class="minimal-app tone-green" type="button" onclick="openSchedule(event)"><span class="minimal-app-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="4" y="5.5" width="16" height="14" rx="2"/><path d="M8 3.5v4M16 3.5v4M4 9.5h16M8 13h3M13 13h3M8 16h3"/></svg></span><strong>Schedule</strong><small>Plan engineers and appointments.</small><span class="minimal-app-arrow" aria-hidden="true">→</span></button>
-          <button data-fsd-fasttap class="minimal-app tone-navy" type="button" onclick="openCerts(event)"><span class="minimal-app-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3.5h12v17H6z"/><path d="m9 12 2 2 4-4M9 17h6M9 7h6"/></svg></span><strong>Submitted Reports</strong><small>Review completed paperwork.</small><span class="minimal-app-arrow" aria-hidden="true">→</span></button>
+          <button data-fsd-fasttap class="minimal-app tone-navy" type="button" onclick="openSubmittedReports(event)"><span class="minimal-app-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3.5h12v17H6z"/><path d="m9 12 2 2 4-4M9 17h6M9 7h6"/></svg></span><strong>Submitted Reports</strong><small>Review completed paperwork.</small><span class="minimal-app-arrow" aria-hidden="true">→</span></button>
         </div></section>
       </main>
-      <footer class="minimal-footer"><span><strong>FSD Certs</strong> · Built for Fire Safety Direct</span><span class="minimal-labs">Designed &amp; engineered by Jared720 Labs · C97h</span></footer>
+      <footer class="minimal-footer"><span><strong>FSD Certs</strong> · Built for Fire Safety Direct</span><span class="minimal-labs">Designed &amp; engineered by Jared720 Labs · C97br</span></footer>
     </div>
   </section>
   <section id="offlineDrafts" class="screen offline-screen" aria-label="Jobs and Drafts">
@@ -3501,7 +3501,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
     (function () {
       'use strict';
 
-      const SHELL_VER = 'V6.3c97bk';
+      const SHELL_VER = 'V6.3c97br';
       const APP_URL = 'https://script.google.com/macros/s/AKfycbzq9FTETNZwUJWHMGnMHECbu3sJ3jy3FFvGYyeaRXtkoK1GHBtqOu-GLBle_WGfoFtI/exec';
       const SCHEDULE_URL = 'https://fsd-scheduling-2026.infofiresafetydirect.chatgpt.site/';
       const CALLOUTS_PAGE = APP_URL + '?page=callouts&shell=ipad';
@@ -9427,6 +9427,11 @@ function clearOfflineLookupCustomerChunks() {
         openAppUrlInShell(APP_URL + '?page=qq');
       };
 
+      window.openSubmittedReports = function openSubmittedReports(event) {
+        stopTap(event);
+        openAppUrlInShell(APP_URL + '?page=reports');
+      };
+
       window.openCerts = function openCerts(event) {
         stopTap(event);
         // V6.3c48: always load a fresh portal when the home button is pressed.
@@ -9860,7 +9865,7 @@ function clearOfflineLookupCustomerChunks() {
 
     }());
   </script>
-  <div class="fixed-version-badge">FSD Certs · Minimal Home C97h</div>
+  <div class="fixed-version-badge">FSD Certs · Minimal Home C97br</div>
 
 
   <!-- C93p Premium Home clock -->
