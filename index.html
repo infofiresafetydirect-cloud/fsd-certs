@@ -2804,7 +2804,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
           <button data-fsd-fasttap class="minimal-app tone-navy" type="button" onclick="openSubmittedReports(event)"><span class="minimal-app-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3.5h12v17H6z"/><path d="m9 12 2 2 4-4M9 17h6M9 7h6"/></svg></span><strong>Submitted Reports</strong><small>Review completed paperwork.</small><span class="minimal-app-arrow" aria-hidden="true">→</span></button>
         </div></section>
       </main>
-      <footer class="minimal-footer"><span><strong>FSD Certs</strong> · Built for Fire Safety Direct</span><span class="minimal-labs">Designed &amp; engineered by Jared720 Labs · C97br</span></footer>
+      <footer class="minimal-footer"><span><strong>FSD Certs</strong> · Built for Fire Safety Direct</span><span class="minimal-labs">Designed &amp; engineered by Jared720 Labs · C97bs</span></footer>
     </div>
   </section>
   <section id="offlineDrafts" class="screen offline-screen" aria-label="Jobs and Drafts">
@@ -2872,6 +2872,9 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
           </button>
           <button class="offline-report-choice sel" type="button" onclick="chooseOfflineNewReport(event,'SEL')">
             <span class="offline-report-choice-icon">💡</span><span><strong>Emergency Lighting Report</strong><small>SEL with ESR and SFA Add Pages.</small></span><span class="offline-report-choice-arrow">→</span>
+          </button>
+          <button class="offline-report-choice" type="button" onclick="chooseOfflineNewReport(event,'IA')">
+            <span class="offline-report-choice-icon">🛡️</span><span><strong>Intruder Alarm Report</strong><small>IA preventative maintenance checks with full iPad offline working copy.</small></span><span class="offline-report-choice-arrow">→</span>
           </button>
           <button class="offline-report-choice" type="button" onclick="chooseOfflineNewReport(event,'PWS')">
             <span class="offline-report-choice-icon">🧯</span><span><strong>Portable Service Worksheet</strong><small>Full portable-equipment worksheet with extra pages.</small></span><span class="offline-report-choice-arrow">→</span>
@@ -3279,6 +3282,64 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
             <div class="editor-field"><label>Cost Display</label><select id="editElCostDisplayMode"><option value="SEPARATE">Show costs on SEL report</option><option value="SEE_ATTACHED_SFA">Show tick / see attached report</option></select></div>
             <div class="editor-field"><label>Tick Box if Non-Compliant</label><select id="editElNonCompliantHeader"><option value="NO">NO</option><option value="YES">YES - show red Non-Compliant header</option></select></div>
           </div>
+          <div id="iaOfflineFields" class="nested-editor-grid hidden-report-fields">
+            <div class="editor-section-title">IA intruder alarm preventative maintenance checks</div>
+            <div class="sfa-local-note">Full Intruder / Hold-up alarm working copy for BS9263:2016. Save on the iPad, then upload to Cloud Drafts when signal returns.</div>
+            <div class="editor-field"><label>Contract ID No.</label><input id="editIaContractId"></div>
+            <div class="editor-field"><label>Order No.</label><input id="editIaOrderNo"></div>
+            <div class="editor-section-title">Installation / Signalling</div>
+            <div class="editor-field"><label>Audible Only</label><select id="editIaAudibleOnly"><option value="NO">NO</option><option value="YES">YES</option></select></div>
+            <div class="editor-field"><label>Remote Signalling</label><select id="editIaRemoteSignalling"><option value="NO">NO</option><option value="YES">YES</option></select></div>
+            <div class="editor-field"><label>Dual Path</label><select id="editIaDualPath"><option value="NO">NO</option><option value="YES">YES</option></select></div>
+            <div class="editor-field"><label>Single Path</label><select id="editIaSinglePath"><option value="NO">NO</option><option value="YES">YES</option></select></div>
+            <div class="editor-section-title">Equipment Description — Total / Tested</div>
+            <div class="editor-field"><label>Panels / Nodes Total</label><input id="editIaPanelsTotal" inputmode="numeric"></div><div class="editor-field"><label>Panels / Nodes Tested</label><input id="editIaPanelsTested" inputmode="numeric"></div>
+            <div class="editor-field"><label>Power Supplies Total</label><input id="editIaPowerSuppliesTotal" inputmode="numeric"></div><div class="editor-field"><label>Power Supplies Tested</label><input id="editIaPowerSuppliesTested" inputmode="numeric"></div>
+            <div class="editor-field"><label>Batteries Total</label><input id="editIaBatteriesTotal" inputmode="numeric"></div><div class="editor-field"><label>Batteries Tested</label><input id="editIaBatteriesTested" inputmode="numeric"></div>
+            <div class="editor-field"><label>PIR Total</label><input id="editIaPirTotal" inputmode="numeric"></div><div class="editor-field"><label>PIR Tested</label><input id="editIaPirTested" inputmode="numeric"></div>
+            <div class="editor-field"><label>Panic Attack Equipment Total</label><input id="editIaPanicTotal" inputmode="numeric"></div><div class="editor-field"><label>Panic Attack Equipment Tested</label><input id="editIaPanicTested" inputmode="numeric"></div>
+            <div class="editor-field"><label>Roller Door Contact Total</label><input id="editIaRollerDoorTotal" inputmode="numeric"></div><div class="editor-field"><label>Roller Door Contact Tested</label><input id="editIaRollerDoorTested" inputmode="numeric"></div>
+            <div class="editor-field"><label>Door Contact Total</label><input id="editIaDoorContactTotal" inputmode="numeric"></div><div class="editor-field"><label>Door Contact Tested</label><input id="editIaDoorContactTested" inputmode="numeric"></div>
+            <div class="editor-field"><label>Vibration Sensors Total</label><input id="editIaVibrationSensorsTotal" inputmode="numeric"></div><div class="editor-field"><label>Vibration Sensors Tested</label><input id="editIaVibrationSensorsTested" inputmode="numeric"></div>
+            <div class="editor-field"><label>SCB/SAB (External Bell Box) Total</label><input id="editIaScbSabTotal" inputmode="numeric"></div><div class="editor-field"><label>SCB/SAB Tested</label><input id="editIaScbSabTested" inputmode="numeric"></div>
+            <div class="editor-field"><label>Sounder (Internal) Total</label><input id="editIaInternalSounderTotal" inputmode="numeric"></div><div class="editor-field"><label>Sounder (Internal) Tested</label><input id="editIaInternalSounderTested" inputmode="numeric"></div>
+            <div class="editor-section-title">Preventative Maintenance Checklist</div>
+            <div class="editor-field"><label>Installation meets the ‘as fitted’ document</label><select id="editIaAsFitted"><option value="">—</option><option>YES</option><option>NO</option></select></div>
+            <div class="editor-field"><label>Functioning of Detectors and HD's</label><select id="editIaDetectorsHd"><option value="">—</option><option>YES</option><option>NO</option></select></div>
+            <div class="editor-field"><label>All Circuit Resistance Checked</label><select id="editIaCircuitResistance"><option value="">—</option><option>YES</option><option>NO</option></select></div>
+            <div class="editor-field"><label>Environmental conditions for adverse effects</label><select id="editIaEnvironmental"><option value="">—</option><option>YES</option><option>NO</option></select></div>
+            <div class="editor-field"><label>All Anti-Tamper Circuits Checked</label><select id="editIaAntiTamper"><option value="">—</option><option>YES</option><option>NO</option></select></div>
+            <div class="editor-field"><label>Operation of Warning Devices</label><select id="editIaWarningDevices"><option value="">—</option><option>YES</option><option>NO</option></select></div>
+            <div class="editor-field"><label>Setting and Un-setting</label><select id="editIaSettingUnsetting"><option value="">—</option><option>YES</option><option>NO</option></select></div>
+            <div class="editor-field"><label>Operation of any ATS</label><select id="editIaAtsOperation"><option value="">—</option><option>YES</option><option>NO</option></select></div>
+            <div class="editor-field"><label>All Power Supplies Checked</label><select id="editIaPowerSuppliesChecked"><option value="">—</option><option>YES</option><option>NO</option></select></div>
+            <div class="editor-field"><label>Entry and Exit Procedures</label><select id="editIaEntryExit"><option value="">—</option><option>YES</option><option>NO</option></select></div>
+            <div class="editor-section-title">ATS Channels Tested — all paths must be tested</div>
+            <div class="editor-field editor-wide"><div style="display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:6px">
+              <label><input type="checkbox" id="editIaAtsChannel1"> 1</label><label><input type="checkbox" id="editIaAtsChannel2"> 2</label><label><input type="checkbox" id="editIaAtsChannel3"> 3</label><label><input type="checkbox" id="editIaAtsChannel4"> 4</label>
+              <label><input type="checkbox" id="editIaAtsChannel5"> 5</label><label><input type="checkbox" id="editIaAtsChannel6"> 6</label><label><input type="checkbox" id="editIaAtsChannel7"> 7</label><label><input type="checkbox" id="editIaAtsChannel8"> 8</label>
+              <label><input type="checkbox" id="editIaAtsChannel9"> 9</label><label><input type="checkbox" id="editIaAtsChannel10"> 10</label><label><input type="checkbox" id="editIaAtsChannel11"> 11</label><label><input type="checkbox" id="editIaAtsChannel12"> 12</label>
+              <label><input type="checkbox" id="editIaAtsChannel13"> 13</label><label><input type="checkbox" id="editIaAtsChannel14"> 14</label><label><input type="checkbox" id="editIaAtsChannel15"> 15</label><label><input type="checkbox" id="editIaAtsChannel16"> 16</label>
+            </div></div>
+            <div class="editor-section-title">Power Supplies, including any APS</div>
+            <div class="editor-field"><label>Quiescent Current (Q)</label><input id="editIaQuiescentCurrent" inputmode="decimal" oninput="calculateIaOfflineTotals()"></div>
+            <div class="editor-field"><label>Alarm Current (A)</label><input id="editIaAlarmCurrent" inputmode="decimal" oninput="calculateIaOfflineTotals()"></div>
+            <div class="editor-field"><label>C Min.</label><input id="editIaCMin" readonly></div>
+            <div class="editor-field"><label>Battery Fitted Suitable</label><select id="editIaBatterySuitable"><option value="">—</option><option>YES</option><option>NO</option></select></div>
+            <div class="editor-section-title">Comments / Additional Work</div>
+            <div class="editor-field editor-wide"><label>Engineer Comments</label><textarea id="editIaEngineerComments" rows="4"></textarea></div>
+            <div class="editor-field"><label>Any Additional Work required</label><select id="editIaAdditionalWork"><option value="NO">NO</option><option value="YES">YES</option></select></div>
+            <div class="editor-field"><label>Quick Quote Ref</label><input id="editIaQuickQuoteRef" placeholder="e.g. QQ00123"></div>
+            <div class="editor-field editor-wide"><label>Details of any work required</label><textarea id="editIaWorkDetails" rows="6"></textarea></div>
+            <div class="editor-section-title">Costs</div>
+            <div class="editor-field"><label>Service Cost</label><input id="editIaServiceCost" type="number" step="0.01" value="0.00" oninput="calculateIaOfflineTotals()"></div>
+            <div class="editor-field"><label>Material Cost</label><input id="editIaMaterialCost" type="number" step="0.01" value="0.00" oninput="calculateIaOfflineTotals()"></div>
+            <div class="editor-field"><label>Remedial Labour Cost</label><input id="editIaLabourCost" type="number" step="0.01" value="0.00" oninput="calculateIaOfflineTotals()"></div>
+            <div class="editor-field"><label>Sub Total</label><input id="editIaSubTotal" readonly></div>
+            <div class="editor-field"><label>VAT @20%</label><input id="editIaVat" readonly></div>
+            <div class="editor-field"><label>Total Cost Inc VAT</label><input id="editIaTotal" readonly></div>
+          </div>
+
           <div id="offlineWAddedHeader" class="nested-editor-grid hidden-report-fields">
             <div class="editor-section-title">Engineer Service Report</div>
             <div class="sfa-local-note">This is the full Engineer Service Report module used by the online combined report pack.</div>
@@ -3501,7 +3562,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
     (function () {
       'use strict';
 
-      const SHELL_VER = 'V6.3c97br';
+      const SHELL_VER = 'V6.3c97bs';
       const APP_URL = 'https://script.google.com/macros/s/AKfycbzq9FTETNZwUJWHMGnMHECbu3sJ3jy3FFvGYyeaRXtkoK1GHBtqOu-GLBle_WGfoFtI/exec';
       const SCHEDULE_URL = 'https://fsd-scheduling-2026.infofiresafetydirect.chatgpt.site/';
       const CALLOUTS_PAGE = APP_URL + '?page=callouts&shell=ipad';
@@ -4119,12 +4180,13 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
       let offlineLookupData = loadOfflineLookupData();
       setTimeout(function() { refreshOfflineLookupDataFromIndexedDb(); }, 300);
 
-      // C96l: W/ESR, SFA and SEL use the same valid Add Page combinations as online.
+      // C97bs: IA joins W/ESR, SFA and SEL as a full offline working report; existing Add Page rules are unchanged.
       // into the same cloud Drafts records. QQ/FAC stay cloud-only.
       const OFFLINE_REPORT_TYPES = {
         W:   { code: 'W',   label: 'Engineer Service Report',             page: 'esr', editableOffline: true,  syncableOffline: true },
         SFA: { code: 'SFA', label: 'Fire Alarm Service Report',           page: 'fael', editableOffline: true,  syncableOffline: true },
         SEL: { code: 'SEL', label: 'Emergency Lighting Report',           page: 'sel',  editableOffline: true,  syncableOffline: true },
+        IA:  { code: 'IA',  label: 'Intruder Alarm Inspection & Test Report', page: 'ia', editableOffline: true, syncableOffline: true },
         PWS: { code: 'PWS', label: 'Portable Service Worksheet',           page: 'portableService', editableOffline: true, syncableOffline: true },
         MO:  { code: 'MO',  label: 'Manual Order Worksheet',               page: 'manualOrder', editableOffline: true, syncableOffline: true },
         QQ:  { code: 'QQ',  label: 'Quick Quote',                          page: 'qq',   editableOffline: false, syncableOffline: false },
@@ -6213,6 +6275,7 @@ function clearOfflineLookupCustomerChunks() {
         ].map(function(value) { return String(value || '').toUpperCase(); }).join(' ');
         if (normalized.indexOf('FIRE ALARM TEST REPORT') >= 0 || normalized.indexOf('FIRE ALARM SERVICE') >= 0 || /(^|\s)SFA(\s|$)/.test(normalized)) return 'SFA';
         if (normalized.indexOf('EMERGENCY LIGHTING') >= 0 || /(^|\s)SEL(\s|$)/.test(normalized)) return 'SEL';
+        if (normalized.indexOf('INTRUDER ALARM') >= 0 || /(^|\s)IA(\s|$)/.test(normalized)) return 'IA';
         if (normalized.indexOf('QUICK QUOTE') >= 0 || /(^|\s)QQ(\s|$)/.test(normalized)) return 'QQ';
         if (normalized.indexOf('PORTABLE SERVICE') >= 0 || normalized.indexOf('SERVICE WORKSHEET') >= 0 || /(^|\s)PWS(\s|$)/.test(normalized)) return 'PWS';
         if (normalized.indexOf('MANUAL ORDER') >= 0 || /(^|\s)MO(\s|$)/.test(normalized)) return 'MO';
@@ -6494,7 +6557,7 @@ function clearOfflineLookupCustomerChunks() {
         if (!rows.length) {
           offlineList.innerHTML = selectedEngineer
             ? '<div class="offline-empty">No drafts for this engineer are available on this iPad yet. While online, press Sync &amp; Refresh Drafts.</div>'
-            : '<div class="offline-empty">No drafts are available on this iPad yet. Sync while online or start a new ESR, SFA or SEL.</div>';
+            : '<div class="offline-empty">No drafts are available on this iPad yet. Sync while online or start a new ESR, SFA, SEL or IA.</div>';
           setOfflineStatus(selectedEngineer ? 'No drafts match this engineer.' : 'No drafts are saved on this iPad yet.');
           return;
         }
@@ -7315,9 +7378,11 @@ function clearOfflineLookupCustomerChunks() {
         activeOfflineReportCode = report && report.code ? report.code : 'W';
         const isSfa = report && report.code === 'SFA';
         const isSel = report && report.code === 'SEL';
+        const isIa = report && report.code === 'IA';
         const isPortable = report && (report.code === 'PWS' || report.code === 'MO');
         const sfaFields = document.getElementById('sfaOfflineFields');
         const selFields = document.getElementById('selOfflineFields');
+        const iaFields = document.getElementById('iaOfflineFields');
         const wAdmin = document.getElementById('wOfflineAdminFields');
         const wWork = document.getElementById('wOfflineWorkCostFields');
         const materialQuick = document.getElementById('editorMaterialQuickBtn');
@@ -7339,7 +7404,7 @@ function clearOfflineLookupCustomerChunks() {
         if (portableRowsHeading) portableRowsHeading.textContent = report && report.code === 'MO' ? 'Order lines' : 'Equipment inspected';
         if (portableCompletionHeading) portableCompletionHeading.textContent = report && report.code === 'MO' ? 'Instructions' : 'Completion';
         if (portableCommentsLabel) portableCommentsLabel.textContent = report && report.code === 'MO' ? 'Special Instructions' : 'Engineer Comments';
-        if (addCertControls) addCertControls.classList.toggle('hidden-report-fields', isPortable);
+        if (addCertControls) addCertControls.classList.toggle('hidden-report-fields', isPortable || isIa);
         if (portableFields) portableFields.classList.toggle('hidden-report-fields', !isPortable);
         if (portableHeading) portableHeading.textContent = report && report.code === 'MO' ? 'Manual Order' : 'Portable Service Worksheet';
         Array.prototype.forEach.call(document.querySelectorAll('.portable-pws-only'), function(el) {
@@ -7351,9 +7416,10 @@ function clearOfflineLookupCustomerChunks() {
         if (signatureLabel) signatureLabel.textContent = report && report.code === 'MO' ? 'Received Equipment Signature' : 'Engineer Signature';
         if (sfaFields) sfaFields.classList.toggle('hidden-report-fields', !isSfa);
         if (selFields) selFields.classList.toggle('hidden-report-fields', !isSel);
-        if (wAdmin) wAdmin.classList.toggle('hidden-report-fields', isSfa || isSel || isPortable);
-        if (wWork) wWork.classList.toggle('hidden-report-fields', isSfa || isSel || isPortable);
-        if (materialQuick) materialQuick.classList.toggle('hidden-report-fields', isSfa || isSel || isPortable);
+        if (iaFields) iaFields.classList.toggle('hidden-report-fields', !isIa);
+        if (wAdmin) wAdmin.classList.toggle('hidden-report-fields', isSfa || isSel || isIa || isPortable);
+        if (wWork) wWork.classList.toggle('hidden-report-fields', isSfa || isSel || isIa || isPortable);
+        if (materialQuick) materialQuick.classList.toggle('hidden-report-fields', isSfa || isSel || isIa || isPortable);
         if (sfaQuick) sfaQuick.classList.toggle('hidden-report-fields', !isSfa);
         if (sfaPayloadBtn) sfaPayloadBtn.classList.toggle('hidden-report-fields', !isSfa);
         if (!isSfa && sfaPayloadPreview) sfaPayloadPreview.classList.add('hidden-report-fields');
@@ -7469,6 +7535,16 @@ function clearOfflineLookupCustomerChunks() {
         setEditValue('editServiceDate', d.serviceDate || '');
         setEditValue('editCustomer', d.customer || item.customer || '');
         setEditValue('editSite', d.site || item.site || '');
+        setEditValue('editIaContractId', d.contractId || '');
+        setEditValue('editIaOrderNo', d.orderNo || '');
+        ['AudibleOnly','RemoteSignalling','DualPath','SinglePath','PanelsTotal','PanelsTested','PowerSuppliesTotal','PowerSuppliesTested','BatteriesTotal','BatteriesTested','PirTotal','PirTested','PanicTotal','PanicTested','RollerDoorTotal','RollerDoorTested','DoorContactTotal','DoorContactTested','VibrationSensorsTotal','VibrationSensorsTested','ScbSabTotal','ScbSabTested','InternalSounderTotal','InternalSounderTested','AsFitted','DetectorsHd','CircuitResistance','Environmental','AntiTamper','WarningDevices','SettingUnsetting','AtsOperation','PowerSuppliesChecked','EntryExit','QuiescentCurrent','AlarmCurrent','CMin','BatterySuitable','EngineerComments','AdditionalWork','WorkDetails','QuickQuoteRef','ServiceCost','MaterialCost','LabourCost','SubTotal','Vat','Total'].forEach(function(suffix) {
+          const key = 'ia' + suffix;
+          setEditValue('editIa' + suffix, d[key] != null ? d[key] : '');
+        });
+        for (let iaCh = 1; iaCh <= 16; iaCh++) {
+          const box = document.getElementById('editIaAtsChannel' + iaCh);
+          if (box) box.checked = String(d['iaAtsChannel' + iaCh] || '').toUpperCase() === 'YES' || (Array.isArray(d.iaAtsChannels) && d.iaAtsChannels.indexOf(String(iaCh)) !== -1);
+        }
         setEditValue('editPortablePriceList', d.priceList || '');
         setEditValue('editPortableReportNo', d.reportNo || '');
         setEditValue('editPortableCustomerOrderNo', d.customerOrderNo || '');
@@ -7670,6 +7746,7 @@ function clearOfflineLookupCustomerChunks() {
         updateEditorNetworkBadge();
         bindEditorChangeTracking();
         calculateEditorTotals();
+        calculateIaOfflineTotals();
         updateOfflineInlineCertUi();
         if (report.code === 'W') offlineRepeatRestoreDraft(d);
         setEditorDirty(false);
@@ -7929,6 +8006,24 @@ function clearOfflineLookupCustomerChunks() {
         };
       }
 
+      function createBlankOfflineIaItem() {
+        const now = new Date();
+        const today = now.toISOString().slice(0, 10);
+        const offlineId = makeOfflineId('IA');
+        const draft = {
+          offlineCreated:true, offlineId:offlineId, reportType:'Intruder Alarm Inspection & Test Report', reportTypeCode:'IA',
+          draftName:'IA - ' + today, serviceDate:today, customerDate:today, engineer:getDefaultEngineerProfile() || '', customer:'', site:'',
+          contractId:'', orderNo:'', iaAudibleOnly:'NO', iaRemoteSignalling:'NO', iaDualPath:'NO', iaSinglePath:'NO',
+          iaPanelsTotal:'',iaPanelsTested:'',iaPowerSuppliesTotal:'',iaPowerSuppliesTested:'',iaBatteriesTotal:'',iaBatteriesTested:'',iaPirTotal:'',iaPirTested:'',iaPanicTotal:'',iaPanicTested:'',iaRollerDoorTotal:'',iaRollerDoorTested:'',iaDoorContactTotal:'',iaDoorContactTested:'',iaVibrationSensorsTotal:'',iaVibrationSensorsTested:'',iaScbSabTotal:'',iaScbSabTested:'',iaInternalSounderTotal:'',iaInternalSounderTested:'',
+          iaAsFitted:'',iaDetectorsHd:'',iaCircuitResistance:'',iaEnvironmental:'',iaAntiTamper:'',iaWarningDevices:'',iaSettingUnsetting:'',iaAtsOperation:'',iaPowerSuppliesChecked:'',iaEntryExit:'',iaAtsChannels:[],
+          iaQuiescentCurrent:'',iaAlarmCurrent:'',iaCMin:'',iaBatterySuitable:'',iaEngineerComments:'',iaAdditionalWork:'NO',iaWorkDetails:'',iaQuickQuoteRef:'',
+          iaServiceCost:'0.00',iaMaterialCost:'0.00',iaLabourCost:'0.00',iaSubTotal:'0.00',iaVat:'0.00',iaTotal:'0.00',
+          customerName:'',customerSignatureStatus:'SIGNATURE_REQUIRED',engineerSignature:'',customerSignature:'',savedAt:now.toISOString()
+        };
+        for (let ch=1;ch<=16;ch++) draft['iaAtsChannel'+ch]='NO';
+        return {offlineId:offlineId,reportType:'IA',reportTypeCode:'IA',draftId:'',draftName:draft.draftName,engineer:draft.engineer,customer:'',site:'',savedAt:draft.savedAt,source:'github-shell-start-offline-ia-c97bs',draft:draft,syncState:'offline_only'};
+      }
+
       function createBlankOfflinePortableItem(code) {
         code = String(code || '').toUpperCase() === 'MO' ? 'MO' : 'PWS';
         const now = new Date();
@@ -8027,6 +8122,17 @@ function clearOfflineLookupCustomerChunks() {
         });
       };
 
+      window.startNewOfflineIa = function startNewOfflineIa(event) {
+        stopTap(event);
+        const item = createBlankOfflineIaItem();
+        return Promise.resolve(upsertOfflineItem(item)).then(function() {
+          renderOfflineDrafts();
+          openEditorForItem(item);
+          setEditorStatus('New IA started on this iPad. Save here anytime, then upload when signal returns.');
+          return false;
+        });
+      };
+
       window.startNewOfflinePortable = function startNewOfflinePortable(event, code) {
         stopTap(event);
         const item = createBlankOfflinePortableItem(code);
@@ -8110,6 +8216,17 @@ function clearOfflineLookupCustomerChunks() {
         return d;
       }
 
+      function calculateIaOfflineTotals() {
+        function n(id){ const v = parseFloat(String(getEditValue(id) || '').replace(/[^0-9.-]/g,'')); return isFinite(v) ? v : 0; }
+        function m(id,value){ const el=document.getElementById(id); if(el) el.value=(Math.round(Number(value||0)*100)/100).toFixed(2); }
+        const q=n('editIaQuiescentCurrent'), a=n('editIaAlarmCurrent');
+        const c=(q*11.5+a*0.5)*1.25;
+        const cEl=document.getElementById('editIaCMin'); if(cEl)cEl.value=(q||a)?c.toFixed(2):'';
+        const sub=n('editIaServiceCost')+n('editIaMaterialCost')+n('editIaLabourCost');
+        m('editIaSubTotal',sub);m('editIaVat',sub*.2);m('editIaTotal',sub*1.2);
+      }
+      window.calculateIaOfflineTotals = calculateIaOfflineTotals;
+
       function saveEditorToQueue() {
         const offlineId = getEditValue('editOfflineId');
         const item = getOfflineItemById(offlineId);
@@ -8128,10 +8245,28 @@ function clearOfflineLookupCustomerChunks() {
         const savingW = reportCodeForSave === 'W';
         const savingSfa = reportCodeForSave === 'SFA';
         const savingSel = reportCodeForSave === 'SEL';
+        const savingIa = reportCodeForSave === 'IA';
         const savingPortable = reportCodeForSave === 'PWS' || reportCodeForSave === 'MO';
         const savingWModule = savingW || getOfflineInlineFlag('W');
         const savingSfaModule = savingSfa || getOfflineInlineFlag('SFA');
         const savingSelModule = savingSel || getOfflineInlineFlag('SEL');
+        if (savingIa) {
+          calculateIaOfflineTotals();
+          d.reportType = 'Intruder Alarm Inspection & Test Report';
+          d.reportTypeCode = 'IA';
+          d.contractId = getEditValue('editIaContractId');
+          d.orderNo = getEditValue('editIaOrderNo');
+          ['AudibleOnly','RemoteSignalling','DualPath','SinglePath','PanelsTotal','PanelsTested','PowerSuppliesTotal','PowerSuppliesTested','BatteriesTotal','BatteriesTested','PirTotal','PirTested','PanicTotal','PanicTested','RollerDoorTotal','RollerDoorTested','DoorContactTotal','DoorContactTested','VibrationSensorsTotal','VibrationSensorsTested','ScbSabTotal','ScbSabTested','InternalSounderTotal','InternalSounderTested','AsFitted','DetectorsHd','CircuitResistance','Environmental','AntiTamper','WarningDevices','SettingUnsetting','AtsOperation','PowerSuppliesChecked','EntryExit','QuiescentCurrent','AlarmCurrent','CMin','BatterySuitable','EngineerComments','AdditionalWork','WorkDetails','QuickQuoteRef','ServiceCost','MaterialCost','LabourCost','SubTotal','Vat','Total'].forEach(function(suffix) {
+            d['ia' + suffix] = getEditValue('editIa' + suffix);
+          });
+          d.iaAtsChannels = [];
+          for (let iaCh=1; iaCh<=16; iaCh++) {
+            const box=document.getElementById('editIaAtsChannel'+iaCh);
+            d['iaAtsChannel'+iaCh] = box && box.checked ? 'YES' : 'NO';
+            if (box && box.checked) d.iaAtsChannels.push(String(iaCh));
+          }
+          d.subTotal=d.iaSubTotal; d.vat=d.iaVat; d.total=d.iaTotal;
+        }
         if (savingPortable) {
           d.priceList = getEditValue('editPortablePriceList');
           d.reportNo = getEditValue('editPortableReportNo');
@@ -8394,7 +8529,7 @@ function clearOfflineLookupCustomerChunks() {
           d.subTotal = getEditValue('editSfaSubTotal');
           d.vat = getEditValue('editSfaVat');
           d.total = getEditValue('editSfaTotal');
-        } else if (!savingSel && !savingPortable) {
+        } else if (!savingSel && !savingIa && !savingPortable) {
           d.subTotal = getEditValue('editSubTotal');
           d.vat = getEditValue('editVat');
           d.total = getEditValue('editTotal');
@@ -8757,6 +8892,7 @@ function clearOfflineLookupCustomerChunks() {
         if (/(^|\s)QQ(\s|$)/.test(raw) || raw.indexOf('QUICK QUOTE') !== -1) return 'QQ';
         if (/(^|\s)SFA(\s|$)/.test(raw) || raw.indexOf('FIRE ALARM SERVICE') !== -1 || raw.indexOf('FIRE ALARM TEST REPORT') !== -1) return 'SFA';
         if (/(^|\s)SEL(\s|$)/.test(raw) || raw.indexOf('EMERGENCY LIGHTING') !== -1) return 'SEL';
+        if (/(^|\s)IA(\s|$)/.test(raw) || raw.indexOf('INTRUDER ALARM') !== -1) return 'IA';
         return 'W';
       }
 
@@ -9052,7 +9188,7 @@ function clearOfflineLookupCustomerChunks() {
         // the large shared report editor. Showing the normal loader first avoids
         // a blank-looking transition while ESR/SFA/SEL fields are prepared.
         const requestedCode = String(code || '').toUpperCase();
-        const selectedCode = ['W','SFA','SEL','PWS','MO'].indexOf(requestedCode) !== -1 ? requestedCode : 'W';
+        const selectedCode = ['W','SFA','SEL','IA','PWS','MO'].indexOf(requestedCode) !== -1 ? requestedCode : 'W';
         home.classList.add('hidden');
         offlineDrafts.classList.remove('active');
         if (offlineReportChooser) offlineReportChooser.classList.remove('active');
@@ -9068,6 +9204,7 @@ function clearOfflineLookupCustomerChunks() {
           try {
             if (selectedCode === 'SFA') return window.startNewOfflineSfaTrial();
             if (selectedCode === 'SEL') return window.startNewOfflineSelTrial();
+            if (selectedCode === 'IA') return window.startNewOfflineIa();
             if (selectedCode === 'PWS' || selectedCode === 'MO') return window.startNewOfflinePortable(null, selectedCode);
             return window.startNewOfflineW();
           } catch (err) {
@@ -9602,10 +9739,11 @@ function clearOfflineLookupCustomerChunks() {
         if (msg.source === 'fsd-cloud-draft-client-c95f' && msg.type === 'FSD_DRAFT_SAVE_OFFLINE') {
           acknowledgeDraftSaveMessage(event, msg);
           const code = String(msg.reportTypeCode || '').toUpperCase();
-          if (code === 'SFA' || code === 'SEL' || code === 'PWS' || code === 'MO') {
+          if (code === 'SFA' || code === 'SEL' || code === 'IA' || code === 'PWS' || code === 'MO') {
             const reportNames = {
               SFA: 'Fire Alarm Service Report',
               SEL: 'Emergency Lighting Report',
+              IA: 'Intruder Alarm Inspection & Test Report',
               PWS: 'Portable Service Worksheet',
               MO: 'Manual Order Worksheet'
             };
@@ -9704,9 +9842,9 @@ function clearOfflineLookupCustomerChunks() {
           return;
         }
 
-        if (msg.source !== 'fsd-certs-esr' && msg.source !== 'fsd-certs-sfa' && msg.source !== 'fsd-certs-sel' && msg.source !== 'fsd-certs-portables') return;
+        if (msg.source !== 'fsd-certs-esr' && msg.source !== 'fsd-certs-sfa' && msg.source !== 'fsd-certs-sel' && msg.source !== 'fsd-certs-ia' && msg.source !== 'fsd-certs-portables') return;
 
-        if ((msg.type === 'FSD_OFFLINE_W_REQUEST' || msg.type === 'FSD_OFFLINE_SFA_REQUEST' || msg.type === 'FSD_OFFLINE_SEL_REQUEST' || msg.type === 'FSD_OFFLINE_PWS_REQUEST' || msg.type === 'FSD_OFFLINE_MO_REQUEST') && pendingShellAction) {
+        if ((msg.type === 'FSD_OFFLINE_W_REQUEST' || msg.type === 'FSD_OFFLINE_SFA_REQUEST' || msg.type === 'FSD_OFFLINE_SEL_REQUEST' || msg.type === 'FSD_OFFLINE_IA_REQUEST' || msg.type === 'FSD_OFFLINE_PWS_REQUEST' || msg.type === 'FSD_OFFLINE_MO_REQUEST') && pendingShellAction) {
           // V6.3c37y: Apps Script may put the real W page inside a Google
           // wrapper frame. Sending to frame.contentWindow can hit the wrapper
           // instead of the report. Reply directly to the requesting window so
@@ -9752,13 +9890,14 @@ function clearOfflineLookupCustomerChunks() {
           return;
         }
 
-        if (msg.type === 'FSD_OFFLINE_W_SYNC_RESULT' || msg.type === 'FSD_OFFLINE_SFA_SYNC_RESULT' || msg.type === 'FSD_OFFLINE_SEL_SYNC_RESULT' || msg.type === 'FSD_OFFLINE_PWS_SYNC_RESULT' || msg.type === 'FSD_OFFLINE_MO_SYNC_RESULT') {
+        if (msg.type === 'FSD_OFFLINE_W_SYNC_RESULT' || msg.type === 'FSD_OFFLINE_SFA_SYNC_RESULT' || msg.type === 'FSD_OFFLINE_SEL_SYNC_RESULT' || msg.type === 'FSD_OFFLINE_IA_SYNC_RESULT' || msg.type === 'FSD_OFFLINE_PWS_SYNC_RESULT' || msg.type === 'FSD_OFFLINE_MO_SYNC_RESULT') {
           clearTimeout(shellActionTimer);
           const result = msg.item || {};
           const resultCode = msg.type === 'FSD_OFFLINE_SFA_SYNC_RESULT' ? 'SFA' :
             (msg.type === 'FSD_OFFLINE_SEL_SYNC_RESULT' ? 'SEL' :
+            (msg.type === 'FSD_OFFLINE_IA_SYNC_RESULT' ? 'IA' :
             (msg.type === 'FSD_OFFLINE_PWS_SYNC_RESULT' ? 'PWS' :
-            (msg.type === 'FSD_OFFLINE_MO_SYNC_RESULT' ? 'MO' : 'W')));
+            (msg.type === 'FSD_OFFLINE_MO_SYNC_RESULT' ? 'MO' : 'W'))));
           if (result.ok && result.offlineId) {
             const sourceItem = (pendingShellAction && pendingShellAction.item) || getOfflineItemById(result.offlineId);
             if (sourceItem && sourceItem.draft) {
@@ -9865,7 +10004,7 @@ function clearOfflineLookupCustomerChunks() {
 
     }());
   </script>
-  <div class="fixed-version-badge">FSD Certs · Minimal Home C97br</div>
+  <div class="fixed-version-badge">FSD Certs · Minimal Home C97bs</div>
 
 
   <!-- C93p Premium Home clock -->
