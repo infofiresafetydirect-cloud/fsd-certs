@@ -442,6 +442,12 @@
     .sfa-local-note { grid-column: 1 / -1; padding: 10px 12px; border-radius: 14px; background: #fff7ed; color: #7c2d12; border: 1px solid #fed7aa; font-weight: 850; font-size: 13px; line-height: 1.35; }
     .editor-materials { grid-column: 1 / -1; display: grid; gap: 8px; }
     .nested-editor-grid { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+    .iacChoiceGroup { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:7px; margin-top:3px; }
+    .iacChoiceValue { display:none !important; }
+    .iacChoiceBtn { min-height:46px; padding:9px 5px; border-radius:11px; border:2px solid #cbd5e1; background:#f8fafc; color:#334155; font:inherit; font-size:14px; font-weight:950; cursor:pointer; }
+    .iacChoiceBtn.isSelected[data-iac-choice="YES"] { background:#dcfce7; border-color:#16a34a; color:#14532d; }
+    .iacChoiceBtn.isSelected[data-iac-choice="NO"] { background:#fee2e2; border-color:#dc2626; color:#7f1d1d; }
+    .iacChoiceBtn.isSelected[data-iac-choice="NA"] { background:#e2e8f0; border-color:#64748b; color:#1e293b; }
 
     /* C97au: make offline Portables follow the normal online worksheet layout. */
     .offline-editor-screen.portable-online-look-screen { align-items: flex-start; background: #f8fafc; }
@@ -2804,7 +2810,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
           <button data-fsd-fasttap class="minimal-app tone-navy" type="button" onclick="openSubmittedReports(event)"><span class="minimal-app-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3.5h12v17H6z"/><path d="m9 12 2 2 4-4M9 17h6M9 7h6"/></svg></span><strong>Submitted Reports</strong><small>Review completed paperwork.</small><span class="minimal-app-arrow" aria-hidden="true">→</span></button>
         </div></section>
       </main>
-      <footer class="minimal-footer"><span><strong>FSD Certs</strong> · Built for Fire Safety Direct</span><span class="minimal-labs">Designed &amp; engineered by Jared720 Labs · C97ca</span></footer>
+      <footer class="minimal-footer"><span><strong>FSD Certs</strong> · Built for Fire Safety Direct</span><span class="minimal-labs">Designed &amp; engineered by Jared720 Labs · C97cb</span></footer>
     </div>
   </section>
   <section id="offlineDrafts" class="screen offline-screen" aria-label="Jobs and Drafts">
@@ -4346,6 +4352,30 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
         if (code === 'SFA') offlineRepeatRenderSfaRows(section, data.faEquipmentRows || []);
         if (code === 'SLT') offlineRepeatRenderSltRows(section, data.sltReadings || []);
         if (code === 'PSC') offlineRepeatCalculatePsc(section);
+        if (code === 'IAC') syncOfflineIacChoiceButtons(section);
+      }
+
+      function syncOfflineIacChoiceButtons(section) {
+        if (!section) return;
+        section.querySelectorAll('.iacChoiceGroup').forEach(function(group) {
+          const field = group.querySelector('.iacChoiceValue');
+          const selected = String(field && field.value || 'NA').toUpperCase();
+          group.querySelectorAll('.iacChoiceBtn').forEach(function(button) {
+            const active = String(button.getAttribute('data-iac-choice') || '').toUpperCase() === selected;
+            button.classList.toggle('isSelected', active);
+            button.setAttribute('aria-pressed', active ? 'true' : 'false');
+          });
+        });
+      }
+
+      function selectOfflineIacChoice(button, section) {
+        const group = button && button.closest ? button.closest('.iacChoiceGroup') : null;
+        const field = group ? group.querySelector('.iacChoiceValue') : null;
+        if (!field) return false;
+        field.value = String(button.getAttribute('data-iac-choice') || 'NA').toUpperCase();
+        syncOfflineIacChoiceButtons(section || group);
+        setEditorDirty(true);
+        return false;
       }
 
       function offlineRepeatRenderSfaRows(section, items) {
@@ -4415,6 +4445,10 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
         });
         section.addEventListener('input', function() { if (page.code === 'PSC') offlineRepeatCalculatePsc(section); setEditorDirty(true); });
         section.addEventListener('change', function() { if (page.code === 'PSC') offlineRepeatCalculatePsc(section); setEditorDirty(true); });
+        section.addEventListener('click', function(event) {
+          const button = event.target && event.target.closest ? event.target.closest('.iacChoiceBtn') : null;
+          if (page.code === 'IAC' && button && section.contains(button)) selectOfflineIacChoice(button, section);
+        });
         page.element = section;
         offlineRepeatRestoreDom(page.code, page.data || {}, section);
         return section;
@@ -4554,7 +4588,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
         ];
         let html = '<div class="nested-editor-grid"><div class="editor-section-title">Acceptance &amp; Handover Checks</div>';
         checks.forEach(function(label, index) {
-          html += '<div class="editor-field"><label>' + escapeHtml(label) + '</label><select id="editIacCheck' + (index + 1) + '"><option value="NA">N/A</option><option value="YES">YES</option><option value="NO">NO</option></select></div>';
+          html += '<div class="editor-field"><label>' + escapeHtml(label) + '</label><div class="iacChoiceGroup"><select class="iacChoiceValue" id="editIacCheck' + (index + 1) + '" tabindex="-1" aria-hidden="true"><option value="NA">N/A</option><option value="YES">YES</option><option value="NO">NO</option></select><button class="iacChoiceBtn" type="button" data-iac-choice="YES" aria-pressed="false">YES</button><button class="iacChoiceBtn" type="button" data-iac-choice="NO" aria-pressed="false">NO</button><button class="iacChoiceBtn" type="button" data-iac-choice="NA" aria-pressed="false">N/A</button></div></div>';
         });
         html += '<div class="editor-field editor-wide"><label>System Design Proposal changes / departures</label><textarea id="editSystemDesignChanges" rows="4"></textarea></div>';
         html += '<div class="editor-section-title">Equipment Checked</div>';
@@ -10120,7 +10154,7 @@ function clearOfflineLookupCustomerChunks() {
 
     }());
   </script>
-      <div class="fixed-version-badge">FSD Certs · Minimal Home C97ca</div>
+      <div class="fixed-version-badge">FSD Certs · Minimal Home C97cb</div>
 
 
   <!-- C93p Premium Home clock -->
