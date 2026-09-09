@@ -448,6 +448,10 @@
     .iacChoiceBtn.isSelected[data-iac-choice="YES"] { background:#dcfce7; border-color:#16a34a; color:#14532d; }
     .iacChoiceBtn.isSelected[data-iac-choice="NO"] { background:#fee2e2; border-color:#dc2626; color:#7f1d1d; }
     .iacChoiceBtn.isSelected[data-iac-choice="NA"] { background:#e2e8f0; border-color:#64748b; color:#1e293b; }
+    .iacCircuitList { display:grid; gap:10px; }
+    .iacCircuitRow { display:grid; grid-template-columns:1fr 1fr; gap:10px; padding:10px; border:1px solid #e2e8f0; border-radius:12px; background:#f8fafc; }
+    .iacCircuitRow[hidden] { display:none !important; }
+    .iacCircuitControls { display:flex; flex-wrap:wrap; gap:8px; margin-top:10px; }
 
     /* C97au: make offline Portables follow the normal online worksheet layout. */
     .offline-editor-screen.portable-online-look-screen { align-items: flex-start; background: #f8fafc; }
@@ -607,6 +611,7 @@
       .editor-grid { grid-template-columns: 1fr; }
       .editor-material-row { grid-template-columns: 1fr; }
         .nested-editor-grid { grid-template-columns: 1fr; }
+        .iacCircuitRow { grid-template-columns:1fr; }
         .offline-portable-panel { grid-template-columns: 1fr; }
         .portable-online-look .offline-job-panel { grid-template-columns: 1fr; }
         .portable-online-look .offline-signature-panel { grid-template-columns: 1fr; }
@@ -2810,7 +2815,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
           <button data-fsd-fasttap class="minimal-app tone-navy" type="button" onclick="openSubmittedReports(event)"><span class="minimal-app-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3.5h12v17H6z"/><path d="m9 12 2 2 4-4M9 17h6M9 7h6"/></svg></span><strong>Submitted Reports</strong><small>Review completed paperwork.</small><span class="minimal-app-arrow" aria-hidden="true">→</span></button>
         </div></section>
       </main>
-      <footer class="minimal-footer"><span><strong>FSD Certs</strong> · Built for Fire Safety Direct</span><span class="minimal-labs">Designed &amp; engineered by Jared720 Labs · C97cb</span></footer>
+      <footer class="minimal-footer"><span><strong>FSD Certs</strong> · Built for Fire Safety Direct</span><span class="minimal-labs">Designed &amp; engineered by Jared720 Labs · C97cc</span></footer>
     </div>
   </section>
   <section id="offlineDrafts" class="screen offline-screen" aria-label="Jobs and Drafts">
@@ -4352,7 +4357,10 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
         if (code === 'SFA') offlineRepeatRenderSfaRows(section, data.faEquipmentRows || []);
         if (code === 'SLT') offlineRepeatRenderSltRows(section, data.sltReadings || []);
         if (code === 'PSC') offlineRepeatCalculatePsc(section);
-        if (code === 'IAC') syncOfflineIacChoiceButtons(section);
+        if (code === 'IAC') {
+          syncOfflineIacChoiceButtons(section);
+          syncOfflineIacCircuitRows(section);
+        }
       }
 
       function syncOfflineIacChoiceButtons(section) {
@@ -4374,6 +4382,52 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
         if (!field) return false;
         field.value = String(button.getAttribute('data-iac-choice') || 'NA').toUpperCase();
         syncOfflineIacChoiceButtons(section || group);
+        setEditorDirty(true);
+        return false;
+      }
+
+      function syncOfflineIacCircuitRows(section) {
+        if (!section) return;
+        const countField = offlineRepeatField(section, 'editIacCircuitRowCount');
+        let populated = 0;
+        for (let circuit = 1; circuit <= 36; circuit += 1) {
+          const resistance = offlineRepeatField(section, 'editCircuit' + circuit + 'Resistance');
+          const location = offlineRepeatField(section, 'editCircuit' + circuit + 'Location');
+          if (String(resistance && resistance.value || '').trim() || String(location && location.value || '').trim()) populated = circuit;
+        }
+        let count = Number(countField && countField.value) || 0;
+        count = Math.max(2, Math.min(36, Math.max(count, populated)));
+        if (countField) countField.value = String(count);
+        section.querySelectorAll('.iacCircuitRow').forEach(function(row) {
+          row.hidden = Number(row.getAttribute('data-iac-circuit-row') || 0) > count;
+        });
+        const remove = section.querySelector('.iacCircuitRemoveBtn');
+        const add = section.querySelector('.iacCircuitAddBtn');
+        if (remove) remove.disabled = count <= 2;
+        if (add) add.disabled = count >= 36;
+      }
+
+      function addOfflineIacCircuitRow(section) {
+        const countField = offlineRepeatField(section, 'editIacCircuitRowCount');
+        const count = Math.min(36, (Number(countField && countField.value) || 2) + 1);
+        if (countField) countField.value = String(count);
+        syncOfflineIacCircuitRows(section);
+        const field = offlineRepeatField(section, 'editCircuit' + count + 'Resistance');
+        if (field && field.focus) field.focus();
+        setEditorDirty(true);
+        return false;
+      }
+
+      function removeOfflineIacCircuitRow(section) {
+        const countField = offlineRepeatField(section, 'editIacCircuitRowCount');
+        const count = Math.max(2, Number(countField && countField.value) || 2);
+        if (count <= 2) return false;
+        const resistance = offlineRepeatField(section, 'editCircuit' + count + 'Resistance');
+        const location = offlineRepeatField(section, 'editCircuit' + count + 'Location');
+        if (resistance) resistance.value = '';
+        if (location) location.value = '';
+        if (countField) countField.value = String(count - 1);
+        syncOfflineIacCircuitRows(section);
         setEditorDirty(true);
         return false;
       }
@@ -4448,6 +4502,10 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
         section.addEventListener('click', function(event) {
           const button = event.target && event.target.closest ? event.target.closest('.iacChoiceBtn') : null;
           if (page.code === 'IAC' && button && section.contains(button)) selectOfflineIacChoice(button, section);
+          const addCircuit = event.target && event.target.closest ? event.target.closest('.iacCircuitAddBtn') : null;
+          const removeCircuit = event.target && event.target.closest ? event.target.closest('.iacCircuitRemoveBtn') : null;
+          if (page.code === 'IAC' && addCircuit && section.contains(addCircuit)) addOfflineIacCircuitRow(section);
+          if (page.code === 'IAC' && removeCircuit && section.contains(removeCircuit)) removeOfflineIacCircuitRow(section);
         });
         page.element = section;
         offlineRepeatRestoreDom(page.code, page.data || {}, section);
@@ -4603,12 +4661,12 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
           '<div class="editor-field"><label>Battery Fitted</label><input id="editBatteryFitted"></div>' +
           '<div class="editor-field"><label>Battery Suitable</label><select id="editBatterySuitable"><option value="YES">YES</option><option value="NO">NO</option></select></div>' +
           '<div class="editor-field editor-wide"><label>Engineer Comments</label><textarea id="editEngineerComments" rows="4"></textarea></div>' +
-          '<div class="editor-section-title">Record of Circuit Resistance</div>';
+          '<div class="editor-section-title">Record of Circuit Resistance</div><input id="editIacCircuitRowCount" type="hidden" value="2"><div class="iacCircuitList editor-wide">';
         for (let circuit = 1; circuit <= 36; circuit += 1) {
-          html += '<div class="editor-field"><label>Circuit ' + circuit + ' Resistance</label><input id="editCircuit' + circuit + 'Resistance"></div>' +
-            '<div class="editor-field"><label>Circuit ' + circuit + ' Location</label><input id="editCircuit' + circuit + 'Location"></div>';
+          html += '<div class="iacCircuitRow" data-iac-circuit-row="' + circuit + '"><div class="editor-field"><label>Circuit ' + circuit + ' Resistance</label><input id="editCircuit' + circuit + 'Resistance"></div>' +
+            '<div class="editor-field"><label>Circuit ' + circuit + ' Location</label><input id="editCircuit' + circuit + 'Location"></div></div>';
         }
-        host.innerHTML = html + '</div>';
+        host.innerHTML = html + '</div><div class="iacCircuitControls editor-wide"><button class="editor-mini-btn iacCircuitAddBtn" type="button">+ Add Circuit</button><button class="editor-mini-btn iacCircuitRemoveBtn" type="button">Remove Last Circuit</button></div></div>';
       }
 
       function offlineRepeatEnsureDefaults() {
@@ -10154,7 +10212,7 @@ function clearOfflineLookupCustomerChunks() {
 
     }());
   </script>
-      <div class="fixed-version-badge">FSD Certs · Minimal Home C97cb</div>
+      <div class="fixed-version-badge">FSD Certs · Minimal Home C97cc</div>
 
 
   <!-- C93p Premium Home clock -->
