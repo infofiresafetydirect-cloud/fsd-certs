@@ -2804,7 +2804,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
           <button data-fsd-fasttap class="minimal-app tone-navy" type="button" onclick="openSubmittedReports(event)"><span class="minimal-app-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3.5h12v17H6z"/><path d="m9 12 2 2 4-4M9 17h6M9 7h6"/></svg></span><strong>Submitted Reports</strong><small>Review completed paperwork.</small><span class="minimal-app-arrow" aria-hidden="true">→</span></button>
         </div></section>
       </main>
-      <footer class="minimal-footer"><span><strong>FSD Certs</strong> · Built for Fire Safety Direct</span><span class="minimal-labs">Designed &amp; engineered by Jared720 Labs · C97br</span></footer>
+      <footer class="minimal-footer"><span><strong>FSD Certs</strong> · Built for Fire Safety Direct</span><span class="minimal-labs">Designed &amp; engineered by Jared720 Labs · C97ca</span></footer>
     </div>
   </section>
   <section id="offlineDrafts" class="screen offline-screen" aria-label="Jobs and Drafts">
@@ -3021,6 +3021,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
             <input type="hidden" id="editIncludeFireAlarmModificationReport" value="NO">
             <input type="hidden" id="editIncludePowerSupplyCertificate" value="NO">
             <input type="hidden" id="editIncludeSoundLevelTestReport" value="NO">
+            <input type="hidden" id="editIncludeIntruderAlarmCommissioningReport" value="NO">
             <div class="editor-quick-row editor-wide">
               <button id="offlineAddWBtn" class="editor-mini-btn" type="button" onclick="addOfflineInlineCert(event,'W')">Add Engineer Service Report</button>
               <button id="offlineAddSfaBtn" class="editor-mini-btn" type="button" onclick="addOfflineInlineCert(event,'SFA')">Add Fire Alarm Report</button>
@@ -3029,8 +3030,16 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
               <button id="offlineAddFamBtn" class="editor-mini-btn" type="button" onclick="addOfflineInlineCert(event,'FAM')">Add FAM page</button>
               <button id="offlineAddPscBtn" class="editor-mini-btn" type="button" onclick="addOfflineInlineCert(event,'PSC')">Add PSC page</button>
               <button id="offlineAddSltBtn" class="editor-mini-btn" type="button" onclick="addOfflineInlineCert(event,'SLT')">Add Sound Level Test</button>
+              <button id="offlineAddIacBtn" class="editor-mini-btn" type="button" onclick="addOfflineInlineCert(event,'IAC')">Add Intruder Commissioning</button>
             </div>
             <div id="offlineInlineCertSummary" class="sfa-local-note editor-wide">No extra pages added yet.</div>
+          </div>
+
+          <div id="iacOfflineFields" class="nested-editor-grid hidden-report-fields">
+            <div class="editor-section-title">IAC Intruder Alarm Acceptance &amp; Handover Certificate</div>
+            <div class="sfa-local-note">Both IAC certificate pages are saved inside this offline ESR draft. Customer, site, engineer, date and signatures come from the parent ESR.</div>
+            <button class="editor-mini-btn" type="button" onclick="removeOfflineInlineCert(event,'IAC')">Remove IAC page</button>
+            <div id="offlineIacDynamicFields" class="editor-wide"></div>
           </div>
 
           <div id="facOfflineFields" class="nested-editor-grid hidden-report-fields">
@@ -4176,7 +4185,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
         FAC: { code: 'FAC', label: 'Fire Alarm Commissioning Certificate', page: 'fac', editableOffline: false, syncableOffline: false }
       };
       const OFFLINE_ADD_PAGE_RULES = {
-        W: ['SFA', 'SEL', 'FAC', 'FAM', 'PSC', 'SLT'],
+        W: ['SFA', 'SEL', 'FAC', 'FAM', 'PSC', 'SLT', 'IAC'],
         SFA: ['W', 'SEL'],
         SEL: ['W', 'SFA']
       };
@@ -4187,9 +4196,9 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
       let offlineCustomerSignatureData = '';
       let sigHelperLocalTarget = '';
       // C97ar: every offline ESR added copy is a complete visible form page.
-      const OFFLINE_REPEAT_TYPE_MAP = { SFA:'FIRE_ALARM', SEL:'EMERGENCY_LIGHTING', FAC:'FIRE_ALARM_COMMISSIONING', FAM:'FIRE_ALARM_MODIFICATION', PSC:'POWER_SUPPLY', SLT:'SOUND_LEVEL_TEST' };
-      const OFFLINE_REPEAT_CODE_MAP = { FIRE_ALARM:'SFA', EMERGENCY_LIGHTING:'SEL', FIRE_ALARM_COMMISSIONING:'FAC', FIRE_ALARM_MODIFICATION:'FAM', POWER_SUPPLY:'PSC', SOUND_LEVEL_TEST:'SLT' };
-      const OFFLINE_REPEAT_SECTION_MAP = { SFA:'sfaOfflineFields', SEL:'selOfflineFields', FAC:'facOfflineFields', FAM:'famOfflineFields', PSC:'pscOfflineFields', SLT:'sltOfflineFields' };
+      const OFFLINE_REPEAT_TYPE_MAP = { SFA:'FIRE_ALARM', SEL:'EMERGENCY_LIGHTING', FAC:'FIRE_ALARM_COMMISSIONING', FAM:'FIRE_ALARM_MODIFICATION', PSC:'POWER_SUPPLY', SLT:'SOUND_LEVEL_TEST', IAC:'INTRUDER_ALARM_COMMISSIONING' };
+      const OFFLINE_REPEAT_CODE_MAP = { FIRE_ALARM:'SFA', EMERGENCY_LIGHTING:'SEL', FIRE_ALARM_COMMISSIONING:'FAC', FIRE_ALARM_MODIFICATION:'FAM', POWER_SUPPLY:'PSC', SOUND_LEVEL_TEST:'SLT', INTRUDER_ALARM_COMMISSIONING:'IAC' };
+      const OFFLINE_REPEAT_SECTION_MAP = { SFA:'sfaOfflineFields', SEL:'selOfflineFields', FAC:'facOfflineFields', FAM:'famOfflineFields', PSC:'pscOfflineFields', SLT:'sltOfflineFields', IAC:'iacOfflineFields' };
       let offlineRepeatPages = {};
       let offlineRepeatDefaults = {};
       let offlineRepeatTemplates = {};
@@ -4237,6 +4246,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
           FAM: function(key){ return key.indexOf('fam') === 0; },
           PSC: function(key){ return key.indexOf('psc') === 0; },
           SLT: function(key){ return key.indexOf('slt') === 0; }
+          ,IAC: function(key){ return key.indexOf('iac') === 0 || ['systemDesignChanges','quiescentCurrent','alarmCurrent','minimumCapacity','batteryFitted','batterySuitable','engineerComments'].indexOf(key) !== -1 || /^circuit\d+(Resistance|Location)$/.test(key); }
         };
         Object.keys(draft || {}).forEach(function(key) { if (tests[code] && tests[code](key)) out[key] = draft[key]; });
         return out;
@@ -4512,7 +4522,63 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
         return false;
       }
 
+      function buildOfflineIacCommissioningFields() {
+        const host = document.getElementById('offlineIacDynamicFields');
+        if (!host || host.children.length) return;
+        const checks = [
+          'System installed and configured to the system design proposal',
+          'System complies with current industry standards and workmanship requirements',
+          'All interconnections clearly labelled',
+          'Log resistance of detection interconnections or check continuity',
+          'Every detector checked for correct operation through to the CIE',
+          'All batteries marked with installation date',
+          'Current drawn in quiescent and alarm states logged',
+          'Mains removed and battery voltage/system operation checked',
+          'Adequate standby battery capacity confirmed',
+          'All warning devices and hold-off operation checked',
+          'All tamper devices checked',
+          'Movement/vibration detector coverage and alignment checked',
+          'Entry/exit routes and times checked',
+          'Detection devices operated to check alarm conditions',
+          'ATS paths tested for correct ARC receipt',
+          'Remote checks/support synchronization checked where applicable',
+          'Customer shown detector and hold-up device operation',
+          'Documentation completed and left on site',
+          'Customer receipt/operation signature obtained',
+          'Surplus materials removed and premises left tidy'
+        ];
+        const equipment = [
+          ['panelsNodes','Panels / Nodes'],['powerSupplies','Power Supplies'],['batteries','Batteries'],['pir','PIR'],
+          ['panicAttack','Panic Attack Equipment'],['rollerDoor','Roller Door Contact'],['doorContact','Door Contact'],
+          ['vibrationSensors','Vibration Sensors'],['externalBell','SCB/SAB (External Bell Box)'],['internalSounder','Sounder (Internal)']
+        ];
+        let html = '<div class="nested-editor-grid"><div class="editor-section-title">Acceptance &amp; Handover Checks</div>';
+        checks.forEach(function(label, index) {
+          html += '<div class="editor-field"><label>' + escapeHtml(label) + '</label><select id="editIacCheck' + (index + 1) + '"><option value="NA">N/A</option><option value="YES">YES</option><option value="NO">NO</option></select></div>';
+        });
+        html += '<div class="editor-field editor-wide"><label>System Design Proposal changes / departures</label><textarea id="editSystemDesignChanges" rows="4"></textarea></div>';
+        html += '<div class="editor-section-title">Equipment Checked</div>';
+        equipment.forEach(function(row) {
+          html += '<div class="editor-field"><label>' + escapeHtml(row[1]) + ' - Total</label><input id="editIac' + row[0] + 'Total" inputmode="numeric"></div>' +
+            '<div class="editor-field"><label>' + escapeHtml(row[1]) + ' - Tested</label><input id="editIac' + row[0] + 'Tested" inputmode="numeric"></div>';
+        });
+        html += '<div class="editor-section-title">Power Supplies &amp; Comments</div>' +
+          '<div class="editor-field"><label>Quiescent Current</label><input id="editQuiescentCurrent"></div>' +
+          '<div class="editor-field"><label>Alarm Current</label><input id="editAlarmCurrent"></div>' +
+          '<div class="editor-field"><label>Minimum Capacity</label><input id="editMinimumCapacity"></div>' +
+          '<div class="editor-field"><label>Battery Fitted</label><input id="editBatteryFitted"></div>' +
+          '<div class="editor-field"><label>Battery Suitable</label><select id="editBatterySuitable"><option value="YES">YES</option><option value="NO">NO</option></select></div>' +
+          '<div class="editor-field editor-wide"><label>Engineer Comments</label><textarea id="editEngineerComments" rows="4"></textarea></div>' +
+          '<div class="editor-section-title">Record of Circuit Resistance</div>';
+        for (let circuit = 1; circuit <= 36; circuit += 1) {
+          html += '<div class="editor-field"><label>Circuit ' + circuit + ' Resistance</label><input id="editCircuit' + circuit + 'Resistance"></div>' +
+            '<div class="editor-field"><label>Circuit ' + circuit + ' Location</label><input id="editCircuit' + circuit + 'Location"></div>';
+        }
+        host.innerHTML = html + '</div>';
+      }
+
       function offlineRepeatEnsureDefaults() {
+        buildOfflineIacCommissioningFields();
         Object.keys(OFFLINE_REPEAT_TYPE_MAP).forEach(function(code) {
           if (offlineRepeatDefaults[code]) return;
           const section = document.getElementById(OFFLINE_REPEAT_SECTION_MAP[code] || '');
@@ -6721,6 +6787,7 @@ function clearOfflineLookupCustomerChunks() {
         if (type === 'FAM') setEditValue('editIncludeFireAlarmModificationReport', yes);
         if (type === 'PSC') setEditValue('editIncludePowerSupplyCertificate', yes);
         if (type === 'SLT') setEditValue('editIncludeSoundLevelTestReport', yes);
+        if (type === 'IAC') setEditValue('editIncludeIntruderAlarmCommissioningReport', yes);
       }
 
       function getOfflineInlineFlag(type) {
@@ -6731,6 +6798,7 @@ function clearOfflineLookupCustomerChunks() {
         if (type === 'FAM') return offlineBoolYes(getEditValue('editIncludeFireAlarmModificationReport'));
         if (type === 'PSC') return offlineBoolYes(getEditValue('editIncludePowerSupplyCertificate'));
         if (type === 'SLT') return offlineBoolYes(getEditValue('editIncludeSoundLevelTestReport'));
+        if (type === 'IAC') return offlineBoolYes(getEditValue('editIncludeIntruderAlarmCommissioningReport'));
         return false;
       }
 
@@ -6747,6 +6815,7 @@ function clearOfflineLookupCustomerChunks() {
           FAM: 'offlineAddFamBtn',
           PSC: 'offlineAddPscBtn',
           SLT: 'offlineAddSltBtn'
+          ,IAC: 'offlineAddIacBtn'
         };
         const button = document.getElementById(ids[type] || '');
         if (button) button.classList.toggle('hidden-report-fields', !allowed || (activeOfflineReportCode !== 'W' && offlineModuleIncluded(type)));
@@ -6754,7 +6823,7 @@ function clearOfflineLookupCustomerChunks() {
 
       function updateOfflineInlineCertUi() {
         const allowed = OFFLINE_ADD_PAGE_RULES[activeOfflineReportCode] || [];
-        ['W', 'SFA', 'SEL', 'FAC', 'FAM', 'PSC', 'SLT'].forEach(function(type) {
+        ['W', 'SFA', 'SEL', 'FAC', 'FAM', 'PSC', 'SLT', 'IAC'].forEach(function(type) {
           if (type !== activeOfflineReportCode && allowed.indexOf(type) === -1 && getOfflineInlineFlag(type)) {
             setOfflineInlineFlag(type, false);
           }
@@ -6766,6 +6835,7 @@ function clearOfflineLookupCustomerChunks() {
         const fam = getOfflineInlineFlag('FAM');
         const psc = getOfflineInlineFlag('PSC');
         const slt = getOfflineInlineFlag('SLT');
+        const iac = getOfflineInlineFlag('IAC');
         const wHeader = document.getElementById('offlineWAddedHeader');
         const wSfaCosts = document.getElementById('offlineAddedWSfaCosts');
         const wAdmin = document.getElementById('wOfflineAdminFields');
@@ -6776,6 +6846,7 @@ function clearOfflineLookupCustomerChunks() {
         const famBox = document.getElementById('famOfflineFields');
         const pscBox = document.getElementById('pscOfflineFields');
         const sltBox = document.getElementById('sltOfflineFields');
+        const iacBox = document.getElementById('iacOfflineFields');
         const removeSfa = document.getElementById('offlineRemoveSfaPageBtn');
         const removeSel = document.getElementById('offlineRemoveSelPageBtn');
         const materialQuick = document.getElementById('editorMaterialQuickBtn');
@@ -6793,17 +6864,18 @@ function clearOfflineLookupCustomerChunks() {
         if (famBox) famBox.classList.toggle('hidden-report-fields', !fam);
         if (pscBox) pscBox.classList.toggle('hidden-report-fields', !psc);
         if (sltBox) sltBox.classList.toggle('hidden-report-fields', !slt);
+        if (iacBox) iacBox.classList.toggle('hidden-report-fields', !iac);
         if (removeSfa) removeSfa.classList.toggle('hidden-report-fields', activeOfflineReportCode === 'SFA');
         if (removeSel) removeSel.classList.toggle('hidden-report-fields', activeOfflineReportCode === 'SEL');
         if (materialQuick) materialQuick.classList.toggle('hidden-report-fields', !w);
         if (sfaQuick) sfaQuick.classList.toggle('hidden-report-fields', !sfa);
         if (sfaPayloadBtn) sfaPayloadBtn.classList.toggle('hidden-report-fields', !sfa);
-        ['W', 'SFA', 'SEL', 'FAC', 'FAM', 'PSC', 'SLT'].forEach(function(type) {
+        ['W', 'SFA', 'SEL', 'FAC', 'FAM', 'PSC', 'SLT', 'IAC'].forEach(function(type) {
           toggleOfflineAddButton(type, allowed.indexOf(type) !== -1);
         });
         if (note) {
           const labels = {
-            W: 'ESR can add Fire Alarm, Emergency Lighting, FAC, FAM, PSC and Sound Level Test pages.',
+            W: 'ESR can add Fire Alarm, Emergency Lighting, FAC, FAM, PSC, Sound Level Test and IAC pages.',
             SFA: 'SFA can add Engineer Service Report and Emergency Lighting pages.',
             SEL: 'SEL can add Engineer Service Report and Fire Alarm pages.'
           };
@@ -6818,6 +6890,7 @@ function clearOfflineLookupCustomerChunks() {
           if (fam) names.push('FAM Modification' + (activeOfflineReportCode === 'W' && (offlineRepeatPages.FAM || []).length > 1 ? ' × ' + offlineRepeatPages.FAM.length : ''));
           if (psc) names.push('PSC Power Supply' + (activeOfflineReportCode === 'W' && (offlineRepeatPages.PSC || []).length > 1 ? ' × ' + offlineRepeatPages.PSC.length : ''));
           if (slt) names.push('Sound Level Test' + (activeOfflineReportCode === 'W' && (offlineRepeatPages.SLT || []).length > 1 ? ' × ' + offlineRepeatPages.SLT.length : ''));
+          if (iac) names.push('IAC Acceptance & Handover' + (activeOfflineReportCode === 'W' && (offlineRepeatPages.IAC || []).length > 1 ? ' × ' + offlineRepeatPages.IAC.length : ''));
           summary.textContent = names.length ? ('Added pages: ' + names.join(', ')) : 'No extra pages added yet.';
         }
         if (slt && !document.querySelector('#offlineSltReadings .offline-slt-reading')) renderOfflineSltReadings([]);
@@ -7446,6 +7519,7 @@ function clearOfflineLookupCustomerChunks() {
         setEditValue('editIncludeFireAlarmModificationReport', d.includeFireAlarmModificationReport || 'NO');
         setEditValue('editIncludePowerSupplyCertificate', d.includePowerSupplyCertificate || 'NO');
         setEditValue('editIncludeSoundLevelTestReport', d.includeSoundLevelTestReport || 'NO');
+        setEditValue('editIncludeIntruderAlarmCommissioningReport', d.includeIntruderAlarmCommissioningReport || 'NO');
 
         setEditValue('editFacCategory', d.facCategory || 'L1');
         setEditValue('editFacOtherCategory', d.facOtherCategory || '');
@@ -8186,6 +8260,7 @@ function clearOfflineLookupCustomerChunks() {
         d.includeFireAlarmModificationReport = getEditValue('editIncludeFireAlarmModificationReport') || 'NO';
         d.includePowerSupplyCertificate = getEditValue('editIncludePowerSupplyCertificate') || 'NO';
         d.includeSoundLevelTestReport = getEditValue('editIncludeSoundLevelTestReport') || 'NO';
+        d.includeIntruderAlarmCommissioningReport = getEditValue('editIncludeIntruderAlarmCommissioningReport') || 'NO';
 
         d.facCategory = getEditValue('editFacCategory');
         d.facOtherCategory = getEditValue('editFacOtherCategory');
@@ -10045,7 +10120,7 @@ function clearOfflineLookupCustomerChunks() {
 
     }());
   </script>
-      <div class="fixed-version-badge">FSD Certs · Minimal Home C97bt</div>
+      <div class="fixed-version-badge">FSD Certs · Minimal Home C97ca</div>
 
 
   <!-- C93p Premium Home clock -->
