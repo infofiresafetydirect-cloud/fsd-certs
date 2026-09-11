@@ -3,7 +3,7 @@
   "short_name": "FSD Certs",
   "description": "Fire Safety Direct certificate and report shell",
   "id": "/fsd-certs/?pwa=fsd-certs",
-  "start_url": "./?pwa=1&v=71d",
+  "start_url": "./?pwa=1&v=97cd",
   "scope": "./",
   "display": "standalone",
   "display_override": [
@@ -11,7 +11,7 @@
     "minimal-ui",
     "browser"
   ],
-  "orientation": "portrait-primary",
+  "orientation": "any",
   "background_color": "#0f172a",
   "theme_color": "#0f172a",
   "categories": [

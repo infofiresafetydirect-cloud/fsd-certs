@@ -20,7 +20,7 @@
   <link rel="dns-prefetch" href="https://script.google.com">
   <link rel="dns-prefetch" href="https://docs.google.com">
 
-  <link rel="manifest" href="manifest.webmanifest?v=71d">
+  <link rel="manifest" href="manifest.webmanifest?v=97cd">
   <link rel="apple-touch-icon" href="apple-touch-icon.png?v=71d">
   <link rel="icon" href="favicon.png?v=71d">
   <link rel="icon" type="image/png" sizes="192x192" href="fsd-certs-logo.png?v=71d">
@@ -3565,7 +3565,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
     (function () {
       'use strict';
 
-      const SHELL_VER = 'V6.3c97bt';
+      const SHELL_VER = 'V6.3c97cd';
       const APP_URL = 'https://script.google.com/macros/s/AKfycbzq9FTETNZwUJWHMGnMHECbu3sJ3jy3FFvGYyeaRXtkoK1GHBtqOu-GLBle_WGfoFtI/exec';
       const SCHEDULE_URL = 'https://fsd-scheduling-2026.infofiresafetydirect.chatgpt.site/';
       const CALLOUTS_PAGE = APP_URL + '?page=callouts&shell=ipad';
@@ -10194,7 +10194,37 @@ function clearOfflineLookupCustomerChunks() {
       window.addEventListener('offline', updateEditorNetworkBadge);
       updateEditorNetworkBadge();
       setupSignatureHelperCanvas();
-      window.addEventListener('resize', function() { if (sigHelper && sigHelper.classList.contains('active')) resizeSignatureHelperCanvas(true); });
+      // C97cd: Android installed apps can change orientation without delivering
+      // the same single resize event used by iPad Safari. Listen to every safe
+      // viewport/orientation signal and resize the open signature pad without
+      // clearing the ink already drawn.
+      let fsdOrientationRefreshTimer = 0;
+      function refreshShellAfterOrientationChange() {
+        clearTimeout(fsdOrientationRefreshTimer);
+        fsdOrientationRefreshTimer = setTimeout(function() {
+          if (sigHelper && sigHelper.classList.contains('active')) {
+            resizeSignatureHelperCanvas(true);
+          }
+          if (offlineEditor && offlineEditor.classList.contains('active')) {
+            drawOfflineSignatureCanvas('editEngineerSignature', offlineEngineerSignatureData);
+            drawOfflineSignatureCanvas('editCustomerSignature', offlineCustomerSignatureData);
+          }
+          // Reading the frame rectangles after Android has settled forces its
+          // embedded report viewport to recalculate against the new dimensions.
+          try { if (frame) frame.getBoundingClientRect(); } catch (err) {}
+          try { if (scheduleFrame) scheduleFrame.getBoundingClientRect(); } catch (err) {}
+        }, 120);
+      }
+      window.addEventListener('resize', refreshShellAfterOrientationChange, false);
+      window.addEventListener('orientationchange', refreshShellAfterOrientationChange, false);
+      if (window.visualViewport) {
+        window.visualViewport.addEventListener('resize', refreshShellAfterOrientationChange, false);
+      }
+      try {
+        if (screen.orientation && screen.orientation.addEventListener) {
+          screen.orientation.addEventListener('change', refreshShellAfterOrientationChange, false);
+        }
+      } catch (err) {}
 
       document.addEventListener('gesturestart', function (event) {
         event.preventDefault();
@@ -10212,7 +10242,7 @@ function clearOfflineLookupCustomerChunks() {
 
     }());
   </script>
-      <div class="fixed-version-badge">FSD Certs · Minimal Home C97cc</div>
+      <div class="fixed-version-badge">FSD Certs · Minimal Home C97cd</div>
 
 
   <!-- C93p Premium Home clock -->
