@@ -1269,7 +1269,8 @@
       color:#111827;
       margin: 12px 0 6px;
     }
-    .profile-card input {
+    .profile-card input,
+    .profile-card select {
       width: 100%;
       box-sizing: border-box;
       padding: 14px;
@@ -2815,7 +2816,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
           <button data-fsd-fasttap class="minimal-app tone-navy" type="button" onclick="openSubmittedReports(event)"><span class="minimal-app-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3.5h12v17H6z"/><path d="m9 12 2 2 4-4M9 17h6M9 7h6"/></svg></span><strong>Submitted Reports</strong><small>Review completed paperwork.</small><span class="minimal-app-arrow" aria-hidden="true">→</span></button>
         </div></section>
       </main>
-      <footer class="minimal-footer"><span><strong>FSD Certs</strong> · Built for Fire Safety Direct</span><span class="minimal-labs">Designed &amp; engineered by Jared720 Labs · C97cc</span></footer>
+      <footer class="minimal-footer"><span><strong>FSD Certs</strong> · Built for Fire Safety Direct</span><span class="minimal-labs">Designed &amp; engineered by Jared720 Labs · C97cr</span></footer>
     </div>
   </section>
   <section id="offlineDrafts" class="screen offline-screen" aria-label="Jobs and Drafts">
@@ -3444,12 +3445,12 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
   <section id="engineerProfileModal" class="profile-modal" aria-label="Engineer Profile" aria-hidden="true">
     <div class="profile-card">
       <h2>Engineer Profile</h2>
-      <p>Set the default engineer for this iPad. The list is loaded live from the same engineer list used by the reports.</p>
+      <p>Choose the default engineer for this device. The names are loaded live from the same engineer list used by the reports.</p>
 
-      <label for="defaultEngineerInput">Default engineer for this iPad</label>
-      <input id="defaultEngineerInput" list="defaultEngineerList" autocomplete="off" placeholder="Type/select engineer name">
-
-      <datalist id="defaultEngineerList"></datalist>
+      <label for="defaultEngineerInput">Default engineer</label>
+      <select id="defaultEngineerInput">
+        <option value="">Loading engineers...</option>
+      </select>
 
       <div id="defaultEngineerNote" class="profile-note">Loading live engineer list...</div>
       <label for="engineerProfileLink">Engineer iPad shortcut link</label>
@@ -4049,6 +4050,11 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
         stopTap(event);
         const input = document.getElementById('defaultEngineerInput');
         const engineer = input ? String(input.value || '').trim() : '';
+        if (!engineer) {
+          alert('Choose an engineer from the dropdown first.');
+          if (input) input.focus();
+          return false;
+        }
         setDefaultEngineerProfile(engineer);
         refreshDefaultEngineerProfileUi();
         loadLiveEngineerProfileList();
@@ -4090,21 +4096,22 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
 
       window.fsdEngineerProfileJsonp = function fsdEngineerProfileJsonp(payload) {
         try {
-          const list = document.getElementById('defaultEngineerList');
+          const list = document.getElementById('defaultEngineerInput');
           const rows = payload && Array.isArray(payload.engineers) ? payload.engineers : [];
           liveEngineerProfileNames = rows.map(function(row) {
             return String(row && row.name ? row.name : '').trim();
           }).filter(Boolean);
           if (list) {
-            list.innerHTML = liveEngineerProfileNames.map(function(name) {
-              return '<option value="' + escapeHtml(name) + '"></option>';
+            list.innerHTML = '<option value="">Choose engineer...</option>' + liveEngineerProfileNames.map(function(name) {
+              return '<option value="' + escapeHtml(name) + '">' + escapeHtml(name) + '</option>';
             }).join('');
+            list.value = getDefaultEngineerProfile();
           }
           refreshOfflineEngineerFilter(readOfflineQueue());
           const note = document.getElementById('defaultEngineerNote');
           if (note && !getDefaultEngineerProfile()) {
             note.textContent = rows.length
-              ? 'Live engineer list loaded. Pick the engineer for this iPad.'
+              ? 'Live engineer list loaded. Choose the engineer for this device.'
               : 'No engineers returned from the live report list.';
           }
         } catch(e) {}
@@ -10242,7 +10249,7 @@ function clearOfflineLookupCustomerChunks() {
 
     }());
   </script>
-      <div class="fixed-version-badge">FSD Certs · Minimal Home C97cd</div>
+      <div class="fixed-version-badge">FSD Certs · Minimal Home C97cr</div>
 
 
   <!-- C93p Premium Home clock -->
