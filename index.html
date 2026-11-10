@@ -2816,7 +2816,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
           <button data-fsd-fasttap class="minimal-app tone-navy" type="button" onclick="openSubmittedReports(event)"><span class="minimal-app-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3.5h12v17H6z"/><path d="m9 12 2 2 4-4M9 17h6M9 7h6"/></svg></span><strong>Submitted Reports</strong><small>Review completed paperwork.</small><span class="minimal-app-arrow" aria-hidden="true">→</span></button>
         </div></section>
       </main>
-      <footer class="minimal-footer"><span><strong>FSD Certs</strong> · Built for Fire Safety Direct</span><span class="minimal-labs">Designed &amp; engineered by Jared720 Labs · C97cr</span></footer>
+      <footer class="minimal-footer"><span><strong>FSD Certs</strong> · Built for Fire Safety Direct</span><span class="minimal-labs">Designed &amp; engineered by Jared720 Labs · C97da</span></footer>
     </div>
   </section>
   <section id="offlineDrafts" class="screen offline-screen" aria-label="Jobs and Drafts">
@@ -3566,7 +3566,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
     (function () {
       'use strict';
 
-      const SHELL_VER = 'V6.3c97cd';
+      const SHELL_VER = 'V6.3c97da';
       const APP_URL = 'https://script.google.com/macros/s/AKfycbzq9FTETNZwUJWHMGnMHECbu3sJ3jy3FFvGYyeaRXtkoK1GHBtqOu-GLBle_WGfoFtI/exec';
       const SCHEDULE_URL = 'https://fsd-scheduling-2026.infofiresafetydirect.chatgpt.site/';
       const CALLOUTS_PAGE = APP_URL + '?page=callouts&shell=ipad';
@@ -4197,6 +4197,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
         SFA: { code: 'SFA', label: 'Fire Alarm Service Report',           page: 'fael', editableOffline: true,  syncableOffline: true },
         SEL: { code: 'SEL', label: 'Emergency Lighting Report',           page: 'sel',  editableOffline: true,  syncableOffline: true },
         IA:  { code: 'IA',  label: 'Intruder Alarm Inspection & Test Report', page: 'ia', editableOffline: true, syncableOffline: true },
+        MTS: { code: 'MTS', label: 'POBL Monthly Testing Sheet', page: 'mts', editableOffline: false, syncableOffline: false },
         PWS: { code: 'PWS', label: 'Portable Service Worksheet',           page: 'portableService', editableOffline: true, syncableOffline: true },
         MO:  { code: 'MO',  label: 'Manual Order Worksheet',               page: 'manualOrder', editableOffline: true, syncableOffline: true },
         QQ:  { code: 'QQ',  label: 'Quick Quote',                          page: 'qq',   editableOffline: false, syncableOffline: false },
@@ -6445,6 +6446,7 @@ function clearOfflineLookupCustomerChunks() {
         if (normalized.indexOf('FIRE ALARM TEST REPORT') >= 0 || normalized.indexOf('FIRE ALARM SERVICE') >= 0 || /(^|\s)SFA(\s|$)/.test(normalized)) return 'SFA';
         if (normalized.indexOf('EMERGENCY LIGHTING') >= 0 || /(^|\s)SEL(\s|$)/.test(normalized)) return 'SEL';
         if (normalized.indexOf('INTRUDER ALARM') >= 0 || /(^|\s)IA(\s|$)/.test(normalized)) return 'IA';
+        if (normalized.indexOf('POBL MONTHLY') >= 0 || normalized.indexOf('MONTHLY TESTING') >= 0 || /(^|\s)MTS(\s|$)/.test(normalized)) return 'MTS';
         if (normalized.indexOf('QUICK QUOTE') >= 0 || /(^|\s)QQ(\s|$)/.test(normalized)) return 'QQ';
         if (normalized.indexOf('PORTABLE SERVICE') >= 0 || normalized.indexOf('SERVICE WORKSHEET') >= 0 || /(^|\s)PWS(\s|$)/.test(normalized)) return 'PWS';
         if (normalized.indexOf('MANUAL ORDER') >= 0 || /(^|\s)MO(\s|$)/.test(normalized)) return 'MO';
@@ -6459,12 +6461,61 @@ function clearOfflineLookupCustomerChunks() {
       }
 
       function cleanOfflineQueueRows(rows) {
-        return Array.isArray(rows) ? rows.filter(function(row) { return row && row.offlineId && row.draft; }).map(function(row) {
+        const cleaned = Array.isArray(rows) ? rows.filter(function(row) { return row && row.offlineId && row.draft; }).map(function(row) {
           const type = getOfflineReportType(row);
           if (!row.reportType) row.reportType = type;
           if (row.draft && !row.draft.reportTypeCode) row.draft.reportTypeCode = type;
           return row;
         }) : [];
+
+        // C97da: draftId is the cloud identity. If an online draft temporarily
+        // saves offline, keep the locally changed/photo-bearing copy and merge
+        // it with the cached cloud card instead of displaying two jobs.
+        const merged = [];
+        const draftIndexes = {};
+        const statePriority = function(row) {
+          const state = String(row && row.syncState || (row && row.draftId ? 'synced' : 'offline_only')).toLowerCase();
+          if (state === 'needs_sync') return 4;
+          if (state === 'offline_only') return 3;
+          if (state === 'synced' || state === 'cloud_cached') return 2;
+          return 1;
+        };
+        const savedTime = function(row) {
+          const value = row && (row.savedAt || (row.draft && row.draft.savedAt) || row.cloudLastUpdated) || '';
+          const time = Date.parse(value);
+          return isNaN(time) ? 0 : time;
+        };
+
+        cleaned.forEach(function(row) {
+          const draftId = String(row.draftId || (row.draft && (row.draft.draftId || row.draft.cloudDraftId)) || '').trim();
+          if (!draftId) {
+            merged.push(row);
+            return;
+          }
+          if (!Object.prototype.hasOwnProperty.call(draftIndexes, draftId)) {
+            draftIndexes[draftId] = merged.length;
+            merged.push(row);
+            return;
+          }
+
+          const index = draftIndexes[draftId];
+          const existing = merged[index];
+          const rowWins = statePriority(row) > statePriority(existing) ||
+            (statePriority(row) === statePriority(existing) && savedTime(row) > savedTime(existing));
+          const preferred = rowWins ? row : existing;
+          const secondary = rowWins ? existing : row;
+          merged[index] = Object.assign({}, secondary || {}, preferred || {}, {
+            offlineId: preferred.offlineId || secondary.offlineId,
+            draftId: draftId,
+            cloudDeleteToken: preferred.cloudDeleteToken || secondary.cloudDeleteToken || '',
+            cloudLastUpdated: preferred.cloudLastUpdated || secondary.cloudLastUpdated || '',
+            draft: Object.assign({}, secondary.draft || {}, preferred.draft || {}, {
+              draftId: draftId,
+              cloudDraftId: draftId
+            })
+          });
+        });
+        return merged;
       }
 
       function readLegacyOfflineQueueRows() {
@@ -6488,7 +6539,7 @@ function clearOfflineLookupCustomerChunks() {
         cleanOfflineQueueRows(secondaryRows).forEach(function(row) {
           if (!seen[row.offlineId]) { merged.push(row); seen[row.offlineId] = true; }
         });
-        return merged;
+        return cleanOfflineQueueRows(merged);
       }
 
       function sameOfflineQueueIdentity(left, right) {
@@ -9108,6 +9159,7 @@ function clearOfflineLookupCustomerChunks() {
         if (/(^|\s)QQ(\s|$)/.test(raw) || raw.indexOf('QUICK QUOTE') !== -1) return 'QQ';
         if (/(^|\s)SFA(\s|$)/.test(raw) || raw.indexOf('FIRE ALARM SERVICE') !== -1 || raw.indexOf('FIRE ALARM TEST REPORT') !== -1) return 'SFA';
         if (/(^|\s)SEL(\s|$)/.test(raw) || raw.indexOf('EMERGENCY LIGHTING') !== -1) return 'SEL';
+        if (/(^|\s)MTS(\s|$)/.test(raw) || raw.indexOf('POBL MONTHLY') !== -1 || raw.indexOf('MONTHLY TESTING') !== -1) return 'MTS';
         return 'W';
       }
 
@@ -9965,18 +10017,25 @@ function clearOfflineLookupCustomerChunks() {
             const stableDraftId = String(
               (msg.draft && (msg.draft.cloudDraftId || msg.draft.draftId)) || ''
             ).trim();
+            const existingDraftItem = stableDraftId ? readOfflineQueue().find(function(row) {
+              return row && String(row.draftId || '') === stableDraftId;
+            }) : null;
+            const stableOfflineId = existingDraftItem && existingDraftItem.offlineId
+              ? String(existingDraftItem.offlineId)
+              : (code + '-OFFLINE-' + Date.now() + '-' + Math.random().toString(36).slice(2, 7).toUpperCase());
             const rawDraft = Object.assign({}, msg.draft || {}, {
               reportTypeCode: code,
               reportType: reportNames[code] || 'Report',
               draftId: stableDraftId,
               cloudDraftId: stableDraftId,
               offlineCreated: true,
-              offlineId: code + '-OFFLINE-' + Date.now() + '-' + Math.random().toString(36).slice(2, 7).toUpperCase(),
+              offlineId: stableOfflineId,
               draftName: msg.draftName || ''
             });
-            upsertOfflineItem({
+            upsertOfflineItem(Object.assign({}, existingDraftItem || {}, {
               offlineId: rawDraft.offlineId,
               draftId: stableDraftId,
+              cloudDeleteToken: existingDraftItem && existingDraftItem.cloudDeleteToken || '',
               reportType: rawDraft.reportType,
               reportTypeCode: code,
               draftName: msg.draftName || rawDraft.reportType,
@@ -9985,9 +10044,10 @@ function clearOfflineLookupCustomerChunks() {
               site: rawDraft.site || '',
               savedAt: new Date().toISOString(),
               reason: 'Saved after cloud connection loss',
-              draft: rawDraft,
+              cloudLastUpdated: existingDraftItem && existingDraftItem.cloudLastUpdated || '',
+              draft: Object.assign({}, existingDraftItem && existingDraftItem.draft || {}, rawDraft),
               syncState: stableDraftId ? 'needs_sync' : 'offline_only'
-            });
+            }));
           }
           openJobsAndDraftsAfterOfflineDraftSave(msg);
           return;
@@ -10249,7 +10309,7 @@ function clearOfflineLookupCustomerChunks() {
 
     }());
   </script>
-      <div class="fixed-version-badge">FSD Certs · Minimal Home C97cr</div>
+      <div class="fixed-version-badge">FSD Certs · Minimal Home C97da</div>
 
 
   <!-- C93p Premium Home clock -->
