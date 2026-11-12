@@ -5664,13 +5664,19 @@ function clearOfflineLookupCustomerChunks() {
         return mergePendingLookupRows(customers, pending.customers || [], 'invoice');
       }
 
-      function searchOfflineLookupRows(mode, query) {
+      function searchOfflineLookupRows(mode, query, accountRef) {
         if ((offlineLookupData && offlineLookupData.indexedDbCustomers && !((offlineLookupData.customers || []).length))) {
           refreshOfflineLookupDataFromIndexedDb();
         }
         const q = normaliseOfflineLookupText(query || '');
         const terms = q.split(' ').filter(function(term) { return term.length >= 2; });
         let rows = offlineLookupRowsForMode(mode);
+        const wantedAccount = mode === 'site' ? normaliseOfflineLookupText(accountRef || '') : '';
+        if (wantedAccount) {
+          rows = rows.filter(function(row) {
+            return normaliseOfflineLookupText((row || {}).sageAccountNo || '') === wantedAccount;
+          });
+        }
         if (!terms.length) return rows.slice(0, OFFLINE_LOOKUP_MAX_RESULTS);
         return rows.map(function(row) {
           const hay = offlineLookupSearchHay(row, mode);
@@ -6276,7 +6282,10 @@ function clearOfflineLookupCustomerChunks() {
         const wrap = document.getElementById('offlineLookupResults');
         const search = document.getElementById('offlineLookupSearch');
         if (!wrap) return;
-        const rows = searchOfflineLookupRows(offlineLookupMode, search ? search.value : '');
+        const selectedAccount = offlineLookupMode === 'site'
+          ? (getEditValue('editSageAccountNo') || getEditValue('editSfaSageAccountNo') || getEditValue('editSelSageAccountNo') || '')
+          : '';
+        const rows = searchOfflineLookupRows(offlineLookupMode, search ? search.value : '', selectedAccount);
         if (!rows.length) {
           wrap.innerHTML = '<div class="offline-lookup-empty">No matches found in the saved offline list. Try a shorter search, or update the list when online.</div>';
           return;
@@ -9684,6 +9693,7 @@ function clearOfflineLookupCustomerChunks() {
         const requestId = msg.requestId || '';
         const mode = msg.mode === 'material' ? 'material' : (msg.mode === 'site' ? 'site' : 'invoice');
         const query = String(msg.query || '');
+        const accountRef = mode === 'site' ? String(msg.accountRef || '') : '';
         const limit = Math.max(1, Math.min(Number(msg.limit || 80) || 80, 120));
 
         try {
@@ -9708,7 +9718,7 @@ function clearOfflineLookupCustomerChunks() {
             await refreshOfflineLookupDataFromIndexedDb();
           }
 
-          let rows = searchOfflineLookupRows(mode, query).slice(0, limit);
+          let rows = searchOfflineLookupRows(mode, query, accountRef).slice(0, limit);
           if (mode === 'site') rows = enrichOfflineSiteRowsWithCachedEquipment_C91f(rows);
           const metaData = offlineLookupData || {};
           const pendingRows = loadPendingOfflineLookupRows();
@@ -10334,3 +10344,4 @@ function clearOfflineLookupCustomerChunks() {
 
 </body>
 </html>
+
