@@ -4198,6 +4198,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
         SEL: { code: 'SEL', label: 'Emergency Lighting Report',           page: 'sel',  editableOffline: true,  syncableOffline: true },
         IA:  { code: 'IA',  label: 'Intruder Alarm Inspection & Test Report', page: 'ia', editableOffline: true, syncableOffline: true },
         MTS: { code: 'MTS', label: 'POBL Monthly Testing Sheet', page: 'mts', editableOffline: false, syncableOffline: false },
+        SCS: { code: 'SCS', label: 'Smoke Control System Inspection & Test Report', page: 'scs', editableOffline: false, syncableOffline: false },
         PWS: { code: 'PWS', label: 'Portable Service Worksheet',           page: 'portableService', editableOffline: true, syncableOffline: true },
         MO:  { code: 'MO',  label: 'Manual Order Worksheet',               page: 'manualOrder', editableOffline: true, syncableOffline: true },
         QQ:  { code: 'QQ',  label: 'Quick Quote',                          page: 'qq',   editableOffline: false, syncableOffline: false },
@@ -6456,6 +6457,7 @@ function clearOfflineLookupCustomerChunks() {
         if (normalized.indexOf('EMERGENCY LIGHTING') >= 0 || /(^|\s)SEL(\s|$)/.test(normalized)) return 'SEL';
         if (normalized.indexOf('INTRUDER ALARM') >= 0 || /(^|\s)IA(\s|$)/.test(normalized)) return 'IA';
         if (normalized.indexOf('POBL MONTHLY') >= 0 || normalized.indexOf('MONTHLY TESTING') >= 0 || /(^|\s)MTS(\s|$)/.test(normalized)) return 'MTS';
+        if (normalized === 'SCS' || normalized.indexOf('SMOKE CONTROL SYSTEM INSPECTION') >= 0) return 'SCS';
         if (normalized.indexOf('QUICK QUOTE') >= 0 || /(^|\s)QQ(\s|$)/.test(normalized)) return 'QQ';
         if (normalized.indexOf('PORTABLE SERVICE') >= 0 || normalized.indexOf('SERVICE WORKSHEET') >= 0 || /(^|\s)PWS(\s|$)/.test(normalized)) return 'PWS';
         if (normalized.indexOf('MANUAL ORDER') >= 0 || /(^|\s)MO(\s|$)/.test(normalized)) return 'MO';
@@ -9169,6 +9171,7 @@ function clearOfflineLookupCustomerChunks() {
         if (/(^|\s)SFA(\s|$)/.test(raw) || raw.indexOf('FIRE ALARM SERVICE') !== -1 || raw.indexOf('FIRE ALARM TEST REPORT') !== -1) return 'SFA';
         if (/(^|\s)SEL(\s|$)/.test(raw) || raw.indexOf('EMERGENCY LIGHTING') !== -1) return 'SEL';
         if (/(^|\s)MTS(\s|$)/.test(raw) || raw.indexOf('POBL MONTHLY') !== -1 || raw.indexOf('MONTHLY TESTING') !== -1) return 'MTS';
+        if (raw === 'SCS' || raw.indexOf('SMOKE CONTROL SYSTEM INSPECTION') !== -1) return 'SCS';
         return 'W';
       }
 
