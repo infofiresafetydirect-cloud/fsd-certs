@@ -2869,7 +2869,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
       <div class="offline-manager-head">
         <div>
           <h2 class="offline-title">Start New Report</h2>
-          <p class="offline-help">SCS opens online and needs a connection. Other reports start as iPad working copies.</p>
+          <p class="offline-help">Start a working copy on this device. Upload it when connected.</p>
         </div>
         <button class="offline-home-button" type="button" onclick="closeOfflineReportChooser(event)">← Jobs &amp; Drafts</button>
       </div>
@@ -2889,7 +2889,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
             <span class="offline-report-choice-icon">🛡️</span><span><strong>Intruder Alarm Inspection &amp; Test</strong><small>Complete the full IA preventative-maintenance report offline.</small></span><span class="offline-report-choice-arrow">→</span>
           </button>
           <button class="offline-report-choice" type="button" onclick="chooseOfflineNewReport(event,'SCS')">
-            <span class="offline-report-choice-icon">📝</span><span><strong>Smoke Control / AOV Service (SCS)</strong><small>Open the online report. Internet connection required.</small></span><span class="offline-report-choice-arrow">→</span>
+            <span class="offline-report-choice-icon">📝</span><span><strong>Smoke Control / AOV Service (SCS)</strong><small>Start a Smoke Control / AOV Service working copy on this device.</small></span><span class="offline-report-choice-arrow">→</span>
           </button>
           <button class="offline-report-choice" type="button" onclick="chooseOfflineNewReport(event,'PWS')">
             <span class="offline-report-choice-icon">🧯</span><span><strong>Portable Service Worksheet</strong><small>Full portable-equipment worksheet with extra pages.</small></span><span class="offline-report-choice-arrow">→</span>
@@ -2899,7 +2899,6 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
           </button>
         </div>
       </section>
-      <p id="offlineReportChooserStatus" class="offline-help" role="status"></p>
       <div class="maker-mark">Jared720 Labs · C97h Report Chooser</div>
     </main>
   </section>
@@ -2935,7 +2934,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
           <div class="editor-field"><label>Service date</label><input id="editServiceDate" type="date"></div>
           <div class="editor-field editor-wide"><label>Customer / Invoice address</label><textarea id="editCustomer"></textarea></div>
           <div class="editor-field editor-wide"><label>Site address</label><textarea id="editSite"></textarea></div>
-          <div class="editor-quick-row editor-wide">
+          <div id="offlineAddressActions" class="editor-quick-row editor-wide">
             <button class="editor-mini-btn" type="button" onclick="openOfflineCustomerPicker(event,'invoice')">Pick Invoice Customer Offline</button>
             <button class="editor-mini-btn" type="button" onclick="openOfflineCustomerPicker(event,'site')">Pick Site Address Offline</button>
             <button class="editor-mini-btn" type="button" onclick="copyOfflineInvoiceToSite(event)">Same as Invoice</button>
@@ -3318,6 +3317,57 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
               <div class="editor-field"><label>Labour Cost</label><input id="editServiceReportLabourCost" type="number" step="0.01" value="0.00"></div>
             </div>
           </div>
+          <div id="scsOfflineFields" class="nested-editor-grid hidden-report-fields">
+            <div class="editor-section-title">Certificate and service visit</div>
+            <div id="editScsNumberStatus" class="sfa-local-note editor-wide"></div>
+            <input type="hidden" id="editScs_sageAccountNo" data-scs-field="sageAccountNo">
+            <div class="editor-field"><label for="editScs_contractId">Contract ID</label><input id="editScs_contractId" data-scs-field="contractId"></div>
+            <div class="editor-field"><label for="editScs_orderNo">Order number</label><input id="editScs_orderNo" data-scs-field="orderNo"></div>
+            <div class="editor-field"><label for="editScs_frequency">Frequency</label><select id="editScs_frequency" data-scs-field="frequency"><option value="">Select frequency</option><option value="3">Quarterly</option><option value="6">Bi-annual</option><option value="12">Annual</option></select></div>
+            <div class="editor-field"><label for="editScs_visitNumber">Visit number</label><input id="editScs_visitNumber" data-scs-field="visitNumber" type="number" min="1" step="1"></div>
+            <div class="editor-field"><label for="editScs_visitTotal">Visits in cycle</label><input id="editScs_visitTotal" data-scs-field="visitTotal" type="number" min="1" step="1"></div>
+            <div class="editor-field"><label for="editScs_lastServiceVisit">Last service visit</label><input id="editScs_lastServiceVisit" data-scs-field="lastServiceVisit" placeholder="dd/mm/yyyy"></div>
+            <div class="editor-field"><label for="editScs_nextServiceVisit">Next service visit</label><input id="editScs_nextServiceVisit" data-scs-field="nextServiceVisit" placeholder="dd/mm/yyyy"></div>
+            <div class="editor-section-title">Equipment quantities</div>
+            <div class="editor-field"><label for="editScs_qty0">Fire Control Panel</label><input id="editScs_qty0" data-scs-field="qty0" type="number" min="0" step="1"></div>
+            <div class="editor-field"><label for="editScs_qty1">Reset Controllers</label><input id="editScs_qty1" data-scs-field="qty1" type="number" min="0" step="1"></div>
+            <div class="editor-field"><label for="editScs_qty2">Windows</label><input id="editScs_qty2" data-scs-field="qty2" type="number" min="0" step="1"></div>
+            <div class="editor-field"><label for="editScs_qty3">Smoke Control Panels</label><input id="editScs_qty3" data-scs-field="qty3" type="number" min="0" step="1"></div>
+            <div class="editor-field"><label for="editScs_qty4">Smoke Detectors</label><input id="editScs_qty4" data-scs-field="qty4" type="number" min="0" step="1"></div>
+            <div class="editor-field"><label for="editScs_qty5">Interface units</label><input id="editScs_qty5" data-scs-field="qty5" type="number" min="0" step="1"></div>
+            <div class="editor-field"><label for="editScs_qty6">Batteries</label><input id="editScs_qty6" data-scs-field="qty6" type="number" min="0" step="1"></div>
+            <div class="editor-field"><label for="editScs_qty7">Vents</label><input id="editScs_qty7" data-scs-field="qty7" type="number" min="0" step="1"></div>
+            <div class="editor-section-title">Inspection checklist</div>
+            <div class="editor-field editor-wide"><label for="editScs_check0">1. Confirm primary &amp; secondary power supplies are available and operate correctly to BS 8519 and BS EN 12101.</label><select id="editScs_check0" data-scs-field="check0"><option value="">Select result</option><option value="C">Complete</option><option value="AR">Action Required</option><option value="NA">Not Applicable</option></select></div>
+            <div class="editor-field editor-wide"><label for="editScs_check1">2. Check battery systems and recharging to BS EN 12101.</label><select id="editScs_check1" data-scs-field="check1"><option value="">Select result</option><option value="C">Complete</option><option value="AR">Action Required</option><option value="NA">Not Applicable</option></select></div>
+            <div class="editor-field editor-wide"><label for="editScs_check2">3. Electrical inspections of power supplies, loose connections and electrical damage.</label><select id="editScs_check2" data-scs-field="check2"><option value="">Select result</option><option value="C">Complete</option><option value="AR">Action Required</option><option value="NA">Not Applicable</option></select></div>
+            <div class="editor-field editor-wide"><label for="editScs_check3">4. Inspection of electrical equipment environment and condition including ingress and overheating.</label><select id="editScs_check3" data-scs-field="check3"><option value="">Select result</option><option value="C">Complete</option><option value="AR">Action Required</option><option value="NA">Not Applicable</option></select></div>
+            <div class="editor-field editor-wide"><label for="editScs_check4">5. Check for system faults and act on log records.</label><select id="editScs_check4" data-scs-field="check4"><option value="">Select result</option><option value="C">Complete</option><option value="AR">Action Required</option><option value="NA">Not Applicable</option></select></div>
+            <div class="editor-field editor-wide"><label for="editScs_check5">6. Check system activation by smoke detectors or fire alarm interfaces.</label><select id="editScs_check5" data-scs-field="check5"><option value="">Select result</option><option value="C">Complete</option><option value="AR">Action Required</option><option value="NA">Not Applicable</option></select></div>
+            <div class="editor-field editor-wide"><label for="editScs_check6">7. Full function test to verify operation of all equipment against the design cause and effect.</label><select id="editScs_check6" data-scs-field="check6"><option value="">Select result</option><option value="C">Complete</option><option value="AR">Action Required</option><option value="NA">Not Applicable</option></select></div>
+            <div class="editor-field editor-wide"><label for="editScs_check7">8. Confirm activation and response times are acceptable to BS EN 12101 and design criteria.</label><select id="editScs_check7" data-scs-field="check7"><option value="">Select result</option><option value="C">Complete</option><option value="AR">Action Required</option><option value="NA">Not Applicable</option></select></div>
+            <div class="editor-field editor-wide"><label for="editScs_check8">9. Check correct operation of critical integrated plant, interface and communications.</label><select id="editScs_check8" data-scs-field="check8"><option value="">Select result</option><option value="C">Complete</option><option value="AR">Action Required</option><option value="NA">Not Applicable</option></select></div>
+            <div class="editor-field editor-wide"><label for="editScs_check9">10. Mechanical inspection of moving parts, hinges and fixtures.</label><select id="editScs_check9" data-scs-field="check9"><option value="">Select result</option><option value="C">Complete</option><option value="AR">Action Required</option><option value="NA">Not Applicable</option></select></div>
+            <div class="editor-field editor-wide"><label for="editScs_check10">11. Inspect vents and seals for leakage and weather ingress.</label><select id="editScs_check10" data-scs-field="check10"><option value="">Select result</option><option value="C">Complete</option><option value="AR">Action Required</option><option value="NA">Not Applicable</option></select></div>
+            <div class="editor-field editor-wide"><label for="editScs_check11">12. Check operation of vents open fully and are free from obstruction.</label><select id="editScs_check11" data-scs-field="check11"><option value="">Select result</option><option value="C">Complete</option><option value="AR">Action Required</option><option value="NA">Not Applicable</option></select></div>
+            <div class="editor-field editor-wide"><label for="editScs_check12">13. Mechanical inspection of fan dampers, moving parts, fixtures and fittings.</label><select id="editScs_check12" data-scs-field="check12"><option value="">Select result</option><option value="C">Complete</option><option value="AR">Action Required</option><option value="NA">Not Applicable</option></select></div>
+            <div class="editor-field editor-wide"><label for="editScs_check13">14. Inspection of ductwork for damage, leakage, weather ingress and foreign objects.</label><select id="editScs_check13" data-scs-field="check13"><option value="">Select result</option><option value="C">Complete</option><option value="AR">Action Required</option><option value="NA">Not Applicable</option></select></div>
+            <div class="editor-field editor-wide"><label for="editScs_check14">15. Check operation of standby fans.</label><select id="editScs_check14" data-scs-field="check14"><option value="">Select result</option><option value="C">Complete</option><option value="AR">Action Required</option><option value="NA">Not Applicable</option></select></div>
+            <div class="editor-field editor-wide"><label for="editScs_check15">16. Verify fan speed and direction for each operating mode against design criteria.</label><select id="editScs_check15" data-scs-field="check15"><option value="">Select result</option><option value="C">Complete</option><option value="AR">Action Required</option><option value="NA">Not Applicable</option></select></div>
+            <div class="editor-field editor-wide"><label for="editScs_check16">17. Verify correct fan modulation for pressure control systems.</label><select id="editScs_check16" data-scs-field="check16"><option value="">Select result</option><option value="C">Complete</option><option value="AR">Action Required</option><option value="NA">Not Applicable</option></select></div>
+            <div class="editor-field editor-wide"><label for="editScs_check17">18. Relevant details of completed works and faults identified have been entered into the system logbook.</label><select id="editScs_check17" data-scs-field="check17"><option value="">Select result</option><option value="C">Complete</option><option value="AR">Action Required</option><option value="NA">Not Applicable</option></select></div>
+            <div class="editor-section-title">Work and findings</div>
+            <div class="editor-field editor-wide"><label for="editScs_workCarriedOut">Work carried out</label><textarea id="editScs_workCarriedOut" data-scs-field="workCarriedOut" rows="3"></textarea></div>
+            <div class="editor-field editor-wide"><label for="editScs_variations">Variations</label><textarea id="editScs_variations" data-scs-field="variations" rows="3"></textarea></div>
+            <div class="editor-field editor-wide"><label for="editScs_comments">Notice or comments</label><textarea id="editScs_comments" data-scs-field="comments" rows="3"></textarea></div>
+            <div class="editor-field editor-wide"><label for="editScs_actionRequired">Action required</label><textarea id="editScs_actionRequired" data-scs-field="actionRequired" rows="3"></textarea></div>
+            <div class="editor-field editor-wide"><label for="editScs_designRecords">Design performance records available at first service?</label><select id="editScs_designRecords" data-scs-field="designRecords"><option value=""></option><option value="YES">Yes</option><option value="NO">No</option></select></div>
+            <div class="editor-section-title">Costs</div>
+            <div class="editor-field"><label for="editScs_serviceCost">Service cost (£)</label><input id="editScs_serviceCost" data-scs-field="serviceCost" type="number" min="0" step="0.01"></div>
+            <div class="editor-field"><label for="editScs_labourCost">Remedial labour (£)</label><input id="editScs_labourCost" data-scs-field="labourCost" type="number" min="0" step="0.01"></div>
+            <div class="editor-field"><label for="editScs_materialCost">Remedial materials (£)</label><input id="editScs_materialCost" data-scs-field="materialCost" type="number" min="0" step="0.01"></div>
+            <p id="editScsTotals" class="sfa-local-note editor-wide" aria-live="polite"></p>
+          </div>
           <div id="iaOfflineFields" class="nested-editor-grid hidden-report-fields">
             <div class="editor-section-title">IA Intruder Alarm Inspection &amp; Test</div>
             <div class="sfa-local-note">Full offline IA working copy. Every field is retained when uploaded to Cloud Drafts.</div>
@@ -3426,7 +3476,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
           <div class="editor-section-title">Customer sign-off</div>
           <div class="editor-field"><label>Customer name</label><input id="editCustomerName"></div>
           <div class="editor-field"><label>Customer date</label><input id="editCustomerDate" type="date"></div>
-          <div class="editor-field editor-wide">
+          <div id="offlineCustomerSignatureStatusField" class="editor-field editor-wide">
             <label>Customer Signature Status</label>
             <select id="editCustomerSignatureStatus">
               <option value="SIGNATURE_REQUIRED">Customer available - signature required</option>
@@ -3570,7 +3620,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
     (function () {
       'use strict';
 
-      const SHELL_VER = 'V6.3c97da';
+      const SHELL_VER = 'V6.3c97da-scs-offline';
       const APP_URL = 'https://script.google.com/macros/s/AKfycbzq9FTETNZwUJWHMGnMHECbu3sJ3jy3FFvGYyeaRXtkoK1GHBtqOu-GLBle_WGfoFtI/exec';
       const SCHEDULE_URL = 'https://fsd-scheduling-2026.infofiresafetydirect.chatgpt.site/';
       const CALLOUTS_PAGE = APP_URL + '?page=callouts&shell=ipad';
@@ -4202,7 +4252,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
         SEL: { code: 'SEL', label: 'Emergency Lighting Report',           page: 'sel',  editableOffline: true,  syncableOffline: true },
         IA:  { code: 'IA',  label: 'Intruder Alarm Inspection & Test Report', page: 'ia', editableOffline: true, syncableOffline: true },
         MTS: { code: 'MTS', label: 'POBL Monthly Testing Sheet', page: 'mts', editableOffline: false, syncableOffline: false },
-        SCS: { code: 'SCS', label: 'Smoke Control System Inspection & Test Report', page: 'scs', editableOffline: false, syncableOffline: false },
+        SCS: { code: 'SCS', label: 'Smoke Control System Inspection & Test Report', page: 'scs', editableOffline: true, syncableOffline: true },
         PWS: { code: 'PWS', label: 'Portable Service Worksheet',           page: 'portableService', editableOffline: true, syncableOffline: true },
         MO:  { code: 'MO',  label: 'Manual Order Worksheet',               page: 'manualOrder', editableOffline: true, syncableOffline: true },
         QQ:  { code: 'QQ',  label: 'Quick Quote',                          page: 'qq',   editableOffline: false, syncableOffline: false },
@@ -5702,7 +5752,9 @@ function clearOfflineLookupCustomerChunks() {
 
       function setVisibleSageAccount(value, overwrite) {
         if (!value) return;
-        ['editSageAccountNo','editSfaSageAccountNo','editSelSageAccountNo'].forEach(function(id) {
+        const ids = activeOfflineReportCode === 'SCS' ? ['editScs_sageAccountNo'] :
+          ['editSageAccountNo','editSfaSageAccountNo','editSelSageAccountNo'];
+        ids.forEach(function(id) {
           const el = document.getElementById(id);
           if (el && (overwrite || !el.value)) el.value = value;
         });
@@ -6288,7 +6340,8 @@ function clearOfflineLookupCustomerChunks() {
         const search = document.getElementById('offlineLookupSearch');
         if (!wrap) return;
         const selectedAccount = offlineLookupMode === 'site'
-          ? (getEditValue('editSageAccountNo') || getEditValue('editSfaSageAccountNo') || getEditValue('editSelSageAccountNo') || '')
+          ? (activeOfflineReportCode === 'SCS' ? getEditValue('editScs_sageAccountNo') :
+            getEditValue('editSageAccountNo') || getEditValue('editSfaSageAccountNo') || getEditValue('editSelSageAccountNo') || '')
           : '';
         const rows = searchOfflineLookupRows(offlineLookupMode, search ? search.value : '', selectedAccount);
         if (!rows.length) {
@@ -6416,6 +6469,7 @@ function clearOfflineLookupCustomerChunks() {
           if (row.defaultCustomerOrderNo) {
             if (document.getElementById('editCustomerOrderNo') && !getEditValue('editCustomerOrderNo')) setEditValue('editCustomerOrderNo', row.defaultCustomerOrderNo);
             if (document.getElementById('editSfaOrderNo') && !getEditValue('editSfaOrderNo')) setEditValue('editSfaOrderNo', row.defaultCustomerOrderNo);
+            if (activeOfflineReportCode === 'SCS' && !getEditValue('editScs_orderNo')) setEditValue('editScs_orderNo', row.defaultCustomerOrderNo);
           }
           if (row.defaultOurRefNo && document.getElementById('editOurRefNo') && !getEditValue('editOurRefNo')) setEditValue('editOurRefNo', row.defaultOurRefNo);
         }
@@ -6461,7 +6515,7 @@ function clearOfflineLookupCustomerChunks() {
         if (normalized.indexOf('EMERGENCY LIGHTING') >= 0 || /(^|\s)SEL(\s|$)/.test(normalized)) return 'SEL';
         if (normalized.indexOf('INTRUDER ALARM') >= 0 || /(^|\s)IA(\s|$)/.test(normalized)) return 'IA';
         if (normalized.indexOf('POBL MONTHLY') >= 0 || normalized.indexOf('MONTHLY TESTING') >= 0 || /(^|\s)MTS(\s|$)/.test(normalized)) return 'MTS';
-        if (normalized === 'SCS' || normalized.indexOf('SMOKE CONTROL SYSTEM INSPECTION') >= 0) return 'SCS';
+        if (/(^|\s)SCS(\s|$)/.test(normalized) || normalized.indexOf('SMOKE CONTROL SYSTEM INSPECTION') >= 0) return 'SCS';
         if (normalized.indexOf('QUICK QUOTE') >= 0 || /(^|\s)QQ(\s|$)/.test(normalized)) return 'QQ';
         if (normalized.indexOf('PORTABLE SERVICE') >= 0 || normalized.indexOf('SERVICE WORKSHEET') >= 0 || /(^|\s)PWS(\s|$)/.test(normalized)) return 'PWS';
         if (normalized.indexOf('MANUAL ORDER') >= 0 || /(^|\s)MO(\s|$)/.test(normalized)) return 'MO';
@@ -7352,6 +7406,9 @@ function clearOfflineLookupCustomerChunks() {
         form.__fsdBound = true;
         form.addEventListener('input', function(event) {
           setEditorDirty(true);
+          if (activeOfflineReportCode === 'SCS' && event.target && /^editScs_(service|labour|material)Cost$/.test(event.target.id)) {
+            updateOfflineScsTotals();
+          }
           if (event.target && (event.target.matches('input') || event.target.matches('textarea') || event.target.matches('select'))) {
             calculateEditorTotals();
             if (event.target && String(event.target.id || '').indexOf('editPsc') === 0) calculateOfflinePsc();
@@ -7621,6 +7678,7 @@ function clearOfflineLookupCustomerChunks() {
         const isSfa = report && report.code === 'SFA';
         const isSel = report && report.code === 'SEL';
         const isIa = report && report.code === 'IA';
+        const isScs = report && report.code === 'SCS';
         const isPortable = report && (report.code === 'PWS' || report.code === 'MO');
         const sfaFields = document.getElementById('sfaOfflineFields');
         const selFields = document.getElementById('selOfflineFields');
@@ -7642,11 +7700,11 @@ function clearOfflineLookupCustomerChunks() {
         const portableCommentsLabel = document.getElementById('portableOfflineCommentsLabel');
         if (offlineEditor) offlineEditor.classList.toggle('portable-online-look-screen', isPortable);
         if (editorCard) editorCard.classList.toggle('portable-online-look', isPortable);
-        if (jobHeading) jobHeading.textContent = isPortable ? 'Customer and job' : (isIa ? 'Customer and site' : 'Job Details');
+        if (jobHeading) jobHeading.textContent = isPortable ? 'Customer and job' : ((isIa || isScs) ? 'Customer and site' : 'Job Details');
         if (portableRowsHeading) portableRowsHeading.textContent = report && report.code === 'MO' ? 'Order lines' : 'Equipment inspected';
         if (portableCompletionHeading) portableCompletionHeading.textContent = report && report.code === 'MO' ? 'Instructions' : 'Completion';
         if (portableCommentsLabel) portableCommentsLabel.textContent = report && report.code === 'MO' ? 'Special Instructions' : 'Engineer Comments';
-        if (addCertControls) addCertControls.classList.toggle('hidden-report-fields', isPortable || isIa);
+        if (addCertControls) addCertControls.classList.toggle('hidden-report-fields', isPortable || isIa || isScs);
         if (portableFields) portableFields.classList.toggle('hidden-report-fields', !isPortable);
         if (portableHeading) portableHeading.textContent = report && report.code === 'MO' ? 'Manual Order' : 'Portable Service Worksheet';
         Array.prototype.forEach.call(document.querySelectorAll('.portable-pws-only'), function(el) {
@@ -7659,9 +7717,11 @@ function clearOfflineLookupCustomerChunks() {
         if (sfaFields) sfaFields.classList.toggle('hidden-report-fields', !isSfa);
         if (selFields) selFields.classList.toggle('hidden-report-fields', !isSel);
         if (iaFields) iaFields.classList.toggle('hidden-report-fields', !isIa);
-        if (wAdmin) wAdmin.classList.toggle('hidden-report-fields', isSfa || isSel || isPortable || isIa);
-        if (wWork) wWork.classList.toggle('hidden-report-fields', isSfa || isSel || isPortable || isIa);
-        if (materialQuick) materialQuick.classList.toggle('hidden-report-fields', isSfa || isSel || isPortable || isIa);
+        document.getElementById('scsOfflineFields').classList.toggle('hidden-report-fields', !isScs);
+        document.getElementById('offlineCustomerSignatureStatusField').classList.toggle('hidden-report-fields', isScs);
+        if (wAdmin) wAdmin.classList.toggle('hidden-report-fields', isSfa || isSel || isPortable || isIa || isScs);
+        if (wWork) wWork.classList.toggle('hidden-report-fields', isSfa || isSel || isPortable || isIa || isScs);
+        if (materialQuick) materialQuick.classList.toggle('hidden-report-fields', isSfa || isSel || isPortable || isIa || isScs);
         if (sfaQuick) sfaQuick.classList.toggle('hidden-report-fields', !isSfa);
         if (sfaPayloadBtn) sfaPayloadBtn.classList.toggle('hidden-report-fields', !isSfa);
         if (!isSfa && sfaPayloadPreview) sfaPayloadPreview.classList.add('hidden-report-fields');
@@ -7756,7 +7816,9 @@ function clearOfflineLookupCustomerChunks() {
         if (titleEl) titleEl.textContent = report.code === 'W' ? 'Fire Safety Direct Certificate' :
           (report.code === 'PWS' ? 'Service Worksheet' : (report.code === 'MO' ? 'Manual Order' : ('Edit ' + report.code + ' Draft')));
         if (noteEl) {
-          noteEl.textContent = report.code === 'W'
+          noteEl.textContent = report.code === 'SCS'
+            ? 'Save on this device, then upload and finish the certificate when connected.'
+            : report.code === 'W'
             ? 'Engineer Service Report · Offline working copy. This follows the online ESR order and uses the same Report Pack Add Pages.'
             : ((report.code === 'PWS' || report.code === 'MO')
               ? 'This iPad working copy uses the same Portables fields, address lookup and Fast Signature Pad. Save here anytime, then upload and complete the PDF when signal returns.'
@@ -7772,6 +7834,12 @@ function clearOfflineLookupCustomerChunks() {
         if (sfaPayloadPreview) sfaPayloadPreview.classList.add('hidden-report-fields');
         if (sfaPayloadJson) sfaPayloadJson.value = '';
         const d = item.draft || {};
+        const scsLinked = report.code === 'SCS' && !!d.parentServiceKey;
+        ['editCustomer', 'editSite'].forEach(function(id) {
+          document.getElementById(id).readOnly = scsLinked;
+        });
+        document.getElementById('offlineAddressActions').classList.toggle('hidden-report-fields', scsLinked);
+        document.getElementById('offlineEditorLookupStatus').classList.toggle('hidden-report-fields', scsLinked);
         const restoringAddedW = report.code !== 'W' && offlineBoolYes(d.includeServiceReport);
         document.getElementById('editOfflineId').value = item.offlineId || '';
         setEditValue('editDraftName', item.draftName || d.draftName || buildEditorDraftName(d));
@@ -7997,8 +8065,9 @@ function clearOfflineLookupCustomerChunks() {
         updateOfflinePanelPhotoUi();
         setOfflineSignatureData('engineer', d.engineerSignature || '');
         setOfflineSignatureData('customer', d.customerSignature || '');
-        setEditValue('editCustomerName', d.customerName || '');
-        setEditValue('editCustomerDate', d.customerDate || '');
+        setEditValue('editCustomerName', (report.code === 'SCS' ? d.customerSignatory : d.customerName) || '');
+        setEditValue('editCustomerDate', (report.code === 'SCS' ? d.customerSignDate : d.customerDate) || '');
+        if (report.code === 'SCS') restoreOfflineScs(d, scsLinked);
         setEditValue('editCustomerSignatureStatus', d.customerSignatureStatus || 'SIGNATURE_REQUIRED');
         home.classList.add('hidden');
         offlineDrafts.classList.remove('active');
@@ -8304,6 +8373,62 @@ function clearOfflineLookupCustomerChunks() {
         };
       }
 
+      function restoreOfflineScs(draft, linked) {
+        const frequency = document.getElementById('editScs_frequency');
+        const oldOption = frequency.querySelector('[data-planner-frequency]');
+        if (oldOption) oldOption.remove();
+        const months = String(draft.frequency || '');
+        if (/^[1-9][0-9]?$/.test(months) && !['3', '6', '12'].includes(months)) {
+          const option = new Option('Every ' + months + ' months (planner)', months);
+          option.setAttribute('data-planner-frequency', '');
+          frequency.add(option);
+        }
+        frequency.disabled = linked;
+        document.getElementById('editScs_lastServiceVisit').readOnly = linked;
+        const nextVisit = document.getElementById('editScs_nextServiceVisit');
+        nextVisit.readOnly = linked;
+        nextVisit.placeholder = linked ? 'Calculated when submitted' : 'dd/mm/yyyy';
+        document.querySelectorAll('[data-scs-field]').forEach(function(field) {
+          const value = draft[field.dataset.scsField];
+          field.value = value == null ? '' : value;
+        });
+        document.getElementById('editScsNumberStatus').textContent = draft.reportNo && draft.scsNumberReceipt
+          ? 'Reserved certificate number: ' + draft.reportNo
+          : 'Certificate number reserved online before submission.';
+        updateOfflineScsTotals();
+      }
+
+      function updateOfflineScsTotals() {
+        const costs = ['serviceCost', 'labourCost', 'materialCost'].map(function(key) {
+          return getEditValue('editScs_' + key);
+        });
+        const subtotal = costs.reduce(function(sum, value) { return sum + Math.round(Number(value) * 100); }, 0);
+        const vat = Math.round(subtotal * 0.20);
+        document.getElementById('editScsTotals').textContent = costs.some(Boolean) ?
+          'Subtotal ' + money(subtotal / 100) + ' · VAT ' + money(vat / 100) + ' · Total ' + money((subtotal + vat) / 100) : '';
+      }
+
+      function createBlankOfflineScsItem() {
+        const now = new Date();
+        const today = new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
+        const offlineId = makeOfflineId('SCS');
+        const bytes = window.crypto.getRandomValues(new Uint8Array(16));
+        bytes[6] = (bytes[6] & 15) | 64;
+        bytes[8] = (bytes[8] & 63) | 128;
+        const hex = Array.from(bytes, function(byte) { return byte.toString(16).padStart(2, '0'); }).join('');
+        const submissionId = [hex.slice(0, 8), hex.slice(8, 12), hex.slice(12, 16), hex.slice(16, 20), hex.slice(20)].join('-');
+        const draft = {
+          offlineCreated: true, offlineId: offlineId, reportTypeCode: 'SCS',
+          reportType: OFFLINE_REPORT_TYPES.SCS.label,
+          draftName: OFFLINE_REPORT_TYPES.SCS.label + ' - ' + today,
+          serviceDate: today, customer: '', site: '', engineer: getDefaultEngineerProfile() || '',
+          scsSubmissionId: submissionId, parentServiceKey: '', reportNo: '', scsNumberReceipt: '',
+          savedAt: now.toISOString()
+        };
+        return {offlineId: offlineId, reportType: 'SCS', reportTypeCode: 'SCS', draftId: '', draftName: draft.draftName,
+          engineer: draft.engineer, customer: '', site: '', savedAt: draft.savedAt, draft: draft, syncState: 'offline_only'};
+      }
+
       function createBlankOfflineIaItem() {
         const now = new Date();
         const today = now.toISOString().slice(0, 10);
@@ -8390,6 +8515,15 @@ function clearOfflineLookupCustomerChunks() {
           openEditorForItem(item);
           setEditorStatus('New SEL started on this iPad. Save here anytime, then upload when signal returns.');
           return false;
+        });
+      };
+
+      window.startNewOfflineScs = function startNewOfflineScs() {
+        const item = createBlankOfflineScsItem();
+        upsertOfflineItem(item);
+        return waitForOfflineDraftQueueSave().then(function() {
+          renderOfflineDrafts();
+          openEditorForItem(item);
         });
       };
 
@@ -8503,6 +8637,20 @@ function clearOfflineLookupCustomerChunks() {
         d.customer = getEditValue('editCustomer');
         d.site = getEditValue('editSite');
         const reportCodeForSave = String(d.reportTypeCode || item.reportType || '').toUpperCase();
+        if (getOfflineReportType(item) === 'SCS') {
+          document.querySelectorAll('[data-scs-field]').forEach(function(field) {
+            d[field.dataset.scsField] = field.value;
+          });
+          if (d.parentServiceKey) {
+            d.customer = item.draft.customer || item.customer || '';
+            d.site = item.draft.site || item.site || '';
+          }
+          d.customerSignatory = getEditValue('editCustomerName');
+          d.customerSignDate = getEditValue('editCustomerDate');
+          d.engineerSignature = offlineEngineerSignatureData || '';
+          d.customerSignature = offlineCustomerSignatureData || '';
+          return queueEditorDraft(item, d);
+        }
         const savingW = reportCodeForSave === 'W';
         const savingSfa = reportCodeForSave === 'SFA';
         const savingSel = reportCodeForSave === 'SEL';
@@ -8822,6 +8970,10 @@ function clearOfflineLookupCustomerChunks() {
         d.engineerSignature = offlineEngineerSignatureData || '';
         d.customerSignature = offlineCustomerSignatureData || '';
         offlineRepeatAttachToDraft(d);
+        return queueEditorDraft(item, d);
+      }
+
+      function queueEditorDraft(item, d) {
         const draftName = getEditValue('editDraftName') || item.draftName || buildEditorDraftName(d);
         const updated = Object.assign({}, item, {
           draft: d,
@@ -9175,7 +9327,7 @@ function clearOfflineLookupCustomerChunks() {
         if (/(^|\s)SFA(\s|$)/.test(raw) || raw.indexOf('FIRE ALARM SERVICE') !== -1 || raw.indexOf('FIRE ALARM TEST REPORT') !== -1) return 'SFA';
         if (/(^|\s)SEL(\s|$)/.test(raw) || raw.indexOf('EMERGENCY LIGHTING') !== -1) return 'SEL';
         if (/(^|\s)MTS(\s|$)/.test(raw) || raw.indexOf('POBL MONTHLY') !== -1 || raw.indexOf('MONTHLY TESTING') !== -1) return 'MTS';
-        if (raw === 'SCS' || raw.indexOf('SMOKE CONTROL SYSTEM INSPECTION') !== -1) return 'SCS';
+        if (/(^|\s)SCS(\s|$)/.test(raw) || raw.indexOf('SMOKE CONTROL SYSTEM INSPECTION') !== -1) return 'SCS';
         return 'W';
       }
 
@@ -9216,13 +9368,20 @@ function clearOfflineLookupCustomerChunks() {
           }
           const draft = row.draft && typeof row.draft === 'object' ? row.draft : {};
           const code = inferOfflineReportCodeFromCloud(row, draft);
-          const existingIndex = queue.findIndex(function(item) { return item && String(item.draftId || '') === String(row.draftId); });
+          const existingIndex = queue.findIndex(function(item) {
+            return item && (String(item.draftId || '') === String(row.draftId) ||
+              (code === 'SCS' && !item.draftId && item.offlineId === row.draftId));
+          });
           const existing = existingIndex >= 0 ? queue[existingIndex] : null;
           const existingState = normaliseDraftSyncState(existing || {});
           if (existing && (existingState === 'needs_sync' || existingState === 'offline_only')) {
             // C97ba: preserve every local edit, but still attach the server-issued
             // delete token so a protected/changed draft can be deleted on request.
             if (row.deleteToken) existing.cloudDeleteToken = String(row.deleteToken);
+            if (code === 'SCS' && !existing.draftId) {
+              existing.draftId = row.draftId;
+              existing.syncState = 'needs_sync';
+            }
             skippedLocalChanges += 1;
             return;
           }
@@ -9452,8 +9611,6 @@ function clearOfflineLookupCustomerChunks() {
 
       window.openOfflineReportChooser = function openOfflineReportChooser(event) {
         stopTap(event);
-        const status = document.getElementById('offlineReportChooserStatus');
-        if (status) status.textContent = '';
         offlineDrafts.classList.remove('active');
         if (offlineReportChooser) offlineReportChooser.classList.add('active');
         return false;
@@ -9473,17 +9630,7 @@ function clearOfflineLookupCustomerChunks() {
         // the large shared report editor. Showing the normal loader first avoids
         // a blank-looking transition while ESR/SFA/SEL fields are prepared.
         const requestedCode = String(code || '').toUpperCase();
-        if (requestedCode === 'SCS') {
-          if (navigator.onLine === false) {
-            const status = document.getElementById('offlineReportChooserStatus');
-            if (status) status.textContent = 'Connect to the internet to start an SCS report.';
-            return false;
-          }
-          if (offlineReportChooser) offlineReportChooser.classList.remove('active');
-          openAppUrlInShell(APP_URL + '?page=scs');
-          return false;
-        }
-        const selectedCode = ['W','SFA','SEL','IA','PWS','MO'].indexOf(requestedCode) !== -1 ? requestedCode : 'W';
+        const selectedCode = ['W','SFA','SEL','IA','SCS','PWS','MO'].indexOf(requestedCode) !== -1 ? requestedCode : 'W';
         home.classList.add('hidden');
         offlineDrafts.classList.remove('active');
         if (offlineReportChooser) offlineReportChooser.classList.remove('active');
@@ -9500,6 +9647,7 @@ function clearOfflineLookupCustomerChunks() {
             if (selectedCode === 'SFA') return window.startNewOfflineSfaTrial();
             if (selectedCode === 'SEL') return window.startNewOfflineSelTrial();
             if (selectedCode === 'IA') return window.startNewOfflineIa();
+            if (selectedCode === 'SCS') return window.startNewOfflineScs();
             if (selectedCode === 'PWS' || selectedCode === 'MO') return window.startNewOfflinePortable(null, selectedCode);
             return window.startNewOfflineW();
           } catch (err) {
@@ -10035,11 +10183,12 @@ function clearOfflineLookupCustomerChunks() {
         if (msg.source === 'fsd-cloud-draft-client-c95f' && msg.type === 'FSD_DRAFT_SAVE_OFFLINE') {
           acknowledgeDraftSaveMessage(event, msg);
           const code = String(msg.reportTypeCode || '').toUpperCase();
-          if (code === 'SFA' || code === 'SEL' || code === 'IA' || code === 'PWS' || code === 'MO') {
+          if (code === 'SFA' || code === 'SEL' || code === 'IA' || code === 'SCS' || code === 'PWS' || code === 'MO') {
             const reportNames = {
               SFA: 'Fire Alarm Service Report',
               SEL: 'Emergency Lighting Report',
               IA: 'Intruder Alarm Inspection & Test Report',
+              SCS: OFFLINE_REPORT_TYPES.SCS.label,
               PWS: 'Portable Service Worksheet',
               MO: 'Manual Order Worksheet'
             };
@@ -10146,15 +10295,17 @@ function clearOfflineLookupCustomerChunks() {
           return;
         }
 
-        if (msg.source !== 'fsd-certs-esr' && msg.source !== 'fsd-certs-sfa' && msg.source !== 'fsd-certs-sel' && msg.source !== 'fsd-certs-ia' && msg.source !== 'fsd-certs-portables') return;
+        if (msg.source !== 'fsd-certs-esr' && msg.source !== 'fsd-certs-sfa' && msg.source !== 'fsd-certs-sel' && msg.source !== 'fsd-certs-ia' && msg.source !== 'fsd-certs-scs' && msg.source !== 'fsd-certs-portables') return;
 
-        if ((msg.type === 'FSD_OFFLINE_W_REQUEST' || msg.type === 'FSD_OFFLINE_SFA_REQUEST' || msg.type === 'FSD_OFFLINE_SEL_REQUEST' || msg.type === 'FSD_OFFLINE_IA_REQUEST' || msg.type === 'FSD_OFFLINE_PWS_REQUEST' || msg.type === 'FSD_OFFLINE_MO_REQUEST') && pendingShellAction) {
+        if ((msg.type === 'FSD_OFFLINE_W_REQUEST' || msg.type === 'FSD_OFFLINE_SFA_REQUEST' || msg.type === 'FSD_OFFLINE_SEL_REQUEST' || msg.type === 'FSD_OFFLINE_IA_REQUEST' || msg.type === 'FSD_OFFLINE_SCS_REQUEST' || msg.type === 'FSD_OFFLINE_PWS_REQUEST' || msg.type === 'FSD_OFFLINE_MO_REQUEST') && pendingShellAction) {
           // V6.3c37y: Apps Script may put the real W page inside a Google
           // wrapper frame. Sending to frame.contentWindow can hit the wrapper
           // instead of the report. Reply directly to the requesting window so
           // Resume/Sync receives the actual saved draft payload.
           const report = getOfflineReportConfig(pendingShellAction.item);
-        const type = pendingShellAction.action === 'sync' ? 'FSD_OFFLINE_' + report.code + '_SYNC' : 'FSD_OFFLINE_' + report.code + '_RESTORE';
+          if ((report.code === 'SCS' || msg.type === 'FSD_OFFLINE_SCS_REQUEST') &&
+              (report.code !== 'SCS' || msg.type !== 'FSD_OFFLINE_SCS_REQUEST')) return;
+          const type = pendingShellAction.action === 'sync' ? 'FSD_OFFLINE_' + report.code + '_SYNC' : 'FSD_OFFLINE_' + report.code + '_RESTORE';
           try {
             event.source.postMessage({
               type: type,
@@ -10194,10 +10345,14 @@ function clearOfflineLookupCustomerChunks() {
           return;
         }
 
-        if (msg.type === 'FSD_OFFLINE_W_SYNC_RESULT' || msg.type === 'FSD_OFFLINE_SFA_SYNC_RESULT' || msg.type === 'FSD_OFFLINE_SEL_SYNC_RESULT' || msg.type === 'FSD_OFFLINE_IA_SYNC_RESULT' || msg.type === 'FSD_OFFLINE_PWS_SYNC_RESULT' || msg.type === 'FSD_OFFLINE_MO_SYNC_RESULT') {
-          clearTimeout(shellActionTimer);
+        if (msg.type === 'FSD_OFFLINE_W_SYNC_RESULT' || msg.type === 'FSD_OFFLINE_SFA_SYNC_RESULT' || msg.type === 'FSD_OFFLINE_SEL_SYNC_RESULT' || msg.type === 'FSD_OFFLINE_IA_SYNC_RESULT' || msg.type === 'FSD_OFFLINE_SCS_SYNC_RESULT' || msg.type === 'FSD_OFFLINE_PWS_SYNC_RESULT' || msg.type === 'FSD_OFFLINE_MO_SYNC_RESULT') {
           const result = msg.item || {};
-          const resultCode = msg.type === 'FSD_OFFLINE_SFA_SYNC_RESULT' ? 'SFA' :
+          const isScs = msg.type === 'FSD_OFFLINE_SCS_SYNC_RESULT';
+          const syncItem = pendingShellAction && pendingShellAction.item;
+          if (isScs && (!syncItem || getOfflineReportType(syncItem) !== 'SCS' ||
+              (result.offlineId && result.offlineId !== syncItem.offlineId))) return;
+          clearTimeout(shellActionTimer);
+          const resultCode = isScs ? 'SCS' : msg.type === 'FSD_OFFLINE_SFA_SYNC_RESULT' ? 'SFA' :
             (msg.type === 'FSD_OFFLINE_SEL_SYNC_RESULT' ? 'SEL' :
             (msg.type === 'FSD_OFFLINE_IA_SYNC_RESULT' ? 'IA' :
             (msg.type === 'FSD_OFFLINE_PWS_SYNC_RESULT' ? 'PWS' :
@@ -10338,7 +10493,7 @@ function clearOfflineLookupCustomerChunks() {
 
     }());
   </script>
-      <div class="fixed-version-badge">FSD Certs · Minimal Home C97da</div>
+      <div class="fixed-version-badge">FSD Certs · C97da · SCS Offline</div>
 
 
   <!-- C93p Premium Home clock -->
