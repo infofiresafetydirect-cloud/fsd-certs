@@ -2869,7 +2869,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
       <div class="offline-manager-head">
         <div>
           <h2 class="offline-title">Start New Report</h2>
-          <p class="offline-help">Choose the certificate you need. It will start as an iPad working copy and can be uploaded when signal returns.</p>
+          <p class="offline-help">SCS opens online and needs a connection. Other reports start as iPad working copies.</p>
         </div>
         <button class="offline-home-button" type="button" onclick="closeOfflineReportChooser(event)">← Jobs &amp; Drafts</button>
       </div>
@@ -2888,6 +2888,9 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
           <button class="offline-report-choice" type="button" onclick="chooseOfflineNewReport(event,'IA')">
             <span class="offline-report-choice-icon">🛡️</span><span><strong>Intruder Alarm Inspection &amp; Test</strong><small>Complete the full IA preventative-maintenance report offline.</small></span><span class="offline-report-choice-arrow">→</span>
           </button>
+          <button class="offline-report-choice" type="button" onclick="chooseOfflineNewReport(event,'SCS')">
+            <span class="offline-report-choice-icon">📝</span><span><strong>Smoke Control / AOV Service (SCS)</strong><small>Open the online report. Internet connection required.</small></span><span class="offline-report-choice-arrow">→</span>
+          </button>
           <button class="offline-report-choice" type="button" onclick="chooseOfflineNewReport(event,'PWS')">
             <span class="offline-report-choice-icon">🧯</span><span><strong>Portable Service Worksheet</strong><small>Full portable-equipment worksheet with extra pages.</small></span><span class="offline-report-choice-arrow">→</span>
           </button>
@@ -2896,6 +2899,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
           </button>
         </div>
       </section>
+      <p id="offlineReportChooserStatus" class="offline-help" role="status"></p>
       <div class="maker-mark">Jared720 Labs · C97h Report Chooser</div>
     </main>
   </section>
@@ -9448,6 +9452,8 @@ function clearOfflineLookupCustomerChunks() {
 
       window.openOfflineReportChooser = function openOfflineReportChooser(event) {
         stopTap(event);
+        const status = document.getElementById('offlineReportChooserStatus');
+        if (status) status.textContent = '';
         offlineDrafts.classList.remove('active');
         if (offlineReportChooser) offlineReportChooser.classList.add('active');
         return false;
@@ -9467,6 +9473,16 @@ function clearOfflineLookupCustomerChunks() {
         // the large shared report editor. Showing the normal loader first avoids
         // a blank-looking transition while ESR/SFA/SEL fields are prepared.
         const requestedCode = String(code || '').toUpperCase();
+        if (requestedCode === 'SCS') {
+          if (navigator.onLine === false) {
+            const status = document.getElementById('offlineReportChooserStatus');
+            if (status) status.textContent = 'Connect to the internet to start an SCS report.';
+            return false;
+          }
+          if (offlineReportChooser) offlineReportChooser.classList.remove('active');
+          openAppUrlInShell(APP_URL + '?page=scs');
+          return false;
+        }
         const selectedCode = ['W','SFA','SEL','IA','PWS','MO'].indexOf(requestedCode) !== -1 ? requestedCode : 'W';
         home.classList.add('hidden');
         offlineDrafts.classList.remove('active');
