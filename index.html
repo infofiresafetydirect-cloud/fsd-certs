@@ -3620,7 +3620,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
     (function () {
       'use strict';
 
-      const SHELL_VER = 'V6.3c97da-scs-offline';
+      const SHELL_VER = 'V6.3c97da-draft-types';
       const APP_URL = 'https://script.google.com/macros/s/AKfycbzq9FTETNZwUJWHMGnMHECbu3sJ3jy3FFvGYyeaRXtkoK1GHBtqOu-GLBle_WGfoFtI/exec';
       const SCHEDULE_URL = 'https://fsd-scheduling-2026.infofiresafetydirect.chatgpt.site/';
       const CALLOUTS_PAGE = APP_URL + '?page=callouts&shell=ipad';
@@ -6507,6 +6507,7 @@ function clearOfflineLookupCustomerChunks() {
         const draft = item.draft || {};
         const normalized = [
           item.reportType,
+          item.reportTypeCode,
           draft.reportTypeCode,
           draft.reportType,
           item.type
@@ -6533,7 +6534,8 @@ function clearOfflineLookupCustomerChunks() {
         const cleaned = Array.isArray(rows) ? rows.filter(function(row) { return row && row.offlineId && row.draft; }).map(function(row) {
           const type = getOfflineReportType(row);
           if (!row.reportType) row.reportType = type;
-          if (row.draft && !row.draft.reportTypeCode) row.draft.reportTypeCode = type;
+          // Older cloud refreshes could leave a correct report title with a W payload code.
+          row.draft.reportTypeCode = type;
           return row;
         }) : [];
 
@@ -8636,8 +8638,9 @@ function clearOfflineLookupCustomerChunks() {
         d.serviceDate = getEditValue('editServiceDate');
         d.customer = getEditValue('editCustomer');
         d.site = getEditValue('editSite');
-        const reportCodeForSave = String(d.reportTypeCode || item.reportType || '').toUpperCase();
-        if (getOfflineReportType(item) === 'SCS') {
+        const reportCodeForSave = getOfflineReportType(item);
+        d.reportTypeCode = reportCodeForSave;
+        if (reportCodeForSave === 'SCS') {
           document.querySelectorAll('[data-scs-field]').forEach(function(field) {
             d[field.dataset.scsField] = field.value;
           });
@@ -9315,20 +9318,12 @@ function clearOfflineLookupCustomerChunks() {
       }
 
       function inferOfflineReportCodeFromCloud(row, draft) {
-        row = row || {};
-        draft = draft || {};
-        const raw = [
-          draft.reportTypeCode,
-          draft.reportType,
-          row.reportType,
-          row.certificateType
-        ].map(function(value) { return String(value || '').toUpperCase(); }).join(' ');
-        if (/(^|\s)QQ(\s|$)/.test(raw) || raw.indexOf('QUICK QUOTE') !== -1) return 'QQ';
-        if (/(^|\s)SFA(\s|$)/.test(raw) || raw.indexOf('FIRE ALARM SERVICE') !== -1 || raw.indexOf('FIRE ALARM TEST REPORT') !== -1) return 'SFA';
-        if (/(^|\s)SEL(\s|$)/.test(raw) || raw.indexOf('EMERGENCY LIGHTING') !== -1) return 'SEL';
-        if (/(^|\s)MTS(\s|$)/.test(raw) || raw.indexOf('POBL MONTHLY') !== -1 || raw.indexOf('MONTHLY TESTING') !== -1) return 'MTS';
-        if (/(^|\s)SCS(\s|$)/.test(raw) || raw.indexOf('SMOKE CONTROL SYSTEM INSPECTION') !== -1) return 'SCS';
-        return 'W';
+        return getOfflineReportType({
+          reportType: row.reportType,
+          reportTypeCode: row.reportTypeCode,
+          type: row.certificateType,
+          draft: draft
+        });
       }
 
       function mergeCloudDraftRows(rows, options) {
@@ -9378,6 +9373,10 @@ function clearOfflineLookupCustomerChunks() {
             // C97ba: preserve every local edit, but still attach the server-issued
             // delete token so a protected/changed draft can be deleted on request.
             if (row.deleteToken) existing.cloudDeleteToken = String(row.deleteToken);
+            if (code !== 'W' && getOfflineReportType(existing) === 'W') {
+              existing.reportType = code;
+              existing.draft.reportTypeCode = code;
+            }
             if (code === 'SCS' && !existing.draftId) {
               existing.draftId = row.draftId;
               existing.syncState = 'needs_sync';
@@ -10493,7 +10492,7 @@ function clearOfflineLookupCustomerChunks() {
 
     }());
   </script>
-      <div class="fixed-version-badge">FSD Certs · C97da · SCS Offline</div>
+      <div class="fixed-version-badge">FSD Certs · C97da · Draft Types</div>
 
 
   <!-- C93p Premium Home clock -->
