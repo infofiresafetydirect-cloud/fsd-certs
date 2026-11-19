@@ -2888,6 +2888,9 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
           <button class="offline-report-choice" type="button" onclick="chooseOfflineNewReport(event,'IA')">
             <span class="offline-report-choice-icon">🛡️</span><span><strong>Intruder Alarm Inspection &amp; Test</strong><small>Complete the full IA preventative-maintenance report offline.</small></span><span class="offline-report-choice-arrow">→</span>
           </button>
+          <button class="offline-report-choice" type="button" onclick="chooseOfflineNewReport(event,'VSS')">
+            <span class="offline-report-choice-icon">📝</span><span><strong>CCTV Service / VSS</strong><small>Start a CCTV inspection working copy on this device.</small></span><span class="offline-report-choice-arrow">→</span>
+          </button>
           <button class="offline-report-choice" type="button" onclick="chooseOfflineNewReport(event,'SCS')">
             <span class="offline-report-choice-icon">📝</span><span><strong>Smoke Control / AOV Service (SCS)</strong><small>Start a Smoke Control / AOV Service working copy on this device.</small></span><span class="offline-report-choice-arrow">→</span>
           </button>
@@ -3317,6 +3320,12 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
               <div class="editor-field"><label>Labour Cost</label><input id="editServiceReportLabourCost" type="number" step="0.01" value="0.00"></div>
             </div>
           </div>
+<div id="vssOfflineFields" class="nested-editor-grid hidden-report-fields">
+  <p id="editVssNumberStatus" class="editor-field editor-wide"></p>
+  <input id="editVss_sageAccountNo" type="hidden" data-vss-field="sageAccountNo">
+  <div class="editor-field"><label for="editVss_contractId">Contract ID</label><input id="editVss_contractId" data-vss-field="contractId"></div>
+  <div class="editor-field"><label for="editVss_orderNo">Order number</label><input id="editVss_orderNo" data-vss-field="orderNo"></div>
+  <div class="editor-field editor-wide"><h2>Equipment</h2><fieldset><legend>Cameras</legend><div class="editor-grid"><div class="editor-field"><label for="editVss_equipment0_total">Total</label><input id="editVss_equipment0_total" data-vss-field="equipment0_total" type="number" min="0" step="1" max="9999"></div><div class="editor-field"><label for="editVss_equipment0_tested">Tested</label><input id="editVss_equipment0_tested" data-vss-field="equipment0_tested" type="number" min="0" step="1" max="9999"></div><div class="editor-field"><label for="editVss_equipment0_passed">Passed</label><input id="editVss_equipment0_passed" data-vss-field="equipment0_passed" type="number" min="0" step="1" max="9999"></div><div class="editor-field"><label for="editVss_equipment0_failed">Failed</label><input id="editVss_equipment0_failed" data-vss-field="equipment0_failed" type="number" min="0" step="1" max="9999"></div></div><div class="editor-field"><label for="editVss_equipment0_comment">Comments</label><input id="editVss_equipment0_comment" data-vss-field="equipment0_comment"></div></fieldset><fieldset><legend>Monitors</legend><div class="editor-grid"><div class="editor-field"><label for="editVss_equipment1_total">Total</label><input id="editVss_equipment1_total" data-vss-field="equipment1_total" type="number" min="0" step="1" max="9999"></div><div class="editor-field"><label for="editVss_equipment1_tested">Tested</label><input id="editVss_equipment1_tested" data-vss-field="equipment1_tested" type="number" min="0" step="1" max="9999"></div><div class="editor-field"><label for="editVss_equipment1_passed">Passed</label><input id="editVss_equipment1_passed" data-vss-field="equipment1_passed" type="number" min="0" step="1" max="9999"></div><div class="editor-field"><label for="editVss_equipment1_failed">Failed</label><input id="editVss_equipment1_failed" data-vss-field="equipment1_failed" type="number" min="0" step="1" max="9999"></div></div><div class="editor-field"><label for="editVss_equipment1_comment">Comments</label><input id="editVss_equipment1_comment" data-vss-field="equipment1_comment"></div></fieldset><fieldset><legend>Recording / Camera Controller</legend><div class="editor-grid"><div class="editor-field"><label for="editVss_equipment2_total">Total</label><input id="editVss_equipment2_total" data-vss-field="equipment2_total" type="number" min="0" step="1" max="9999"></div><div class="editor-field"><label for="editVss_equipment2_tested">Tested</label><input id="editVss_equipment2_tested" data-vss-field="equipment2_tested" type="number" min="0" step="1" max="9999"></div><div class="editor-field"><label for="editVss_equipment2_passed">Passed</label><input id="editVss_equipment2_passed" data-vss-field="equipment2_passed" type="number" min="0" step="1" max="9999"></div><div class="editor-field"><label for="editVss_equipment2_failed">Failed</label><input id="editVss_equipment2_failed" data-vss-field="equipment2_failed" type="number" min="0" step="1" max="9999"></div></div><div class="editor-field"><label for="editVss_equipment2_comment">Comments</label><input id="editVss_equipment2_comment" data-vss-field="equipment2_comment"></div></fieldset><fieldset><legend>Recording Equipment</legend><div class="editor-grid"><div class="editor-field"><label for="editVss_equipment3_total">Total</label><input id="editVss_equipment3_total" data-vss-field="equipment3_total" type="number" min="0" step="1" max="9999"></div><div class="editor-field"><label for="editVss_equipment3_tested">Tested</label><input id="editVss_equipment3_tested" data-vss-field="equipment3_tested" type="number" min="0" step="1" max="9999"></div><div class="editor-field"><label for="editVss_equipment3_passed">Passed</label><input id="editVss_equipment3_passed" data-vss-field="equipment3_passed" type="number" min="0" step="1" max="9999"></div><div class="editor-field"><label for="editVss_equipment3_failed">Failed</label><input id="editVss_equipment3_failed" data-vss-field="equipment3_failed" type="number" min="0" step="1" max="9999"></div></div><div class="editor-field"><label for="editVss_equipment3_comment">Comments</label><input id="editVss_equipment3_comment" data-vss-field="equipment3_comment"></div></fieldset></div><div class="editor-field editor-wide"><h2>Functional inspection</h2><fieldset><legend>1. The picture quality of each camera and correct display selection.</legend><div class="editor-grid"><div class="editor-field"><label for="editVss_inspection0_answer">Result</label><select id="editVss_inspection0_answer" data-vss-field="inspection0_answer"><option value="">Select</option><option value="YES">Yes</option><option value="NO">No</option></select></div><div class="editor-field"><label for="editVss_inspection0_comment">Comments</label><input id="editVss_inspection0_comment" data-vss-field="inspection0_comment"></div></div></fieldset><fieldset><legend>2. Check covers and housings are clean and secure.</legend><div class="editor-grid"><div class="editor-field"><label for="editVss_inspection1_answer">Result</label><select id="editVss_inspection1_answer" data-vss-field="inspection1_answer"><option value="">Select</option><option value="YES">Yes</option><option value="NO">No</option></select></div><div class="editor-field"><label for="editVss_inspection1_comment">Comments</label><input id="editVss_inspection1_comment" data-vss-field="inspection1_comment"></div></div></fieldset><fieldset><legend>3. All automatic and remote control camera functions comply with specification (e.g. pan, tilt, zoom, electronic iris, focus, wipers, washers, heaters) and camera movement and fields of view are free from obstruction.</legend><div class="editor-grid"><div class="editor-field"><label for="editVss_inspection2_answer">Result</label><select id="editVss_inspection2_answer" data-vss-field="inspection2_answer"><option value="">Select</option><option value="YES">Yes</option><option value="NO">No</option></select></div><div class="editor-field"><label for="editVss_inspection2_comment">Comments</label><input id="editVss_inspection2_comment" data-vss-field="inspection2_comment"></div></div></fieldset><fieldset><legend>4. Operation of all displaying, switching, multiplexing and recording equipment (including time and date generators) is satisfactory and correct.</legend><div class="editor-grid"><div class="editor-field"><label for="editVss_inspection3_answer">Result</label><select id="editVss_inspection3_answer" data-vss-field="inspection3_answer"><option value="">Select</option><option value="YES">Yes</option><option value="NO">No</option></select></div><div class="editor-field"><label for="editVss_inspection3_comment">Comments</label><input id="editVss_inspection3_comment" data-vss-field="inspection3_comment"></div></div></fieldset><fieldset><legend>5. All equipment, in particular video recording equipment, is installed in accordance with manufacturers’ recommendations and instructions.</legend><div class="editor-grid"><div class="editor-field"><label for="editVss_inspection4_answer">Result</label><select id="editVss_inspection4_answer" data-vss-field="inspection4_answer"><option value="">Select</option><option value="YES">Yes</option><option value="NO">No</option></select></div><div class="editor-field"><label for="editVss_inspection4_comment">Comments</label><input id="editVss_inspection4_comment" data-vss-field="inspection4_comment"></div></div></fieldset><fieldset><legend>6. Function of all interfaces with alarms is satisfactory including correct triggering of alarms.</legend><div class="editor-grid"><div class="editor-field"><label for="editVss_inspection5_answer">Result</label><select id="editVss_inspection5_answer" data-vss-field="inspection5_answer"><option value="">Select</option><option value="YES">Yes</option><option value="NO">No</option></select></div><div class="editor-field"><label for="editVss_inspection5_comment">Comments</label><input id="editVss_inspection5_comment" data-vss-field="inspection5_comment"></div></div></fieldset><fieldset><legend>7. Operation of supplementary lighting is satisfactory.</legend><div class="editor-grid"><div class="editor-field"><label for="editVss_inspection6_answer">Result</label><select id="editVss_inspection6_answer" data-vss-field="inspection6_answer"><option value="">Select</option><option value="YES">Yes</option><option value="NO">No</option></select></div><div class="editor-field"><label for="editVss_inspection6_comment">Comments</label><input id="editVss_inspection6_comment" data-vss-field="inspection6_comment"></div></div></fieldset><fieldset><legend>8. Check transmission system through to the RVRC and ensure that suitable quality of transmitted video and alarms are satisfactory.</legend><div class="editor-grid"><div class="editor-field"><label for="editVss_inspection7_answer">Result</label><select id="editVss_inspection7_answer" data-vss-field="inspection7_answer"><option value="">Select</option><option value="YES">Yes</option><option value="NO">No</option></select></div><div class="editor-field"><label for="editVss_inspection7_comment">Comments</label><input id="editVss_inspection7_comment" data-vss-field="inspection7_comment"></div></div></fieldset><fieldset><legend>9. Check that the performance of the system(s) meets the agreed specification / operational requirement according to the periodic test scheme agreed with the customer.</legend><div class="editor-grid"><div class="editor-field"><label for="editVss_inspection8_answer">Result</label><select id="editVss_inspection8_answer" data-vss-field="inspection8_answer"><option value="">Select</option><option value="YES">Yes</option><option value="NO">No</option></select></div><div class="editor-field"><label for="editVss_inspection8_comment">Comments</label><input id="editVss_inspection8_comment" data-vss-field="inspection8_comment"></div></div></fieldset><fieldset><legend>10. Utilise standardised test target to evaluate the performance of the VSS system.</legend><div class="editor-grid"><div class="editor-field"><label for="editVss_inspection9_answer">Result</label><select id="editVss_inspection9_answer" data-vss-field="inspection9_answer"><option value="">Select</option><option value="YES">Yes</option><option value="NO">No</option></select></div><div class="editor-field"><label for="editVss_inspection9_comment">Comments</label><input id="editVss_inspection9_comment" data-vss-field="inspection9_comment"></div></div></fieldset><fieldset><legend>11. System installation meets operational requirements.</legend><div class="editor-grid"><div class="editor-field"><label for="editVss_inspection10_answer">Result</label><select id="editVss_inspection10_answer" data-vss-field="inspection10_answer"><option value="">Select</option><option value="YES">Yes</option><option value="NO">No</option></select></div><div class="editor-field"><label for="editVss_inspection10_comment">Comments</label><input id="editVss_inspection10_comment" data-vss-field="inspection10_comment"></div></div></fieldset></div><div class="editor-field editor-wide"><h2>Work and findings</h2><div class="editor-grid"><div class="editor-field"><label for="editVss_work">Work carried out</label><textarea id="editVss_work" data-vss-field="work" rows="3"></textarea></div><div class="editor-field"><label for="editVss_recommendations">Recommendations or comments</label><textarea id="editVss_recommendations" data-vss-field="recommendations" rows="3"></textarea></div></div></div><div class="editor-field editor-wide"><h2>Disconnected equipment and revisit</h2><div class="editor-grid"><div class="editor-field"><label for="editVss_disconnected">Items disconnected</label><textarea id="editVss_disconnected" data-vss-field="disconnected" rows="3"></textarea></div><div class="editor-field"><label for="editVss_disconnectionType">Disconnection type</label><select id="editVss_disconnectionType" data-vss-field="disconnectionType"><option value="">Select</option><option value="PERMANENT">Permanent</option><option value="TEMPORARY">Temporary</option></select></div><div class="editor-field"><label for="editVss_reconnectDate">Reconnection date</label><input id="editVss_reconnectDate" data-vss-field="reconnectDate" type="date"></div><div class="editor-field"><label for="editVss_revisit">Is a revisit required?</label><select id="editVss_revisit" data-vss-field="revisit"><option value="">Select</option><option value="YES">Yes</option><option value="NO">No</option></select></div><div class="editor-field"><label for="editVss_revisitReason">Reason for revisit</label><textarea id="editVss_revisitReason" data-vss-field="revisitReason" rows="3"></textarea></div><div class="editor-field"><label for="editVss_revisitDate">Revisit date</label><input id="editVss_revisitDate" data-vss-field="revisitDate" type="date"></div></div></div><div class="editor-field editor-wide"><h2>Costs</h2><div class="editor-grid"><div class="editor-field"><label for="editVss_serviceCost">Service cost (£)</label><input id="editVss_serviceCost" data-vss-field="serviceCost" type="number" min="0" step="0.01"></div><div class="editor-field"><label for="editVss_materialCost">Material cost (£)</label><input id="editVss_materialCost" data-vss-field="materialCost" type="number" min="0" step="0.01"></div><div class="editor-field"><label for="editVss_labourCost">Remedial labour (£)</label><input id="editVss_labourCost" data-vss-field="labourCost" type="number" min="0" step="0.01"></div></div><p id="editVssTotals" aria-live="polite"></p></div></div>
           <div id="scsOfflineFields" class="nested-editor-grid hidden-report-fields">
             <div class="editor-section-title">Certificate and service visit</div>
             <div id="editScsNumberStatus" class="sfa-local-note editor-wide"></div>
@@ -3620,7 +3629,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
     (function () {
       'use strict';
 
-      const SHELL_VER = 'V6.3c97da-draft-types';
+      const SHELL_VER = 'V6.3c97da-vss';
       const APP_URL = 'https://script.google.com/macros/s/AKfycbzq9FTETNZwUJWHMGnMHECbu3sJ3jy3FFvGYyeaRXtkoK1GHBtqOu-GLBle_WGfoFtI/exec';
       const SCHEDULE_URL = 'https://fsd-scheduling-2026.infofiresafetydirect.chatgpt.site/';
       const CALLOUTS_PAGE = APP_URL + '?page=callouts&shell=ipad';
@@ -4252,6 +4261,7 @@ window.FSD_CALLOUT_SHEET_URL = "https://docs.google.com/spreadsheets/d/1-lKMU6LI
         SEL: { code: 'SEL', label: 'Emergency Lighting Report',           page: 'sel',  editableOffline: true,  syncableOffline: true },
         IA:  { code: 'IA',  label: 'Intruder Alarm Inspection & Test Report', page: 'ia', editableOffline: true, syncableOffline: true },
         MTS: { code: 'MTS', label: 'POBL Monthly Testing Sheet', page: 'mts', editableOffline: false, syncableOffline: false },
+        VSS: { code: 'VSS', label: 'VSS Inspection & Test Report', page: 'vss', editableOffline: true, syncableOffline: true },
         SCS: { code: 'SCS', label: 'Smoke Control System Inspection & Test Report', page: 'scs', editableOffline: true, syncableOffline: true },
         PWS: { code: 'PWS', label: 'Portable Service Worksheet',           page: 'portableService', editableOffline: true, syncableOffline: true },
         MO:  { code: 'MO',  label: 'Manual Order Worksheet',               page: 'manualOrder', editableOffline: true, syncableOffline: true },
@@ -5752,7 +5762,7 @@ function clearOfflineLookupCustomerChunks() {
 
       function setVisibleSageAccount(value, overwrite) {
         if (!value) return;
-        const ids = activeOfflineReportCode === 'SCS' ? ['editScs_sageAccountNo'] :
+        const ids = activeOfflineReportCode === 'VSS' ? ['editVss_sageAccountNo'] : activeOfflineReportCode === 'SCS' ? ['editScs_sageAccountNo'] :
           ['editSageAccountNo','editSfaSageAccountNo','editSelSageAccountNo'];
         ids.forEach(function(id) {
           const el = document.getElementById(id);
@@ -6340,7 +6350,7 @@ function clearOfflineLookupCustomerChunks() {
         const search = document.getElementById('offlineLookupSearch');
         if (!wrap) return;
         const selectedAccount = offlineLookupMode === 'site'
-          ? (activeOfflineReportCode === 'SCS' ? getEditValue('editScs_sageAccountNo') :
+          ? (activeOfflineReportCode === 'VSS' ? getEditValue('editVss_sageAccountNo') : activeOfflineReportCode === 'SCS' ? getEditValue('editScs_sageAccountNo') :
             getEditValue('editSageAccountNo') || getEditValue('editSfaSageAccountNo') || getEditValue('editSelSageAccountNo') || '')
           : '';
         const rows = searchOfflineLookupRows(offlineLookupMode, search ? search.value : '', selectedAccount);
@@ -6469,6 +6479,7 @@ function clearOfflineLookupCustomerChunks() {
           if (row.defaultCustomerOrderNo) {
             if (document.getElementById('editCustomerOrderNo') && !getEditValue('editCustomerOrderNo')) setEditValue('editCustomerOrderNo', row.defaultCustomerOrderNo);
             if (document.getElementById('editSfaOrderNo') && !getEditValue('editSfaOrderNo')) setEditValue('editSfaOrderNo', row.defaultCustomerOrderNo);
+            if (activeOfflineReportCode === 'VSS' && !getEditValue('editVss_orderNo')) setEditValue('editVss_orderNo', row.defaultCustomerOrderNo);
             if (activeOfflineReportCode === 'SCS' && !getEditValue('editScs_orderNo')) setEditValue('editScs_orderNo', row.defaultCustomerOrderNo);
           }
           if (row.defaultOurRefNo && document.getElementById('editOurRefNo') && !getEditValue('editOurRefNo')) setEditValue('editOurRefNo', row.defaultOurRefNo);
@@ -6516,6 +6527,7 @@ function clearOfflineLookupCustomerChunks() {
         if (normalized.indexOf('EMERGENCY LIGHTING') >= 0 || /(^|\s)SEL(\s|$)/.test(normalized)) return 'SEL';
         if (normalized.indexOf('INTRUDER ALARM') >= 0 || /(^|\s)IA(\s|$)/.test(normalized)) return 'IA';
         if (normalized.indexOf('POBL MONTHLY') >= 0 || normalized.indexOf('MONTHLY TESTING') >= 0 || /(^|\s)MTS(\s|$)/.test(normalized)) return 'MTS';
+        if (/(^|\s)(VSS|CCTV)(\s|$)/.test(normalized)) return 'VSS';
         if (/(^|\s)SCS(\s|$)/.test(normalized) || normalized.indexOf('SMOKE CONTROL SYSTEM INSPECTION') >= 0) return 'SCS';
         if (normalized.indexOf('QUICK QUOTE') >= 0 || /(^|\s)QQ(\s|$)/.test(normalized)) return 'QQ';
         if (normalized.indexOf('PORTABLE SERVICE') >= 0 || normalized.indexOf('SERVICE WORKSHEET') >= 0 || /(^|\s)PWS(\s|$)/.test(normalized)) return 'PWS';
@@ -7408,6 +7420,7 @@ function clearOfflineLookupCustomerChunks() {
         form.__fsdBound = true;
         form.addEventListener('input', function(event) {
           setEditorDirty(true);
+          if (activeOfflineReportCode === 'VSS' && event.target && /^editVss_(service|labour|material)Cost$/.test(event.target.id)) updateOfflineVssTotals();
           if (activeOfflineReportCode === 'SCS' && event.target && /^editScs_(service|labour|material)Cost$/.test(event.target.id)) {
             updateOfflineScsTotals();
           }
@@ -7681,6 +7694,7 @@ function clearOfflineLookupCustomerChunks() {
         const isSel = report && report.code === 'SEL';
         const isIa = report && report.code === 'IA';
         const isScs = report && report.code === 'SCS';
+        const isVss = report && report.code === 'VSS';
         const isPortable = report && (report.code === 'PWS' || report.code === 'MO');
         const sfaFields = document.getElementById('sfaOfflineFields');
         const selFields = document.getElementById('selOfflineFields');
@@ -7702,11 +7716,11 @@ function clearOfflineLookupCustomerChunks() {
         const portableCommentsLabel = document.getElementById('portableOfflineCommentsLabel');
         if (offlineEditor) offlineEditor.classList.toggle('portable-online-look-screen', isPortable);
         if (editorCard) editorCard.classList.toggle('portable-online-look', isPortable);
-        if (jobHeading) jobHeading.textContent = isPortable ? 'Customer and job' : ((isIa || isScs) ? 'Customer and site' : 'Job Details');
+        if (jobHeading) jobHeading.textContent = isPortable ? 'Customer and job' : ((isIa || isScs || isVss) ? 'Customer and site' : 'Job Details');
         if (portableRowsHeading) portableRowsHeading.textContent = report && report.code === 'MO' ? 'Order lines' : 'Equipment inspected';
         if (portableCompletionHeading) portableCompletionHeading.textContent = report && report.code === 'MO' ? 'Instructions' : 'Completion';
         if (portableCommentsLabel) portableCommentsLabel.textContent = report && report.code === 'MO' ? 'Special Instructions' : 'Engineer Comments';
-        if (addCertControls) addCertControls.classList.toggle('hidden-report-fields', isPortable || isIa || isScs);
+        if (addCertControls) addCertControls.classList.toggle('hidden-report-fields', isPortable || isIa || isScs || isVss);
         if (portableFields) portableFields.classList.toggle('hidden-report-fields', !isPortable);
         if (portableHeading) portableHeading.textContent = report && report.code === 'MO' ? 'Manual Order' : 'Portable Service Worksheet';
         Array.prototype.forEach.call(document.querySelectorAll('.portable-pws-only'), function(el) {
@@ -7720,10 +7734,11 @@ function clearOfflineLookupCustomerChunks() {
         if (selFields) selFields.classList.toggle('hidden-report-fields', !isSel);
         if (iaFields) iaFields.classList.toggle('hidden-report-fields', !isIa);
         document.getElementById('scsOfflineFields').classList.toggle('hidden-report-fields', !isScs);
-        document.getElementById('offlineCustomerSignatureStatusField').classList.toggle('hidden-report-fields', isScs);
-        if (wAdmin) wAdmin.classList.toggle('hidden-report-fields', isSfa || isSel || isPortable || isIa || isScs);
-        if (wWork) wWork.classList.toggle('hidden-report-fields', isSfa || isSel || isPortable || isIa || isScs);
-        if (materialQuick) materialQuick.classList.toggle('hidden-report-fields', isSfa || isSel || isPortable || isIa || isScs);
+        document.getElementById('offlineCustomerSignatureStatusField').classList.toggle('hidden-report-fields', isScs || isVss);
+        document.getElementById('vssOfflineFields').classList.toggle('hidden-report-fields', !isVss);
+        if (wAdmin) wAdmin.classList.toggle('hidden-report-fields', isSfa || isSel || isPortable || isIa || isScs || isVss);
+        if (wWork) wWork.classList.toggle('hidden-report-fields', isSfa || isSel || isPortable || isIa || isScs || isVss);
+        if (materialQuick) materialQuick.classList.toggle('hidden-report-fields', isSfa || isSel || isPortable || isIa || isScs || isVss);
         if (sfaQuick) sfaQuick.classList.toggle('hidden-report-fields', !isSfa);
         if (sfaPayloadBtn) sfaPayloadBtn.classList.toggle('hidden-report-fields', !isSfa);
         if (!isSfa && sfaPayloadPreview) sfaPayloadPreview.classList.add('hidden-report-fields');
@@ -8067,8 +8082,9 @@ function clearOfflineLookupCustomerChunks() {
         updateOfflinePanelPhotoUi();
         setOfflineSignatureData('engineer', d.engineerSignature || '');
         setOfflineSignatureData('customer', d.customerSignature || '');
-        setEditValue('editCustomerName', (report.code === 'SCS' ? d.customerSignatory : d.customerName) || '');
-        setEditValue('editCustomerDate', (report.code === 'SCS' ? d.customerSignDate : d.customerDate) || '');
+        setEditValue('editCustomerName', ((report.code === 'SCS' || report.code === 'VSS') ? d.customerSignatory : d.customerName) || '');
+        setEditValue('editCustomerDate', ((report.code === 'SCS' || report.code === 'VSS') ? d.customerSignDate : d.customerDate) || '');
+        if (report.code === 'VSS') restoreOfflineVss(d);
         if (report.code === 'SCS') restoreOfflineScs(d, scsLinked);
         setEditValue('editCustomerSignatureStatus', d.customerSignatureStatus || 'SIGNATURE_REQUIRED');
         home.classList.add('hidden');
@@ -8410,6 +8426,24 @@ function clearOfflineLookupCustomerChunks() {
           'Subtotal ' + money(subtotal / 100) + ' · VAT ' + money(vat / 100) + ' · Total ' + money((subtotal + vat) / 100) : '';
       }
 
+      function restoreOfflineVss(draft) {
+        document.querySelectorAll('[data-vss-field]').forEach(function(field) {
+          const value = draft[field.dataset.vssField];
+          field.value = value == null ? '' : value;
+        });
+        document.getElementById('editVssNumberStatus').textContent = draft.reportNo
+          ? 'Certificate number: ' + draft.reportNo : 'Certificate number reserved online before submission.';
+        updateOfflineVssTotals();
+      }
+
+      function updateOfflineVssTotals() {
+        const costs = ['serviceCost', 'labourCost', 'materialCost'].map(function(key) { return getEditValue('editVss_' + key); });
+        const subtotal = costs.reduce(function(sum, value) { return sum + Math.round(Number(value) * 100); }, 0);
+        const vat = Math.round(subtotal * 0.20);
+        document.getElementById('editVssTotals').textContent = costs.some(Boolean)
+          ? 'Subtotal ' + money(subtotal / 100) + ' · VAT ' + money(vat / 100) + ' · Total ' + money((subtotal + vat) / 100) : '';
+      }
+
       function createBlankOfflineScsItem() {
         const now = new Date();
         const today = new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
@@ -8428,6 +8462,27 @@ function clearOfflineLookupCustomerChunks() {
           savedAt: now.toISOString()
         };
         return {offlineId: offlineId, reportType: 'SCS', reportTypeCode: 'SCS', draftId: '', draftName: draft.draftName,
+          engineer: draft.engineer, customer: '', site: '', savedAt: draft.savedAt, draft: draft, syncState: 'offline_only'};
+      }
+
+      function createBlankOfflineVssItem() {
+        const now = new Date();
+        const today = new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
+        const offlineId = makeOfflineId('VSS');
+        const bytes = window.crypto.getRandomValues(new Uint8Array(16));
+        bytes[6] = (bytes[6] & 15) | 64;
+        bytes[8] = (bytes[8] & 63) | 128;
+        const hex = Array.from(bytes, function(byte) { return byte.toString(16).padStart(2, '0'); }).join('');
+        const submissionId = [hex.slice(0, 8), hex.slice(8, 12), hex.slice(12, 16), hex.slice(16, 20), hex.slice(20)].join('-');
+        const draft = {
+          offlineCreated: true, offlineId: offlineId, reportTypeCode: 'VSS',
+          reportType: OFFLINE_REPORT_TYPES.VSS.label,
+          draftName: OFFLINE_REPORT_TYPES.VSS.label + ' - ' + today,
+          serviceDate: today, customer: '', site: '', engineer: getDefaultEngineerProfile() || '',
+          vssSubmissionId: submissionId, reportNo: '',
+          savedAt: now.toISOString()
+        };
+        return {offlineId: offlineId, reportType: 'VSS', reportTypeCode: 'VSS', draftId: '', draftName: draft.draftName,
           engineer: draft.engineer, customer: '', site: '', savedAt: draft.savedAt, draft: draft, syncState: 'offline_only'};
       }
 
@@ -8522,6 +8577,15 @@ function clearOfflineLookupCustomerChunks() {
 
       window.startNewOfflineScs = function startNewOfflineScs() {
         const item = createBlankOfflineScsItem();
+        upsertOfflineItem(item);
+        return waitForOfflineDraftQueueSave().then(function() {
+          renderOfflineDrafts();
+          openEditorForItem(item);
+        });
+      };
+
+      window.startNewOfflineVss = function startNewOfflineVss() {
+        const item = createBlankOfflineVssItem();
         upsertOfflineItem(item);
         return waitForOfflineDraftQueueSave().then(function() {
           renderOfflineDrafts();
@@ -8640,6 +8704,14 @@ function clearOfflineLookupCustomerChunks() {
         d.site = getEditValue('editSite');
         const reportCodeForSave = getOfflineReportType(item);
         d.reportTypeCode = reportCodeForSave;
+        if (reportCodeForSave === 'VSS') {
+          document.querySelectorAll('[data-vss-field]').forEach(function(field) { d[field.dataset.vssField] = field.value; });
+          d.customerSignatory = getEditValue('editCustomerName');
+          d.customerSignDate = getEditValue('editCustomerDate');
+          d.engineerSignature = offlineEngineerSignatureData || '';
+          d.customerSignature = offlineCustomerSignatureData || '';
+          return queueEditorDraft(item, d);
+        }
         if (reportCodeForSave === 'SCS') {
           document.querySelectorAll('[data-scs-field]').forEach(function(field) {
             d[field.dataset.scsField] = field.value;
@@ -9365,7 +9437,7 @@ function clearOfflineLookupCustomerChunks() {
           const code = inferOfflineReportCodeFromCloud(row, draft);
           const existingIndex = queue.findIndex(function(item) {
             return item && (String(item.draftId || '') === String(row.draftId) ||
-              (code === 'SCS' && !item.draftId && item.offlineId === row.draftId));
+              ((code === 'SCS' || code === 'VSS') && !item.draftId && item.offlineId === row.draftId));
           });
           const existing = existingIndex >= 0 ? queue[existingIndex] : null;
           const existingState = normaliseDraftSyncState(existing || {});
@@ -9377,7 +9449,7 @@ function clearOfflineLookupCustomerChunks() {
               existing.reportType = code;
               existing.draft.reportTypeCode = code;
             }
-            if (code === 'SCS' && !existing.draftId) {
+            if ((code === 'SCS' || code === 'VSS') && !existing.draftId) {
               existing.draftId = row.draftId;
               existing.syncState = 'needs_sync';
             }
@@ -9629,7 +9701,7 @@ function clearOfflineLookupCustomerChunks() {
         // the large shared report editor. Showing the normal loader first avoids
         // a blank-looking transition while ESR/SFA/SEL fields are prepared.
         const requestedCode = String(code || '').toUpperCase();
-        const selectedCode = ['W','SFA','SEL','IA','SCS','PWS','MO'].indexOf(requestedCode) !== -1 ? requestedCode : 'W';
+        const selectedCode = ['W','SFA','SEL','IA','SCS','VSS','PWS','MO'].indexOf(requestedCode) !== -1 ? requestedCode : 'W';
         home.classList.add('hidden');
         offlineDrafts.classList.remove('active');
         if (offlineReportChooser) offlineReportChooser.classList.remove('active');
@@ -9646,6 +9718,7 @@ function clearOfflineLookupCustomerChunks() {
             if (selectedCode === 'SFA') return window.startNewOfflineSfaTrial();
             if (selectedCode === 'SEL') return window.startNewOfflineSelTrial();
             if (selectedCode === 'IA') return window.startNewOfflineIa();
+            if (selectedCode === 'VSS') return window.startNewOfflineVss();
             if (selectedCode === 'SCS') return window.startNewOfflineScs();
             if (selectedCode === 'PWS' || selectedCode === 'MO') return window.startNewOfflinePortable(null, selectedCode);
             return window.startNewOfflineW();
@@ -10182,12 +10255,13 @@ function clearOfflineLookupCustomerChunks() {
         if (msg.source === 'fsd-cloud-draft-client-c95f' && msg.type === 'FSD_DRAFT_SAVE_OFFLINE') {
           acknowledgeDraftSaveMessage(event, msg);
           const code = String(msg.reportTypeCode || '').toUpperCase();
-          if (code === 'SFA' || code === 'SEL' || code === 'IA' || code === 'SCS' || code === 'PWS' || code === 'MO') {
+          if (code === 'SFA' || code === 'SEL' || code === 'IA' || code === 'SCS' || code === 'VSS' || code === 'PWS' || code === 'MO') {
             const reportNames = {
               SFA: 'Fire Alarm Service Report',
               SEL: 'Emergency Lighting Report',
               IA: 'Intruder Alarm Inspection & Test Report',
               SCS: OFFLINE_REPORT_TYPES.SCS.label,
+              VSS: OFFLINE_REPORT_TYPES.VSS.label,
               PWS: 'Portable Service Worksheet',
               MO: 'Manual Order Worksheet'
             };
@@ -10294,9 +10368,9 @@ function clearOfflineLookupCustomerChunks() {
           return;
         }
 
-        if (msg.source !== 'fsd-certs-esr' && msg.source !== 'fsd-certs-sfa' && msg.source !== 'fsd-certs-sel' && msg.source !== 'fsd-certs-ia' && msg.source !== 'fsd-certs-scs' && msg.source !== 'fsd-certs-portables') return;
+        if (msg.source !== 'fsd-certs-esr' && msg.source !== 'fsd-certs-sfa' && msg.source !== 'fsd-certs-sel' && msg.source !== 'fsd-certs-ia' && msg.source !== 'fsd-certs-scs' && msg.source !== 'fsd-certs-vss' && msg.source !== 'fsd-certs-portables') return;
 
-        if ((msg.type === 'FSD_OFFLINE_W_REQUEST' || msg.type === 'FSD_OFFLINE_SFA_REQUEST' || msg.type === 'FSD_OFFLINE_SEL_REQUEST' || msg.type === 'FSD_OFFLINE_IA_REQUEST' || msg.type === 'FSD_OFFLINE_SCS_REQUEST' || msg.type === 'FSD_OFFLINE_PWS_REQUEST' || msg.type === 'FSD_OFFLINE_MO_REQUEST') && pendingShellAction) {
+        if ((msg.type === 'FSD_OFFLINE_W_REQUEST' || msg.type === 'FSD_OFFLINE_SFA_REQUEST' || msg.type === 'FSD_OFFLINE_SEL_REQUEST' || msg.type === 'FSD_OFFLINE_IA_REQUEST' || msg.type === 'FSD_OFFLINE_SCS_REQUEST' || msg.type === 'FSD_OFFLINE_VSS_REQUEST' || msg.type === 'FSD_OFFLINE_PWS_REQUEST' || msg.type === 'FSD_OFFLINE_MO_REQUEST') && pendingShellAction) {
           // V6.3c37y: Apps Script may put the real W page inside a Google
           // wrapper frame. Sending to frame.contentWindow can hit the wrapper
           // instead of the report. Reply directly to the requesting window so
@@ -10304,6 +10378,8 @@ function clearOfflineLookupCustomerChunks() {
           const report = getOfflineReportConfig(pendingShellAction.item);
           if ((report.code === 'SCS' || msg.type === 'FSD_OFFLINE_SCS_REQUEST') &&
               (report.code !== 'SCS' || msg.type !== 'FSD_OFFLINE_SCS_REQUEST')) return;
+          if ((report.code === 'VSS' || msg.type === 'FSD_OFFLINE_VSS_REQUEST') &&
+              (report.code !== 'VSS' || msg.type !== 'FSD_OFFLINE_VSS_REQUEST')) return;
           const type = pendingShellAction.action === 'sync' ? 'FSD_OFFLINE_' + report.code + '_SYNC' : 'FSD_OFFLINE_' + report.code + '_RESTORE';
           try {
             event.source.postMessage({
@@ -10344,14 +10420,17 @@ function clearOfflineLookupCustomerChunks() {
           return;
         }
 
-        if (msg.type === 'FSD_OFFLINE_W_SYNC_RESULT' || msg.type === 'FSD_OFFLINE_SFA_SYNC_RESULT' || msg.type === 'FSD_OFFLINE_SEL_SYNC_RESULT' || msg.type === 'FSD_OFFLINE_IA_SYNC_RESULT' || msg.type === 'FSD_OFFLINE_SCS_SYNC_RESULT' || msg.type === 'FSD_OFFLINE_PWS_SYNC_RESULT' || msg.type === 'FSD_OFFLINE_MO_SYNC_RESULT') {
+        if (msg.type === 'FSD_OFFLINE_W_SYNC_RESULT' || msg.type === 'FSD_OFFLINE_SFA_SYNC_RESULT' || msg.type === 'FSD_OFFLINE_SEL_SYNC_RESULT' || msg.type === 'FSD_OFFLINE_IA_SYNC_RESULT' || msg.type === 'FSD_OFFLINE_SCS_SYNC_RESULT' || msg.type === 'FSD_OFFLINE_VSS_SYNC_RESULT' || msg.type === 'FSD_OFFLINE_PWS_SYNC_RESULT' || msg.type === 'FSD_OFFLINE_MO_SYNC_RESULT') {
           const result = msg.item || {};
           const isScs = msg.type === 'FSD_OFFLINE_SCS_SYNC_RESULT';
+          const isVss = msg.type === 'FSD_OFFLINE_VSS_SYNC_RESULT';
           const syncItem = pendingShellAction && pendingShellAction.item;
           if (isScs && (!syncItem || getOfflineReportType(syncItem) !== 'SCS' ||
               (result.offlineId && result.offlineId !== syncItem.offlineId))) return;
+          if (isVss && (!syncItem || getOfflineReportType(syncItem) !== 'VSS' ||
+              (result.offlineId && result.offlineId !== syncItem.offlineId))) return;
           clearTimeout(shellActionTimer);
-          const resultCode = isScs ? 'SCS' : msg.type === 'FSD_OFFLINE_SFA_SYNC_RESULT' ? 'SFA' :
+          const resultCode = isVss ? 'VSS' : isScs ? 'SCS' : msg.type === 'FSD_OFFLINE_SFA_SYNC_RESULT' ? 'SFA' :
             (msg.type === 'FSD_OFFLINE_SEL_SYNC_RESULT' ? 'SEL' :
             (msg.type === 'FSD_OFFLINE_IA_SYNC_RESULT' ? 'IA' :
             (msg.type === 'FSD_OFFLINE_PWS_SYNC_RESULT' ? 'PWS' :
